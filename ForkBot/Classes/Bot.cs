@@ -16,6 +16,8 @@ namespace ForkBot
     {
         static void Main(string[] args) => new Bot().Run().GetAwaiter().GetResult();
 
+        public static char mode;
+
         public static DiscordSocketClient client;
         public static CommandService commands;
         public static User[] users;
@@ -32,6 +34,9 @@ namespace ForkBot
             Start:
             try
             {
+                Console.Write("WINDOWS [W] OR UBUNTU [U]?:");
+                mode = Console.ReadKey().KeyChar;
+                mode = char.ToUpper(mode);
                 Console.WriteLine("Welcome. Initializing ForkBot...");
                 client = new DiscordSocketClient();
                 Console.WriteLine("Client Initialized.");
@@ -39,7 +44,8 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, File.ReadAllText(@"Constants\bottoken"));
+                if (mode == 'W') await client.LoginAsync(TokenType.Bot, File.ReadAllText(@"Constants\bottoken"));
+                else if (mode == 'U') await client.LoginAsync(TokenType.Bot, File.ReadAllText(@"Constants/bottoken"));
                 Console.WriteLine("Successfully logged in!");
                 // Connect the client to Discord's gateway
                 await client.StartAsync();

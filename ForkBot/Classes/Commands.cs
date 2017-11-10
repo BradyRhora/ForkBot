@@ -65,7 +65,9 @@ namespace ForkBot
         {
             if (!Bot.hangman)
             {
-                var wordList = File.ReadAllLines(@"Files\wordlist.txt");
+                string[] wordList = {""};
+                if (Bot.mode == 'W') wordList = File.ReadAllLines(@"Files\wordlist.txt");
+                else if (Bot.mode == 'U') wordList = File.ReadAllLines(@"Files/wordlist.txt");
                 Bot.hmWord = wordList[(rdm.Next(wordList.Count()))];
                 Bot.hangman = true;
                 Bot.hmCount = 0;

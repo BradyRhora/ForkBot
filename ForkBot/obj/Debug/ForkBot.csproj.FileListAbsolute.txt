@@ -28,3 +28,33 @@ c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\S
 c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.exe
 c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
 C:\Users\Owner\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\libvideo.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.exe
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\libvideo.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csprojResolveAssemblyReference.cache
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.exe
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
