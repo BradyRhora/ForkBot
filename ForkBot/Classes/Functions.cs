@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
@@ -22,6 +23,14 @@ namespace ForkBot
                 else return Constants.Colours.DEFAULT_COLOUR;
             }
             else return Constants.Colours.DEFAULT_COLOUR;
+        }
+
+        public static void LoadUsers()
+        {
+            foreach(string data in File.ReadLines("Files/users.txt"))
+            {
+                Bot.users.Add(new User(data:data,load:true));
+            }
         }
     }
 }

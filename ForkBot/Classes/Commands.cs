@@ -129,5 +129,17 @@ namespace ForkBot
             }
 
         }
+
+        [Command("listusers")]
+        public async Task Listusers()
+        {
+            string msg = "```\n";
+            foreach(User u in Bot.users)
+            {
+                msg += u.Username + " " + u.ID + ". Coins: " + u.Coins + "\n";
+            }
+            msg += "```";
+            await Context.Channel.SendMessageAsync(msg);
+        }
     }
 }

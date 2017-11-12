@@ -8,21 +8,23 @@ namespace ForkBot
 {
     public class User
     {
-        string Username { get; set; }
-        int Coins { get; set; }
-        long ID { get; set; }
-
-        User(long ID)
+        public string Username { get; set; }
+        public int Coins { get; set; }
+        public long ID { get; set; }
+        
+        public User(long ID = 0, Boolean load = false, string data = "")
         {
             this.ID = ID;
+            if (load) Load(data);
         }
 
-        void Load(string userLine)
+        User Load(string userLine)
         {
             string[] info = userLine.Split('|');
             Username = info[0];
             ID = Convert.ToUInt32(info[1]);
             Coins = Convert.ToInt32(info[2]);
+            return this;
         }
     }
 }

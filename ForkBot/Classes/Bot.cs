@@ -20,7 +20,7 @@ namespace ForkBot
 
         public static DiscordSocketClient client;
         public static CommandService commands;
-        public static User[] users;
+        public static List<User> users = new List<User>();
 
         #region HangMan vars
         public static string hmWord;
@@ -78,6 +78,7 @@ namespace ForkBot
             client.UserJoined += HandleJoin;
             client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
+            client.Ready += HandleReady;
             // Discover all of the commands in this assembly and load them.
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
@@ -101,17 +102,14 @@ namespace ForkBot
             }
             else return;
         }
-
         public async Task HandleJoin(SocketGuildUser user)
         {
             await user.Guild.DefaultChannel.SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to #commands to get a role.");
         }
-
         public async Task HandleLeave(SocketGuildUser user)
         {
             await user.Guild.DefaultChannel.SendMessageAsync($"{user.Username} has left the server.");
         }
-
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
             IMessage msg = await cache.DownloadAsync();
@@ -122,6 +120,10 @@ namespace ForkBot
             emb.Description = msg.Content;
             var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
             await chan.SendMessageAsync("", embed: emb.Build());
+        }
+        public async Task HandleReady()    
+        {
+            Functions.LoadUsers();
         }
     }
 }
