@@ -69,6 +69,7 @@ namespace ForkBot
                 Bot.hmWord = wordList[(rdm.Next(wordList.Count()))];
                 Bot.hangman = true;
                 Bot.hmCount = 0;
+                Bot.guessedChars.Clear();
                 await HangMan("");
             }
             else
@@ -85,12 +86,8 @@ namespace ForkBot
             else
             {
                 if (guess.Count() == 1 && !Bot.guessedChars.Contains(guess[0])) Bot.guessedChars.Add(guess[0]);
-                else if (Bot.hmWord == guess)
-                {
-                    Bot.hangman = false;
-                    await Context.Channel.SendMessageAsync("You did it!");
-                    //add coins to user
-                }
+                if (guess != "" && ((!Bot.hmWord.Contains(guess[0]) && guess.Count() == 1) || (Bot.hmWord != guess && guess.Count() > 1))) Bot.hmErrors++;
+                
 
                 string[] hang = {
             "       ______   " ,    //0
@@ -108,11 +105,58 @@ namespace ForkBot
                     else hang[6] += "_ ";
                 }
 
-                if (!hang[6].Contains("_")) //win
+                for (int i = 0; i < Bot.hmErrors; i++) 
+                {
+                    if (i == 0)
+                    {
+                        var line = hang[2].ToCharArray();
+                        line[13] = 'O';
+                        hang[2] = new string(line);
+                    }
+                    if (i == 1)
+                    {
+                        var line = hang[3].ToCharArray();
+                        line[13] = '|';
+                        hang[3] = new string(line);
+                    }
+                    if (i == 2)
+                    {
+                        var line = hang[4].ToCharArray();
+                        line[12] = '/';
+                        hang[4] = new string(line);
+                    }
+                    if (i == 3)
+                    {
+                        var line = hang[4].ToCharArray();
+                        line[14] = '\\';
+                        hang[4] = new string(line);
+                    }
+                    if (i == 4)
+                    {
+                        var line = hang[3].ToCharArray();
+                        line[12] = '/';
+                        hang[3] = new string(line);
+                    }
+                    if (i == 5)
+                    {
+                        var line = hang[3].ToCharArray();
+                        line[14] = '\\';
+                        hang[3] = new string(line);
+                    }
+                }
+
+                if (!hang[6].Contains("_") || Bot.hmWord == guess) //win
                 {
                     await Context.Channel.SendMessageAsync("You did it!");
                     Bot.hangman = false;
+                    
                     //add coins to user
+                }
+
+                if (Bot.hmErrors == 6)
+                {
+                    await Context.Channel.SendMessageAsync("You lose! The word was: " + Bot.hmWord);
+                    Bot.hangman = false;
                 }
 
                 string msg = "```\n";

@@ -27,6 +27,7 @@ namespace ForkBot
         public static bool hangman = false;
         public static int hmCount = 0;
         public static List<char> guessedChars = new List<char>();
+        public static int hmErrors = 0;
         #endregion
 
         public async Task Run()
