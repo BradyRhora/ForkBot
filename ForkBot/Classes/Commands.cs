@@ -66,9 +66,10 @@ namespace ForkBot
             if (!Bot.hangman)
             {
                 var wordList = File.ReadAllLines("Files/wordlist.txt");
-                Bot.hmWord = wordList[(rdm.Next(wordList.Count()))];
+                Bot.hmWord = wordList[(rdm.Next(wordList.Count()))].ToLower();
                 Bot.hangman = true;
                 Bot.hmCount = 0;
+                Bot.hmErrors = 0;
                 Bot.guessedChars.Clear();
                 await HangMan("");
             }
@@ -81,8 +82,8 @@ namespace ForkBot
         [Command("hangman"), Alias(new string[] { "hm" })]
         public async Task HangMan(string guess)
         {
-
-            if (guess != "" && Bot.guessedChars.Contains(guess[0])) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
+            guess = guess.ToLower();
+            if (guess != "" && Bot.guessedChars.Contains(guess[0]) && guess.Count() == 1) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
             else
             {
                 if (guess.Count() == 1 && !Bot.guessedChars.Contains(guess[0])) Bot.guessedChars.Add(guess[0]);
@@ -166,7 +167,7 @@ namespace ForkBot
                 {
                     msg += "Guessed letters: ";
                     foreach (char c in Bot.guessedChars) msg += char.ToUpper(c) + " ";
-                    msg += "\nUse `;hangman [guess]` to guess a character or the entire word.";
+                    msg += "\nUse `;hangman [guess]` to guess a character or the entire word.\n ~~hint hint the word is " + Bot.hmWord + "~~";
 
                 }
                 await Context.Channel.SendMessageAsync(msg);
