@@ -32,7 +32,7 @@ namespace ForkBot
                     string header = command.Name;
                     foreach (String alias in command.Aliases)
                     {
-                        header += "(;" + alias + ") ";
+                        if (alias != command.Name) header += " (;" + alias + ") ";
                     }
 
                     foreach (ParameterInfo parameter in command.Parameters)

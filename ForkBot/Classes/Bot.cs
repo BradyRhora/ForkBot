@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -21,6 +22,9 @@ namespace ForkBot
         public static DiscordSocketClient client;
         public static CommandService commands;
         public static List<User> users = new List<User>();
+
+        List<IUser> leaveBanned = new List<IUser>();
+        List<DateTime> unbanTime = new List<DateTime>();
 
         #region HangMan vars
         public static string hmWord;
@@ -44,10 +48,9 @@ namespace ForkBot
                 Console.WriteLine("Commands Installed, logging in.");
                 await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken"));
                 Console.WriteLine("Successfully logged in!");
-                // Connect the client to Discord's gateway
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                // Block this task until the program is exited.
+                Timer timer = new Timer(new TimerCallback(TimerCall),null,0,60000);
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -72,15 +75,28 @@ namespace ForkBot
             }
         }
 
+        async void TimerCall(object state) //code that is run every minute
+        {
+            for(int i = 0; i < leaveBanned.Count(); i++)
+            {
+                if (DateTime.Now > unbanTime[i])
+                {
+                    var g = client.GetGuild(Constants.Guilds.YORK_UNIVERSITY);
+                    var user = leaveBanned[i];
+                    await g.RemoveBanAsync(user);
+                    leaveBanned.Remove(user);
+                    unbanTime.Remove(unbanTime[i]);
+                }
+            }
+        }
+
         public async Task InstallCommands()
         {
-            // Hook the MessageReceived Event into our Command Handler
             client.MessageReceived += HandleCommand;
             client.UserJoined += HandleJoin;
             client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
             client.Ready += HandleReady;
-            // Discover all of the commands in this assembly and load them.
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
         
@@ -110,6 +126,10 @@ namespace ForkBot
         public async Task HandleLeave(SocketGuildUser user)
         {
             await user.Guild.DefaultChannel.SendMessageAsync($"{user.Username} has left the server.");
+            Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
+            leaveBanned.Add(user);
+            unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
+            await user.Guild.AddBanAsync(user, reason:"Temp ban for leaving server. Done automatically by ForkBot. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
@@ -126,6 +146,8 @@ namespace ForkBot
         {
             Functions.LoadUsers();
         }
+
+        
     }
 }
 
