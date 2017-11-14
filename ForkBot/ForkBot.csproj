@@ -98,9 +98,5 @@
     <None Include="packages.config" />
     <None Include="Constants\youtubekey" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Files\users.txt" />
-    <Content Include="Files\wordlist.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

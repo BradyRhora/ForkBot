@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -22,11 +23,15 @@ namespace ForkBot
         public static CommandService commands;
         public static List<User> users = new List<User>();
 
+        List<IUser> leaveBanned = new List<IUser>();
+        List<DateTime> unbanTime = new List<DateTime>();
+
         #region HangMan vars
         public static string hmWord;
         public static bool hangman = false;
         public static int hmCount = 0;
         public static List<char> guessedChars = new List<char>();
+        public static int hmErrors = 0;
         #endregion
 
         public async Task Run()
@@ -43,10 +48,10 @@ namespace ForkBot
                 Console.WriteLine("Commands Installed, logging in.");
                 await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken"));
                 Console.WriteLine("Successfully logged in!");
-                // Connect the client to Discord's gateway
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                // Block this task until the program is exited.
+                Timer banCheck = new Timer(new TimerCallback(TimerCall),null,0,60000);
+                Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000*60*60);
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -71,15 +76,33 @@ namespace ForkBot
             }
         }
 
+        async void TimerCall(object state) //code that is run every minute
+        {
+            for(int i = 0; i < leaveBanned.Count(); i++)
+            {
+                if (DateTime.Now > unbanTime[i])
+                {
+                    var g = client.GetGuild(Constants.Guilds.YORK_UNIVERSITY);
+                    var user = leaveBanned[i];
+                    await g.RemoveBanAsync(user);
+                    leaveBanned.Remove(user);
+                    unbanTime.Remove(unbanTime[i]);
+                }
+            }
+        }
+
+        void Hourly(object state) //code that is run every hour
+        {
+            Functions.SaveUsers();
+        }
+
         public async Task InstallCommands()
         {
-            // Hook the MessageReceived Event into our Command Handler
             client.MessageReceived += HandleCommand;
             client.UserJoined += HandleJoin;
             client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
             client.Ready += HandleReady;
-            // Discover all of the commands in this assembly and load them.
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
         
@@ -104,11 +127,15 @@ namespace ForkBot
         }
         public async Task HandleJoin(SocketGuildUser user)
         {
-            await user.Guild.DefaultChannel.SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to #commands to get a role.");
+            await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to #commands to get a role.");
         }
         public async Task HandleLeave(SocketGuildUser user)
         {
-            await user.Guild.DefaultChannel.SendMessageAsync($"{user.Username} has left the server.");
+            await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
+            Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
+            leaveBanned.Add(user);
+            unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
+            await user.Guild.AddBanAsync(user, reason:"Tempban for leaving server. Done automatically by ForkBot. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
@@ -125,6 +152,8 @@ namespace ForkBot
         {
             Functions.LoadUsers();
         }
+
+        
     }
 }
 

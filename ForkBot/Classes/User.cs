@@ -10,9 +10,9 @@ namespace ForkBot
     {
         public string Username { get; set; }
         public int Coins { get; set; }
-        public long ID { get; set; }
+        public ulong ID { get; set; }
         
-        public User(long ID = 0, Boolean load = false, string data = "")
+        public User(ulong ID = 0, Boolean load = false, string data = "")
         {
             this.ID = ID;
             if (load) Load(data);
