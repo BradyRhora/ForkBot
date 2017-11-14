@@ -25,12 +25,34 @@ namespace ForkBot
             else return Constants.Colours.DEFAULT_COLOUR;
         }
 
+        public static void SaveUsers()
+        {
+            string toWrite = "";
+            foreach(User u in Bot.users)
+            {
+                toWrite += $"{u.Username}|{u.ID}|{u.Coins}\n";
+            }
+            File.WriteAllText("Files/users.txt", toWrite);
+        }
+        
         public static void LoadUsers()
         {
             foreach(string data in File.ReadLines("Files/users.txt"))
             {
                 Bot.users.Add(new User(data:data,load:true));
             }
+        }
+
+        public static User GetUser(IUser user) //gets User class for IUser, makes one if there isn't already one.
+        {
+            int attempts = 0;
+            while (attempts < 5)
+            {
+                foreach (User u in Bot.users) if (u.ID == user.Id) { SaveUsers(); return u; }
+                Bot.users.Add(new User(user.Id));
+                attempts++;
+            }
+            return null;
         }
     }
 }
