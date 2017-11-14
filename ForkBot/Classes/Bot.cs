@@ -50,7 +50,8 @@ namespace ForkBot
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                Timer timer = new Timer(new TimerCallback(TimerCall),null,0,60000);
+                Timer banCheck = new Timer(new TimerCallback(TimerCall),null,0,60000);
+                Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000*60*60);
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -88,6 +89,11 @@ namespace ForkBot
                     unbanTime.Remove(unbanTime[i]);
                 }
             }
+        }
+
+        void Hourly(object state) //code that is run every hour
+        {
+            Functions.SaveUsers();
         }
 
         public async Task InstallCommands()

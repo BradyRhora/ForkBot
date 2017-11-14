@@ -44,9 +44,10 @@ namespace ForkBot
                 }));
             }
 
-            await Context.User.SendMessageAsync("", embed: emb.Build());
-            await Context.Channel.SendMessageAsync("Commands have been sent to you privately!");
-
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
+            //await Context.User.SendMessageAsync("", embed: emb.Build());
+            //await Context.Channel.SendMessageAsync("Commands have been sent to you privately!");
+            
         }
 
         /*[Command("play"), Summary("Play a song from Youtube.")]
@@ -150,8 +151,10 @@ namespace ForkBot
                 {
                     await Context.Channel.SendMessageAsync("You did it!");
                     Bot.hangman = false;
-                    
-                    //add coins to user
+
+                    var u = Functions.GetUser(Context.User);
+                    u.Coins += 10;
+                    Functions.SaveUsers();
                 }
 
                 if (Bot.hmErrors == 6)
@@ -174,6 +177,43 @@ namespace ForkBot
             }
 
         }
+
+        [Command("profile"), Summary("View the your or another users profile.")]
+        public async Task Profile(IUser user)
+        {
+            var u = Functions.GetUser(user);
+
+            var emb = new JEmbed();
+            emb.Author.Name = user.Username;
+            emb.Author.IconUrl = user.GetAvatarUrl();
+
+            emb.ColorStripe = Functions.GetColor(user);
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Coins:";
+                x.Text = Convert.ToString(u.Coins);
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Roles:";
+                string text = "";
+                foreach(ulong id in (Context.User as IGuildUser).RoleIds)
+                {
+                    text += Context.Guild.GetRole(id).Name + "\n";
+                }
+
+                x.Text = Convert.ToString(text);
+                x.Inline = true;
+            }));
+
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
+        }
+
+        [Command("profile")]
+        public async Task Profile() { await Profile(Context.User); }
 
         [Command("listusers")]
         public async Task Listusers()
