@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
 
 namespace ForkBot
 {
     public class User
     {
-        public string Username { get; set; }
         public int Coins { get; set; }
         public ulong ID { get; set; }
         
@@ -21,10 +21,14 @@ namespace ForkBot
         User Load(string userLine)
         {
             string[] info = userLine.Split('|');
-            Username = info[0];
             ID = Convert.ToUInt32(info[1]);
             Coins = Convert.ToInt32(info[2]);
             return this;
+        }
+
+        public string Username()
+        {
+            return Bot.client.GetUser(ID).Username;
         }
     }
 }

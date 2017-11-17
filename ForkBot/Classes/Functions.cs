@@ -30,7 +30,7 @@ namespace ForkBot
             string toWrite = "";
             foreach(User u in Bot.users)
             {
-                toWrite += $"{u.Username}|{u.ID}|{u.Coins}\n";
+                toWrite += $"{u.ID}|{u.Coins}\n";
             }
             File.WriteAllText("Files/users.txt", toWrite);
         }

@@ -220,16 +220,10 @@ namespace ForkBot
             string msg = "```\n";
             foreach(User u in Bot.users)
             {
-                msg += u.Username + " " + u.ID + ". Coins: " + u.Coins + "\n";
+                msg += u.Username() + " " + u.ID + ". Coins: " + u.Coins + "\n";
             }
             msg += "```";
             await Context.Channel.SendMessageAsync(msg);
-        }
-
-        [Command("define")]
-        public async Task Define(string word)
-        {
-
         }
     }
 }
