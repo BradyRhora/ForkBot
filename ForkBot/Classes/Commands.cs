@@ -6,7 +6,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-
 //using VideoLibrary;
 
 namespace ForkBot
@@ -225,6 +224,12 @@ namespace ForkBot
             }
             msg += "```";
             await Context.Channel.SendMessageAsync(msg);
+        }
+
+        [Command("define")]
+        public async Task Define(string word)
+        {
+
         }
     }
 }
