@@ -225,5 +225,15 @@ namespace ForkBot
             msg += "```";
             await Context.Channel.SendMessageAsync(msg);
         }
+
+        [Command("present")]
+        public async Task Present()
+        {
+            if (!Bot.presentWaiting)
+            {
+                await Context.Channel.SendMessageAsync("A present appears! :gift: Press 4 to open it!");
+                Bot.presentWaiting = true;
+            }
+        }
     }
 }

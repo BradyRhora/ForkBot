@@ -17,7 +17,7 @@ namespace ForkBot
     {
         static void Main(string[] args) => new Bot().Run().GetAwaiter().GetResult();
 
-        public static char mode;
+        Random rdm = new Random();
 
         public static DiscordSocketClient client;
         public static CommandService commands;
@@ -33,6 +33,8 @@ namespace ForkBot
         public static List<char> guessedChars = new List<char>();
         public static int hmErrors = 0;
         #endregion
+
+        public static bool presentWaiting = false;
 
         public async Task Run()
         {
@@ -112,6 +114,16 @@ namespace ForkBot
             if (message == null) return;
             int argPos = 0;
 
+            if (presentWaiting && message.Content == "4")
+            {
+                presentWaiting = false;
+                await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
+                var presents = File.ReadAllLines("Files/presents.txt");
+                var presentData = presents[rdm.Next(presents.Count())].Split('|');
+                var present = presentData[0];
+                var pMessage = presentData[1];
+                await message.Channel.SendMessageAsync($"A {present}! :{present}: {pMessage}");
+            }
 
             if (message.HasCharPrefix(';', ref argPos))
             {
