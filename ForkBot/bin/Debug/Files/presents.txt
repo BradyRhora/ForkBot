@@ -33,7 +33,6 @@ knife|Careful, it's sharp!
 bomb|How did that get in there.
 gun|Hahah hey whoa... watch it buddy..
 telescope|Now you can see the universe! Or into your neighbours window.
-bow|For dapper young lads like yourself!
 gift|Oh! I wonder what's inside?
 scissors|Don't run with them!
 pen_ballpoint|It's a pen. What else can I say.

@@ -169,7 +169,7 @@ namespace ForkBot
                 {
                     msg += "Guessed letters: ";
                     foreach (char c in Bot.guessedChars) msg += char.ToUpper(c) + " ";
-                    msg += "\nUse `;hangman [guess]` to guess a character or the entire word.\n ~~hint hint the word is " + Bot.hmWord + "~~";
+                    msg += "\nUse `;hangman [guess]` to guess a character or the entire word.";
 
                 }
                 await Context.Channel.SendMessageAsync(msg);
@@ -226,7 +226,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(msg);
         }
 
-        [Command("present")]
+        [Command("present"), Summary("Get a cool gift!")]
         public async Task Present()
         {
             if (!Bot.presentWaiting)
