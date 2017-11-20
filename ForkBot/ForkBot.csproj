@@ -94,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
     <Compile Include="Classes\User.cs" />

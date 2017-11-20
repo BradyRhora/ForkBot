@@ -243,6 +243,8 @@ namespace ForkBot
                 Bot.presentNum = rdm.Next(10);
                 await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Bot.presentNum} to open it!");
                 Bot.presentWaiting = true;
+                Bot.replacing = false;
+                Bot.replaceable = true;
             }
         }
 

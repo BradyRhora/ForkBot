@@ -36,6 +36,10 @@ namespace ForkBot
 
         public static bool presentWaiting = false;
         public static int presentNum = 0;
+        public static bool replacing = false;
+        IUser presentReplacer = null;
+        string rPresent;
+        public static bool replaceable = true;
 
         public async Task Run()
         {
@@ -122,10 +126,29 @@ namespace ForkBot
                 var presents = File.ReadAllLines("Files/presents.txt");
                 var presentData = presents[rdm.Next(presents.Count())].Split('|');
                 var present = presentData[0];
+                rPresent = present;
                 var presentName = present.Replace('_', ' ');
                 var pMessage = presentData[1];
                 await message.Channel.SendMessageAsync($"A {func.ToTitleCase(presentName)}! :{present}: {pMessage}");
+                if (replaceable)
+                {
+                    await message.Channel.SendMessageAsync("Don't like this gift? Press {presentNum} again to replace it once!");
+                    replacing = true;
+                    presentReplacer = message.Author;
+                }
             }
+            else if (replaceable && replacing && message.Content == Convert.ToString(presentNum) && message.Author == presentReplacer)
+            {
+                await message.Channel.SendMessageAsync("Okay! I'll be right back.");
+                Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{rPresent}:");
+                await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {presentNum} to open it!");
+                presentWaiting = true;
+                replacing = false;
+                replaceable = false;
+            }
+
+
+
 
             if (message.HasCharPrefix(';', ref argPos))
             {

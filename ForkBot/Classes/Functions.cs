@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 
@@ -80,7 +81,29 @@ namespace ForkBot
             return html.Substring(start, length);
         }
 
-        
+        public static async void SendAnimation(IMessageChannel chan, EmoteAnimation anim) { SendAnimation(chan, anim, ""); }
+
+        static IUserMessage animation;
+        static EmoteAnimation anim;
+        static string varEmote;
+        static int frameCount;
+        static Timer animTimer;
+        public static async void SendAnimation(IMessageChannel chan, EmoteAnimation Animation, string var)
+        {
+            anim = Animation;
+            varEmote = var;
+            frameCount = 1;
+            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", varEmote));
+            animTimer = new Timer(new TimerCallback(AnimateTimerCallback), null, 100, 100);
+        }
+
+        static async void AnimateTimerCallback(object state)
+        {
+            await animation.ModifyAsync(x => x.Content = anim.frames[frameCount].Replace("%", varEmote));
+            frameCount++;
+            if (frameCount > anim.frames.Count()) animTimer.Dispose();
+        }
+
     }
 
     static class func
