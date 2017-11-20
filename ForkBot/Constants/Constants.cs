@@ -39,5 +39,16 @@ namespace ForkBot
             public static ulong COMMANDS = 271843457121779712;
             public static ulong DELETED_MESSAGES = 306236074655612930;
         }
+
+        public class EmoteAnimations
+        {
+            public static EmoteAnimation presentReturn = new EmoteAnimation(new string[] {
+                ":black_large_square::black_large_square::black_large_square::convenience_store::black_large_square:%:runner:",
+                ":black_large_square::black_large_square::black_large_square::convenience_store:%:runner::black_large_square:",
+                ":black_large_square::black_large_square::black_large_square::convenience_store::runner::black_large_square::black_large_square:",
+                ":black_large_square::black_large_square::gift::convenience_store::black_large_square::black_large_square::black_large_square:",
+                ":black_large_square::gift::runner::convenience_store::black_large_square::black_large_square::black_large_square:",
+                ":gift::runner::black_large_square::convenience_store::black_large_square::black_large_square::black_large_square:"});
+        }
     }
 }

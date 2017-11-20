@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 
@@ -55,10 +56,76 @@ namespace ForkBot
             return null;
         }
 
+<<<<<<< HEAD
         public static void GiveCoins(User u, int amount)
         {
             u.Coins += amount;
             SaveUsers();
+=======
+        public static string GetTID(string html)
+        {
+            var c = html.ToCharArray();
+            int start = 0, end = 0;
+            for (int i = 0; i < c.Count(); i++)
+            {
+                if (new String(c, i, 4) == "tid=")
+                {
+                    start = i + 4;
+                    break;
+                }
+            }
+
+            for (int i = start; i < c.Count(); i++)
+            {
+                if (!Char.IsNumber(c[i]))
+                {
+                    end = i;
+                    break;
+                }
+            }
+            int length = end - start;
+            return html.Substring(start, length);
+        }
+
+        public static async void SendAnimation(IMessageChannel chan, EmoteAnimation anim) { SendAnimation(chan, anim, ""); }
+
+        static IUserMessage animation;
+        static EmoteAnimation anim;
+        static string varEmote;
+        static int frameCount;
+        static Timer animTimer;
+        public static async void SendAnimation(IMessageChannel chan, EmoteAnimation Animation, string var)
+        {
+            anim = Animation;
+            varEmote = var;
+            frameCount = 1;
+            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", varEmote));
+            animTimer = new Timer(new TimerCallback(AnimateTimerCallback), null, 100, 100);
+        }
+
+        static async void AnimateTimerCallback(object state)
+        {
+            await animation.ModifyAsync(x => x.Content = anim.frames[frameCount].Replace("%", varEmote));
+            frameCount++;
+            if (frameCount > anim.frames.Count()) animTimer.Dispose();
+        }
+
+    }
+
+    static class func
+    {
+        public static string ToTitleCase(this string s)
+        {
+            return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(s.ToLower());
+>>>>>>> origin/master
         }
     }
 }
+
+/*
+ * game ideas
+ * emoji guessing?
+ * sharades???
+ * presents????
+ * 
+ */
