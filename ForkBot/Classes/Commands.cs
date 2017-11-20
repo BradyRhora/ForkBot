@@ -254,7 +254,7 @@ namespace ForkBot
             if (result != null)
             {
                 JEmbed emb = new JEmbed();
-                emb.Title = result.Result;
+                emb.Title = thing;
                 emb.Description = result.Text;
                 emb.ImageUrl = result.Icon.Url;
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
