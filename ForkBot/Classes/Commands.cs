@@ -283,12 +283,16 @@ namespace ForkBot
                 var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
                 var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
                 var imageNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[1]/img");
+                var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
+                string profName = titleText.Split(' ')[0] + " "+ titleText.Split(' ')[1];
+
+
                 string imageURL = null;
                 if (imageNode != null) imageURL = imageNode.Attributes[0].Value;
 
                 JEmbed emb = new JEmbed();
 
-                emb.Title = func.ToTitleCase(name);
+                emb.Title = profName;
                 if (imageURL != null) emb.ImageUrl = imageURL;
 
                 emb.Fields.Add(new JEmbedField(x =>
