@@ -48,18 +48,7 @@ namespace ForkBot
             //await Context.Channel.SendMessageAsync("Commands have been sent to you privately!");
             
         }
-
-        /*[Command("play"), Summary("Play a song from Youtube.")]
-        public async Task Play(string song)
-        {
-
-            var youTube = YouTube.Default; // starting point for YouTube actions
-            var video = await youTube.GetVideoAsync(song); // gets a Video object with info about the video
-            File.WriteAllBytes(@"Video\" + video.FullName, video.GetBytes());
-            
-        }*/
-
-
+        
         [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] {"hm"})]
         public async Task HangMan()
         {

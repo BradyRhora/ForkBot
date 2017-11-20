@@ -54,5 +54,11 @@ namespace ForkBot
             }
             return null;
         }
+
+        public static void GiveCoins(User u, int amount)
+        {
+            u.Coins += amount;
+            SaveUsers();
+        }
     }
 }
