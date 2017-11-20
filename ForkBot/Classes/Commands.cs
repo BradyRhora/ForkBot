@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 //using VideoLibrary;
+using DuckDuckGo.Net;
 
 namespace ForkBot
 {
@@ -82,15 +83,17 @@ namespace ForkBot
         [Command("hangman"), Alias(new string[] { "hm" })]
         public async Task HangMan(string guess)
         {
-            guess = guess.ToLower();
-            if (guess != "" && Bot.guessedChars.Contains(guess[0]) && guess.Count() == 1) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
-            else
+            if (Bot.hangman)
             {
-                if (guess.Count() == 1 && !Bot.guessedChars.Contains(guess[0])) Bot.guessedChars.Add(guess[0]);
-                if (guess != "" && ((!Bot.hmWord.Contains(guess[0]) && guess.Count() == 1) || (Bot.hmWord != guess && guess.Count() > 1))) Bot.hmErrors++;
-                
+                guess = guess.ToLower();
+                if (guess != "" && Bot.guessedChars.Contains(guess[0]) && guess.Count() == 1) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
+                else
+                {
+                    if (guess.Count() == 1 && !Bot.guessedChars.Contains(guess[0])) Bot.guessedChars.Add(guess[0]);
+                    if (guess != "" && ((!Bot.hmWord.Contains(guess[0]) && guess.Count() == 1) || (Bot.hmWord != guess && guess.Count() > 1))) Bot.hmErrors++;
 
-                string[] hang = {
+
+                    string[] hang = {
             "       ______   " ,    //0
             "      /      \\  " ,   //1
             "     |          " ,    //2
@@ -100,81 +103,86 @@ namespace ForkBot
             "     |          " ,    //6
             "_____|_____     " };   //7
 
-                for (int i = 0; i < Bot.hmWord.Count(); i++)
-                {
-                    if (Bot.guessedChars.Contains(Bot.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Bot.hmWord[i])) + " ";
-                    else hang[6] += "_ ";
+                    for (int i = 0; i < Bot.hmWord.Count(); i++)
+                    {
+                        if (Bot.guessedChars.Contains(Bot.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Bot.hmWord[i])) + " ";
+                        else hang[6] += "_ ";
+                    }
+
+                    for (int i = 0; i < Bot.hmErrors; i++)
+                    {
+                        if (i == 0)
+                        {
+                            var line = hang[2].ToCharArray();
+                            line[13] = 'O';
+                            hang[2] = new string(line);
+                        }
+                        if (i == 1)
+                        {
+                            var line = hang[3].ToCharArray();
+                            line[13] = '|';
+                            hang[3] = new string(line);
+                        }
+                        if (i == 2)
+                        {
+                            var line = hang[4].ToCharArray();
+                            line[12] = '/';
+                            hang[4] = new string(line);
+                        }
+                        if (i == 3)
+                        {
+                            var line = hang[4].ToCharArray();
+                            line[14] = '\\';
+                            hang[4] = new string(line);
+                        }
+                        if (i == 4)
+                        {
+                            var line = hang[3].ToCharArray();
+                            line[12] = '/';
+                            hang[3] = new string(line);
+                        }
+                        if (i == 5)
+                        {
+                            var line = hang[3].ToCharArray();
+                            line[14] = '\\';
+                            hang[3] = new string(line);
+                        }
+                    }
+
+                    if (!hang[6].Contains("_") || Bot.hmWord == guess) //win
+                    {
+                        await Context.Channel.SendMessageAsync("You did it!");
+                        Bot.hangman = false;
+
+                        var u = Functions.GetUser(Context.User);
+                        u.Coins += 10;
+                        Functions.SaveUsers();
+                    }
+
+                    if (Bot.hmErrors == 6)
+                    {
+                        await Context.Channel.SendMessageAsync("You lose! The word was: " + Bot.hmWord);
+                        Bot.hangman = false;
+                    }
+
+                    string msg = "```\n";
+                    foreach (String s in hang) msg += s + "\n";
+                    msg += "```";
+                    if (Bot.hangman)
+                    {
+                        msg += "Guessed letters: ";
+                        foreach (char c in Bot.guessedChars) msg += char.ToUpper(c) + " ";
+                        msg += "\nUse `;hangman [guess]` to guess a character or the entire word.";
+
+                    }
+                    await Context.Channel.SendMessageAsync(msg);
                 }
-
-                for (int i = 0; i < Bot.hmErrors; i++) 
-                {
-                    if (i == 0)
-                    {
-                        var line = hang[2].ToCharArray();
-                        line[13] = 'O';
-                        hang[2] = new string(line);
-                    }
-                    if (i == 1)
-                    {
-                        var line = hang[3].ToCharArray();
-                        line[13] = '|';
-                        hang[3] = new string(line);
-                    }
-                    if (i == 2)
-                    {
-                        var line = hang[4].ToCharArray();
-                        line[12] = '/';
-                        hang[4] = new string(line);
-                    }
-                    if (i == 3)
-                    {
-                        var line = hang[4].ToCharArray();
-                        line[14] = '\\';
-                        hang[4] = new string(line);
-                    }
-                    if (i == 4)
-                    {
-                        var line = hang[3].ToCharArray();
-                        line[12] = '/';
-                        hang[3] = new string(line);
-                    }
-                    if (i == 5)
-                    {
-                        var line = hang[3].ToCharArray();
-                        line[14] = '\\';
-                        hang[3] = new string(line);
-                    }
-                }
-
-                if (!hang[6].Contains("_") || Bot.hmWord == guess) //win
-                {
-                    await Context.Channel.SendMessageAsync("You did it!");
-                    Bot.hangman = false;
-
-                    var u = Functions.GetUser(Context.User);
-                    u.Coins += 10;
-                    Functions.SaveUsers();
-                }
-
-                if (Bot.hmErrors == 6)
-                {
-                    await Context.Channel.SendMessageAsync("You lose! The word was: " + Bot.hmWord);
-                    Bot.hangman = false;
-                }
-
-                string msg = "```\n";
-                foreach (String s in hang) msg += s + "\n";
-                msg += "```";
-                if (Bot.hangman)
-                {
-                    msg += "Guessed letters: ";
-                    foreach (char c in Bot.guessedChars) msg += char.ToUpper(c) + " ";
-                    msg += "\nUse `;hangman [guess]` to guess a character or the entire word.";
-
-                }
-                await Context.Channel.SendMessageAsync(msg);
             }
-
+            else
+            {
+                await HangMan();
+                await HangMan(guess);
+            }
         }
 
         [Command("profile"), Summary("View the your or another users profile.")]
@@ -234,6 +242,25 @@ namespace ForkBot
                 await Context.Channel.SendMessageAsync("A present appears! :gift: Press 4 to open it!");
                 Bot.presentWaiting = true;
             }
+        }
+
+        [Command("whatis"), Summary("Don't know what something is? Find out!")]
+        public async Task WhatIs([Remainder]string thing)
+        {
+            var results = new Search().Query(thing, "ForkBot");
+            QueryResult result = null;
+            if (results.Abstract == "" && results.RelatedTopics.Count > 0) result = results.RelatedTopics[0];
+
+            if (result != null)
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = result.Result;
+                emb.Description = result.Text;
+                emb.ImageUrl = result.Icon.Url;
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+            }
+            else await Context.Channel.SendMessageAsync("No results found!");
+
         }
     }
 }

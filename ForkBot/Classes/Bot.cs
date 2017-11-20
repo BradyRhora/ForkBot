@@ -120,9 +120,10 @@ namespace ForkBot
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
                 var presents = File.ReadAllLines("Files/presents.txt");
                 var presentData = presents[rdm.Next(presents.Count())].Split('|');
-                var present = presentData[0].Replace('_',' ');
+                var present = presentData[0];
+                var presentName = present.Replace('_', ' ');
                 var pMessage = presentData[1];
-                await message.Channel.SendMessageAsync($"A {present}! :{present}: {pMessage}");
+                await message.Channel.SendMessageAsync($"A {presentName}! :{present}: {pMessage}");
             }
 
             if (message.HasCharPrefix(';', ref argPos))
