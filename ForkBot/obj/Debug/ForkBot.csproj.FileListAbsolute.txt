@@ -90,3 +90,6 @@ C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\RestSharp.dll
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\DuckDuckGo.dll
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml

@@ -35,6 +35,7 @@ namespace ForkBot
         #endregion
 
         public static bool presentWaiting = false;
+        public static int presentNum = 0;
 
         public async Task Run()
         {
@@ -114,7 +115,7 @@ namespace ForkBot
             if (message == null) return;
             int argPos = 0;
 
-            if (presentWaiting && message.Content == "4")
+            if (presentWaiting && message.Content == Convert.ToString(presentNum))
             {
                 presentWaiting = false;
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
@@ -123,7 +124,7 @@ namespace ForkBot
                 var present = presentData[0];
                 var presentName = present.Replace('_', ' ');
                 var pMessage = presentData[1];
-                await message.Channel.SendMessageAsync($"A {presentName}! :{present}: {pMessage}");
+                await message.Channel.SendMessageAsync($"A {func.ToTitleCase(presentName)}! :{present}: {pMessage}");
             }
 
             if (message.HasCharPrefix(';', ref argPos))

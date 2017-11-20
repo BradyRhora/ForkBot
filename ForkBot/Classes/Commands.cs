@@ -8,7 +8,8 @@ using Discord;
 using Discord.Commands;
 //using VideoLibrary;
 using DuckDuckGo.Net;
-
+using System.Net;
+using HtmlAgilityPack;
 namespace ForkBot
 {
     public class Commands : ModuleBase
@@ -239,7 +240,8 @@ namespace ForkBot
         {
             if (!Bot.presentWaiting)
             {
-                await Context.Channel.SendMessageAsync("A present appears! :gift: Press 4 to open it!");
+                Bot.presentNum = rdm.Next(10);
+                await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Bot.presentNum} to open it!");
                 Bot.presentWaiting = true;
             }
         }
@@ -261,6 +263,60 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync("No results found!");
 
+        }
+
+        [Command("professor"), Alias(new string[] {"prof","rmp"}), Summary("Check out a professors rating from RateMyProfessors.com!")]
+        public async Task Professor([Remainder]string name)
+        {
+            HtmlWeb web = new HtmlWeb();
+            
+            string link = "http://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ","%20");
+            var page = web.Load(link);
+            var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li[1]");
+            if (node != null)
+            {
+                string tid = Functions.GetTID(node.InnerHtml);
+
+                var newLink = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + tid;
+                page = web.Load(newLink);
+                var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
+                var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
+                var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
+                var imageNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[1]/img");
+                string imageURL = null;
+                if (imageNode != null) imageURL = imageNode.Attributes[0].Value;
+
+                JEmbed emb = new JEmbed();
+
+                emb.Title = func.ToTitleCase(name);
+                if (imageURL != null) emb.ImageUrl = imageURL;
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Rating:";
+                    x.Text = rating;
+                    x.Inline = true;
+                }));
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Difficulty:";
+                    x.Text = difficulty;
+                    x.Inline = true;
+                }));
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Would take again?:";
+                    x.Text = takeAgain;
+                    x.Inline = true;
+                }));
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+            } else
+            {
+                await Context.Channel.SendMessageAsync("Professor not found!");
+            }
         }
     }
 }
