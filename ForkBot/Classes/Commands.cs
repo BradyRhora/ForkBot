@@ -47,7 +47,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync("", embed: emb.Build());
             //await Context.User.SendMessageAsync("", embed: emb.Build());
             //await Context.Channel.SendMessageAsync("Commands have been sent to you privately!");
-            
+
         }
 
         /*[Command("play"), Summary("Play a song from Youtube.")]
@@ -61,7 +61,7 @@ namespace ForkBot
         }*/
 
 
-        [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] {"hm"})]
+        [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
         public async Task HangMan()
         {
             if (!Bot.hangman)
@@ -207,7 +207,7 @@ namespace ForkBot
             {
                 x.Header = "Roles:";
                 string text = "";
-                foreach(ulong id in (Context.User as IGuildUser).RoleIds)
+                foreach (ulong id in (Context.User as IGuildUser).RoleIds)
                 {
                     text += Context.Guild.GetRole(id).Name + "\n";
                 }
@@ -226,7 +226,7 @@ namespace ForkBot
         public async Task Listusers()
         {
             string msg = "```\n";
-            foreach(User u in Bot.users)
+            foreach (User u in Bot.users)
             {
                 msg += u.Username() + " " + u.ID + ". Coins: " + u.Coins + "\n";
             }
@@ -244,7 +244,7 @@ namespace ForkBot
             }
         }
 
-        [Command("whatis"), Summary("Don't know what something is? Find out!")]
+        [Command("whatis"), Alias(new string[] { "wi" }), Summary("Don't know what something is? Find out!")]
         public async Task WhatIs([Remainder]string thing)
         {
             var results = new Search().Query(thing, "ForkBot");
