@@ -132,7 +132,7 @@ namespace ForkBot
                 await message.Channel.SendMessageAsync($"A {func.ToTitleCase(presentName)}! :{present}: {pMessage}");
                 if (replaceable)
                 {
-                    await message.Channel.SendMessageAsync("Don't like this gift? Press {presentNum} again to replace it once!");
+                    await message.Channel.SendMessageAsync($"Don't like this gift? Press {presentNum} again to replace it once!");
                     replacing = true;
                     presentReplacer = message.Author;
                 }
