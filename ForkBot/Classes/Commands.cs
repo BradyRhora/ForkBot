@@ -62,8 +62,7 @@ namespace ForkBot
             File.WriteAllBytes(@"Video\" + video.FullName, video.GetBytes());
             
         }*/
-
-
+        
         [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
         public async Task HangMan()
         {
@@ -274,23 +273,27 @@ namespace ForkBot
         {
             OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
             var result = await client.SearchEntries(word, CancellationToken.None);
-            var senses = result.Results[0].LexicalEntries[0].Entries[0].Senses[0];
-
-            JEmbed emb = new JEmbed();
-            emb.Title = func.ToTitleCase(word);
-            emb.Description = senses.Definitions[0];
-            emb.Fields.Add(new JEmbedField(x =>
+            if (result != null)
             {
-                x.Header = "Examples:";
-                string text = "";
-                foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
-                {
-                    text += $"\"{eg.Text}\"\n";
-                }
-                x.Text = text;
-            }));
+                var senses = result.Results[0].LexicalEntries[0].Entries[0].Senses[0];
 
-            await Context.Channel.SendMessageAsync("", embed: emb.Build());
+                JEmbed emb = new JEmbed();
+                emb.Title = func.ToTitleCase(word);
+                emb.Description = senses.Definitions[0];
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Examples:";
+                    string text = "";
+                    foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
+                    {
+                        text += $"\"{eg.Text}\"\n";
+                    }
+                    x.Text = text;
+                }));
+
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+            }
+            else await Context.Channel.SendMessageAsync($"Could not find definition for: {word}.");
         }
 
         [Command("professor"), Alias(new string[] {"prof","rmp"}), Summary("Check out a professors rating from RateMyProfessors.com!")]

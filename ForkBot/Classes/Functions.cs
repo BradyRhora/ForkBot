@@ -89,28 +89,32 @@ namespace ForkBot
                 return html.Substring(start, length);
             }
 
-            public static async void SendAnimation(IMessageChannel chan, EmoteAnimation anim) { SendAnimation(chan, anim, ""); }
+        public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation anim) { await SendAnimation(chan, anim, ""); }
 
-            static IUserMessage animation;
-            static EmoteAnimation anim;
-            static string varEmote;
-            static int frameCount;
-            static Timer animTimer;
-            public static async void SendAnimation(IMessageChannel chan, EmoteAnimation Animation, string var)
-            {
-                anim = Animation;
-                varEmote = var;
-                frameCount = 1;
-                animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", varEmote));
-                animTimer = new Timer(new TimerCallback(AnimateTimerCallback), null, 100, 100);
-            }
+        static IUserMessage animation;
+        static EmoteAnimation anim;
+        static string varEmote;
+        static int frameCount;
+        static Timer animTimer;
+        public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation Animation, string var)
+        {
+            anim = Animation;
+            varEmote = var;
+            frameCount = 1;
+            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", varEmote));
+            animTimer = new Timer(new TimerCallback(AnimateTimerCallback), null, 1000, 1000);
+        }
 
-            static async void AnimateTimerCallback(object state)
+        static async void AnimateTimerCallback(object state)
+        {
+            await animation.ModifyAsync(x => x.Content = anim.frames[frameCount].Replace("%", varEmote));
+            frameCount++;
+            if (frameCount >= anim.frames.Count())
             {
-                await animation.ModifyAsync(x => x.Content = anim.frames[frameCount].Replace("%", varEmote));
-                frameCount++;
-                if (frameCount > anim.frames.Count()) animTimer.Dispose();
+                Bot.timerComplete = true;
+                animTimer.Dispose();
             }
+        }
 
         }
     

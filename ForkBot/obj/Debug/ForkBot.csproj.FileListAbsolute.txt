@@ -94,6 +94,5 @@ C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\DuckDuckGo.dll
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.dll
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\RestSharp.dll
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml

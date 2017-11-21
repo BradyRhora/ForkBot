@@ -40,6 +40,7 @@ namespace ForkBot
         IUser presentReplacer = null;
         string rPresent;
         public static bool replaceable = true;
+        public static bool timerComplete = false;
 
         public async Task Run()
         {
@@ -140,13 +141,13 @@ namespace ForkBot
             else if (replaceable && replacing && message.Content == Convert.ToString(presentNum) && message.Author == presentReplacer)
             {
                 await message.Channel.SendMessageAsync("Okay! I'll be right back.");
-                Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{rPresent}:");
+                await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{rPresent}:");
                 await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {presentNum} to open it!");
                 presentWaiting = true;
                 replacing = false;
                 replaceable = false;
             }
-
+            
 
 
 
