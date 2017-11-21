@@ -278,14 +278,14 @@ namespace ForkBot
 
             JEmbed emb = new JEmbed();
             emb.Title = func.ToTitleCase(word);
-            emb.Description = senses.Definitions[0];
+            emb.Description = Char.ToUpper(senses.Definitions[0][0]) + senses.Definitions[0].Substring(1) + ".";
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Examples:";
                 string text = "";
                 foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
                 {
-                    text += $"\"{eg.Text}\"\n";
+                    text += $"\"{Char.ToUpper(eg.Text[0]) + eg.Text.Substring(1)}.\"\n";
                 }
                 x.Text = text;
             }));
@@ -411,6 +411,48 @@ namespace ForkBot
             {
                 await Context.Channel.SendMessageAsync("Professor not found!");
             }
+        }
+
+        //for viewing a tag
+        [Command("tag"), Summary("Make or view a tag!")]
+        public async Task Tag(string tag)
+        {
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            string[] tags = File.ReadAllLines("Files/tags.txt");
+            bool sent = false;
+
+            foreach (string line in tags)
+            {
+                if (line.Split('|')[0] == tag)
+                {
+                    sent = true;
+                    await Context.Channel.SendMessageAsync(line.Split('|')[1].Replace("%NEWLINE%", "\n"));
+                    break;
+                }
+            }
+
+            if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
+
+        }
+
+        //for creating the tag
+        [Command("tag")]
+        public async Task Tag(string tag, [Remainder]string content)
+        {
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            bool exists = false;
+            string[] tags = File.ReadAllLines("Files/tags.txt");
+            foreach (string line in tags)
+            {
+                if (line.Split('|')[0] == tag) { exists = true; break; }
+            }
+
+            if (!exists)
+            {
+                File.AppendAllText("Files/tags.txt", tag + "|" + content.Replace("\n", "%NEWLINE%"));
+                await Context.Channel.SendMessageAsync("Tag created!");
+            }
+            else await Context.Channel.SendMessageAsync("Tag already exists!");
         }
     }
 }

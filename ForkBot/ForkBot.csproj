@@ -116,6 +116,10 @@
     <None Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\Files\presents.txt" />
+    <Content Include="bin\Debug\Files\tags.txt" />
+    <Content Include="bin\Debug\Files\users.txt" />
+    <Content Include="bin\Debug\Files\wordlist.txt" />
     <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
