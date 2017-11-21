@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 //using VideoLibrary;
 using DuckDuckGo.Net;
-using System.Net;
+using OxfordDictionariesAPI;
 using HtmlAgilityPack;
 
 namespace ForkBot
@@ -266,6 +267,30 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync("No results found!");
 
+        }
+
+        [Command("define"), Summary("Returns the definiton for the inputted word.")]
+        public async Task Define([Remainder]string word)
+        {
+            OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
+            var result = await client.SearchEntries(word, CancellationToken.None);
+            var senses = result.Results[0].LexicalEntries[0].Entries[0].Senses[0];
+
+            JEmbed emb = new JEmbed();
+            emb.Title = func.ToTitleCase(word);
+            emb.Description = senses.Definitions[0];
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Examples:";
+                string text = "";
+                foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
+                {
+                    text += $"\"{eg.Text}\"\n";
+                }
+                x.Text = text;
+            }));
+
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
         }
 
         [Command("professor"), Alias(new string[] {"prof","rmp"}), Summary("Check out a professors rating from RateMyProfessors.com!")]

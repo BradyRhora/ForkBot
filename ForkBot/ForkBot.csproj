@@ -97,6 +97,8 @@
     <Compile Include="Classes\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
+    <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
+    <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />
@@ -107,12 +109,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Classes\OxfordDictionariesAPI\Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Constants\bottoken" />
     <None Include="packages.config" />
     <None Include="Constants\youtubekey" />
     <None Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
