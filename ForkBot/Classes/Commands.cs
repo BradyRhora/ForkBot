@@ -10,6 +10,7 @@ using Discord.Commands;
 using DuckDuckGo.Net;
 using System.Net;
 using HtmlAgilityPack;
+
 namespace ForkBot
 {
     public class Commands : ModuleBase
@@ -50,11 +51,7 @@ namespace ForkBot
             //await Context.Channel.SendMessageAsync("Commands have been sent to you privately!");
 
         }
-<<<<<<< HEAD
         
-        [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] {"hm"})]
-=======
-
         /*[Command("play"), Summary("Play a song from Youtube.")]
         public async Task Play(string song)
         {
@@ -67,7 +64,6 @@ namespace ForkBot
 
 
         [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
->>>>>>> origin/master
         public async Task HangMan()
         {
             if (!Bot.hangman)
@@ -191,7 +187,7 @@ namespace ForkBot
             }
         }
 
-        [Command("profile"), Summary("View the your or another users profile.")]
+        [Command("profile"), Summary("View your or another users profile.")]
         public async Task Profile(IUser user)
         {
             var u = Functions.GetUser(user);
@@ -286,6 +282,7 @@ namespace ForkBot
 
                 var newLink = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + tid;
                 page = web.Load(newLink);
+
                 var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
                 var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
                 var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
@@ -293,15 +290,62 @@ namespace ForkBot
                 var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
                 string profName = titleText.Split(' ')[0] + " "+ titleText.Split(' ')[1];
 
+                var tagsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
+                List<string> tags = new List<string>();
+                for (int i = 0; i < tagsNode.ChildNodes.Count(); i++)
+                {
+                    if (tagsNode.ChildNodes[i].Name == "span") tags.Add(tagsNode.ChildNodes[i].InnerText);
+                }
 
+                var hotness = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[3]/div/figure/img").Attributes[0].Value;
+                var hotnessIMG = "http://www.ratemyprofessors.com" + hotness;
                 string imageURL = null;
                 if (imageNode != null) imageURL = imageNode.Attributes[0].Value;
+
+                var commentsNode = page.DocumentNode.SelectSingleNode("/ html[1] / body[1] / div[2] / div[4] / div[3] / div[1] / div[7] / table[1]");
+
+                List<string> comments = new List<string>();
+                for (int i = 3; i<commentsNode.ChildNodes.Count();i++)
+                {
+                    if (commentsNode.ChildNodes[i].Name=="tr" && commentsNode.ChildNodes[i].Attributes.Count() ==2)
+                    {
+                        comments.Add(commentsNode.ChildNodes[i].ChildNodes[5].ChildNodes[3].InnerText.Replace("\r\n               ",""));
+                    }
+                }
+                List<string> words = new List<string>();
+                List<int> counts = new List<int>();
+
+                foreach (string comment in comments)
+                {
+                    foreach (string word in comment.Split(' '))
+                    {
+                        if (words.Contains(word)) counts[words.IndexOf(word)]++;
+                        else
+                        {
+                            words.Add(word);
+                            counts.Add(1);
+                        }
+                    }
+                }
+
+                List<string> OrderedWords = new List<string>();
+                for (int i = counts.Max(); i >= 0; i--)
+                {
+                    for (int c = 0; c < counts.Count(); c++)
+                    {
+                        if (counts[c] == i)
+                        {
+                            OrderedWords.Add(words[counts.IndexOf(counts[c])]);
+                        }
+                    }
+                }
+
 
                 JEmbed emb = new JEmbed();
 
                 emb.Title = profName;
                 if (imageURL != null) emb.ImageUrl = imageURL;
-
+                emb.ThumbnailUrl = hotnessIMG;
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "Rating:";
@@ -322,9 +366,23 @@ namespace ForkBot
                     x.Text = takeAgain;
                     x.Inline = true;
                 }));
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Top Tags:";
+                    string text = "";
+                    foreach(string s in tags)
+                    {
+                        text += s;
+                    }
+                    x.Text = text;
+                    x.Inline = false;
+                }));
+
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
-            } else
+            } 
+            else
             {
                 await Context.Channel.SendMessageAsync("Professor not found!");
             }

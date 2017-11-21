@@ -11,7 +11,8 @@ namespace ForkBot
     {
         public int Coins { get; set; }
         public ulong ID { get; set; }
-        
+        public List<string> Items = new List<string>();
+
         public User(ulong ID = 0, Boolean load = false, string data = "")
         {
             this.ID = ID;
@@ -23,6 +24,7 @@ namespace ForkBot
             string[] info = userLine.Split('|');
             ID = Convert.ToUInt32(info[1]);
             Coins = Convert.ToInt32(info[2]);
+            for (int i = 3; i < info.Count(); i++) Items.Add(info[i]);
             return this;
         }
 
