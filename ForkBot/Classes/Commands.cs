@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -337,7 +338,7 @@ namespace ForkBot
                 {
                     if (commentsNode.ChildNodes[i].Name=="tr" && commentsNode.ChildNodes[i].Attributes.Count() ==2)
                     {
-                        comments.Add(commentsNode.ChildNodes[i].ChildNodes[5].ChildNodes[3].InnerText.Replace("\r\n               ",""));
+                        comments.Add(commentsNode.ChildNodes[i].ChildNodes[5].ChildNodes[3].InnerText.Replace("\r\n               ","").Replace("/"," "));
                     }
                 }
                 List<string> words = new List<string>();
@@ -345,13 +346,17 @@ namespace ForkBot
 
                 foreach (string comment in comments)
                 {
-                    foreach (string word in comment.Split(' '))
+                    foreach (string dWord in comment.Split(' '))
                     {
-                        if (words.Contains(word)) counts[words.IndexOf(word)]++;
-                        else
+                        string word = dWord.ToLower().Replace(".", "").Replace(",","").Replace("'", "").Replace("(", "").Replace(")", "").Replace("!", "").Replace("?", "");
+                        if (word != "")
                         {
-                            words.Add(word);
-                            counts.Add(1);
+                            if (words.Contains(word)) counts[words.IndexOf(word)]++;
+                            else
+                            {
+                                words.Add(word);
+                                counts.Add(1);
+                            }
                         }
                     }
                 }
@@ -364,11 +369,13 @@ namespace ForkBot
                         if (counts[c] == i)
                         {
                             OrderedWords.Add(words[counts.IndexOf(counts[c])]);
+                            break;
                         }
                     }
                 }
-
-
+                string[] commonWords = { "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0],profName.ToLower().Split(' ')[1] };
+                foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
+                
                 JEmbed emb = new JEmbed();
 
                 emb.Title = profName;
@@ -403,6 +410,19 @@ namespace ForkBot
                     {
                         text += s;
                     }
+                    x.Text = text;
+                    x.Inline = false;
+                }));
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Common Comments:";
+                    string text = "";
+                    foreach (string s in OrderedWords)
+                    {
+                        text += s + ", ";
+                    }
+                    text = text.Substring(0, text.Count() - 2);
                     x.Text = text;
                     x.Inline = false;
                 }));
