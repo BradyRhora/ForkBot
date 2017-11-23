@@ -97,6 +97,7 @@
     <Compile Include="Classes\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
+    <Compile Include="Classes\InfoEmbed.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
     <Compile Include="Classes\Timers.cs" />
@@ -110,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="bin\Debug\Constants\bottoken" />
     <None Include="Classes\OxfordDictionariesAPI\Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Constants\bottoken" />
     <None Include="packages.config" />
@@ -117,6 +119,12 @@
     <None Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\Files\Images\ForkBot.png" />
+    <Content Include="bin\Debug\Files\Images\Hammer.png" />
+    <Content Include="bin\Debug\Files\Images\Kick.png" />
+    <Content Include="bin\Debug\Files\presents.txt" />
+    <Content Include="bin\Debug\Files\users.txt" />
+    <Content Include="bin\Debug\Files\wordlist.txt" />
     <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />

@@ -50,6 +50,13 @@ namespace ForkBot
                 ":black_large_square::gift::runner::convenience_store::black_large_square::black_large_square::black_large_square:",
                 ":gift::runner::black_large_square::convenience_store::black_large_square::black_large_square::black_large_square:"});
         }
+
+        public class Images
+        {
+            public const string Ban = "Files/Images/Hammer.png";
+            public const string Kick = "Files/Images/Kick.png";
+            public const string ForkBot = "Files/Images/ForkBot.png";
+        }
         
     }
 }

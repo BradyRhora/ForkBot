@@ -19,41 +19,55 @@ namespace ForkBot
     {
         Random rdm = new Random();
 
+        [Command("mhelp"), Summary("Displays Moderator commands and descriptions"), RequireUserPermission(GuildPermission.BanMembers)]
+        public async Task MHelp()
+        {
+            JEmbed emb = new JEmbed();
+            emb.Author.Name = "ForkBot Commands";
+            emb.ThumbnailUrl = Context.User.AvatarId;
+            if (Context.Guild != null) emb.ColorStripe = Functions.GetColor(Context.User);
+            else emb.ColorStripe = Constants.Colours.DEFAULT_COLOUR;
+            foreach (CommandInfo command in Bot.commands.Commands)
+            {
+                if (command.Summary != null && command.Summary.StartsWith("[MOD]"))
+                {
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        string header = command.Name;
+                        foreach (String alias in command.Aliases) if (alias != command.Name) header += " (;" + alias + ") ";
+                        foreach (ParameterInfo parameter in command.Parameters) header += " [" + parameter.Name + "]";
+                        x.Header = header;
+                        x.Text = command.Summary;
+                    }));
+                }
+            }
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
+        }
+
         [Command("help"), Summary("Displays commands and descriptions.")]
         public async Task Help()
         {
             JEmbed emb = new JEmbed();
             emb.Author.Name = "ForkBot Commands";
             emb.ThumbnailUrl = Context.User.AvatarId;
-
             if (Context.Guild != null) emb.ColorStripe = Functions.GetColor(Context.User);
             else emb.ColorStripe = Constants.Colours.DEFAULT_COLOUR;
-
             foreach (CommandInfo command in Bot.commands.Commands)
             {
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    string header = command.Name;
-                    foreach (String alias in command.Aliases)
+                if (command.Summary != null && !command.Summary.StartsWith("[MOD]")) {
+                    emb.Fields.Add(new JEmbedField(x =>
                     {
-                        if (alias != command.Name) header += " (;" + alias + ") ";
-                    }
-
-                    foreach (ParameterInfo parameter in command.Parameters)
-                    {
-                        header += " [" + parameter.Name + "]";
-                    }
-                    x.Header = header;
-                    x.Text = command.Summary;
-                }));
+                        string header = command.Name;
+                        foreach (String alias in command.Aliases) if (alias != command.Name) header += " (;" + alias + ") ";
+                        foreach (ParameterInfo parameter in command.Parameters) header += " [" + parameter.Name + "]";
+                        x.Header = header;
+                        x.Text = command.Summary;
+                    }));
+                }
             }
-
             await Context.Channel.SendMessageAsync("", embed: emb.Build());
-            //await Context.User.SendMessageAsync("", embed: emb.Build());
-            //await Context.Channel.SendMessageAsync("Commands have been sent to you privately!");
-
         }
-        
+
         /*[Command("play"), Summary("Play a song from Youtube.")]
         public async Task Play(string song)
         {
@@ -63,7 +77,7 @@ namespace ForkBot
             File.WriteAllBytes(@"Video\" + video.FullName, video.GetBytes());
             
         }*/
-        
+
         [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
         public async Task HangMan()
         {
@@ -297,12 +311,12 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync($"Could not find definition for: {word}.");
         }
 
-        [Command("professor"), Alias(new string[] {"prof","rmp"}), Summary("Check out a professors rating from RateMyProfessors.com!")]
+        [Command("professor"), Alias(new string[] { "prof", "rmp" }), Summary("Check out a professors rating from RateMyProfessors.com!")]
         public async Task Professor([Remainder]string name)
         {
             HtmlWeb web = new HtmlWeb();
-            
-            string link = "http://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ","%20");
+
+            string link = "http://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ", "%20");
             var page = web.Load(link);
             var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li[1]");
             if (node != null)
@@ -317,7 +331,7 @@ namespace ForkBot
                 var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
                 var imageNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[1]/img");
                 var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
-                string profName = titleText.Split(' ')[0] + " "+ titleText.Split(' ')[1];
+                string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
 
                 var tagsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
                 List<string> tags = new List<string>();
@@ -334,11 +348,11 @@ namespace ForkBot
                 var commentsNode = page.DocumentNode.SelectSingleNode("/ html[1] / body[1] / div[2] / div[4] / div[3] / div[1] / div[7] / table[1]");
 
                 List<string> comments = new List<string>();
-                for (int i = 3; i<commentsNode.ChildNodes.Count();i++)
+                for (int i = 3; i < commentsNode.ChildNodes.Count(); i++)
                 {
-                    if (commentsNode.ChildNodes[i].Name=="tr" && commentsNode.ChildNodes[i].Attributes.Count() ==2)
+                    if (commentsNode.ChildNodes[i].Name == "tr" && commentsNode.ChildNodes[i].Attributes.Count() == 2)
                     {
-                        comments.Add(commentsNode.ChildNodes[i].ChildNodes[5].ChildNodes[3].InnerText.Replace("\r\n               ","").Replace("/"," "));
+                        comments.Add(commentsNode.ChildNodes[i].ChildNodes[5].ChildNodes[3].InnerText.Replace("\r\n               ", "").Replace("/", " "));
                     }
                 }
                 List<string> words = new List<string>();
@@ -348,7 +362,7 @@ namespace ForkBot
                 {
                     foreach (string dWord in comment.Split(' '))
                     {
-                        string word = dWord.ToLower().Replace(".", "").Replace(",","").Replace("'", "").Replace("(", "").Replace(")", "").Replace("!", "").Replace("?", "");
+                        string word = dWord.ToLower().Replace(".", "").Replace(",", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace("!", "").Replace("?", "");
                         if (word != "")
                         {
                             if (words.Contains(word)) counts[words.IndexOf(word)]++;
@@ -373,9 +387,9 @@ namespace ForkBot
                         }
                     }
                 }
-                string[] commonWords = { "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0],profName.ToLower().Split(' ')[1] };
+                string[] commonWords = { "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
                 foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
-                
+
                 JEmbed emb = new JEmbed();
 
                 emb.Title = profName;
@@ -406,7 +420,7 @@ namespace ForkBot
                 {
                     x.Header = "Top Tags:";
                     string text = "";
-                    foreach(string s in tags)
+                    foreach (string s in tags)
                     {
                         text += s;
                     }
@@ -429,14 +443,54 @@ namespace ForkBot
 
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
-            } 
+            }
             else
             {
                 await Context.Channel.SendMessageAsync("Professor not found!");
             }
         }
 
-        [Command("move"), Summary("[ADMIN]Move people who are in the wrong channel to the correct channel.")]
+
+
+
+
+
+        #region Mod Commands
+
+        [Command("ban"), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
+        public async Task Ban(IGuildUser u, int minutes = 0, [Remainder]string reason = null)
+        {
+            string rText = ".";
+            if (reason != null) rText = $" for: \"{reason}\".";
+
+            string tText = "";
+
+            if (minutes != 0)
+            {
+                TimeSpan tSpan = new TimeSpan(0, minutes, 0);
+                var unbanTime = DateTime.Now + tSpan;
+                Bot.leaveBanned.Add(u);
+                Bot.unbanTime.Add(unbanTime);
+                tText = $"\nThey have been banned until {unbanTime}.";
+            }
+
+            InfoEmbed banEmb = new InfoEmbed("USER BAN", $"User: {u} has been banned{rText}.{tText}");
+            await Context.Guild.AddBanAsync(u, reason: reason);
+            await Context.Channel.SendMessageAsync("", embed: banEmb.Build());
+        }
+
+        [Command("kick"), Summary("[MOD] Kicks the specified user.")]
+        public async Task Kick(IUser u, [Remainder]string reason = null)
+        {
+            string rText = ".";
+            if (reason != null) rText = $" for: \"{reason}\".";
+            InfoEmbed kickEmb = new InfoEmbed("USER KICK", $"User: {u} has been kicked{rText}");
+            await (u as IGuildUser).KickAsync(reason);
+            await Context.Channel.SendMessageAsync("", embed: kickEmb.Build());
+        }
+
+
+        [Command("move"), Summary("[MOD] Move people who are in the wrong channel to the correct channel.")]
         public async Task Move(IMessageChannel chan, params IUser[] users)
         {
             string mentionedUsers = "";
@@ -460,5 +514,9 @@ namespace ForkBot
 
             Timers.mvTimer = new Timer(Timers.MoveTimer, null, 5000, Timeout.Infinite);
         }
+
+
+
+        #endregion
     }
 }
