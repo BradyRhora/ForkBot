@@ -99,6 +99,7 @@
     <Compile Include="Classes\Commands.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
+    <Compile Include="Classes\Timers.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />

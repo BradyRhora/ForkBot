@@ -420,7 +420,7 @@ namespace ForkBot
                     string text = "";
                     foreach (string s in OrderedWords)
                     {
-                        text += s + ", ";
+                        text += func.ToTitleCase(s) + ", ";
                     }
                     text = text.Substring(0, text.Count() - 2);
                     x.Text = text;
@@ -434,6 +434,31 @@ namespace ForkBot
             {
                 await Context.Channel.SendMessageAsync("Professor not found!");
             }
+        }
+
+        [Command("move"), Summary("[ADMIN]Move people who are in the wrong channel to the correct channel.")]
+        public async Task Move(IMessageChannel chan, params IUser[] users)
+        {
+            string mentionedUsers = "";
+            foreach(IUser u in users)
+            {
+                mentionedUsers += u.Mention + ", ";
+            }
+            await chan.SendMessageAsync(mentionedUsers + " please keep discussions in their correct channel.");
+            var channels = await Context.Guild.GetTextChannelsAsync();
+            OverwritePermissions op = new OverwritePermissions(readMessages: PermValue.Deny);
+            foreach (IGuildChannel c in channels)
+            {
+                foreach (IUser u in users)
+                {
+                    if (c != null && c.Id != chan.Id) await c.AddPermissionOverwriteAsync(u, op);
+                }
+            }
+            Timers.mvChannel = chan;
+            Timers.mvChannels = channels;
+            Timers.mvUsers = users;
+
+            Timers.mvTimer = new Timer(Timers.MoveTimer, null, 5000, Timeout.Infinite);
         }
     }
 }
