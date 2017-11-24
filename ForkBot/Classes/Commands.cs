@@ -471,7 +471,7 @@ namespace ForkBot
                 tText = $"\nThey have been banned until {unbanTime}.";
             }
 
-            InfoEmbed banEmb = new InfoEmbed("USER BAN", $"User: {u} has been banned{rText}.{tText}");
+            InfoEmbed banEmb = new InfoEmbed("USER BAN", $"User: {u} has been banned{rText}.{tText}", Constants.Images.Ban);
             await Context.Guild.AddBanAsync(u, reason: reason);
             await Context.Channel.SendMessageAsync("", embed: banEmb.Build());
         }
@@ -481,7 +481,7 @@ namespace ForkBot
         {
             string rText = ".";
             if (reason != null) rText = $" for: \"{reason}\".";
-            InfoEmbed kickEmb = new InfoEmbed("USER KICK", $"User: {u} has been kicked{rText}");
+            InfoEmbed kickEmb = new InfoEmbed("USER KICK", $"User: {u} has been kicked{rText}", Constants.Images.Kick);
             await (u as IGuildUser).KickAsync(reason);
             await Context.Channel.SendMessageAsync("", embed: kickEmb.Build());
         }
