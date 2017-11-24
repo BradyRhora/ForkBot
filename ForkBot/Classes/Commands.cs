@@ -449,19 +449,12 @@ namespace ForkBot
                 await Context.Channel.SendMessageAsync("Professor not found!");
             }
         }
-
-        [Command("Brady"), Summary("Sets a random users nickname to Brady")]
-        public async Task Brady()
-        {
-            var users = Context.Guild.GetUsersAsync();
-            await users.Result.ElementAt(rdm.Next(users.Result.Count())).ModifyAsync(x => x.Nickname = "Brady");
-        }
-        
+            
 
 
         #region Mod Commands
 
-        [Command("ban"), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
+        [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
         public async Task Ban(IGuildUser u, int minutes = 0, [Remainder]string reason = null)
         {
             string rText = ".";
@@ -483,7 +476,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync("", embed: banEmb.Build());
         }
 
-        [Command("kick"), Summary("[MOD] Kicks the specified user.")]
+        [Command("kick"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Kicks the specified user.")]
         public async Task Kick(IUser u, [Remainder]string reason = null)
         {
             string rText = ".";
@@ -493,8 +486,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync("", embed: kickEmb.Build());
         }
 
-
-        [Command("move"), Summary("[MOD] Move people who are in the wrong channel to the correct channel.")]
+        [Command("move"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Move people who are in the wrong channel to the correct channel.")]
         public async Task Move(IMessageChannel chan, params IUser[] users)
         {
             string mentionedUsers = "";
