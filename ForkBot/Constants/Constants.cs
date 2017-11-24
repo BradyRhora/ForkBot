@@ -53,9 +53,9 @@ namespace ForkBot
 
         public class Images
         {
-            public const string Ban = "Files/Images/Hammer.png";
-            public const string Kick = "Files/Images/Kick.png";
-            public const string ForkBot = "Files/Images/ForkBot.png";
+            public const string Ban = "https://i.imgur.com/S8nPf5Y.png";
+            public const string Kick = "https://i.imgur.com/Pid9NH3.png";
+            public const string ForkBot = "https://i.imgur.com/xz1OuJr.png";
         }
         
     }

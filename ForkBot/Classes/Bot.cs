@@ -163,7 +163,8 @@ namespace ForkBot
                 if (!result.IsSuccess)
                 {
                     Console.WriteLine(result.ErrorReason);
-                    await message.Channel.SendMessageAsync(result.ErrorReason);
+                    var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
+                    await message.Channel.SendMessageAsync("",embed:emb);
                 }
             }
             else return;
