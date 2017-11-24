@@ -450,9 +450,13 @@ namespace ForkBot
             }
         }
 
-
-
-
+        [Command("Brady"), Summary("Sets a random users nickname to Brady")]
+        public async Task Brady()
+        {
+            var users = Context.Guild.GetUsersAsync();
+            await users.Result.ElementAt(rdm.Next(users.Result.Count())).ModifyAsync(x => x.Nickname = "Brady");
+        }
+        
 
 
         #region Mod Commands
