@@ -23,8 +23,8 @@ namespace ForkBot
         public static CommandService commands;
         public static List<User> users = new List<User>();
 
-        List<IUser> leaveBanned = new List<IUser>();
-        List<DateTime> unbanTime = new List<DateTime>();
+        public static List<IGuildUser> leaveBanned = new List<IGuildUser>();
+        public static List<DateTime> unbanTime = new List<DateTime>();
 
         #region HangMan vars
         public static string hmWord;
@@ -34,12 +34,15 @@ namespace ForkBot
         public static int hmErrors = 0;
         #endregion
 
+        #region Present vars
         public static bool presentWaiting = false;
         public static int presentNum = 0;
         public static bool replacing = false;
         IUser presentReplacer = null;
         string rPresent;
         public static bool replaceable = true;
+        public static bool timerComplete = false;
+        #endregion
 
         public async Task Run()
         {
@@ -57,7 +60,7 @@ namespace ForkBot
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                Timer banCheck = new Timer(new TimerCallback(TimerCall),null,0,60000);
+                Timer banCheck = new Timer(new TimerCallback(TimerCall),null,0,1000);
                 Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000*60*60);
                 await Task.Delay(-1);
             }
@@ -83,17 +86,20 @@ namespace ForkBot
             }
         }
 
-        async void TimerCall(object state) //code that is run every minute
+        async void TimerCall(object state) //code that is run every second
         {
             for(int i = 0; i < leaveBanned.Count(); i++)
             {
                 if (DateTime.Now > unbanTime[i])
                 {
-                    var g = client.GetGuild(Constants.Guilds.YORK_UNIVERSITY);
                     var user = leaveBanned[i];
+                    var g = user.Guild;
                     await g.RemoveBanAsync(user);
                     leaveBanned.Remove(user);
                     unbanTime.Remove(unbanTime[i]);
+
+                    InfoEmbed iEmb = new InfoEmbed("USER UNBAN", $"User {user} has been unbanned.");
+                    await (await g.GetDefaultChannelAsync()).SendMessageAsync("", embed: iEmb.Build());
                 }
             }
         }
@@ -140,13 +146,13 @@ namespace ForkBot
             else if (replaceable && replacing && message.Content == Convert.ToString(presentNum) && message.Author == presentReplacer)
             {
                 await message.Channel.SendMessageAsync("Okay! I'll be right back.");
-                Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{rPresent}:");
+                await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{rPresent}:");
                 await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {presentNum} to open it!");
                 presentWaiting = true;
                 replacing = false;
                 replaceable = false;
             }
-
+            
 
 
 
@@ -157,7 +163,8 @@ namespace ForkBot
                 if (!result.IsSuccess)
                 {
                     Console.WriteLine(result.ErrorReason);
-                    await message.Channel.SendMessageAsync(result.ErrorReason);
+                    var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
+                    await message.Channel.SendMessageAsync("",embed:emb);
                 }
             }
             else return;
@@ -172,7 +179,7 @@ namespace ForkBot
             Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
             leaveBanned.Add(user);
             unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
-            await user.Guild.AddBanAsync(user, reason:"Tempban for leaving server. Done automatically by ForkBot. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
+            await user.Guild.AddBanAsync(user, reason:"Tempban for leaving server. Done automatically by ForkBot to prevent spam leave-joining. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
@@ -185,12 +192,10 @@ namespace ForkBot
             var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
             await chan.SendMessageAsync("", embed: emb.Build());
         }
-        public async Task HandleReady()    
+        public async Task HandleReady()
         {
             Functions.LoadUsers();
         }
-
-        
     }
 }
 
