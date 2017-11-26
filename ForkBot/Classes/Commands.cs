@@ -454,5 +454,23 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync("Tag already exists!");
         }
+
+        [Command("remind")]
+        public async Task Remind(string reminder)
+        {
+            if (reminder != "")
+            {
+                File.AppendAllText("Files/reminders.txt",reminder+"\n");
+                await Context.Channel.SendMessageAsync("Added");
+            }
+            else
+            {
+                string reminders = File.ReadAllText("Files/reminders.txt");
+                await Context.Channel.SendMessageAsync(reminders);
+            }
+        }
+
+        [Command("remind")]
+        public async Task Remind() { await Remind(""); }
     }
 }
