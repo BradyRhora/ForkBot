@@ -233,6 +233,17 @@ namespace ForkBot
                 x.Inline = true;
             }));
 
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Inventory:";
+                string text = "";
+                foreach (string item in u.Items)
+                {
+                    text += item + ", ";
+                }
+                x.Text = Convert.ToString(text);
+            }));
+
             await Context.Channel.SendMessageAsync("", embed: emb.Build());
         }
 
@@ -387,7 +398,7 @@ namespace ForkBot
                         }
                     }
                 }
-                string[] commonWords = { "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
+                string[] commonWords = {"youll","if","an","not","it","as","is","in","for","but","so","on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
                 foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
 
                 JEmbed emb = new JEmbed();
@@ -449,8 +460,45 @@ namespace ForkBot
                 await Context.Channel.SendMessageAsync("Professor not found!");
             }
         }
-            
 
+        #region Item Commands
+        [Command("roll")]
+        public async Task Roll(int max)
+        {
+            if (Functions.GetUser(Context.User).Items.Contains("game_die"))
+            {
+                await Context.Channel.SendMessageAsync(":game_die: | " + Convert.ToString(rdm.Next(max) + 1));
+            }
+        }
+
+        [Command("roll")]
+        public async Task Roll() { await Roll(6); }
+
+        [Command("8ball")]
+        public async Task EightBall([Remainder] string question)
+        {
+            if (Functions.GetUser(Context.User).Items.Contains("8ball"))
+            {
+                string[] answers = { "Yes", "No", "Ask again later", "Cannot predict now", "Unlikely", "Chances good", "Likely", "Lol no", "If you believe" };
+                await Context.Channel.SendMessageAsync(":8ball: | " + answers[rdm.Next(answers.Count())]);
+            }
+        }
+
+        [Command("sell"), Summary("Sell items from your inventory.")]
+        public async Task Sell(string item)
+        {
+            var u = Functions.GetUser(Context.User);
+            if (u.Items.Contains(item))
+            {
+                u.Items.Remove(item);
+                u.Coins += 5;
+                Functions.SaveUsers();
+                await Context.Channel.SendMessageAsync($"You successfully sold your {item} for 5 coins!");
+            }
+            else await Context.Channel.SendMessageAsync($"You do not have an item called {item}!");
+        }
+
+        #endregion
 
         #region Mod Commands
 

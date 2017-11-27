@@ -35,6 +35,7 @@ namespace ForkBot
         #endregion
 
         #region Present vars
+        string present;
         public static bool presentWaiting = false;
         public static int presentNum = 0;
         public static bool replacing = false;
@@ -60,6 +61,7 @@ namespace ForkBot
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
+                Functions.LoadUsers();
                 Timer banCheck = new Timer(new TimerCallback(TimerCall),null,0,1000);
                 Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000*60*60);
                 await Task.Delay(-1);
@@ -125,17 +127,37 @@ namespace ForkBot
             if (message == null) return;
             int argPos = 0;
 
+            var user = Functions.GetUser(message.Author);
+
             if (presentWaiting && message.Content == Convert.ToString(presentNum))
             {
                 presentWaiting = false;
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
                 var presents = File.ReadAllLines("Files/presents.txt");
                 var presentData = presents[rdm.Next(presents.Count())].Split('|');
-                var present = presentData[0];
+                present = presentData[0];
                 rPresent = present;
                 var presentName = present.Replace('_', ' ');
                 var pMessage = presentData[1];
                 await message.Channel.SendMessageAsync($"A {func.ToTitleCase(presentName)}! :{present}: {pMessage}");
+                if (present == "moneybag") { user.Coins += 100; replaceable = false; }
+                else if (present == "santa")
+                {
+                    await message.Channel.SendMessageAsync("You got...");
+                    string sMessage = "";
+                    for(int i = 0; i < 5; i++)
+                    {
+                        string sPresent = presents[rdm.Next(presents.Count())].Split('|')[0];
+                        sMessage += ":" + sPresent + ": ";
+                        if (present == "moneybag") user.Coins += 100;
+                        else user.Items.Add(sPresent);
+                        await message.Channel.SendMessageAsync(sMessage);
+                    }
+                    
+                    replaceable = false;
+                }
+                else user.Items.Add(present);
+                
                 if (replaceable)
                 {
                     await message.Channel.SendMessageAsync($"Don't like this gift? Press {presentNum} again to replace it once!");
@@ -145,6 +167,7 @@ namespace ForkBot
             }
             else if (replaceable && replacing && message.Content == Convert.ToString(presentNum) && message.Author == presentReplacer)
             {
+                user.Items.Remove(present);
                 await message.Channel.SendMessageAsync("Okay! I'll be right back.");
                 await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{rPresent}:");
                 await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {presentNum} to open it!");
@@ -153,9 +176,7 @@ namespace ForkBot
                 replaceable = false;
             }
             
-
-
-
+            
             if (message.HasCharPrefix(';', ref argPos))
             {
                 var context = new CommandContext(client, message);

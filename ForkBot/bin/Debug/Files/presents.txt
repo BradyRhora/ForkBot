@@ -28,7 +28,7 @@ bike|Ring ring! Who needs the TTC?
 watch|And an expensive one too!
 iphone|The latest in mobile technology!
 joystick|For the classics!
-moneybag|The best but lamest gift!
+moneybag|The best but lamest gift! +100 coins!
 knife|Careful, it's sharp!
 bomb|How did that get in there.
 gun|Hahah hey whoa... watch it buddy..

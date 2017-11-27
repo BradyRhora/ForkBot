@@ -22,9 +22,9 @@ namespace ForkBot
         User Load(string userLine)
         {
             string[] info = userLine.Split('|');
-            ID = Convert.ToUInt32(info[1]);
-            Coins = Convert.ToInt32(info[2]);
-            for (int i = 3; i < info.Count(); i++) Items.Add(info[i]);
+            ID = Convert.ToUInt64(info[0]);
+            Coins = Convert.ToInt32(info[1]);
+            for (int i = 2; i < info.Count(); i++) Items.Add(info[i]);
             return this;
         }
 
