@@ -97,8 +97,10 @@
     <Compile Include="Classes\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
+    <Compile Include="Classes\InfoEmbed.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
+    <Compile Include="Classes\Timers.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />

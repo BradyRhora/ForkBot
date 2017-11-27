@@ -510,12 +510,9 @@ namespace ForkBot
 
             Timers.mvTimer = new Timer(Timers.MoveTimer, null, 5000, Timeout.Infinite);
         }
-
-
-
+        
         #endregion
-    }
-        }
+
 
         //for viewing a tag
         [Command("tag"), Summary("Make or view a tag!")]
