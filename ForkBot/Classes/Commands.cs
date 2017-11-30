@@ -567,6 +567,7 @@ namespace ForkBot
             await Context.Channel.DeleteMessagesAsync(messages);
 
             InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted.");
+            await Context.Channel.SendMessageAsync("", embed: ie.Build());
         }
         #endregion
 
@@ -614,7 +615,7 @@ namespace ForkBot
         }
 
         [Command("remind")]
-        public async Task Remind(string reminder)
+        public async Task Remind([Remainder] string reminder)
         {
             if (reminder != "")
             {
