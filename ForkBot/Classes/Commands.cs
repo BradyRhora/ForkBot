@@ -81,14 +81,14 @@ namespace ForkBot
         [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
         public async Task HangMan()
         {
-            if (!Bot.hangman)
+            if (!Var.hangman)
             {
                 var wordList = File.ReadAllLines("Files/wordlist.txt");
-                Bot.hmWord = wordList[(rdm.Next(wordList.Count()))].ToLower();
-                Bot.hangman = true;
-                Bot.hmCount = 0;
-                Bot.hmErrors = 0;
-                Bot.guessedChars.Clear();
+                Var.hmWord = wordList[(rdm.Next(wordList.Count()))].ToLower();
+                Var.hangman = true;
+                Var.hmCount = 0;
+                Var.hmErrors = 0;
+                Var.guessedChars.Clear();
                 await HangMan("");
             }
             else
@@ -100,14 +100,14 @@ namespace ForkBot
         [Command("hangman"), Alias(new string[] { "hm" })]
         public async Task HangMan(string guess)
         {
-            if (Bot.hangman)
+            if (Var.hangman)
             {
                 guess = guess.ToLower();
-                if (guess != "" && Bot.guessedChars.Contains(guess[0]) && guess.Count() == 1) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
+                if (guess != "" && Var.guessedChars.Contains(guess[0]) && guess.Count() == 1) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
                 else
                 {
-                    if (guess.Count() == 1 && !Bot.guessedChars.Contains(guess[0])) Bot.guessedChars.Add(guess[0]);
-                    if (guess != "" && ((!Bot.hmWord.Contains(guess[0]) && guess.Count() == 1) || (Bot.hmWord != guess && guess.Count() > 1))) Bot.hmErrors++;
+                    if (guess.Count() == 1 && !Var.guessedChars.Contains(guess[0])) Var.guessedChars.Add(guess[0]);
+                    if (guess != "" && ((!Var.hmWord.Contains(guess[0]) && guess.Count() == 1) || (Var.hmWord != guess && guess.Count() > 1))) Var.hmErrors++;
 
 
                     string[] hang = {
@@ -120,13 +120,13 @@ namespace ForkBot
             "     |          " ,    //6
             "_____|_____     " };   //7
 
-                    for (int i = 0; i < Bot.hmWord.Count(); i++)
+                    for (int i = 0; i < Var.hmWord.Count(); i++)
                     {
-                        if (Bot.guessedChars.Contains(Bot.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Bot.hmWord[i])) + " ";
+                        if (Var.guessedChars.Contains(Var.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Var.hmWord[i])) + " ";
                         else hang[6] += "_ ";
                     }
 
-                    for (int i = 0; i < Bot.hmErrors; i++)
+                    for (int i = 0; i < Var.hmErrors; i++)
                     {
                         if (i == 0)
                         {
@@ -166,29 +166,29 @@ namespace ForkBot
                         }
                     }
 
-                    if (!hang[6].Contains("_") || Bot.hmWord == guess) //win
+                    if (!hang[6].Contains("_") || Var.hmWord == guess) //win
                     {
                         await Context.Channel.SendMessageAsync("You did it!");
-                        Bot.hangman = false;
+                        Var.hangman = false;
 
                         var u = Functions.GetUser(Context.User);
                         u.Coins += 10;
                         Functions.SaveUsers();
                     }
 
-                    if (Bot.hmErrors == 6)
+                    if (Var.hmErrors == 6)
                     {
-                        await Context.Channel.SendMessageAsync("You lose! The word was: " + Bot.hmWord);
-                        Bot.hangman = false;
+                        await Context.Channel.SendMessageAsync("You lose! The word was: " + Var.hmWord);
+                        Var.hangman = false;
                     }
 
                     string msg = "```\n";
                     foreach (String s in hang) msg += s + "\n";
                     msg += "```";
-                    if (Bot.hangman)
+                    if (Var.hangman)
                     {
                         msg += "Guessed letters: ";
-                        foreach (char c in Bot.guessedChars) msg += char.ToUpper(c) + " ";
+                        foreach (char c in Var.guessedChars) msg += char.ToUpper(c) + " ";
                         msg += "\nUse `;hangman [guess]` to guess a character or the entire word.";
 
                     }
@@ -265,13 +265,13 @@ namespace ForkBot
         [Command("present"), Summary("Get a cool gift!")]
         public async Task Present()
         {
-            if (!Bot.presentWaiting)
+            if (!Var.presentWaiting)
             {
-                Bot.presentNum = rdm.Next(10);
-                await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Bot.presentNum} to open it!");
-                Bot.presentWaiting = true;
-                Bot.replacing = false;
-                Bot.replaceable = true;
+                Var.presentNum = rdm.Next(10);
+                await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
+                Var.presentWaiting = true;
+                Var.replacing = false;
+                Var.replaceable = true;
             }
         }
 
@@ -303,19 +303,19 @@ namespace ForkBot
             {
                 var senses = result.Results[0].LexicalEntries[0].Entries[0].Senses[0];
 
-            JEmbed emb = new JEmbed();
-            emb.Title = func.ToTitleCase(word);
-            emb.Description = Char.ToUpper(senses.Definitions[0][0]) + senses.Definitions[0].Substring(1) + ".";
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Examples:";
-                string text = "";
-                foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
+                JEmbed emb = new JEmbed();
+                emb.Title = Func.ToTitleCase(word);
+                emb.Description = Char.ToUpper(senses.Definitions[0][0]) + senses.Definitions[0].Substring(1) + ".";
+                emb.Fields.Add(new JEmbedField(x =>
                 {
-                    text += $"\"{Char.ToUpper(eg.Text[0]) + eg.Text.Substring(1)}.\"\n";
-                }
-                x.Text = text;
-            }));
+                    x.Header = "Examples:";
+                    string text = "";
+                    foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
+                    {
+                        text += $"\"{Char.ToUpper(eg.Text[0]) + eg.Text.Substring(1)}.\"\n";
+                    }
+                    x.Text = text;
+                }));
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
@@ -398,7 +398,7 @@ namespace ForkBot
                         }
                     }
                 }
-                string[] commonWords = {"youll","if","an","not","it","as","is","in","for","but","so","on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
+                string[] commonWords = { "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
                 foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
 
                 JEmbed emb = new JEmbed();
@@ -445,7 +445,7 @@ namespace ForkBot
                     string text = "";
                     foreach (string s in OrderedWords)
                     {
-                        text += func.ToTitleCase(s) + ", ";
+                        text += Func.ToTitleCase(s) + ", ";
                     }
                     text = text.Substring(0, text.Count() - 2);
                     x.Text = text;
@@ -491,14 +491,138 @@ namespace ForkBot
             if (u.Items.Contains(item))
             {
                 u.Items.Remove(item);
-                u.Coins += 5;
+                var items = Functions.GetItemList();
+                int price = 0;
+                foreach (string line in items)
+                {
+                    if (line.Split('|')[0] == item)
+                    {
+                        if (line.Split('|')[2] != "?") price = Convert.ToInt32(line.Split('|')[2]);
+                        else
+                        {
+                            await Context.Channel.SendMessageAsync("Wait... Something is happening....");
+
+                        }
+                    }
+                }
+                u.Coins += price;
                 Functions.SaveUsers();
                 await Context.Channel.SendMessageAsync($"You successfully sold your {item} for 5 coins!");
             }
             else await Context.Channel.SendMessageAsync($"You do not have an item called {item}!");
         }
 
+        //Test me!
+        [Command("trade"), Summary("Initiate a trade with another user!")]
+        public async Task Trade(IUser user)
+        {
+            if (Functions.GetTrade(Context.User) == null && Functions.GetTrade(user) == null)
+            {
+                Var.trades.Add(new ItemTrade(Context.User, user));
+                await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE INVITE",
+                    user.Mention + "! " + Context.User.Username + " has invited you to trade."
+                    + " Type ';trade accept' to accept or ';trade deny' to deny!").Build());
+            }
+            else await Context.Channel.SendMessageAsync("Either you or the person you are attempting to trade with is already in a trade!"
+                                                    +" If you accidentally left a trade going, use `;trade cancel` to cancel the trade.");
+        }
+
+        //Test me!
+        [Command("trade")]
+        public async Task Trade(string command, string param = "")
+        {
+            bool showMenu = false;
+            var trade = Functions.GetTrade(Context.User);
+            if (trade != null)
+            {
+                switch (command)
+                {
+                    case "accept":
+                        if (!trade.Accepted) trade.Accept();
+                        showMenu = true;
+                        break;
+                    case "deny":
+                        if (!trade.Accepted)
+                        {
+                            await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE DENIED", $"{trade.Starter().Mention}, {Context.User.Username} has denied the trade request.").Build());
+                            Var.trades.Remove(trade);
+                        }
+                        break;
+                    case "add":
+                        if (param != "")
+                        {
+                            trade.AddItem(Context.User, param);
+                            showMenu = true;
+                        }
+                        else await Context.Channel.SendMessageAsync("Please specify the item to add!");
+                        break;
+                    case "finish":
+                        trade.Confirm(Context.User);
+                        break;
+                    case "cancel":
+                        await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE CANCELLED", $"{Context.User.Username} has cancelled the trade. All items have been returned.").Build());
+                        break;
+                }
+            }
+            else await Context.Channel.SendMessageAsync("You are not currently part of a trade.");
+
+            if (showMenu) await Context.Channel.SendMessageAsync("", embed: trade.CreateMenu());
+
+            if (trade.IsCompleted())
+            {
+                await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE SUCCESSFUL", "The trade has been completed successfully.").Build());
+                Var.trades.Remove(trade);
+            }
+        }
         #endregion
+
+        //for viewing a tag
+        [Command("tag"), Summary("Make or view a tag!")]
+        public async Task Tag(string tag)
+        {
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            string[] tags = File.ReadAllLines("Files/tags.txt");
+            bool sent = false;
+
+            foreach (string line in tags)
+            {
+                if (line.Split('|')[0] == tag)
+                {
+                    sent = true;
+                    await Context.Channel.SendMessageAsync(line.Split('|')[1]);
+                    break;
+                }
+            }
+
+            if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
+
+        }
+
+        //for creating the tag
+        [Command("tag")]
+        public async Task Tag(string tag, [Remainder]string content)
+        {
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            bool exists = false;
+            string[] tags = File.ReadAllLines("Files/tags.txt");
+            foreach (string line in tags)
+            {
+                if (line.Split('|')[0] == tag) { exists = true; break; }
+            }
+
+            if (!exists)
+            {
+                File.AppendAllText("Files/tags.txt", tag + "|" + content + "\n");
+                await Context.Channel.SendMessageAsync("Tag created!");
+            }
+            else await Context.Channel.SendMessageAsync("Tag already exists!");
+        }
+
+
+
+
+
+
 
         #region Mod Commands
 
@@ -514,8 +638,8 @@ namespace ForkBot
             {
                 TimeSpan tSpan = new TimeSpan(0, minutes, 0);
                 var unbanTime = DateTime.Now + tSpan;
-                Bot.leaveBanned.Add(u);
-                Bot.unbanTime.Add(unbanTime);
+                Var.leaveBanned.Add(u);
+                Var.unbanTime.Add(unbanTime);
                 tText = $"\nThey have been banned until {unbanTime}.";
             }
 
@@ -572,47 +696,11 @@ namespace ForkBot
         #endregion
 
 
-        //for viewing a tag
-        [Command("tag"), Summary("Make or view a tag!")]
-        public async Task Tag(string tag)
-        {
-            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
-            string[] tags = File.ReadAllLines("Files/tags.txt");
-            bool sent = false;
 
-            foreach (string line in tags)
-            {
-                if (line.Split('|')[0] == tag)
-                {
-                    sent = true;
-                    await Context.Channel.SendMessageAsync(line.Split('|')[1]);
-                    break;
-                }
-            }
 
-            if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
 
-        }
 
-        //for creating the tag
-        [Command("tag")]
-        public async Task Tag(string tag, [Remainder]string content)
-        {
-            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
-            bool exists = false;
-            string[] tags = File.ReadAllLines("Files/tags.txt");
-            foreach (string line in tags)
-            {
-                if (line.Split('|')[0] == tag) { exists = true; break; }
-            }
-
-            if (!exists)
-            {
-                File.AppendAllText("Files/tags.txt", tag + "|" + content + "\n");
-                await Context.Channel.SendMessageAsync("Tag created!");
-            }
-            else await Context.Channel.SendMessageAsync("Tag already exists!");
-        }
+        #region Brady Commands
 
         [Command("remind")]
         public async Task Remind([Remainder] string reminder)
@@ -631,8 +719,6 @@ namespace ForkBot
 
         [Command("remind")]
         public async Task Remind() { await Remind(""); }
-
-        #region Brady Commands
 
         [Command("givecoins"), Summary("Give the inputted user the specified amount of coins.")]
         public async Task Give(IUser user, int amount)

@@ -23,28 +23,6 @@ namespace ForkBot
         public static CommandService commands;
         public static List<User> users = new List<User>();
 
-        public static List<IGuildUser> leaveBanned = new List<IGuildUser>();
-        public static List<DateTime> unbanTime = new List<DateTime>();
-
-        #region HangMan vars
-        public static string hmWord;
-        public static bool hangman = false;
-        public static int hmCount = 0;
-        public static List<char> guessedChars = new List<char>();
-        public static int hmErrors = 0;
-        #endregion
-
-        #region Present vars
-        string present;
-        public static bool presentWaiting = false;
-        public static int presentNum = 0;
-        public static bool replacing = false;
-        IUser presentReplacer = null;
-        string rPresent;
-        public static bool replaceable = true;
-        public static bool timerComplete = false;
-        #endregion
-
         public async Task Run()
         {
             Start:
@@ -90,15 +68,15 @@ namespace ForkBot
 
         async void TimerCall(object state) //code that is run every second
         {
-            for(int i = 0; i < leaveBanned.Count(); i++)
+            for(int i = 0; i < Var.leaveBanned.Count(); i++)
             {
-                if (DateTime.Now > unbanTime[i])
+                if (DateTime.Now > Var.unbanTime[i])
                 {
-                    var user = leaveBanned[i];
+                    var user = Var.leaveBanned[i];
                     var g = user.Guild;
                     await g.RemoveBanAsync(user);
-                    leaveBanned.Remove(user);
-                    unbanTime.Remove(unbanTime[i]);
+                    Var.leaveBanned.Remove(user);
+                    Var.unbanTime.Remove(Var.unbanTime[i]);
 
                     InfoEmbed iEmb = new InfoEmbed("USER UNBAN", $"User {user} has been unbanned.");
                     await (await g.GetDefaultChannelAsync()).SendMessageAsync("", embed: iEmb.Build());
@@ -129,19 +107,18 @@ namespace ForkBot
 
             var user = Functions.GetUser(message.Author);
 
-            if (presentWaiting && message.Content == Convert.ToString(presentNum))
+            if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {
-                presentWaiting = false;
+                Var.presentWaiting = false;
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
-                var presents = File.ReadAllLines("Files/presents.txt");
+                var presents = Functions.GetItemList();
                 var presentData = presents[rdm.Next(presents.Count())].Split('|');
-                present = presentData[0];
-                rPresent = present;
-                var presentName = present.Replace('_', ' ');
+                Var.present = presentData[0];
+                Var.rPresent = Var.present;
+                var presentName = Var.present.Replace('_', ' ');
                 var pMessage = presentData[1];
-                await message.Channel.SendMessageAsync($"A {func.ToTitleCase(presentName)}! :{present}: {pMessage}");
-                if (present == "moneybag") { user.Coins += 100; replaceable = false; }
-                else if (present == "santa")
+                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName)}! :{Var.present}: {pMessage}");
+                if (Var.present == "santa")
                 {
                     await message.Channel.SendMessageAsync("You got...");
                     string sMessage = "";
@@ -149,31 +126,30 @@ namespace ForkBot
                     {
                         string sPresent = presents[rdm.Next(presents.Count())].Split('|')[0];
                         sMessage += ":" + sPresent + ": ";
-                        if (present == "moneybag") user.Coins += 100;
-                        else user.Items.Add(sPresent);
-                        await message.Channel.SendMessageAsync(sMessage);
+                        user.Items.Add(sPresent);
                     }
-                    
-                    replaceable = false;
+                    await message.Channel.SendMessageAsync(sMessage);
+
+                    Var.replaceable = false;
                 }
-                else user.Items.Add(present);
+                else user.Items.Add(Var.present);
                 
-                if (replaceable)
+                if (Var.replaceable)
                 {
-                    await message.Channel.SendMessageAsync($"Don't like this gift? Press {presentNum} again to replace it once!");
-                    replacing = true;
-                    presentReplacer = message.Author;
+                    await message.Channel.SendMessageAsync($"Don't like this gift? Press {Var.presentNum} again to replace it once!");
+                    Var.replacing = true;
+                    Var.presentReplacer = message.Author;
                 }
             }
-            else if (replaceable && replacing && message.Content == Convert.ToString(presentNum) && message.Author == presentReplacer)
+            else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
             {
-                user.Items.Remove(present);
+                user.Items.Remove(Var.present);
                 await message.Channel.SendMessageAsync("Okay! I'll be right back.");
-                await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{rPresent}:");
-                await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {presentNum} to open it!");
-                presentWaiting = true;
-                replacing = false;
-                replaceable = false;
+                await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{Var.rPresent}:");
+                await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
+                Var.presentWaiting = true;
+                Var.replacing = false;
+                Var.replaceable = false;
             }
             
             
@@ -198,8 +174,8 @@ namespace ForkBot
         {
             await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
             Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
-            leaveBanned.Add(user);
-            unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
+            Var.leaveBanned.Add(user);
+            Var.unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
             await user.Guild.AddBanAsync(user, reason:"Tempban for leaving server. Done automatically by ForkBot to prevent spam leave-joining. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)

@@ -94,17 +94,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\EmoteAnimation.cs" />
+    <Compile Include="Classes\Objects\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
-    <Compile Include="Classes\InfoEmbed.cs" />
+    <Compile Include="Classes\Objects\InfoEmbed.cs" />
+    <Compile Include="Classes\Objects\ItemTrade.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
     <Compile Include="Classes\Timers.cs" />
-    <Compile Include="Classes\User.cs" />
+    <Compile Include="Classes\Objects\User.cs" />
+    <Compile Include="Classes\Var.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />
-    <Compile Include="Classes\JEmbed.cs" />
+    <Compile Include="Classes\Objects\JEmbed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteAsync.cs" />

@@ -1,47 +1,47 @@
-poop|Oh, that's just disgusting.
-shirt|Now you can look fashionable!
-dress|Oh! You'll look so pretty in this!
-high_heel|It's what the men like!
-athletic_shoe|Now you can go for a run!
-dark_sunglasses|Don't look directly into the sun!
-eyeglasses|Do you need these? No? Oh well!
-umbrella2|For those rainy days!
-briefcase|Now you can, uh.. hold stuff.
-purse|I know you like it.
-baby|Oh, I guess you're a parent now.
+poop|Oh, that's just disgusting.|1
+shirt|Now you can look fashionable!|5
+dress|Oh! You'll look so pretty in this!|10
+high_heel|It's what the men like!|10
+athletic_shoe|Now you can go for a run!|8
+dark_sunglasses|Don't look directly into the sun!|5
+eyeglasses|Do you need these? No? Oh well!|6
+umbrella2|For those rainy days!|6
+briefcase|Now you can, uh.. hold stuff.|7
+purse|I know you like it.|8
+baby|Oh, I guess you're a parent now.|50
 santa|Merry Christmas! You get five more gifts!
-cat|Meow
-dog|Bork
-eggplant|Oh my.. So.... *Phallic...*
-apple|An apple a day...
-egg|EGG.
-ramen|Aka gods gift to humanity.
-beer|Drink responsibly!
-spoon|Well, it's not a fork but it'll do.
-8ball|Ask it a question with `;8ball`!
-bow_and_arrow|Watch where you're shooting!
-ping_pong|Smack some balls around!
-microphone|Does this mean we can have karaoke night now?
-video_game|The cause of all evil in the world!
-game_die|Roll it with `;roll`!
-bike|Ring ring! Who needs the TTC?
-watch|And an expensive one too!
-iphone|The latest in mobile technology!
-joystick|For the classics!
-moneybag|The best but lamest gift! +100 coins!
-knife|Careful, it's sharp!
-bomb|How did that get in there.
-gun|Hahah hey whoa... watch it buddy..
-telescope|Now you can see the universe! Or into your neighbours window.
+cat|Meow|20
+dog|Bork|20
+eggplant|Oh my.. So.... *Phallic...*|1
+apple|An apple a day...|3
+egg|EGG.|3
+ramen|Aka gods gift to humanity.|?
+beer|Drink responsibly!|5
+spoon|Well, it's not a fork but it'll do.|-1
+8ball|Ask it a question with `;8ball`!|50
+bow_and_arrow|Watch where you're shooting!|10
+ping_pong|Smack some balls around!|8
+microphone|Does this mean we can have karaoke night now?|10
+video_game|The cause of all evil in the world!|15
+game_die|Roll it with `;roll`!|50
+bike|Ring ring! Who needs the TTC?|15
+watch|And an expensive one too!|35
+iphone|The latest in mobile technology!|35
+joystick|For the classics!|20
+moneybag|The best but lamest gift!|100
+knife|Careful, it's sharp!|15
+bomb|How did that get in there|10
+gun|Hahah hey whoa... watch it buddy..|15
+telescope|Now you can see the universe! Or into your neighbours window.|12
 gift|Oh! I wonder what's inside?
-scissors|Don't run with them!
-pen_ballpoint|It's a pen. What else can I say.
-paintbrush|I believe, every day's a good day when you paint.
-mag|Burn the ants! Or read, I guess.
-crayon|Colour in between the lines!
-milk|Calcium! Strong bones! COW JUICE!
-heart|I'm giving my heart to you! What? You don't want it? Oh..
-basketball|Get out there and play some ball, kiddo.
-goose|FUCK
-youness|Lucky you... :weary:
-ttc|Oh, that sucks.
+scissors|Don't run with them!|5
+pen_ballpoint|It's a pen. What else can I say.|3
+paintbrush|I believe, every day's a good day when you paint.|3
+mag|Burn the ants! Or read, I guess.|5
+crayon|Colour in between the lines!|3
+milk|Calcium! Strong bones! COW JUICE!|5
+heart|I'm giving my heart to you! What? You don't want it? Oh..|25
+basketball|Get out there and play some ball, kiddo.|10
+goose|FUCK|-25
+youness|Lucky you... :weary:|-10
+ttc|Oh, that sucks.|-10

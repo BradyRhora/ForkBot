@@ -57,6 +57,10 @@ namespace ForkBot
             }
             return null;
         }
+        public static IUser GetUser(User user)
+        { 
+            return Bot.client.GetUser(user.ID);
+        }
 
         public static void GiveCoins(User u, int amount)
         {
@@ -65,29 +69,29 @@ namespace ForkBot
         }
 
         public static string GetTID(string html)
+        {
+            var c = html.ToCharArray();
+            int start = 0, end = 0;
+            for (int i = 0; i < c.Count(); i++)
             {
-                var c = html.ToCharArray();
-                int start = 0, end = 0;
-                for (int i = 0; i < c.Count(); i++)
+                if (new String(c, i, 4) == "tid=")
                 {
-                    if (new String(c, i, 4) == "tid=")
-                    {
-                        start = i + 4;
-                        break;
-                    }
+                    start = i + 4;
+                    break;
                 }
-
-                for (int i = start; i < c.Count(); i++)
-                {
-                    if (!Char.IsNumber(c[i]))
-                    {
-                        end = i;
-                        break;
-                    }
-                }
-                int length = end - start;
-                return html.Substring(start, length);
             }
+
+            for (int i = start; i < c.Count(); i++)
+            {
+                if (!Char.IsNumber(c[i]))
+                {
+                    end = i;
+                    break;
+                }
+            }
+            int length = end - start;
+            return html.Substring(start, length);
+        }
 
         public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation anim) { await SendAnimation(chan, anim, ""); }
 
@@ -111,15 +115,32 @@ namespace ForkBot
             frameCount++;
             if (frameCount >= anim.frames.Count())
             {
-                Bot.timerComplete = true;
+                Var.timerComplete = true;
                 animTimer.Dispose();
             }
         }
 
+        public static string[] GetItemList()
+        {
+            return File.ReadAllLines("Files/presents.txt");
         }
+
+        public static ItemTrade GetTrade(IUser user)
+        {
+            foreach (ItemTrade trade in Var.trades)
+            {
+                if (trade.HasUser(user))
+                {
+                    return trade;
+                }
+            }
+            return null;
+        }
+
+    }
     
 
-    static class func
+    static class Func
     {
         public static string ToTitleCase(this string s)
         {
