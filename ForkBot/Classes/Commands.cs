@@ -634,7 +634,7 @@ namespace ForkBot
 
         #region Brady Commands
 
-        [Command("give"), Summary("Give the inputted user the specified amount of coins.")]
+        [Command("givecoins"), Summary("Give the inputted user the specified amount of coins.")]
         public async Task Give(IUser user, int amount)
         {
             if (Context.User.Id == Constants.Users.BRADY)
@@ -646,7 +646,7 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
 
-        [Command("give"), Summary("Give the inputted user the specified item.")]
+        [Command("giveitem"), Summary("Give the inputted user the specified item.")]
         public async Task Give(IUser user, string item)
         {
             if (Context.User.Id == Constants.Users.BRADY)
