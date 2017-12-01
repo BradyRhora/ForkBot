@@ -558,7 +558,17 @@ namespace ForkBot
 
             Timers.mvTimer = new Timer(Timers.MoveTimer, null, 5000, Timeout.Infinite);
         }
-        
+
+        [Command("purge"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Delete [amount] messages")]
+        public async Task Purge(int amount)
+        {
+
+            var messages = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
+            await Context.Channel.DeleteMessagesAsync(messages);
+
+            InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted.");
+            await Context.Channel.SendMessageAsync("", embed: ie.Build());
+        }
         #endregion
 
 
@@ -575,7 +585,7 @@ namespace ForkBot
                 if (line.Split('|')[0] == tag)
                 {
                     sent = true;
-                    await Context.Channel.SendMessageAsync(line.Split('|')[1].Replace("%NEWLINE%", "\n"));
+                    await Context.Channel.SendMessageAsync(line.Split('|')[1]);
                     break;
                 }
             }
@@ -598,14 +608,14 @@ namespace ForkBot
 
             if (!exists)
             {
-                File.AppendAllText("Files/tags.txt", tag + "|" + content.Replace("\n", "%NEWLINE%"));
+                File.AppendAllText("Files/tags.txt", tag + "|" + content + "\n");
                 await Context.Channel.SendMessageAsync("Tag created!");
             }
             else await Context.Channel.SendMessageAsync("Tag already exists!");
         }
 
         [Command("remind")]
-        public async Task Remind(string reminder)
+        public async Task Remind([Remainder] string reminder)
         {
             if (reminder != "")
             {
