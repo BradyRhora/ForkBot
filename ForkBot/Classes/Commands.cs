@@ -500,7 +500,7 @@ namespace ForkBot
                         if (line.Split('|')[2] != "?") price = Convert.ToInt32(line.Split('|')[2]);
                         else
                         {
-                            await Context.Channel.SendMessageAsync("Wait... Something is happening....");
+                            await Context.Channel.SendMessageAsync("Wait... Something is happening.... [WIP] Remind Brady about this.");
 
                         }
                     }

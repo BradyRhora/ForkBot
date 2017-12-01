@@ -30,7 +30,7 @@ iphone|The latest in mobile technology!|35
 joystick|For the classics!|20
 moneybag|The best but lamest gift!|100
 knife|Careful, it's sharp!|15
-bomb|How did that get in there|10
+bomb|How did that get in there|?
 gun|Hahah hey whoa... watch it buddy..|15
 telescope|Now you can see the universe! Or into your neighbours window.|12
 gift|Oh! I wonder what's inside?
@@ -43,5 +43,5 @@ milk|Calcium! Strong bones! COW JUICE!|5
 heart|I'm giving my heart to you! What? You don't want it? Oh..|25
 basketball|Get out there and play some ball, kiddo.|10
 goose|FUCK|-25
-youness|Lucky you... :weary:|-10
+youness|Lucky you... :weary:|?
 ttc|Oh, that sucks.|-10
