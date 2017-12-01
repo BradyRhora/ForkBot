@@ -621,5 +621,33 @@ namespace ForkBot
 
         [Command("remind")]
         public async Task Remind() { await Remind(""); }
+
+        #region Brady Commands
+
+        [Command("give"), Summary("Give the inputted user the specified amount of coins.")]
+        public async Task Give(IUser user, int amount)
+        {
+            if (Context.User.Id == Constants.Users.BRADY)
+            {
+                User u = Functions.GetUser(user);
+                u.Coins += amount;
+                await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given {amount} coins.");
+            }
+            else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
+        }
+
+        [Command("give"), Summary("Give the inputted user the specified item.")]
+        public async Task Give(IUser user, string item)
+        {
+            if (Context.User.Id == Constants.Users.BRADY)
+            {
+                User u = Functions.GetUser(user);
+                u.Items.Add(item);
+                await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given: {item}.");
+            }
+            else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
+        }
+        #endregion
+        //( ͡° ͜ʖ ͡°)
     }
 }
