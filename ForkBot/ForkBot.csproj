@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\Debug\Files\presents.txt" />
+    <Content Include="bin\Debug\Files\rareitems.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />
     <Content Include="bin\Debug\Files\users.txt" />
     <Content Include="bin\Debug\Files\wordlist.txt" />

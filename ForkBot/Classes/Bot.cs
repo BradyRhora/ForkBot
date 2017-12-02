@@ -95,7 +95,6 @@ namespace ForkBot
             client.UserJoined += HandleJoin;
             client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
-            client.Ready += HandleReady;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
         
@@ -188,10 +187,6 @@ namespace ForkBot
             emb.Description = msg.Content;
             var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
             await chan.SendMessageAsync("", embed: emb.Build());
-        }
-        public async Task HandleReady()
-        {
-            Functions.LoadUsers();
         }
     }
 }

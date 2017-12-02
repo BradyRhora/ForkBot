@@ -294,7 +294,7 @@ namespace ForkBot
 
         }
 
-        [Command("define"), Summary("Returns the definiton for the inputted word.")]
+        [Command("define"), Alias(new string[] { "def" }), Summary("Returns the definiton for the inputted word.")]
         public async Task Define([Remainder]string word)
         {
             OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
@@ -306,17 +306,20 @@ namespace ForkBot
                 JEmbed emb = new JEmbed();
                 emb.Title = Func.ToTitleCase(word);
                 emb.Description = Char.ToUpper(senses.Definitions[0][0]) + senses.Definitions[0].Substring(1) + ".";
-                emb.Fields.Add(new JEmbedField(x =>
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                if (senses.Examples != null)
                 {
-                    x.Header = "Examples:";
-                    string text = "";
-                    foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
+                    emb.Fields.Add(new JEmbedField(x =>
                     {
-                        text += $"\"{Char.ToUpper(eg.Text[0]) + eg.Text.Substring(1)}.\"\n";
-                    }
-                    x.Text = text;
-                }));
-
+                        x.Header = "Examples:";
+                        string text = "";
+                        foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
+                        {
+                            text += $"\"{Char.ToUpper(eg.Text[0]) + eg.Text.Substring(1)}.\"\n";
+                        }
+                        x.Text = text;
+                    }));
+                }
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             else await Context.Channel.SendMessageAsync($"Could not find definition for: {word}.");
@@ -500,14 +503,15 @@ namespace ForkBot
                         if (line.Split('|')[2] != "?") price = Convert.ToInt32(line.Split('|')[2]);
                         else
                         {
-                            await Context.Channel.SendMessageAsync("Wait... Something is happening.... [WIP] Remind Brady about this.");
+                            await Context.Channel.SendMessageAsync($"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n"+
+                                                                    "");
 
                         }
                     }
                 }
                 u.Coins += price;
                 Functions.SaveUsers();
-                await Context.Channel.SendMessageAsync($"You successfully sold your {item} for 5 coins!");
+                await Context.Channel.SendMessageAsync($"You successfully sold your {item} for {price} coins!");
             }
             else await Context.Channel.SendMessageAsync($"You do not have an item called {item}!");
         }
@@ -551,16 +555,23 @@ namespace ForkBot
                     case "add":
                         if (param != "")
                         {
-                            trade.AddItem(Context.User, param);
-                            showMenu = true;
+                            var success = trade.AddItem(Context.User, param);
+                            if (success == false)
+                            {
+                                await Context.Channel.SendMessageAsync("Unable to add item. Are you sure you have it?");
+                            }
+                            else showMenu = true;
                         }
                         else await Context.Channel.SendMessageAsync("Please specify the item to add!");
                         break;
                     case "finish":
                         trade.Confirm(Context.User);
+                        if (trade.IsCompleted()) Var.trades.Remove(trade);
+                        else await Context.Channel.SendMessageAsync("Awaiting confirmation from other user.");
                         break;
                     case "cancel":
                         await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE CANCELLED", $"{Context.User.Username} has cancelled the trade. All items have been returned.").Build());
+                        Var.trades.Remove(trade);
                         break;
                 }
             }
@@ -707,8 +718,11 @@ namespace ForkBot
         {
             if (reminder != "")
             {
-                File.AppendAllText("Files/reminders.txt",reminder+"\n");
-                await Context.Channel.SendMessageAsync("Added");
+                if (Context.User.Id == Constants.Users.BRADY)
+                {
+                    File.AppendAllText("Files/reminders.txt", reminder + "\n");
+                    await Context.Channel.SendMessageAsync("Added");
+                }
             }
             else
             {

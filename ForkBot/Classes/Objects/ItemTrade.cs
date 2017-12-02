@@ -41,8 +41,11 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    coins1 += coins;
-                    return true;
+                    if (u1.Coins >= coins)
+                    {
+                        coins1 += coins;
+                        return true;
+                    }
                 }
 
                 if (u1.Items.Contains(item)) 
@@ -55,8 +58,11 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    coins2 += coins;
-                    return true;
+                    if (u1.Coins >= coins)
+                    {
+                        coins2 += coins;
+                        return true;
+                    }
                 }
 
                 if (u2.Items.Contains(item))
