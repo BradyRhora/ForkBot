@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +11,8 @@ using Discord.Commands;
 using DuckDuckGo.Net;
 using OxfordDictionariesAPI;
 using HtmlAgilityPack;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ForkBot
 {
@@ -500,18 +501,28 @@ namespace ForkBot
                 {
                     if (line.Split('|')[0] == item)
                     {
-                        if (line.Split('|')[2] != "?") price = Convert.ToInt32(line.Split('|')[2]);
-                        else
-                        {
-                            await Context.Channel.SendMessageAsync($"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n"+
-                                                                    "");
-
-                        }
+                        price = Convert.ToInt32(line.Split('|')[2]);
+                        break;
                     }
                 }
-                u.Coins += price;
-                Functions.SaveUsers();
-                await Context.Channel.SendMessageAsync($"You successfully sold your {item} for {price} coins!");
+
+                if (rdm.Next(100) < 5)
+                {
+                    var rItems = Functions.GetRareItemList();
+                    var rItemData = rItems[rdm.Next(rItems.Count())];
+                    var itemName = rItemData.Split('|')[0].Replace('_', ' ');
+                    var rMessage = rItemData.Split('|')[1];
+                    
+                    u.Items.Add(Var.present);
+                    await Context.Channel.SendMessageAsync($"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
+                                                           $"A {itemName}! :{itemName}: {rMessage}");
+                }
+                else
+                {
+                    u.Coins += price;
+                    Functions.SaveUsers();
+                    await Context.Channel.SendMessageAsync($"You successfully sold your {item} for {price} coins!");
+                }
             }
             else await Context.Channel.SendMessageAsync($"You do not have an item called {item}!");
         }
@@ -629,11 +640,42 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Tag already exists!");
         }
 
+        [Command("draw"), Summary("Gets ForkBot to draw you a lovely picture")]
+        public async Task Draw(int count)
+        {
+            
+            using (Bitmap bmp = new Bitmap(500, 500))
+            {
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
+                        Brush b = new SolidBrush(c);
+                        Pen p = new Pen(b);
+                        int x = rdm.Next(500) + 1;
+                        int y = rdm.Next(500) + 1;
+                        int w = rdm.Next(500) + 1;
+                        int h = rdm.Next(500) + 1;
 
+                        int shape = rdm.Next(2);
+                        switch (shape)
+                        {
+                            case 0:
+                                g.FillEllipse(b, x, y, w, h);
+                                break;
+                            case 1:
+                                g.FillRectangle(b, x, y, w, h);
+                                break;
+                        }
+                    }
 
+                    bmp.Save("Files/drawing.png");
+                    await Context.Channel.SendFileAsync("Files/drawing.png");
 
-
-
+                }
+            }
+        }
 
         #region Mod Commands
 
@@ -705,10 +747,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync("", embed: ie.Build());
         }
         #endregion
-
-
-
-
+        
 
 
         #region Brady Commands

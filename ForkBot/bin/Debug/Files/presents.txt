@@ -15,7 +15,7 @@ dog|Bork|20
 eggplant|Oh my.. So.... *Phallic...*|1
 apple|An apple a day...|3
 egg|EGG.|3
-ramen|Aka gods gift to humanity.|?
+ramen|Aka gods gift to humanity.|15
 beer|Drink responsibly!|5
 spoon|Well, it's not a fork but it'll do.|-1
 8ball|Ask it a question with `;8ball`!|50
@@ -30,10 +30,10 @@ iphone|The latest in mobile technology!|35
 joystick|For the classics!|20
 moneybag|The best but lamest gift!|100
 knife|Careful, it's sharp!|15
-bomb|How did that get in there|?
+bomb|How did that get in there|50
 gun|Hahah hey whoa... watch it buddy..|15
 telescope|Now you can see the universe! Or into your neighbours window.|12
-gift|Oh! I wonder what's inside?
+gift|Oh! I wonder what's inside?|0
 scissors|Don't run with them!|5
 pen_ballpoint|It's a pen. What else can I say.|3
 paintbrush|I believe, every day's a good day when you paint.|3
@@ -43,5 +43,5 @@ milk|Calcium! Strong bones! COW JUICE!|5
 heart|I'm giving my heart to you! What? You don't want it? Oh..|25
 basketball|Get out there and play some ball, kiddo.|10
 goose|FUCK|-25
-youness|Lucky you... :weary:|?
+youness|Lucky you... :weary:|25
 ttc|Oh, that sucks.|-10

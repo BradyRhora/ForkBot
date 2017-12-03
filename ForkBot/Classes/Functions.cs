@@ -125,6 +125,11 @@ namespace ForkBot
             return File.ReadAllLines("Files/presents.txt");
         }
 
+        public static string[] GetRareItemList()
+        {
+            return File.ReadAllLines("Files/rareitems.txt");
+        }
+
         public static ItemTrade GetTrade(IUser user)
         {
             foreach (ItemTrade trade in Var.trades)
