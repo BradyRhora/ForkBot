@@ -13,6 +13,7 @@ using OxfordDictionariesAPI;
 using HtmlAgilityPack;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Net;
 
 namespace ForkBot
 {
@@ -643,30 +644,34 @@ namespace ForkBot
         [Command("draw"), Summary("Gets ForkBot to draw you a lovely picture")]
         public async Task Draw(int count)
         {
-            
-            using (Bitmap bmp = new Bitmap(500, 500))
+            int size = 500;
+            using (Bitmap bmp = new Bitmap(size, size))
             {
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
+                    int x = rdm.Next(size);
+                    int y = rdm.Next(size);
+                    var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
+                    
+
                     for (int i = 0; i < count; i++)
                     {
-                        var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
                         Brush b = new SolidBrush(c);
                         Pen p = new Pen(b);
-                        int x = rdm.Next(500) + 1;
-                        int y = rdm.Next(500) + 1;
-                        int w = rdm.Next(500) + 1;
-                        int h = rdm.Next(500) + 1;
 
-                        int shape = rdm.Next(2);
-                        switch (shape)
+                        g.FillEllipse(b, x, y, 10, 10);
+                        int mult = 0;
+                        mult = rdm.Next(-1, 2);
+                        x += 5 * mult;
+                        mult = rdm.Next(-1, 2);
+                        y += 5 * mult;
+                        
+
+                        if (rdm.Next(100) == 1 || x > size || x < 0 || y > size || y < 0)
                         {
-                            case 0:
-                                g.FillEllipse(b, x, y, w, h);
-                                break;
-                            case 1:
-                                g.FillRectangle(b, x, y, w, h);
-                                break;
+                            x = rdm.Next(size);
+                            y = rdm.Next(size);
+                            c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
                         }
                     }
 
@@ -674,6 +679,33 @@ namespace ForkBot
                     await Context.Channel.SendFileAsync("Files/drawing.png");
 
                 }
+            }
+        }
+
+        [Command("birth"), Summary("Gives birth to your very own creature in the pack.")]
+        public async Task Birth(string name)
+        {
+            bool hasCreature = false;
+            User user = Functions.GetUser(Context.User);
+            string creatureName = "";
+            foreach ( Creature c in Timers.creatures)
+            {
+                if (c.Owner == user)
+                {
+                    hasCreature = true;
+                    creatureName = c.Name;
+                    break;
+                }
+            }
+
+            if (!hasCreature)
+            {
+                Timers.creatures.Add(new Creature(user, name, new Point(rdm.Next(Timers.lifeSize), rdm.Next(Timers.lifeSize))));
+                await Context.Channel.SendMessageAsync(name + " has been given life!");
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync("You already have a creature, " + creatureName + ".");
             }
         }
 
@@ -773,7 +805,7 @@ namespace ForkBot
         [Command("remind")]
         public async Task Remind() { await Remind(""); }
 
-        [Command("givecoins"), Summary("Give the inputted user the specified amount of coins.")]
+        [Command("givecoins")]
         public async Task Give(IUser user, int amount)
         {
             if (Context.User.Id == Constants.Users.BRADY)
@@ -785,7 +817,7 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
 
-        [Command("giveitem"), Summary("Give the inputted user the specified item.")]
+        [Command("giveitem")]
         public async Task Give(IUser user, string item)
         {
             if (Context.User.Id == Constants.Users.BRADY)
@@ -797,6 +829,5 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
         #endregion
-        //( ͡° ͜ʖ ͡°)
     }
 }

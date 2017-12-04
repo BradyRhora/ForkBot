@@ -42,6 +42,7 @@ namespace ForkBot
                 Functions.LoadUsers();
                 Timer banCheck = new Timer(new TimerCallback(TimerCall),null,0,1000);
                 Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000*60*60);
+                Timer life = new Timer(new TimerCallback(Timers.Life), null, 0, 1);
                 await Task.Delay(-1);
             }
             catch (Exception e)
