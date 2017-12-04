@@ -709,6 +709,18 @@ namespace ForkBot
             }
         }
 
+        [Command("choose"), Summary("Get ForkBot to make your decisions for you! Seperate choices with `|`")]
+        public async Task Choose([Remainder] string input)
+        {
+            var choices = input.Split('|');
+
+            var decision = choices[rdm.Next(choices.Count())];
+
+            await Context.Channel.SendMessageAsync($"{Context.User.Username}, I choose...");
+            await Context.Channel.SendMessageAsync(decision + "!");
+            
+        }
+
         #region Mod Commands
 
         [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
