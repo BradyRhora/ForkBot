@@ -47,4 +47,6 @@ Temporary Items
 .apdisk
 ForkBot/bin/Debug/Constants/bottoken
 ForkBot/bin/Debug/Files/users.txt
+ForkBot/bin/Debug/Files/tags.txt
+ForkBot/bin/Debug/Files/drawing.png
 ForkBot/.vs

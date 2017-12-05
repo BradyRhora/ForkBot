@@ -1,1 +1,3 @@
-﻿
+﻿brady|( ͡° ͜ʖ ͡°)
+[tag|name] tag STUFF
+tag|Make a tag using `;tag [name] [tag content]`! View the tag with `;tag [name]`!!!
