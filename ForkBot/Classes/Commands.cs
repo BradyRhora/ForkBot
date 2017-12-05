@@ -122,6 +122,7 @@ namespace ForkBot
             "     |          " ,    //6
             "_____|_____     " };   //7
 
+
                     for (int i = 0; i < Var.hmWord.Count(); i++)
                     {
                         if (Var.guessedChars.Contains(Var.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Var.hmWord[i])) + " ";
@@ -179,6 +180,13 @@ namespace ForkBot
                         var u = Functions.GetUser(Context.User);
                         u.Coins += 10;
                         Functions.SaveUsers();
+                    }
+
+                    hang[6] = "     |          ";
+                    for (int i = 0; i < Var.hmWord.Count(); i++)
+                    {
+                        if (Var.guessedChars.Contains(Var.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Var.hmWord[i])) + " ";
+                        else hang[6] += "_ ";
                     }
 
                     if (Var.hmErrors == 6)
