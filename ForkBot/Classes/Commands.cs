@@ -172,7 +172,10 @@ namespace ForkBot
                     {
                         await Context.Channel.SendMessageAsync("You did it!");
                         Var.hangman = false;
-
+                        foreach(char c in Var.hmWord)
+                        {
+                            Var.guessedChars.Add(c);
+                        }
                         var u = Functions.GetUser(Context.User);
                         u.Coins += 10;
                         Functions.SaveUsers();
@@ -206,7 +209,7 @@ namespace ForkBot
 
         [Command("profile"), Summary("View your or another users profile.")]
         public async Task Profile(IUser user)
-        {
+        { 
             var u = Functions.GetUser(user);
 
             var emb = new JEmbed();
@@ -468,19 +471,16 @@ namespace ForkBot
 
         #region Item Commands
         [Command("roll")]
-        public async Task Roll(int max)
+        public async Task Roll(int max = 6)
         {
             if (Functions.GetUser(Context.User).Items.Contains("game_die"))
             {
                 await Context.Channel.SendMessageAsync(":game_die: | " + Convert.ToString(rdm.Next(max) + 1));
             }
         }
-
-        [Command("roll")]
-        public async Task Roll() { await Roll(6); }
-
+        
         [Command("8ball")]
-        public async Task EightBall([Remainder] string question)
+        public async Task EightBall([Remainder] string question ="")
         {
             if (Functions.GetUser(Context.User).Items.Contains("8ball"))
             {
@@ -797,7 +797,7 @@ namespace ForkBot
         #region Brady Commands
 
         [Command("remind")]
-        public async Task Remind([Remainder] string reminder)
+        public async Task Remind([Remainder] string reminder = "")
         {
             if (reminder != "")
             {
@@ -813,10 +813,7 @@ namespace ForkBot
                 await Context.Channel.SendMessageAsync(reminders);
             }
         }
-
-        [Command("remind")]
-        public async Task Remind() { await Remind(""); }
-
+        
         [Command("givecoins")]
         public async Task Give(IUser user, int amount)
         {
