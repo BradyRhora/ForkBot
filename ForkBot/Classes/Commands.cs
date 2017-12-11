@@ -237,7 +237,7 @@ namespace ForkBot
             {
                 x.Header = "Roles:";
                 string text = "";
-                foreach (ulong id in (Context.User as IGuildUser).RoleIds)
+                foreach (ulong id in (user as IGuildUser).RoleIds)
                 {
                     text += Context.Guild.GetRole(id).Name + "\n";
                 }
@@ -774,11 +774,16 @@ namespace ForkBot
             await chan.SendMessageAsync(mentionedUsers + " please keep discussions in their correct channel.");
             var channels = await Context.Guild.GetTextChannelsAsync();
             OverwritePermissions op = new OverwritePermissions(readMessages: PermValue.Deny);
+            
             foreach (IGuildChannel c in channels)
             {
                 foreach (IUser u in users)
                 {
-                    if (c != null && c.Id != chan.Id) await c.AddPermissionOverwriteAsync(u, op);
+                    try
+                    {
+                        if (c != null && c.Id != chan.Id) await c.AddPermissionOverwriteAsync(u, op);
+                    }
+                    catch (Exception ) { }
                 }
             }
             Timers.mvChannel = chan;
@@ -795,7 +800,7 @@ namespace ForkBot
             var messages = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
             await Context.Channel.DeleteMessagesAsync(messages);
 
-            InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted.");
+            InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted by {Context.User.Username}.");
             await Context.Channel.SendMessageAsync("", embed: ie.Build());
         }
         #endregion
