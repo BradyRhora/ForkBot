@@ -1,3 +1,8 @@
 ﻿brady|( ͡° ͜ʖ ͡°)
 [tag|name] tag STUFF
 tag|Make a tag using `;tag [name] [tag content]`! View the tag with `;tag [name]`!!!
+sith|a big dummy
+Brady|chad
+my|name jeff
+koala|swag
+sfw|bot

@@ -80,7 +80,7 @@ namespace ForkBot
             
         }*/
 
-        [Command("hangman"), Summary("Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
+        [Command("hangman"), Summary("[FUN] Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
         public async Task HangMan()
         {
             if (!Var.hangman)
@@ -497,7 +497,7 @@ namespace ForkBot
             }
         }
 
-        [Command("sell"), Summary("Sell items from your inventory.")]
+        [Command("sell"), Summary("[FUN] Sell items from your inventory.")]
         public async Task Sell(string item)
         {
             var u = Functions.GetUser(Context.User);
@@ -537,7 +537,7 @@ namespace ForkBot
         }
 
         //Test me!
-        [Command("trade"), Summary("Initiate a trade with another user!")]
+        [Command("trade"), Summary("[FUN] Initiate a trade with another user!")]
         public async Task Trade(IUser user)
         {
             if (Functions.GetTrade(Context.User) == null && Functions.GetTrade(user) == null)
@@ -652,6 +652,8 @@ namespace ForkBot
         [Command("draw"), Summary("Gets ForkBot to draw you a lovely picture")]
         public async Task Draw(int count)
         {
+            if (count > 99999) count = 99999;
+
             int size = 500;
             using (Bitmap bmp = new Bitmap(size, size))
             {
