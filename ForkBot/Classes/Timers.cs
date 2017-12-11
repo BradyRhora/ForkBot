@@ -23,7 +23,11 @@ namespace ForkBot
             {
                 foreach (IUser u in mvUsers)
                 {
-                    if (c != null && c.Id != mvChannel.Id) await c.AddPermissionOverwriteAsync(u, op2);
+                    try
+                    {
+                        if (c != null && c.Id != mvChannel.Id) await c.AddPermissionOverwriteAsync(u, op2);
+                    }
+                    catch (Exception) { }
                 }
             }
 
