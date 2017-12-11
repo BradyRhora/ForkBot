@@ -5,3 +5,4 @@ profile roles 🅱roke
 fix capitalization on selling
 fix umbrella2
 fix coin trades
+limit draw amount
