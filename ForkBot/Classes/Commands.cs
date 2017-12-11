@@ -649,7 +649,7 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Tag already exists!");
         }
 
-        [Command("draw"), Summary("Gets ForkBot to draw you a lovely picture")]
+        [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
         public async Task Draw(int count)
         {
             if (count > 99999) count = 99999;
@@ -685,35 +685,8 @@ namespace ForkBot
                 }
             }
         }
-
-        [Command("birth"), Summary("Gives birth to your very own creature in the pack.")]
-        public async Task Birth(string name)
-        {
-            bool hasCreature = false;
-            User user = Functions.GetUser(Context.User);
-            string creatureName = "";
-            foreach ( Creature c in Timers.creatures)
-            {
-                if (c.Owner == user)
-                {
-                    hasCreature = true;
-                    creatureName = c.Name;
-                    break;
-                }
-            }
-
-            if (!hasCreature)
-            {
-                Timers.creatures.Add(new Creature(user, name, new Point(rdm.Next(Timers.lifeSize), rdm.Next(Timers.lifeSize))));
-                await Context.Channel.SendMessageAsync(name + " has been given life!");
-            }
-            else
-            {
-                await Context.Channel.SendMessageAsync("You already have a creature, " + creatureName + ".");
-            }
-        }
-
-        [Command("choose"), Summary("Get ForkBot to make your decisions for you! Seperate choices with `|`")]
+        
+        [Command("choose"), Summary("[FUN] Get ForkBot to make your decisions for you! Seperate choices with `|`")]
         public async Task Choose([Remainder] string input)
         {
             var choices = input.Split('|');
@@ -798,6 +771,14 @@ namespace ForkBot
 
             InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted by {Context.User.Username}.");
             await Context.Channel.SendMessageAsync("", embed: ie.Build());
+        }
+
+        [Command("block"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Temporarily stops users from being able to use the bot.")]
+        public async Task Block(IUser u)
+        {
+            if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
+            else Var.blockedUsers.Add(u);
+            
         }
         #endregion
         

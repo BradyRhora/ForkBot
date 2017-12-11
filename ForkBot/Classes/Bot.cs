@@ -43,7 +43,6 @@ namespace ForkBot
                 Functions.LoadUsers();
                 Timer banCheck = new Timer(new TimerCallback(TimerCall),null,0,1000);
                 Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000*60*60);
-                Timer life = new Timer(new TimerCallback(Timers.Life), null, 0, 1);
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -102,9 +101,12 @@ namespace ForkBot
         
         public async Task HandleCommand(SocketMessage messageParam)
         {
+            
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
             int argPos = 0;
+
+            if (Var.blockedUsers.Contains(message.Author)) return;
 
             var user = Functions.GetUser(message.Author);
 

@@ -95,8 +95,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Objects\Creatures\Creature.cs" />
-    <Compile Include="Classes\Objects\Creatures\Food.cs" />
     <Compile Include="Classes\Objects\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
