@@ -12,6 +12,8 @@ namespace ForkBot
         public static List<IGuildUser> leaveBanned = new List<IGuildUser>();
         public static List<DateTime> unbanTime = new List<DateTime>();
 
+        public static bool purging = false;
+
         #region HangMan
         public static string hmWord;
         public static bool hangman = false;
@@ -34,5 +36,7 @@ namespace ForkBot
         public static List<ItemTrade> trades = new List<ItemTrade>();
 
         public static List<IUser> blockedUsers = new List<IUser>();
+
+        public static List<IMessage> awaitingHelp = new List<IMessage>();
     }
 }

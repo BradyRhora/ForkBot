@@ -153,11 +153,3 @@ namespace ForkBot
         }
     }
 }
-
-/*
- * game ideas
- * emoji guessing?
- * sharades???
- * presents????
- * 
- */
