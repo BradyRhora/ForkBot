@@ -185,25 +185,24 @@ namespace ForkBot
             if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
             {
                 JEmbed emb = new JEmbed();
-                emb.Title = msg.Author.Username;
+                emb.Title = msg.Author.Discriminator;
                 emb.Author.Name = "MESSAGE DELETED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
                 emb.Description = msg.Content;
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Header = "User ID";
-                    x.Text = Convert.ToString(msg.Author.Id);
-                    x.Inline = true;
-                }));
+
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "Location";
                     x.Text = msg.Channel + " in " + (msg.Channel as IGuildChannel).Guild;
                     x.Inline = true;
                 }));
+
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 var datetime = DateTime.UtcNow - new TimeSpan(5, 0, 0);
-                emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString();
+                emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString() + "\n" +
+                    msg.Author.Discriminator + "ID: " + msg.Author.Id;
+
+
                 var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
                 await chan.SendMessageAsync("", embed: emb.Build());
             }
