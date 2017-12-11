@@ -275,7 +275,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(msg);
         }
 
-        [Command("present"), Summary("Get a cool gift!")]
+        /*[Command("present"), Summary("Get a cool gift!")]
         public async Task Present()
         {
             if (!Var.presentWaiting)
@@ -286,7 +286,7 @@ namespace ForkBot
                 Var.replacing = false;
                 Var.replaceable = true;
             }
-        }
+        }*/
 
         [Command("whatis"), Alias(new string[] { "wi" }), Summary("Don't know what something is? Find out!")]
         public async Task WhatIs([Remainder]string thing)

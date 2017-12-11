@@ -168,7 +168,7 @@ namespace ForkBot
         }
         public async Task HandleJoin(SocketGuildUser user)
         {
-            await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to {user.Guild.GetChannel(271843457121779712)} to get a role.");
+            await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role.");
         }
         public async Task HandleLeave(SocketGuildUser user)
         {
