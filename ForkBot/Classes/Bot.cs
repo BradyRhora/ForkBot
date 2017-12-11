@@ -189,8 +189,21 @@ namespace ForkBot
                 emb.Author.Name = "MESSAGE DELETED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
                 emb.Description = msg.Content;
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "User ID";
+                    x.Text = Convert.ToString(msg.Author.Id);
+                    x.Inline = true;
+                }));
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Location";
+                    x.Text = msg.Channel + " in " + (msg.Channel as IGuildChannel).Guild;
+                    x.Inline = true;
+                }));
                 emb.ColorStripe = Constants.Colours.YORK_RED;
-                emb.Footer.Text = "In " + msg.Channel.Name;
+                var datetime = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+                emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString();
                 var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
                 await chan.SendMessageAsync("", embed: emb.Build());
             }
