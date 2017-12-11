@@ -32,5 +32,7 @@ namespace ForkBot
         #endregion
 
         public static List<ItemTrade> trades = new List<ItemTrade>();
+
+        public static List<IUser> blockedUsers = new List<IUser>();
     }
 }

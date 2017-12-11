@@ -33,13 +33,5 @@ namespace ForkBot
 
             mvTimer.Dispose();
         }
-
-
-        public static List<Creature> creatures = new List<Creature>();
-        public const int lifeSize = 500;
-        public static async void Life(object state)
-        {
-
-        }
     }
 }
