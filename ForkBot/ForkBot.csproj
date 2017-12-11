@@ -123,7 +123,7 @@
     <None Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\Files\presents.txt" />
+    <Content Include="bin\Debug\Files\items.txt" />
     <Content Include="bin\Debug\Files\rareitems.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />
     <Content Include="bin\Debug\Files\users.txt" />

@@ -28,8 +28,9 @@ namespace ForkBot
             Start:
             try
             {
+                DiscordSocketConfig config = new DiscordSocketConfig() { MessageCacheSize = 500 };
                 Console.WriteLine("Welcome. Initializing ForkBot...");
-                client = new DiscordSocketClient();
+                client = new DiscordSocketClient(config);
                 Console.WriteLine("Client Initialized.");
                 commands = new CommandService();
                 Console.WriteLine("Command Service Initialized.");
@@ -180,12 +181,14 @@ namespace ForkBot
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
-            IMessage msg = await cache.DownloadAsync();
-            EmbedBuilder emb = new EmbedBuilder();
-            emb.Title = "MESSAGE DELETED";
-            emb.Author.Name = msg.Author.Username;
-            emb.Author.IconUrl = msg.Author.GetAvatarUrl();
+            var msg = cache.Value;
+            
+            JEmbed emb = new JEmbed();
+            emb.Title = msg.Author.Username;
+            emb.Author.Name = "MESSAGE DELETED";
+            emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
             emb.Description = msg.Content;
+            emb.ColorStripe = Constants.Colours.YORK_RED;
             var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
             await chan.SendMessageAsync("", embed: emb.Build());
         }
