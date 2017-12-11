@@ -653,7 +653,6 @@ namespace ForkBot
         public async Task Draw(int count)
         {
             if (count > 99999) count = 99999;
-
             int size = 500;
             using (Bitmap bmp = new Bitmap(size, size))
             {
@@ -663,20 +662,15 @@ namespace ForkBot
                     int y = rdm.Next(size);
                     var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
                     
-
                     for (int i = 0; i < count; i++)
                     {
                         Brush b = new SolidBrush(c);
-                        Pen p = new Pen(b);
-
                         g.FillEllipse(b, x, y, 10, 10);
                         int mult = 0;
                         mult = rdm.Next(-1, 2);
                         x += 5 * mult;
                         mult = rdm.Next(-1, 2);
                         y += 5 * mult;
-                        
-
                         if (rdm.Next(100) == 1 || x > size || x < 0 || y > size || y < 0)
                         {
                             x = rdm.Next(size);
