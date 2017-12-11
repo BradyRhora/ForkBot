@@ -199,8 +199,8 @@ namespace ForkBot
 
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 var datetime = DateTime.UtcNow - new TimeSpan(5, 0, 0);
-                emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString() + "\n" +
-                    msg.Author.Username + "#" + msg.Author.Discriminator + "ID: " + msg.Author.Id;
+                emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString() + " | " +
+                    msg.Author.Username + "#" + msg.Author.Discriminator + " ID: " + msg.Author.Id;
 
 
                 var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
