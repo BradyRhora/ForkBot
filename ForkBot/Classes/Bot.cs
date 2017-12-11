@@ -182,15 +182,18 @@ namespace ForkBot
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
             var msg = cache.Value;
-            
-            JEmbed emb = new JEmbed();
-            emb.Title = msg.Author.Username;
-            emb.Author.Name = "MESSAGE DELETED";
-            emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
-            emb.Description = msg.Content;
-            emb.ColorStripe = Constants.Colours.YORK_RED;
-            var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
-            await chan.SendMessageAsync("", embed: emb.Build());
+            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = msg.Author.Username;
+                emb.Author.Name = "MESSAGE DELETED";
+                emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
+                emb.Description = msg.Content;
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                emb.Footer.Text = "In " + msg.Channel.Name;
+                var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
+                await chan.SendMessageAsync("", embed: emb.Build());
+            }
         }
     }
 }
