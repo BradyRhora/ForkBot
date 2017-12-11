@@ -57,6 +57,18 @@ namespace ForkBot
             public const string Kick = "https://i.imgur.com/Pid9NH3.png";
             public const string ForkBot = "https://i.imgur.com/xz1OuJr.png";
         }
-        
+
+        public class Emotes
+        {
+
+            public static Emoji hammer = new Emoji("🔨");
+            public static Emoji die = new Emoji("🎲");
+            public static Emoji question = new Emoji("❓");
+            
+
+        }
+
+
+
     }
 }

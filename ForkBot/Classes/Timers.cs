@@ -33,5 +33,12 @@ namespace ForkBot
 
             mvTimer.Dispose();
         }
+
+        public static Timer unpurge;
+        public static void UnPurge(object state)
+        {
+            Var.purging = false;
+            unpurge.Dispose();
+        }
     }
 }

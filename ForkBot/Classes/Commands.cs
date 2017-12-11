@@ -20,32 +20,7 @@ namespace ForkBot
     public class Commands : ModuleBase
     {
         Random rdm = new Random();
-
-        [Command("mhelp"), Summary("Displays Moderator commands and descriptions"), RequireUserPermission(GuildPermission.BanMembers)]
-        public async Task MHelp()
-        {
-            JEmbed emb = new JEmbed();
-            emb.Author.Name = "ForkBot Commands";
-            emb.ThumbnailUrl = Context.User.AvatarId;
-            if (Context.Guild != null) emb.ColorStripe = Functions.GetColor(Context.User);
-            else emb.ColorStripe = Constants.Colours.DEFAULT_COLOUR;
-            foreach (CommandInfo command in Bot.commands.Commands)
-            {
-                if (command.Summary != null && command.Summary.StartsWith("[MOD]"))
-                {
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        string header = command.Name;
-                        foreach (String alias in command.Aliases) if (alias != command.Name) header += " (;" + alias + ") ";
-                        foreach (ParameterInfo parameter in command.Parameters) header += " [" + parameter.Name + "]";
-                        x.Header = header;
-                        x.Text = command.Summary;
-                    }));
-                }
-            }
-            await Context.Channel.SendMessageAsync("", embed: emb.Build());
-        }
-
+        
         [Command("help"), Summary("Displays commands and descriptions.")]
         public async Task Help()
         {
@@ -54,20 +29,61 @@ namespace ForkBot
             emb.ThumbnailUrl = Context.User.AvatarId;
             if (Context.Guild != null) emb.ColorStripe = Functions.GetColor(Context.User);
             else emb.ColorStripe = Constants.Colours.DEFAULT_COLOUR;
-            foreach (CommandInfo command in Bot.commands.Commands)
+
+            emb.Description = "Select the emote that corresponds to the commands you want to see.";
+
+            emb.Fields.Add(new JEmbedField(x =>
             {
-                if (command.Summary != null && !command.Summary.StartsWith("[MOD]")) {
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        string header = command.Name;
-                        foreach (String alias in command.Aliases) if (alias != command.Name) header += " (;" + alias + ") ";
-                        foreach (ParameterInfo parameter in command.Parameters) header += " [" + parameter.Name + "]";
-                        x.Header = header;
-                        x.Text = command.Summary;
-                    }));
+                x.Text = ":hammer:";
+                x.Header = "MOD COMMANDS";
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Text = ":game_die:";
+                x.Header = "FUN COMMANDS";
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Text = ":question:";
+                x.Header = "OTHER COMMANDS";
+                x.Inline = true;
+            }));
+            
+
+
+            var msg = await Context.Channel.SendMessageAsync("", embed: emb.Build());
+
+            await msg.AddReactionAsync(Constants.Emotes.hammer);
+            await msg.AddReactionAsync(Constants.Emotes.die);
+            await msg.AddReactionAsync(Constants.Emotes.question);
+
+            Var.awaitingHelp.Add(msg);
+
+            /*
+                foreach (CommandInfo command in Bot.commands.Commands)
+                {
+
+
+                    if (command.Summary != null && !command.Summary.StartsWith("[MOD]")) {
+                        emb.Fields.Add(new JEmbedField(x =>
+                        {
+                            string header = command.Name;
+                            foreach (String alias in command.Aliases) if (alias != command.Name) header += " (;" + alias + ") ";
+                            foreach (ParameterInfo parameter in command.Parameters) header += " [" + parameter.Name + "]";
+                            x.Header = header;
+                            x.Text = command.Summary;
+                        }));
+                    }
                 }
-            }
-            await Context.Channel.SendMessageAsync("", embed: emb.Build());
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+                */
+
+
+
         }
 
         /*[Command("play"), Summary("Play a song from Youtube.")]
@@ -765,12 +781,13 @@ namespace ForkBot
         [Command("purge"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Delete [amount] messages")]
         public async Task Purge(int amount)
         {
-
+            Var.purging = true;
             var messages = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
             await Context.Channel.DeleteMessagesAsync(messages);
 
             InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted by {Context.User.Username}.");
             await Context.Channel.SendMessageAsync("", embed: ie.Build());
+            Timers.unpurge = new Timer(new TimerCallback(Timers.UnPurge), null, 5000, Timeout.Infinite);
         }
 
         [Command("block"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Temporarily stops users from being able to use the bot.")]
