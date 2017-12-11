@@ -122,7 +122,7 @@ namespace ForkBot
 
         public static string[] GetItemList()
         {
-            return File.ReadAllLines("Files/presents.txt");
+            return File.ReadAllLines("Files/items.txt");
         }
 
         public static string[] GetRareItemList()
