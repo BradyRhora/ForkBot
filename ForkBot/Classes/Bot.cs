@@ -194,7 +194,9 @@ namespace ForkBot
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
                 emb.Description = msg.Content;
 
-                emb.ImageUrl = msg.Attachments.FirstOrDefault().Url;
+                string attachURL = null;
+                if (msg.Attachments.Count>0) attachURL= msg.Attachments.FirstOrDefault().ProxyUrl;
+                if (attachURL != null) emb.ImageUrl = attachURL;
 
                 emb.Fields.Add(new JEmbedField(x =>
                 {
