@@ -163,9 +163,12 @@ namespace ForkBot
                 var result = await commands.ExecuteAsync(context, argPos);
                 if (!result.IsSuccess)
                 {
-                    Console.WriteLine(result.ErrorReason);
-                    var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
-                    await message.Channel.SendMessageAsync("", embed: emb);
+                    if (result.Error != CommandError.UnknownCommand)
+                    {
+                        Console.WriteLine(result.ErrorReason);
+                        var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
+                        await message.Channel.SendMessageAsync("", embed: emb);
+                    }
                 }
             }
             else return;
