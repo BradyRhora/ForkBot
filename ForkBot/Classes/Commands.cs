@@ -679,7 +679,7 @@ namespace ForkBot
                 Var.trades.Remove(trade);
             }
         }
-
+        
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
         public async Task Shop(string command = null)
         {
@@ -718,6 +718,7 @@ namespace ForkBot
                 JEmbed emb = new JEmbed();
                 emb.Title = "Shop";
                 emb.ThumbnailUrl = Constants.Images.ForkBot;
+                emb.ColorStripe = Constants.Colours.YORK_RED;
                 foreach (string item in Var.currentShop.Items())
                 {
                     var data = item.Split('|');
@@ -735,9 +736,9 @@ namespace ForkBot
             }
             else if (itemNames.Contains(command.ToLower()))
             {
-                foreach(string item in itemNames)
+                foreach(string item in Var.currentShop.Items())
                 {
-                    if (item == command.ToLower())
+                    if (item.Split('|')[0] == command.ToLower())
                     {
                         var data = item.Split('|');
                         string name = data[0];

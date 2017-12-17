@@ -61,6 +61,10 @@ namespace ForkBot
         { 
             return Bot.client.GetUser(user.ID);
         }
+        public static User GetUser(ulong userID)
+        {
+            return GetUser(Bot.client.GetUser(userID));
+        }
 
         public static void GiveCoins(User u, int amount)
         {
@@ -141,7 +145,7 @@ namespace ForkBot
             }
             return null;
         }
-
+        
     }
     
 

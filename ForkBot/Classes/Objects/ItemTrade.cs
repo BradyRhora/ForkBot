@@ -151,8 +151,8 @@ namespace ForkBot
                 u2.Items.Add(item);
                 if (coins1 > 0)
                 {
-                    u1.Coins -= coins1;
-                    u2.Coins += coins1;
+                    Functions.GiveCoins(Functions.GetUser(u1.ID), -coins1);
+                    Functions.GiveCoins(Functions.GetUser(u2.ID), coins1);
                 }
             }
 
@@ -162,8 +162,8 @@ namespace ForkBot
                 u1.Items.Add(item);
                 if (coins2 > 0)
                 {
-                    u2.Coins -= coins1;
-                    u1.Coins += coins1;
+                    Functions.GiveCoins(Functions.GetUser(u1.ID), coins2);
+                    Functions.GiveCoins(Functions.GetUser(u2.ID), -coins2);
                 }
             }
 
