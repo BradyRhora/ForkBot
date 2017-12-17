@@ -167,6 +167,7 @@ namespace ForkBot
                 }
             }
 
+            Functions.SaveUsers();
             completed = true;
         }
 
