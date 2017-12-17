@@ -20,7 +20,7 @@ namespace ForkBot
     public class Commands : ModuleBase
     {
         Random rdm = new Random();
-        
+
         [Command("help"), Summary("Displays commands and descriptions.")]
         public async Task Help()
         {
@@ -52,7 +52,7 @@ namespace ForkBot
                 x.Header = "OTHER COMMANDS";
                 x.Inline = true;
             }));
-            
+
 
 
             var msg = await Context.Channel.SendMessageAsync("", embed: emb.Build());
@@ -189,7 +189,7 @@ namespace ForkBot
                     {
                         await Context.Channel.SendMessageAsync("You did it!");
                         Var.hangman = false;
-                        foreach(char c in Var.hmWord)
+                        foreach (char c in Var.hmWord)
                         {
                             Var.guessedChars.Add(c);
                         }
@@ -233,7 +233,7 @@ namespace ForkBot
 
         [Command("profile"), Summary("View your or another users profile.")]
         public async Task Profile(IUser user)
-        { 
+        {
             var u = Functions.GetUser(user);
 
             var emb = new JEmbed();
@@ -496,52 +496,63 @@ namespace ForkBot
         [Command("course"), Summary("Shows details for course from inputted course code.")]
         public async Task Course([Remainder] string code)
         {
+            if (code.Count() == 8 && int.TryParse(code.Substring(4), out int output))
+            {
+                code = code.Substring(0, 4) + " " + code.Substring(4);
+            }
+
+
             string searchLink = "http://www.google.com/search?q=w2prod " + code;
             HtmlWeb web = new HtmlWeb();
-            var page = web.Load(searchLink);
-            var html = page.ParsedText;
-            var index = html.IndexOf("<h3 class=\"r\">");
-            int start = 0, end = 0;
-            for (int i = index; i < html.Count();i++)
+            bool found = false;
+            string desc, title;
+            int searchIndex = 0;
+            do
             {
-                if (html.Substring(i, 2) == "q=") 
+                var page = web.Load(searchLink);
+                var html = page.ParsedText;
+                var index = html.IndexOf("<h3 class=\"r\">",searchIndex);
+                searchIndex = index + 20;
+                int start = 0, end = 0;
+                
+                //make better
+
+                for (int i = index; i < html.Count(); i++)
                 {
-                    start = i + 2;
-                    for (int o = start; o < html.Count(); o++)
+                    if (html.Substring(i, 2) == "q=")
                     {
-                        ///html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td
-                        if (html[o] == '&')
+                        start = i + 2;
+                        for (int o = start; o < html.Count(); o++)
                         {
-                            end = o;
-                            break;
+                            if (html[o] == '&')
+                            {
+                                end = o;
+                                break;
+                            }
                         }
+                        break;
                     }
-                    break;
                 }
-            }
-            string newLink = "";
-            if (start == 0 || end == 0)
-            {
-                await Context.Channel.SendMessageAsync("Error");
-            }
-            ///html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td
-            else
-            {
-                newLink = html.Substring(start, end - start).Replace("%3F","?").Replace("%3D", "=").Replace("%26", "&");
+                string newLink = "";
+                newLink = html.Substring(start, end - start).Replace("%3F", "?").Replace("%3D", "=").Replace("%26", "&");
                 page = web.Load(newLink);
-                var desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
-                string title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;","");
+                desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+                title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
 
-                JEmbed emb = new JEmbed();
-                emb.Title = title;
-                emb.Description = desc;
-                emb.ColorStripe = Constants.Colours.YORK_RED;
+                if (title.ToLower().Contains(code.ToLower())) found = true;
 
-                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+            } while (!found);
 
-            }
+            JEmbed emb = new JEmbed();
+            emb.Title = title;
+            emb.Description = desc;
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
+
+
         }
-
+    
         #region Item Commands
         [Command("roll")]
         public async Task Roll(int max = 6)
@@ -669,7 +680,84 @@ namespace ForkBot
             }
         }
 
-        //[Command("shop"),]
+        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
+        public async Task Shop(string command = null)
+        {
+            var u = Functions.GetUser(Context.User);
+            DateTime day = new DateTime();
+            DateTime currentDay = new DateTime();
+            if (Var.currentShop != null)
+            {
+                day = Var.currentShop.Date();
+                currentDay = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+            }
+            if (Var.currentShop == null || day.DayOfYear < currentDay.DayOfYear && day.Year == currentDay.Year)
+            {
+                var nItems = Functions.GetItemList();
+                var rItems = Functions.GetRareItemList();
+                var allItems = nItems.Concat(rItems).ToArray();
+
+                List<string> items = new List<string>();
+                for (int i = 0; i < 5; i++)
+                {
+                    int itemID = rdm.Next(allItems.Length);
+                    if (!items.Contains(allItems[itemID])) items.Add(allItems[itemID]);
+                    else i--;
+                }
+
+                Var.currentShop = new Shop(items);
+            }
+
+            List<string> itemNames = new List<string>();
+            foreach (string item in Var.currentShop.Items()) itemNames.Add(item.Split('|')[0]);
+
+
+
+            if (command == null)
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = "Shop";
+                emb.ThumbnailUrl = Constants.Images.ForkBot;
+                foreach (string item in Var.currentShop.Items())
+                {
+                    var data = item.Split('|');
+                    string name = data[0];
+                    string desc = data[1];
+                    int price = Convert.ToInt32(data[2]) * 2;
+                    if (price < 0) price *= -1;
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = $":{name}: {name} - {price} coins";
+                        x.Text = desc;
+                    }));
+                }
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+            }
+            else if (itemNames.Contains(command.ToLower()))
+            {
+                foreach(string item in itemNames)
+                {
+                    if (item == command.ToLower())
+                    {
+                        var data = item.Split('|');
+                        string name = data[0];
+                        string desc = data[1];
+                        int price = Convert.ToInt32(data[2]) * 2;
+                        if (price < 0) price *= -1;
+
+                        if (u.Coins >= price)
+                        {
+                            u.Coins -= price;
+                            u.Items.Add(name);
+                            Functions.SaveUsers();
+                            await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} :{name}: for {price} coins!");
+                        }
+                        else await Context.Channel.SendMessageAsync("You cannot afford this item.");
+                    }
+                }
+            }
+            else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
+        }
         #endregion
 
         //for viewing a tag
@@ -893,43 +981,15 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
-
-        [Command("power"), Alias(new string[] { "p", "pow" })]
-        public async Task Power(params string[] command)
-        {
-            if (Context.User.Id == Constants.Users.BRADY)
-            {
-                string msg = "";
-                if (command[0] == "servers")
-                {
-                    foreach(IGuild g in Bot.client.Guilds)
-                    {
-                        msg += g.Name + " : " + g.Id + "\n";
-                    }
-                }
-                else if (command[0] == "roles")
-                {
-                    IGuild g = Bot.client.GetGuild(Convert.ToUInt64(command[1]));
-                    foreach(IRole r in g.Roles)
-                    {
-                        msg += r.Name + " : " + r.Id + "\n";
-                    }
-                }
-                else if (command[0] == "giverole")
-                {
-                    IGuild g = Bot.client.GetGuild(Convert.ToUInt64(command[1]));
-                    IRole r = g.GetRole(Convert.ToUInt64(command[2]));
-                    var me = await g.GetUserAsync(Constants.Users.BRADY);
-                    await me.AddRoleAsync(r);
-                    msg = "done";
-                }
-                await Context.Channel.SendMessageAsync(msg);
-            }
-        }
+        
 
         #endregion
+        
     }
+    
 }
+
+
 
 
 //change for commit

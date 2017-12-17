@@ -38,5 +38,7 @@ namespace ForkBot
         public static List<IUser> blockedUsers = new List<IUser>();
 
         public static List<IMessage> awaitingHelp = new List<IMessage>();
+
+        public static Shop currentShop = null;
     }
 }
