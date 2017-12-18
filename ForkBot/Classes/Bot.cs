@@ -71,16 +71,23 @@ namespace ForkBot
         {
             for (int i = 0; i < Var.leaveBanned.Count(); i++)
             {
+                Console.WriteLine("Attempting to unban..");
                 if (DateTime.Now > Var.unbanTime[i])
                 {
-                    var user = Var.leaveBanned[i];
-                    var g = user.Guild;
-                    await g.RemoveBanAsync(user);
-                    Var.leaveBanned.Remove(user);
-                    Var.unbanTime.Remove(Var.unbanTime[i]);
+                    try
+                    {
+                        var user = Var.leaveBanned[i];
+                        var g = user.Guild;
+                        await g.RemoveBanAsync(user);
+                        Console.WriteLine($"{user} has been unbanned.");
+                        Var.leaveBanned.Remove(user);
+                        Var.unbanTime.Remove(Var.unbanTime[i]);
 
-                    InfoEmbed iEmb = new InfoEmbed("USER UNBAN", $"User {user} has been unbanned.");
-                    await (await g.GetDefaultChannelAsync()).SendMessageAsync("", embed: iEmb.Build());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Unable to unban user. {e.Message}.");
+                    }
                 }
             }
         }
