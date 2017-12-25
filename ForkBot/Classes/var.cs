@@ -31,6 +31,8 @@ namespace ForkBot
         public static string rPresent;
         public static bool replaceable = true;
         public static bool timerComplete = false;
+        public static DateTime presentTime = new DateTime(1, 1, 1);
+        public static TimeSpan presentWait = new TimeSpan(0,0,0);
         #endregion
 
         public static List<ItemTrade> trades = new List<ItemTrade>();
@@ -40,5 +42,6 @@ namespace ForkBot
         public static List<IMessage> awaitingHelp = new List<IMessage>();
 
         public static Shop currentShop = null;
+
     }
 }

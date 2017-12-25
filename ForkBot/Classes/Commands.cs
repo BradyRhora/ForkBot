@@ -291,18 +291,29 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(msg);
         }
 
-        /*[Command("present"), Summary("Get a cool gift!")]
+        [Command("present"), Summary("[FUN] Get a cool gift!")]
         public async Task Present()
         {
             if (!Var.presentWaiting)
             {
-                Var.presentNum = rdm.Next(10);
-                await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
-                Var.presentWaiting = true;
-                Var.replacing = false;
-                Var.replaceable = true;
+                if (Var.presentTime < DateTime.Now - Var.presentWait)
+                {
+                    Var.presentWait = new TimeSpan(rdm.Next(5), rdm.Next(60), rdm.Next(60));
+                    Var.presentTime = DateTime.Now;
+                    Var.presentNum = rdm.Next(10);
+                    await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
+                    Var.presentWaiting = true;
+                    Var.replacing = false;
+                    Var.replaceable = true;
+                }
+                else
+                {
+                    var sum = Var.presentTime + Var.presentWait;
+                    var wait = sum - DateTime.Now;
+                    await Context.Channel.SendMessageAsync($"The next present will be available in: {wait.Hours} Hours, {wait.Minutes} Minutes, and {wait.Seconds} Seconds.");
+                }
             }
-        }*/
+        }
 
         [Command("whatis"), Alias(new string[] { "wi" }), Summary("Don't know what something is? Find out!")]
         public async Task WhatIs([Remainder]string thing)
