@@ -308,9 +308,7 @@ namespace ForkBot
                 }
                 else
                 {
-                    var sum = Var.presentTime + Var.presentWait;
-                    var wait = sum - DateTime.Now;
-                    await Context.Channel.SendMessageAsync($"The next present will be available in: {wait.Hours} Hours, {wait.Minutes} Minutes, and {wait.Seconds} Seconds.");
+                    await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! The Fork Elves are working their hardest.");
                 }
             }
         }
