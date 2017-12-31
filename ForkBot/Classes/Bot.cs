@@ -109,15 +109,33 @@ namespace ForkBot
 
         public async Task HandleCommand(SocketMessage messageParam)
         {
-
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
             int argPos = 0;
-
+            if (message.Author.Id != Constants.Users.BRADY) return; //Remove me later!
             if (Var.blockedUsers.Contains(message.Author)) return;
 
             var user = Functions.GetUser(message.Author);
             
+            if (Var.recieving)
+            {
+                if (message.Channel == Var.recievingChannel)
+                {
+                    var bBunch = client.GetGuild(371695008157532160).GetChannel(381656424247197697) as IMessageChannel;
+                    
+                    JEmbed emb = new JEmbed();
+                    emb.Title = message.Author.Username + "#" + message.Author.Discriminator;
+                    emb.Author.Name = "MESSAGE RECIEVED";
+                    emb.ThumbnailUrl = message.Author.GetAvatarUrl();
+                    emb.Description = message.Content;
+
+                    string attachURL = null;
+                    if (message.Attachments.Count > 0) attachURL = message.Attachments.FirstOrDefault().ProxyUrl;
+                    if (attachURL != null) emb.ImageUrl = attachURL;
+
+                    await bBunch.SendMessageAsync("", embed: emb.Build());
+                }
+            }
 
             if (message.HasCharPrefix(';', ref argPos))
             {

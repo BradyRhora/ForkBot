@@ -13,6 +13,7 @@ namespace ForkBot
         public static List<DateTime> unbanTime = new List<DateTime>();
 
         public static bool purging = false;
+        public static IMessage purgeMessage;
 
         #region HangMan
         public static string hmWord;
@@ -29,6 +30,10 @@ namespace ForkBot
         public static List<IMessage> awaitingHelp = new List<IMessage>();
 
         public static Shop currentShop = null;
+
+        public static bool recieving = false;
+        public static IMessageChannel recievingChannel;
+
 
     }
 }

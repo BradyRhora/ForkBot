@@ -35,8 +35,9 @@ namespace ForkBot
         }
 
         public static Timer unpurge;
-        public static void UnPurge(object state)
+        public static async void UnPurge(object state)
         {
+            await Var.purgeMessage.DeleteAsync();
             Var.purging = false;
             unpurge.Dispose();
         }

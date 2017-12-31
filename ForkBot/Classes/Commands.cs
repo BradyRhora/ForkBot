@@ -911,7 +911,7 @@ namespace ForkBot
             await Context.Channel.DeleteMessagesAsync(messages);
 
             InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted by {Context.User.Username}.");
-            await Context.Channel.SendMessageAsync("", embed: ie.Build());
+            Var.purgeMessage = await Context.Channel.SendMessageAsync("", embed: ie.Build());
             Timers.unpurge = new Timer(new TimerCallback(Timers.UnPurge), null, 5000, Timeout.Infinite);
         }
 
@@ -969,10 +969,10 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
-        
 
-        #endregion
         
+        #endregion
+
     }
     
 }
