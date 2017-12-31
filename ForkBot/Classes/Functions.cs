@@ -119,7 +119,7 @@ namespace ForkBot
             frameCount++;
             if (frameCount >= anim.frames.Count())
             {
-                Var.timerComplete = true;
+                //Var.timerComplete = true;
                 animTimer.Dispose();
             }
         }

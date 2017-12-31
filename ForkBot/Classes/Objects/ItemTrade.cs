@@ -111,7 +111,7 @@ namespace ForkBot
 
             emb.ColorStripe = Constants.Colours.YORK_RED;
             emb.Author.IconUrl = Constants.Images.ForkBot;
-            emb.Author.Name = "Forkbot Trade Menu:tm:";
+            emb.Author.Name = "Forkbot Trade Menu";
 
             return emb.Build();
         }

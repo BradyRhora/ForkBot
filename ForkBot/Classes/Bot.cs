@@ -117,52 +117,7 @@ namespace ForkBot
             if (Var.blockedUsers.Contains(message.Author)) return;
 
             var user = Functions.GetUser(message.Author);
-
-            if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
-            {
-                Var.presentWaiting = false;
-                await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
-                var presents = Functions.GetItemList();
-                var presentData = presents[rdm.Next(presents.Count())].Split('|');
-                Var.present = presentData[0];
-                Var.rPresent = Var.present;
-                var presentName = Var.present.Replace('_', ' ');
-                var pMessage = presentData[1];
-                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName)}! :{Var.present}: {pMessage}");
-                if (Var.present == "santa")
-                {
-                    await message.Channel.SendMessageAsync("You got...");
-                    string sMessage = "";
-                    for (int i = 0; i < 5; i++)
-                    {
-                        string sPresent = presents[rdm.Next(presents.Count())].Split('|')[0];
-                        sMessage += ":" + sPresent + ": ";
-                        user.Items.Add(sPresent);
-                    }
-                    await message.Channel.SendMessageAsync(sMessage);
-
-                    Var.replaceable = false;
-                }
-                else user.Items.Add(Var.present);
-
-                if (Var.replaceable)
-                {
-                    await message.Channel.SendMessageAsync($"Don't like this gift? Press {Var.presentNum} again to replace it once!");
-                    Var.replacing = true;
-                    Var.presentReplacer = message.Author;
-                }
-            }
-            else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
-            {
-                user.Items.Remove(Var.present);
-                await message.Channel.SendMessageAsync("Okay! I'll be right back.");
-                await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{Var.rPresent}:");
-                await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
-                Var.presentWaiting = true;
-                Var.replacing = false;
-                Var.replaceable = false;
-            }
-
+            
 
             if (message.HasCharPrefix(';', ref argPos))
             {
