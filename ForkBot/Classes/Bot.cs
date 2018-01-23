@@ -112,7 +112,7 @@ namespace ForkBot
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
             int argPos = 0;
-            if (message.Author.Id != Constants.Users.BRADY) return; //Remove me later!
+            
             if (Var.blockedUsers.Contains(message.Author)) return;
 
             var user = Functions.GetUser(message.Author);
