@@ -49,3 +49,4 @@ ForkBot/bin/Debug/Constants/bottoken
 *.txt
 *.png
 ForkBot/.vs
+ForkBot/bin/Debug/Files/drawing.png
