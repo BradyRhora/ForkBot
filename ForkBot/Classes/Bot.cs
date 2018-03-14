@@ -101,7 +101,7 @@ namespace ForkBot
         {
             client.MessageReceived += HandleCommand;
             client.UserJoined += HandleJoin;
-            client.UserLeft += HandleLeave;
+            //client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
             client.ReactionAdded += HandleReact;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
@@ -157,14 +157,14 @@ namespace ForkBot
         {
             await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role.");
         }
-        public async Task HandleLeave(SocketGuildUser user)
+        /*public async Task HandleLeave(SocketGuildUser user)
         {
             await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
             Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
             Var.leaveBanned.Add(user);
             Var.unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
             await user.Guild.AddBanAsync(user, reason: "Tempban for leaving server. Done automatically by ForkBot to prevent spam leave-joining. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
-        }
+        }*/
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
             var msg = cache.Value;
