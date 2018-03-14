@@ -526,7 +526,7 @@ namespace ForkBot
                 page = web.Load(newLink);
                 desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
                 title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
-
+                desc = desc.Replace("&quot;", "\"");
                 if (title.ToLower().Contains(code.ToLower())) found = true;
 
             } while (!found);
