@@ -43,6 +43,7 @@ namespace ForkBot
                 Functions.LoadUsers();
                 Timer banCheck = new Timer(new TimerCallback(TimerCall), null, 0, 1000);
                 Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000 * 60 * 60);
+                Timer weeklyTimer = new Timer(new TimerCallback(Weekly), null, 0, 1000 * 60 * 60 * 24 * 7);
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -96,12 +97,27 @@ namespace ForkBot
         {
             Functions.SaveUsers();
         }
+        void Weekly(object state) //code that is run every week
+        {
+            //user file purge
+            string path = "Files/users.txt";
+            var userdata = File.ReadAllLines(path);
+            List<String> data = userdata.ToList();
+            for (int i = data.Count() - 1; i >= 0; i--)
+            {
+                if (data[i].Split('|')[1] == "0" && data[i].Split('|').Count() <= 2)
+                {
+                    data.Remove(data[i]);
+                }
+            }
+            File.WriteAllLines(path, data.ToArray());
+        }
 
         public async Task InstallCommands()
         {
             client.MessageReceived += HandleCommand;
             client.UserJoined += HandleJoin;
-            //client.UserLeft += HandleLeave;
+            client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
             client.ReactionAdded += HandleReact;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
@@ -114,8 +130,7 @@ namespace ForkBot
             int argPos = 0;
             
             if (Var.blockedUsers.Contains(message.Author)) return;
-
-            var user = Functions.GetUser(message.Author);
+            
             
             if (Var.recieving)
             {
@@ -157,14 +172,14 @@ namespace ForkBot
         {
             await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role.");
         }
-        /*public async Task HandleLeave(SocketGuildUser user)
+        public async Task HandleLeave(SocketGuildUser user)
         {
             await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
-            Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
+            /*Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
             Var.leaveBanned.Add(user);
             Var.unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
             await user.Guild.AddBanAsync(user, reason: "Tempban for leaving server. Done automatically by ForkBot to prevent spam leave-joining. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
-        }*/
+        */}
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
             var msg = cache.Value;
