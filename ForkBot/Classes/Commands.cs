@@ -536,7 +536,7 @@ namespace ForkBot
             emb.ColorStripe = Constants.Colours.YORK_RED;
 
             await Context.Channel.SendMessageAsync("", embed: emb.Build());
-
+            
 
         }
     

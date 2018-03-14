@@ -96,3 +96,38 @@ C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\DuckDuckGo.dll
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.dll
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.exe
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\DuckDuckGo.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\libvideo.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.csprojResolveAssemblyReference.cache
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.exe
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
