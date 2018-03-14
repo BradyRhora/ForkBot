@@ -362,7 +362,8 @@ namespace ForkBot
                 var imageNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[1]/img");
                 var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
                 string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
-
+                string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[3]/h2/a").InnerText;
+                university = university.Replace(" (all campuses)", "");
                 var tagsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
                 List<string> tags = new List<string>();
                 for (int i = 0; i < tagsNode.ChildNodes.Count(); i++)
@@ -417,12 +418,12 @@ namespace ForkBot
                         }
                     }
                 }
-                string[] commonWords = { "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
+                string[] commonWords = { "i", "me", "at", "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
                 foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
 
                 JEmbed emb = new JEmbed();
 
-                emb.Title = profName;
+                emb.Title = profName + "-" + university;
                 if (imageURL != null) emb.ImageUrl = imageURL;
                 emb.ThumbnailUrl = hotnessIMG;
                 emb.Fields.Add(new JEmbedField(x =>
@@ -525,7 +526,7 @@ namespace ForkBot
                 page = web.Load(newLink);
                 desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
                 title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
-
+                desc = desc.Replace("&quot;", "\"");
                 if (title.ToLower().Contains(code.ToLower())) found = true;
 
             } while (!found);
