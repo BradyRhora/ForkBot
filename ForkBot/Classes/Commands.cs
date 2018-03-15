@@ -423,7 +423,7 @@ namespace ForkBot
 
                 JEmbed emb = new JEmbed();
 
-                emb.Title = profName + "-" + university;
+                emb.Title = profName + " - " + university;
                 if (imageURL != null) emb.ImageUrl = imageURL;
                 emb.ThumbnailUrl = hotnessIMG;
                 emb.Fields.Add(new JEmbedField(x =>
