@@ -1,11 +1,11 @@
 add ;sell all
 remove underscore
-fix ;move in york server
-profile roles 🅱roke
 fix capitalization on selling
 fix umbrella2
-fix coin trades
-limit draw amount
-fix image deletion
-remove unknown command error message
 forkbot stats
+add more error messages (more specific ones i guess)
+prof in a skill
+remove gift from ;shop
+add more help stuff
+replace &quot; with " in ;course
+code racism away
