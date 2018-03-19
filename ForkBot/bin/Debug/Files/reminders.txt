@@ -1,11 +1,6 @@
-add ;sell all
 remove underscore
-fix capitalization on selling
 fix umbrella2
 forkbot stats
 add more error messages (more specific ones i guess)
-prof in a skill
 remove gift from ;shop
-add more help stuff
-replace &quot; with " in ;course
-code racism away
+

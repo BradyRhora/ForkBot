@@ -188,10 +188,16 @@
     <None Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\Files\drawing.png" />
+    <Content Include="bin\Debug\Files\Images\ForkBot.png" />
+    <Content Include="bin\Debug\Files\Images\Hammer.png" />
+    <Content Include="bin\Debug\Files\Images\Kick.png" />
     <Content Include="bin\Debug\Files\items.txt" />
     <Content Include="bin\Debug\Files\rareitems.txt" />
+    <Content Include="bin\Debug\Files\reminders.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />
     <Content Include="bin\Debug\Files\users.txt" />
+    <Content Include="bin\Debug\Files\users_prepurge.txt" />
     <Content Include="bin\Debug\Files\wordlist.txt" />
     <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
