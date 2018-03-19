@@ -756,10 +756,16 @@ namespace ForkBot
             if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
             string[] tags = File.ReadAllLines("Files/tags.txt");
             bool sent = false;
+            string msg = "```";
 
             foreach (string line in tags)
             {
-                if (line.Split('|')[0] == tag)
+
+                if (tag == "list")
+                {
+                    msg += "\n" + line.Split('|')[0];
+                }
+                else if (line.Split('|')[0] == tag)
                 {
                     sent = true;
                     await Context.Channel.SendMessageAsync(line.Split('|')[1]);
@@ -777,6 +783,7 @@ namespace ForkBot
         {
             if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
             bool exists = false;
+            if (tag == "list") exists = true;
             string[] tags = File.ReadAllLines("Files/tags.txt");
             foreach (string line in tags)
             {
