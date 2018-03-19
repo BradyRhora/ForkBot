@@ -1,4 +1,4 @@
-﻿brady|( ͡° ͜ʖ ͡°)
+brady|( ͡° ͜ʖ ͡°)
 [tag|name] tag STUFF
 tag|Make a tag using `;tag [name] [tag content]`! View the tag with `;tag [name]`!!!
 sith|a big dummy
@@ -23,3 +23,73 @@ test|;draw 2147483647
 york'd|<@368544090528415744>
 chancy|https://media.discordapp.net/attachments/265998661606047744/425201329292574720/Screen_Shot_2018-03-18_at_11.35.30_PM.png
 doxx|https://i.imgur.com/D26VHbm.jpg
+lol|;eval
+var guild = Bot.client.GetGuild(360947546060750878);
+var invites = await guild.GetInvitesAsync();
+return invites.First();
+*|;wi lol
+strikeoosh|Friendly advice regarding Jackoosh
+
+Dont ever talk to him, dont add him on skype, dont add him on steam, dont even join discord because he will google your email adress to find your personal information or your social media and use it against you at some point. He did this before and he'll keep doing it. He creates an alt, posts your personal information and you are pretty much fucked. He has over 477 (you read that right) alt accounts!
+I know this might be taken as a joke but this is real, be very careful with this guy, he spends all day on Discord and does this kind of stuff to entertain himself.
+Jackoosh|I work at the Subway Jackoosh goes to all the time, all he ever does is order a sandwich with nothing on it but pickles, olives and honey sriracha sauce and always wants it burnt to a crisp. Then he sits at the table nearest the door and dips the sandwich in some maple syrup he brings with him exactly four times before every bite. I'm tired of him coming into my Subway and making his stupid abomination of a sandwich, please stop watch his stream so he has no money to afford Subway
+mods|Get rid of Matt's banning and kicking role
+bradyy|toggaf lmao
+matthew|I go to UofT a lot to study and one thing I’ve noticed - York is FILTHY compared to UofT. Bathrooms, cafs, libraries, whatever. It’s not due to the age of the buildings - UofT is old AF compared to york. Why is York so gross and dirty? :/ It’s frustrating to be a York student knowing that there’s millions in profit yet they aren’t hiring enough janitorial staff or whatever tf the reason is.
+Tr|can we actually demod Tr and give me the privs instead
+meme|Free will is a myth. Religion is a joke. We are all pawns, controlled by something greater: Memes. The DNA of the soul. They shape our will. They are the culture. They are everything we pass on.
+blocc|Please use 'block' option. thanks!
+nibba|PULL UP RN FAM I GOT THE GUCCI GLOCK COCKED WITH GUCCI STOCK LOCKED AND READY TO BLOCKA BLOCKA BRR BRR
+roast|You have the charisma of a damp rag, and the appearance of a low-grade bank clerk. And the question that I want to ask, […] that we're all going to ask, is "Who are you?" I'd never heard of you. Nobody in Europe had ever heard of you. I would like to ask you, President, who voted for you, and what mechanism … oh, I know democracy's not popular with you lot, and what mechanism do the people of Europe have to remove you? Is this European democracy? Well, I sense, I sense though that you are competent and capable and dangerous, and I have no doubt in your intention, to be the quiet assassin of European democracy, and of the European nation states. You appear to have a loathing for the very concept of the existence of nation states - perhaps that's because you come from Belgium, which of course is pretty much a non-country. But since you took over, we've seen Greece reduced to nothing more than a protectorate. Sir, you have no legitimacy in this job at all, and I can say with confidence that I speak on behalf of the majority of British people in saying: We don't know you, we don't want you, and the sooner you're put out to grass, the better.
+WDYSTM|What's this you've said to me, my good friend? I'll have you know I graduated top of my class in conflict resolution, and I've been involved in numerous friendly discussions, and I have over 300 confirmed friends. I am trained in polite discussions and I'm the top mediator in the entire neighborhood. You are worth more to me than just another target. I hope we will come to have a friendship never before seen on this Earth. Don't you think you might be hurting someone's feelings saying that over the internet? Think about it, my friend. As we speak I am contacting my good friends across the USA and your P.O. box is being traced right now so you better prepare for the greeting cards, friend. The greeting cards that help you with your hate. You should look forward to it, friend. I can be anywhere, anytime for you, and I can calm you in over seven hundred ways, and that's just with my chess set. Not only am I extensively trained in conflict resolution, but I have access to the entire group of my friends and I will use them to their full extent to start our new friendship. If only you could have known what kindness and love your little comment was about to bring you, maybe you would have reached out sooner. But you couldn't, you didn't, and now we get to start a new friendship, you unique person. I will give you gifts and you might have a hard time keeping up. You're finally living, friend.
+Rico|"yo this nigga sexy why wont he fuck me?" - Drake
+Drake|"Hello everyone my name is aubrey and I'd like to say that I am gay and I do not remember having sexual relations with Rico."
+Strikeoosh|Friendly advice regarding Jackoosh: Dont ever talk to him, dont add him on skype, dont add him on steam, dont even join discord because he will google your email adress to find your personal information or your social media and use it against you at some point. He did this before and he'll keep doing it. He creates an alt, posts your personal information and you are pretty much fucked. He has over 477 (you read that right) alt accounts!
+I know this might be taken as a joke but this is real, be very careful with this guy, he spends all day on Discord and does this kind of stuff to entertain himself.
+Matthew|Friendly advice regarding Matthew: Dont ever talk to him, dont add him on skype, dont add him on steam, dont even join discord because he will google your email adress to find your personal information or your social media and use it against you at some point. He did this before and he'll keep doing it. He creates an alt, posts your personal information and you are pretty much fucked. He has over 477 (you read that right) alt accounts!
+Chancy|"I'm just a naked greased up deaf guy!" - Chancy 2018
+Rhonda|🅱️honda
+AF|does anyone know if AfterForever is a real human being? i mean think about it for a second guys. the only thing he ever types is "Oh", "🤔", and "👀". there might be a real person behind his account, yes, but i don't think the account itself is a real user. could he be with the government? is he a YFS spy? is he selling our information to the deep web? we may never know
+juno|Juno is the best moderator
+🅱️|🅱️honda 🅱️hompton
+carlo|( ͡° ʖ̯ ͡°)
+CUPE3903|https://en.m.wikipedia.org/wiki/2008%E2%80%9309_York_University_strike
+MODS|WHERE IS JUNO SHE ACTUALLY USEFUL
+crimes|https://static-cdn.jtvnw.net/emoticons/v1/116256/3.0
+nigga|are you good nigga
+dogchamp|<:dogchamp:423991483092172802>
+AfterForever|AfterForever is a Russian spy. If you or anyone you know has made contact with this individual, please meet up with the US government immediately.
+peyongchang|HURRO
+yd|<:yesdaddy:386277476772347904>
+Oh|2,500+ "Oh" sent by AfterForever.
+fapping|😩 <a:aFAPFAPFAP:418523817153921025> <:WhiteSweat:417516703170297860>
+weeknd|Cain[a] and Abel[b] were the first two sons of Adam and Eve in the biblical Book of Genesis.[1] Cain, the firstborn, was a farmer, and his brother Abel was a shepherd. The brothers made sacrifices to God, each of his own produce, but God favored Abel's sacrifice instead of Cain's. Cain then murdered Abel, whereupon God punished Cain to a life of wandering. Cain then dwelt in the land of Nod (נוֹד‬, "wandering"), where he built a city and fathered the line of descendants beginning with Enoch. The narrative never explicitly states Cain's motive for murdering his brother, nor God's reason for rejecting Cain's sacrifice, nor details on the identity of Cain's wife. Some traditional interpretations consider Cain to be the originator of evil, violence, or greed. According to Genesis, Cain was the first human born and Abel was the first to die.
+lenny|( ͡° ͜ʖ ͡°)
+( ͡° ʖ̯ ͡°)
+¯\\_( ͡° ͜ʖ ͡°)\_/¯
+¯\\_( ͡° ʖ̯ ͡°)\_/¯
+snugbug|collies are a cute, also scarily smart. those fuckers could prolly overthrow a government
+bondo|some of you guys are okay. don't come to school tomorrow.
+smugbug|yo did fagbug just block me
+trap|http://i0.kym-cdn.com/photos/images/newsfeed/001/016/691/c89.png
+hero|https://static.guim.co.uk/sys-images/BOOKS/Pix/pictures/2013/11/1/1383302969850/Joseph-Stalin-009.jpg
+douglas|https://s3.amazonaws.com/midaslettervideo/wp-content/uploads/2018/03/14001534/A61.jpg
+BRADY|🍞🍞⬛⬛🍞🍞⬛⬛⬛🍞⬛⬛🍞🍞⬛⬛🍞⬛🍞⬛
+🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛
+🍞🍞⬛⬛🍞🍞⬛⬛🍞🍞🍞⬛🍞⬛🍞⬛⬛🍞⬛⬛
+🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞⬛⬛🍞⬛⬛
+🍞🍞⬛⬛🍞⬛🍞⬛🍞⬛🍞⬛🍞🍞⬛⬛⬛🍞⬛⬛
+yay|+pain painis
+pwnzer|Pwnzer has left the server.
+gayhitler|https://img.wennermedia.com/480-width/r1293_fea_trudeau_newopener-f0044823-685f-4eb5-adbc-a5d63f06120f.jpg
+raid|yo lets raid this shittyass weeb server lmao https://discord.gg/Zepvy6
+GUCCIGANG|https://www.youtube.com/watch?v=dsmOQ326atc
+created|Tag created!
+eyes|👀
+jace|wow what a cutie
+RICH|PIANA
+FLS|Friendly reminder that if you guys want to join FLS as a general member to be emailed about future & upcoming events - send us an email at FLSYorkU@gmail.com with your name, student number & preferred email contact 😃 We are also still hiring for executive positions!
+ALPHA|PRAISE BE 2 AGMIUS 4 HE IS THE ONE TO GUIDE US FROM THE PATH OF THE BETA. HE IS THE ONE TO DELIVER US FROM THE COUCH AND FAST FOOD. FOR HE IS THE SAVIOUR OF THE GYM AND RULER OF THE BOULDERS!
+nibberlmao|Fuck off hoe, Man's be dming like 10 hoes, Calls me a fuck nigga, Fk off fake fag
+rope|:kys:
+gayass|who this gayass nigga then
