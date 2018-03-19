@@ -423,7 +423,7 @@ namespace ForkBot
 
                 JEmbed emb = new JEmbed();
 
-                emb.Title = profName + "-" + university;
+                emb.Title = profName + " - " + university;
                 if (imageURL != null) emb.ImageUrl = imageURL;
                 emb.ThumbnailUrl = hotnessIMG;
                 emb.Fields.Add(new JEmbedField(x =>
@@ -971,7 +971,28 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
 
-        
+        [Command("eval")]
+        public async Task EvaluateCmd([Remainder] string expression)
+        {
+            if (Context.User.Id == Constants.Users.BRADY)
+            {
+                IUserMessage msg = await ReplyAsync("Evaluating...");
+                string result = await EvalService.EvaluateAsync(Context as CommandContext, expression);
+                var user = Context.User as IGuildUser;
+                if (user.RoleIds.ToArray().Count() > 1)
+                {
+                    var role = Context.Guild.GetRole(user.RoleIds.ElementAtOrDefault(1));
+                    var emb = new EmbedBuilder().WithColor(role.Color).WithDescription(result).WithTitle("Evaluated").WithCurrentTimestamp();
+                    await Context.Channel.SendMessageAsync("", embed: emb);
+                }
+                else
+                {
+                    var emb = new EmbedBuilder().WithColor(new Discord.Color(147, 112, 219)).WithDescription(result).WithTitle("Evaluated").WithCurrentTimestamp();
+                    await Context.Channel.SendMessageAsync("", embed: emb);
+                }
+            }
+
+        }
         #endregion
 
     }
