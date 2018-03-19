@@ -183,16 +183,48 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="bin\Debug\ForkBot.exe.config" />
     <None Include="Classes\OxfordDictionariesAPI\Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="packages.config" />
     <None Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\Discord.Net.Commands.dll" />
+    <Content Include="bin\Debug\Discord.Net.Commands.xml" />
+    <Content Include="bin\Debug\Discord.Net.Core.dll" />
+    <Content Include="bin\Debug\Discord.Net.Core.xml" />
+    <Content Include="bin\Debug\Discord.Net.Rest.dll" />
+    <Content Include="bin\Debug\Discord.Net.Rest.xml" />
+    <Content Include="bin\Debug\Discord.Net.Rpc.dll" />
+    <Content Include="bin\Debug\Discord.Net.Rpc.xml" />
+    <Content Include="bin\Debug\Discord.Net.Webhook.dll" />
+    <Content Include="bin\Debug\Discord.Net.Webhook.xml" />
+    <Content Include="bin\Debug\Discord.Net.WebSocket.dll" />
+    <Content Include="bin\Debug\Discord.Net.WebSocket.xml" />
+    <Content Include="bin\Debug\DuckDuckGo.dll" />
     <Content Include="bin\Debug\Files\items.txt" />
     <Content Include="bin\Debug\Files\rareitems.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />
     <Content Include="bin\Debug\Files\users.txt" />
     <Content Include="bin\Debug\Files\wordlist.txt" />
+    <Content Include="bin\Debug\ForkBot.exe" />
+    <Content Include="bin\Debug\ForkBot.pdb" />
+    <Content Include="bin\Debug\HtmlAgilityPack.dll" />
+    <Content Include="bin\Debug\HtmlAgilityPack.pdb" />
+    <Content Include="bin\Debug\HtmlAgilityPack.xml" />
+    <Content Include="bin\Debug\libvideo.dll" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.dll" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.xml" />
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+    <Content Include="bin\Debug\Newtonsoft.Json.xml" />
+    <Content Include="bin\Debug\RestSharp.dll" />
+    <Content Include="bin\Debug\System.Collections.Immutable.dll" />
+    <Content Include="bin\Debug\System.Collections.Immutable.xml" />
+    <Content Include="bin\Debug\System.Interactive.Async.dll" />
+    <Content Include="bin\Debug\System.Interactive.Async.xml" />
+    <Content Include="bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll" />
     <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
