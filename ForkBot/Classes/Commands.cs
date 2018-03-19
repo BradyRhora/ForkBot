@@ -784,18 +784,30 @@ namespace ForkBot
             if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
             bool exists = false;
             if (tag == "list") exists = true;
-            string[] tags = File.ReadAllLines("Files/tags.txt");
-            foreach (string line in tags)
+            else if (tag == "delete")
             {
-                if (line.Split('|')[0] == tag) { exists = true; break; }
+                var tags = File.ReadAllLines("Files/tags.txt").ToList();
+                for (int i = 0; i < tags.Count(); i++)
+                {
+                    if (tags[i].Split('|')[0] == tag) { tags.Remove(tags[i]); break; }
+                }
+                File.WriteAllLines("Files/tags.txt", tags);
             }
+            else
+            {
+                string[] tags = File.ReadAllLines("Files/tags.txt");
+                foreach (string line in tags)
+                {
+                    if (line.Split('|')[0] == tag) { exists = true; break; }
+                }
 
-            if (!exists)
-            {
-                File.AppendAllText("Files/tags.txt", tag + "|" + content + "\n");
-                await Context.Channel.SendMessageAsync("Tag created!");
+                if (!exists)
+                {
+                    File.AppendAllText("Files/tags.txt", tag + "|" + content + "\n");
+                    await Context.Channel.SendMessageAsync("Tag created!");
+                }
+                else await Context.Channel.SendMessageAsync("Tag already exists!");
             }
-            else await Context.Channel.SendMessageAsync("Tag already exists!");
         }
 
         [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
