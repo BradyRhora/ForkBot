@@ -127,6 +127,7 @@ namespace ForkBot
         {
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
+            if (message.Author.Id == client.CurrentUser.Id) return;
             int argPos = 0;
             
             if (Var.blockedUsers.Contains(message.Author)) return;
@@ -151,6 +152,7 @@ namespace ForkBot
                     await bBunch.SendMessageAsync("", embed: emb.Build());
                 }
             }
+
 
             if (message.HasCharPrefix(';', ref argPos))
             {
