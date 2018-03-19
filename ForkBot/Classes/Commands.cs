@@ -772,8 +772,9 @@ namespace ForkBot
                     break;
                 }
             }
-
-            if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
+            msg += "\n```";
+            if (tag == "list") await Context.Channel.SendMessageAsync(msg);
+            else if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
 
         }
 
@@ -784,12 +785,12 @@ namespace ForkBot
             if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
             bool exists = false;
             if (tag == "list") exists = true;
-            else if (tag == "delete")
+            else if (tag == "delete" && Context.User.Id == Constants.Users.BRADY)
             {
                 var tags = File.ReadAllLines("Files/tags.txt").ToList();
                 for (int i = 0; i < tags.Count(); i++)
                 {
-                    if (tags[i].Split('|')[0] == tag) { tags.Remove(tags[i]); break; }
+                    if (tags[i].Split('|')[0] == content) { tags.Remove(tags[i]); break; }
                 }
                 File.WriteAllLines("Files/tags.txt", tags);
             }
