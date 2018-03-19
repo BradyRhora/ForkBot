@@ -1,4 +1,4 @@
-﻿brady|( ͡° ͜ʖ ͡°)
+brady|( ͡° ͜ʖ ͡°)
 [tag|name] tag STUFF
 tag|Make a tag using `;tag [name] [tag content]`! View the tag with `;tag [name]`!!!
 sith|a big dummy
@@ -12,7 +12,6 @@ rev2|YOUR ARE GAY
 bigger|🅱
 nibber|true-nigga
 fagbug|can we ban juno because she is a shite mod and she banned me and she deletes my messages
-'|'
 bhonda|https://3903.cupe.ca/
 ;tag|;tag
 forkbot|i am a good bot
@@ -22,4 +21,3 @@ gn|😴😴😴😴
 test|;draw 2147483647
 york'd|<@368544090528415744>
 chancy|https://media.discordapp.net/attachments/265998661606047744/425201329292574720/Screen_Shot_2018-03-18_at_11.35.30_PM.png
-doxx|https://i.imgur.com/D26VHbm.jpg
