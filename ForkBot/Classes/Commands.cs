@@ -749,6 +749,7 @@ namespace ForkBot
         }
         #endregion
 
+        /* temp disable
         //for viewing a tag
         [Command("tag"), Summary("Make or view a tag!")]
         public async Task Tag(string tag)
@@ -810,7 +811,7 @@ namespace ForkBot
                 else await Context.Channel.SendMessageAsync("Tag already exists!");
             }
         }
-
+        */
         [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
         public async Task Draw(int count)
         {
