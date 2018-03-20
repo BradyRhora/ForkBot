@@ -4,3 +4,4 @@ forkbot stats
 add more error messages (more specific ones i guess)
 remove gift from ;shop
 
+add tag deletion message
