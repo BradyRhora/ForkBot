@@ -2,8 +2,15 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ForkBot.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="lastTweet" Type="System.Int64" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="lastTweet" Type="System.Int64[]" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfLong xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;long&gt;0&lt;/long&gt;
+  &lt;long&gt;0&lt;/long&gt;
+&lt;/ArrayOfLong&gt;</Value>
+    </Setting>
+    <Setting Name="followedTwitters" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

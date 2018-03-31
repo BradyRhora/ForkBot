@@ -51,9 +51,10 @@ namespace ForkBot
                 twit = new TwitterService(twitterLogin[0], twitterLogin[1]);
                 twit.AuthenticateWith(twitterLogin[2], twitterLogin[3]);
                 Console.WriteLine("Successfully authenticated Consumer and Access tokens.");
+                if (Properties.Settings.Default.followedTwitters == null) Properties.Settings.Default.followedTwitters = new System.Collections.Specialized.StringCollection();
 
                 Timer banCheck = new Timer(new TimerCallback(TimerCall), null, 0, 1000);
-                Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000 * 60 * 60);
+                Timer hourlyTimer = new Timer(new TimerCallback(HalfHourly), null, 0, 1000 * 60 * 60);
                 Timer weeklyTimer = new Timer(new TimerCallback(Weekly), null, 0, 1000 * 60 * 60 * 24 * 7);
 
                 await Task.Delay(-1);
@@ -105,25 +106,28 @@ namespace ForkBot
             }
         }
 
-        async void Hourly(object state) //code that is run every hour
+        async void HalfHourly(object state) //code that is run every half hour
         {
             Functions.SaveUsers();
-
-            var tweet = twit.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions
+            foreach (string twitter in Properties.Settings.Default.followedTwitters)
             {
-                ScreenName = "yorkuniversity",
-                Count = 10,
-                ExcludeReplies = true,
-                IncludeRts = false,
-                TrimUser = false
-            }).First();
+                var tweets = twit.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions
+                {
+                    ScreenName = twitter,
+                    Count = 10,
+                    ExcludeReplies = true,
+                    IncludeRts = false,
+                    TrimUser = false
+                });
+                var tweet = tweets.First();
 
-            if (tweet.Id != Properties.Settings.Default.lastTweet)
-            {
-                var gen2 = client.GetChannel(Constants.Channels.GENERAL_2) as IMessageChannel;
-                await gen2.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
-                Properties.Settings.Default.lastTweet = tweet.Id;
-                Properties.Settings.Default.Save();
+                if (tweet.Id != Properties.Settings.Default.lastTweet[Properties.Settings.Default.followedTwitters.IndexOf(twitter)])
+                {
+                    var gen2 = client.GetChannel(Constants.Channels.GENERAL_2) as IMessageChannel;
+                    await gen2.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
+                    Properties.Settings.Default.lastTweet[Properties.Settings.Default.followedTwitters.IndexOf(twitter)] = tweet.Id;
+                    Properties.Settings.Default.Save();
+                }
             }
 
         }

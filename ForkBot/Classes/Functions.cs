@@ -36,7 +36,12 @@ namespace ForkBot
                 foreach (string s in u.Items) toWrite += $"|{s}";
                 toWrite += "\n";
             }
-            File.WriteAllText("Files/users.txt", toWrite);
+            bool unsaved = true;
+            while (unsaved)
+            {
+                try { File.WriteAllText("Files/users.txt", toWrite); unsaved = false; }
+                catch (Exception) { Console.WriteLine("Failed to save users.. trying again."); }
+            }
         }
 
         public static void LoadUsers()

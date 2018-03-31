@@ -540,19 +540,37 @@ namespace ForkBot
             
 
         }
-    
+
         [Command("twitter"), Summary("Get the most recent tweet from a specified Twitter account.")]
-        public async Task Twitter(string account)
+        public async Task Twitter([Remainder]string account)
         {
-            var tweet = Bot.twit.ListTweetsOnUserTimeline(new TweetSharp.ListTweetsOnUserTimelineOptions
+            if (account.StartsWith("follow ") && (Context.User as IGuildUser).RoleIds.Contains(Constants.Roles.MOD))
             {
-                ScreenName = account,
-                Count = 10,
-                ExcludeReplies = true,
-                IncludeRts = false,
-                TrimUser = false
-            }).First();
-            await Context.Channel.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
+                account = account.Replace("follow ", "");
+                Properties.Settings.Default.followedTwitters.Add(account);
+                var newArr = Properties.Settings.Default.lastTweet;
+                Array.Resize(ref newArr, Properties.Settings.Default.followedTwitters.Count);
+                Properties.Settings.Default.lastTweet = newArr;
+
+                Properties.Settings.Default.Save();
+                await Context.Channel.SendMessageAsync("Succcessfully followed " + account);
+            }
+            else
+            {
+                try
+                {
+                    var tweet = Bot.twit.ListTweetsOnUserTimeline(new TweetSharp.ListTweetsOnUserTimelineOptions
+                    {
+                        ScreenName = account,
+                        Count = 10,
+                        ExcludeReplies = true,
+                        IncludeRts = false,
+                        TrimUser = false
+                    }).First();
+                    await Context.Channel.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
+                }
+                catch (Exception) { await Context.Channel.SendMessageAsync("Twitter account not found"); }
+            }
         }
 
         #region Item Commands

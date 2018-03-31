@@ -20,7 +20,7 @@ namespace ForkBot
         public class Roles
         {
             public static ulong ADMIN = 000000000000000;
-            public static ulong MOD = 000000000000000;
+            public static ulong MOD = 266000331442356225;
             public static ulong NON_YORK = 000000000000000;
         }
 
