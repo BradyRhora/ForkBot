@@ -547,9 +547,11 @@ namespace ForkBot
             var tweet = Bot.twit.ListTweetsOnUserTimeline(new TweetSharp.ListTweetsOnUserTimelineOptions
             {
                 ScreenName = account,
-                Count = 1
-            }).FirstOrDefault();
-
+                Count = 10,
+                ExcludeReplies = true,
+                IncludeRts = false,
+                TrimUser = false
+            }).First();
             await Context.Channel.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
         }
 

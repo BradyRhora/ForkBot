@@ -105,17 +105,26 @@ namespace ForkBot
             }
         }
 
-        void Hourly(object state) //code that is run every hour
+        async void Hourly(object state) //code that is run every hour
         {
             Functions.SaveUsers();
 
-            var tweets = twit.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions
+            var tweet = twit.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions
             {
                 ScreenName = "yorkuniversity",
-                Count = 1
-            });
+                Count = 10,
+                ExcludeReplies = true,
+                IncludeRts = false,
+                TrimUser = false
+            }).First();
 
-            var tweet = tweets.FirstOrDefault();
+            if (tweet.Id != Properties.Settings.Default.lastTweet)
+            {
+                var gen2 = client.GetChannel(Constants.Channels.GENERAL_2) as IMessageChannel;
+                await gen2.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
+                Properties.Settings.Default.lastTweet = tweet.Id;
+                Properties.Settings.Default.Save();
+            }
 
         }
         void Weekly(object state) //code that is run every week

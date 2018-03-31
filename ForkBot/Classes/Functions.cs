@@ -158,7 +158,6 @@ namespace ForkBot
             emb.ColorStripe = Constants.Colours.TWITTER_BLUE;
             emb.Description = tweet.Text;
             emb.Timestamp = tweet.CreatedDate;
-
             return emb.Build();
         }
     }
