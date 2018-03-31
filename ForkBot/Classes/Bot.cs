@@ -10,6 +10,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System.Net;
 using System.IO;
+using TweetSharp;
 
 namespace ForkBot
 {
@@ -22,6 +23,8 @@ namespace ForkBot
         public static DiscordSocketClient client;
         public static CommandService commands;
         public static List<User> users = new List<User>();
+
+        public static TwitterService twit;
 
         public async Task Run()
         {
@@ -41,9 +44,18 @@ namespace ForkBot
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
                 Functions.LoadUsers();
+
+
+                Console.WriteLine("Logging in to Twitter...");
+                var twitterLogin = File.ReadAllLines("Constants/twittertokens");
+                twit = new TwitterService(twitterLogin[0], twitterLogin[1]);
+                twit.AuthenticateWith(twitterLogin[2], twitterLogin[3]);
+                Console.WriteLine("Successfully authenticated Consumer and Access tokens.");
+
                 Timer banCheck = new Timer(new TimerCallback(TimerCall), null, 0, 1000);
                 Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000 * 60 * 60);
                 Timer weeklyTimer = new Timer(new TimerCallback(Weekly), null, 0, 1000 * 60 * 60 * 24 * 7);
+
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -96,6 +108,15 @@ namespace ForkBot
         void Hourly(object state) //code that is run every hour
         {
             Functions.SaveUsers();
+
+            var tweets = twit.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions
+            {
+                ScreenName = "yorkuniversity",
+                Count = 1
+            });
+
+            var tweet = tweets.FirstOrDefault();
+
         }
         void Weekly(object state) //code that is run every week
         {

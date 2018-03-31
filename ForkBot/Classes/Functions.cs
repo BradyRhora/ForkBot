@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using TweetSharp;
 
 namespace ForkBot
 {
@@ -146,6 +147,20 @@ namespace ForkBot
             return null;
         }
         
+        public static Embed EmbedTweet(TwitterStatus tweet)
+        {
+            JEmbed emb = new JEmbed();
+            emb.Author = new JEmbedAuthor
+            {
+                IconUrl = tweet.Author.ProfileImageUrl,
+                Name = tweet.Author.ScreenName
+            };
+            emb.ColorStripe = Constants.Colours.TWITTER_BLUE;
+            emb.Description = tweet.Text;
+            emb.Timestamp = tweet.CreatedDate;
+
+            return emb.Build();
+        }
     }
     
 

@@ -161,3 +161,7 @@ C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bi
 C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.dll
 C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.dll
 C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Hammock.ClientProfile.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\TweetSharp.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Hammock.ClientProfile.pdb
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\TweetSharp.pdb

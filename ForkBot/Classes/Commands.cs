@@ -541,6 +541,18 @@ namespace ForkBot
 
         }
     
+        [Command("twitter"), Summary("Get the most recent tweet from a specified Twitter account.")]
+        public async Task Twitter(string account)
+        {
+            var tweet = Bot.twit.ListTweetsOnUserTimeline(new TweetSharp.ListTweetsOnUserTimelineOptions
+            {
+                ScreenName = account,
+                Count = 1
+            }).FirstOrDefault();
+
+            await Context.Channel.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
+        }
+
         #region Item Commands
         [Command("roll")]
         public async Task Roll(int max = 6)
@@ -945,8 +957,6 @@ namespace ForkBot
             
         }
         #endregion
-        
-
 
         #region Brady Commands
 

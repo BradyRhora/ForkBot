@@ -28,6 +28,7 @@ namespace ForkBot
         {
             public static Color YORK_RED = new Color(197, 29, 64);
             public static Color DEFAULT_COLOUR = new Color(197, 29, 64);
+            public static Color TWITTER_BLUE = new Color(0, 172, 237);
         }
 
         public class Channels
