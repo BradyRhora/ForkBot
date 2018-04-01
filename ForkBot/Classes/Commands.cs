@@ -553,7 +553,7 @@ namespace ForkBot
                 Properties.Settings.Default.lastTweet = newArr;
 
                 Properties.Settings.Default.Save();
-                await Context.Channel.SendMessageAsync("Succcessfully followed " + account);
+                await Context.Channel.SendMessageAsync(":bird: | Successfully followed " + account + "!");
             }
             else
             {
@@ -891,6 +891,29 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync($"{Context.User.Username}, I choose...");
             await Context.Channel.SendMessageAsync(decision + "!");
             
+        }
+
+        [Command("nsfw"), Summary("[FUN] Search porn boards for inputted tags.")]
+        public async Task NSFW([Remainder] string tags)
+        {
+            string msg ="";
+            if (tags.Contains("boob")) msg = "(.)(.)";
+            else if (tags.Contains("vagina") || tags.Contains("pussy")) msg = "({})";
+            else if (tags.Contains("penis") || tags.Contains("cock") || tags.Contains("dick")) msg = "8===D";
+            else if (tags.Contains("sex")) msg = "8==D~ ({})";
+            else
+            {
+                string[] msgs = {"```\n"+
+                           "     O\n"+
+                           "   (.)(.)\n"+
+                           "      |\n"+
+                           "      /\\",
+
+                           "8==D (|==8", ":tongue: :peach:", ":eggplant: :sweat_drops:", "[insert interracial gay midget porn]" };
+                msg = msgs[rdm.Next(msg.Count())];
+            }
+
+            await Context.Channel.SendMessageAsync(msg);
         }
 
         #region Mod Commands
