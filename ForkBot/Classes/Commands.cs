@@ -907,10 +907,10 @@ namespace ForkBot
                            "     O\n"+
                            "   (.)(.)\n"+
                            "      |\n"+
-                           "      /\\",
+                           "      /\\```",
 
                            "8==D (|==8", ":tongue: :peach:", ":eggplant: :sweat_drops:", "[insert interracial gay midget porn]" };
-                msg = msgs[rdm.Next(msg.Count())];
+                msg = msgs[rdm.Next(msgs.Count())];
             }
 
             await Context.Channel.SendMessageAsync(msg);
