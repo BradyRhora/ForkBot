@@ -892,30 +892,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(decision + "!");
             
         }
-
-        [Command("nsfw"), Summary("[FUN] Search porn boards for inputted tags.")]
-        public async Task NSFW([Remainder] string tags)
-        {
-            string msg ="";
-            if (tags.Contains("boob")) msg = "(.)(.)";
-            else if (tags.Contains("vagina") || tags.Contains("pussy")) msg = "({})";
-            else if (tags.Contains("penis") || tags.Contains("cock") || tags.Contains("dick")) msg = "8===D";
-            else if (tags.Contains("sex")) msg = "8==D~ ({})";
-            else
-            {
-                string[] msgs = {"```\n"+
-                           "     O\n"+
-                           "   (.)(.)\n"+
-                           "      |\n"+
-                           "      /\\```",
-
-                           "8==D (|==8", ":tongue: :peach:", ":eggplant: :sweat_drops:", "[insert interracial gay midget porn]" };
-                msg = msgs[rdm.Next(msgs.Count())];
-            }
-
-            await Context.Channel.SendMessageAsync(msg);
-        }
-
+        
         #region Mod Commands
 
         [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
