@@ -291,6 +291,28 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(msg);
         }
 
+        [Command("present"), Summary("[FUN] Get a cool gift!")]
+        public async Task Present()
+        {
+            if (!Var.presentWaiting)
+            {
+                if (Var.presentTime < DateTime.Now - Var.presentWait)
+                {
+                    Var.presentWait = new TimeSpan(rdm.Next(5), rdm.Next(60), rdm.Next(60));
+                    Var.presentTime = DateTime.Now;
+                    Var.presentNum = rdm.Next(10);
+                    await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
+                    Var.presentWaiting = true;
+                    Var.replacing = false;
+                    Var.replaceable = true;
+                }
+                else
+                {
+                    await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! The Fork Elves are working their hardest.");
+                }
+            }
+        }
+
         [Command("whatis"), Alias(new string[] { "wi" }), Summary("Don't know what something is? Find out!")]
         public async Task WhatIs([Remainder]string thing)
         {
@@ -618,7 +640,7 @@ namespace ForkBot
                     var itemName = rItemData.Split('|')[0].Replace('_', ' ');
                     var rMessage = rItemData.Split('|')[1];
                     
-                    u.Items.Add(itemName);
+                    u.Items.Add(Var.present);
                     await Context.Channel.SendMessageAsync($"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
                                                            $"A {itemName}! :{itemName}: {rMessage}");
                 }
