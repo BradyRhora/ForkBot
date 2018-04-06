@@ -591,7 +591,7 @@ namespace ForkBot
         public async Task Meme(IUser user)
         {
             string path = @"Files\Templates";
-            string picURL = Context.User.GetAvatarUrl();
+            string picURL = user.GetAvatarUrl();
             using (ImageFactory proc = new ImageFactory())
             {
                 var imgID = rdm.Next(7) + 1;
@@ -631,7 +631,7 @@ namespace ForkBot
                         proc.Resize(new ResizeLayer(size: new Size(600, 600), resizeMode: ResizeMode.Min));
                         overlay = false;
                         var txt = new TextLayer();
-                        txt.Text = Context.User.Username + " " + texts[rdm.Next(texts.Count())];
+                        txt.Text = user.Username + " " + texts[rdm.Next(texts.Count())];
                         txt.FontSize = 50 - (int)(txt.Text.Count() / 1.3);
                         if (txt.FontSize <= 0) txt.FontSize = 1;
                         txt.Position = new Point(20, 630);
@@ -659,7 +659,7 @@ namespace ForkBot
 
                         var text = new TextLayer();
 
-                        text.Text = Context.User.Username + " " + texts[rdm.Next(texts.Count())];
+                        text.Text = user.Username + " " + texts[rdm.Next(texts.Count())];
 
                         char[] cText = text.Text.ToCharArray();
                         int insertCount = 0;
