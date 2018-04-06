@@ -165,3 +165,5 @@ C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bi
 C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\TweetSharp.dll
 C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Hammock.ClientProfile.pdb
 C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\TweetSharp.pdb
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ImageProcessor.dll
+C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ImageProcessor.xml

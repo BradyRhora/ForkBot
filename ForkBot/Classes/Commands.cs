@@ -7,13 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-//using VideoLibrary;
 using DuckDuckGo.Net;
 using OxfordDictionariesAPI;
 using HtmlAgilityPack;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Net;
+using ImageProcessor;
+using ImageProcessor.Imaging;
 
 namespace ForkBot
 {
@@ -278,19 +278,7 @@ namespace ForkBot
 
         [Command("profile")]
         public async Task Profile() { await Profile(Context.User); }
-
-        [Command("listusers")]
-        public async Task Listusers()
-        {
-            string msg = "```\n";
-            foreach (User u in Bot.users)
-            {
-                msg += u.Username() + " " + u.ID + ". Coins: " + u.Coins + "\n";
-            }
-            msg += "```";
-            await Context.Channel.SendMessageAsync(msg);
-        }
-
+        
         [Command("present"), Summary("[FUN] Get a cool gift!")]
         public async Task Present()
         {
@@ -298,7 +286,7 @@ namespace ForkBot
             {
                 if (Var.presentTime < DateTime.Now - Var.presentWait)
                 {
-                    Var.presentWait = new TimeSpan(rdm.Next(5), rdm.Next(60), rdm.Next(60));
+                    Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
                     Var.presentTime = DateTime.Now;
                     Var.presentNum = rdm.Next(10);
                     await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
@@ -308,7 +296,8 @@ namespace ForkBot
                 }
                 else
                 {
-                    await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! The Fork Elves are working their hardest.");
+                    var timeLeft = Var.presentTime - (DateTime.Now - Var.presentWait);
+                    await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! It should be ready in *about* {timeLeft.Hours + 1} hour(s)!");
                 }
             }
         }
@@ -563,7 +552,7 @@ namespace ForkBot
 
         }
 
-        [Command("twitter"), Summary("Get the most recent tweet from a specified Twitter account.")]
+        [Command("twitter"), Summary("Get the most recent tweet from a specified Twitter account. (BETA)")]
         public async Task Twitter([Remainder]string account)
         {
             if (account.StartsWith("follow ") && (Context.User as IGuildUser).RoleIds.Contains(Constants.Roles.MOD))
@@ -592,6 +581,122 @@ namespace ForkBot
                     await Context.Channel.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
                 }
                 catch (Exception) { await Context.Channel.SendMessageAsync("Twitter account not found"); }
+            }
+        }
+
+        [Command("meme"), Summary("[FUN] Memify STUFF.")]
+        public async Task Meme() { await Meme(Context.User); }
+
+        [Command("meme"), Summary("[FUN] Memify STUFF.")]
+        public async Task Meme(IUser user)
+        {
+            string path = @"Files\Templates";
+            string picURL = Context.User.GetAvatarUrl();
+            using (ImageFactory proc = new ImageFactory())
+            {
+                var imgID = rdm.Next(7) + 1;
+                proc.Load(path + $@"\{imgID}.png");
+                using (WebClient web = new WebClient())
+                {
+                    bool downloaded = false;
+                    while (!downloaded)
+                    {
+                        try { web.DownloadFile(picURL, path + @"\0.png"); downloaded = true; }
+                        catch (Exception) { }
+                    }
+                }
+                var img = new ImageLayer();
+                img.Image = System.Drawing.Image.FromFile(path + @"\0.png");
+
+                string[] texts = { "is a dingus", "is an ape", "is cool", "is dumb", "knows how to hold a fork", "eats poo", "is a wasteman" };
+
+                bool overlay = true;
+                switch (imgID)
+                {
+                    case 1:
+                        proc.Load(path + @"\0.png");
+                        proc.Resize(new Size(350, 350));
+                        img.Image = System.Drawing.Image.FromFile(path + $@"\{imgID}.png");
+                        img.Size = new Size(200, 200);
+                        img.Position = new Point(75, 0);
+                        break;
+                    case 2:
+                        img.Position = new Point(60, 440);
+                        img.Size = new Size(100, 100);
+                        break;
+                    case 3:
+                        img.Position = new Point(335, 190);
+                        break;
+                    case 4:
+                        proc.Resize(new ResizeLayer(size: new Size(600, 600), resizeMode: ResizeMode.Min));
+                        overlay = false;
+                        var txt = new TextLayer();
+                        txt.Text = Context.User.Username + " " + texts[rdm.Next(texts.Count())];
+                        txt.FontSize = 50 - (int)(txt.Text.Count() / 1.3);
+                        if (txt.FontSize <= 0) txt.FontSize = 1;
+                        txt.Position = new Point(20, 630);
+                        proc.Watermark(txt);
+                        break;
+                    case 5:
+                        img.Position = new Point(390, 500);
+                        break;
+                    case 6:
+                        var img2 = new ImageLayer();
+                        img2.Image = img.Image;
+                        var img3 = new ImageLayer();
+                        img3.Image = img.Image;
+                        img.Position = new Point(60, 100);
+                        img.Size = new Size(50, 50);
+
+                        img2.Position = new Point(290, 150);
+                        img2.Size = new Size(50, 50);
+
+                        img3.Position = new Point(370, 330);
+                        img3.Size = new Size(50, 50);
+
+                        proc.Overlay(img2);
+                        proc.Overlay(img3);
+
+                        var text = new TextLayer();
+
+                        text.Text = Context.User.Username + " " + texts[rdm.Next(texts.Count())];
+
+                        char[] cText = text.Text.ToCharArray();
+                        int insertCount = 0;
+                        for (int i = 7; i < cText.Count(); i++)
+                        {
+                            if (cText[i] == ' ' && insertCount == 0)
+                            {
+                                cText[i] = '\n';
+                                i += 7;
+                            }
+                        }
+
+                        for (int i = cText.Count() - 1; i >= 0; i--)
+                        {
+                            if (cText[i] == ' ')
+                            {
+                                cText[i] = '\n';
+                                break;
+                            }
+                        }
+
+                        text.Text = new string(cText);
+                        text.FontSize = 15;
+                        text.Position = new Point(95, 300);
+                        proc.Watermark(text);
+                        break;
+                    case 7:
+                        img.Position = new Point(280, 100);
+                        img.Size -= new Size(10, 10);
+                        break;
+                }
+
+                if (overlay) proc.Overlay(img);
+                var sImgID = rdm.Next(1000000);
+                proc.Save(path + $@"\{sImgID}.png");
+                await Context.Channel.SendFileAsync(path + $@"\{sImgID}.png");
+                File.Delete(path + $@"\{sImgID}.png");
             }
         }
 
@@ -1071,8 +1176,3 @@ namespace ForkBot
     }
     
 }
-
-
-
-
-//change for commit
