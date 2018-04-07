@@ -558,22 +558,31 @@ namespace ForkBot
             if (account.StartsWith("follow ") && (Context.User as IGuildUser).RoleIds.Contains(Constants.Roles.MOD))
             {
                 account = account.Replace("follow ", "");
-                Properties.Settings.Default.followedTwitters.Add(account);
-                var newArr = Properties.Settings.Default.lastTweet;
-                Array.Resize(ref newArr, Properties.Settings.Default.followedTwitters.Count);
-                Properties.Settings.Default.lastTweet = newArr;
+                if (Properties.Settings.Default.followedTwitters.Contains(account))
+                {
+                    Properties.Settings.Default.followedTwitters.Remove(account);
+                    await Context.Channel.SendMessageAsync(":bird: | Successfully unfollowed " + account + "!");
+                }
+                else
+                {
+                    Properties.Settings.Default.followedTwitters.Add(account);
+                    var newArr = Properties.Settings.Default.lastTweet;
+                    Array.Resize(ref newArr, Properties.Settings.Default.followedTwitters.Count);
+                    Properties.Settings.Default.lastTweet = newArr;
 
+                    await Context.Channel.SendMessageAsync(":bird: | Successfully followed " + account + "!");
+                }
                 Properties.Settings.Default.Save();
-                await Context.Channel.SendMessageAsync(":bird: | Successfully followed " + account + "!");
             }
             else
             {
                 try
                 {
+                    account = account.Replace(" ", "");
                     var tweet = Bot.twit.ListTweetsOnUserTimeline(new TweetSharp.ListTweetsOnUserTimelineOptions
                     {
                         ScreenName = account,
-                        Count = 10,
+                        Count = 1,
                         ExcludeReplies = true,
                         IncludeRts = false,
                         TrimUser = false

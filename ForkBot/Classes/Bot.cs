@@ -54,7 +54,7 @@ namespace ForkBot
                 if (Properties.Settings.Default.followedTwitters == null) Properties.Settings.Default.followedTwitters = new System.Collections.Specialized.StringCollection();
 
                 Timer banCheck = new Timer(new TimerCallback(TimerCall), null, 0, 1000);
-                Timer hourlyTimer = new Timer(new TimerCallback(HalfHourly), null, 0, 1000 * 60 * 60);
+                Timer halfHourlyTimer = new Timer(new TimerCallback(HalfHourly), null, 0, 1000 * 60 * 30);
                 Timer weeklyTimer = new Timer(new TimerCallback(Weekly), null, 0, 1000 * 60 * 60 * 24 * 7);
 
                 await Task.Delay(-1);
@@ -114,7 +114,7 @@ namespace ForkBot
                 var tweets = twit.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions
                 {
                     ScreenName = twitter,
-                    Count = 10,
+                    Count = 3,
                     ExcludeReplies = true,
                     IncludeRts = false,
                     TrimUser = false
