@@ -299,6 +299,8 @@ namespace ForkBot
         }
         public async Task HandleEdit(Cacheable<IMessage, ulong> cache, SocketMessage msg, ISocketMessageChannel channel)
         {
+            if (msg.Content == cache.Value.Content) return;
+
             if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging)
             {
                 JEmbed emb = new JEmbed();
