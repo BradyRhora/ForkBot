@@ -305,7 +305,20 @@ namespace ForkBot
                 emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;
                 emb.Author.Name = "MESSAGE EDITED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
-                emb.Description = msg.Content;
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "ORIGINAL:";
+                    x.Text = cache.Value.Content;
+                    x.Inline = true;
+                }));
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "EDITED:";
+                    x.Text = msg.Content;
+                    x.Inline = true;
+                }));
 
                 string attachURL = null;
                 if (msg.Attachments.Count > 0) attachURL = msg.Attachments.FirstOrDefault().ProxyUrl;
@@ -315,10 +328,10 @@ namespace ForkBot
                 {
                     x.Header = "Location";
                     x.Text = msg.Channel + " in " + (msg.Channel as IGuildChannel).Guild;
-                    x.Inline = true;
+                    x.Inline = false;
                 }));
 
-                emb.ColorStripe = Constants.Colours.YORK_RED;
+                emb.ColorStripe = Constants.Colours.TWITTER_BLUE;
                 var datetime = DateTime.UtcNow - new TimeSpan(5, 0, 0);
                 emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString() + " | " +
                     msg.Author.Username + "#" + msg.Author.Discriminator + " ID: " + msg.Author.Id;
