@@ -154,6 +154,7 @@ namespace ForkBot
             client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
             client.ReactionAdded += HandleReact;
+            client.MessageUpdated += HandleEdit;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
@@ -277,6 +278,37 @@ namespace ForkBot
 
                 string attachURL = null;
                 if (msg.Attachments.Count>0) attachURL= msg.Attachments.FirstOrDefault().ProxyUrl;
+                if (attachURL != null) emb.ImageUrl = attachURL;
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Location";
+                    x.Text = msg.Channel + " in " + (msg.Channel as IGuildChannel).Guild;
+                    x.Inline = true;
+                }));
+
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                var datetime = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+                emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString() + " | " +
+                    msg.Author.Username + "#" + msg.Author.Discriminator + " ID: " + msg.Author.Id;
+
+
+                var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
+                await chan.SendMessageAsync("", embed: emb.Build());
+            }
+        }
+        public async Task HandleEdit(Cacheable<IMessage, ulong> cache, SocketMessage msg, ISocketMessageChannel channel)
+        {
+            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging)
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;
+                emb.Author.Name = "MESSAGE EDITED";
+                emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
+                emb.Description = msg.Content;
+
+                string attachURL = null;
+                if (msg.Attachments.Count > 0) attachURL = msg.Attachments.FirstOrDefault().ProxyUrl;
                 if (attachURL != null) emb.ImageUrl = attachURL;
 
                 emb.Fields.Add(new JEmbedField(x =>
