@@ -100,7 +100,7 @@ namespace ForkBot
             for (int i = 0; i < uData.Count(); i++)
             {
                 if (uData[i].Contains("}")) break;
-                else if (items) itemList.Add(uData[i]);
+                else if (items) itemList.Add(uData[i].Replace("\t",""));
                 else if (uData[i].Contains("items{")) items = true;
                 
             }
