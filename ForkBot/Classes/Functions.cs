@@ -155,6 +155,19 @@ namespace ForkBot
             }
             return null;
         }
+
+        public static string DateTimeToString(DateTime d)
+        {
+            return $"{d.Year}:{d.Month}:{d.Day}:{d.Hour}:{d.Minute}";
+        }
+        public static DateTime StringToDateTime(string s)
+        {
+            var data = s.Split(':');
+            int[] iData = new int[5];
+            for (int i = 0; i < 5; i++) iData[i] = Convert.ToInt32(data[i]);
+            return new DateTime(iData[0],iData[1],iData[2],iData[3],iData[4],0);
+        }
+        
     }
     
 

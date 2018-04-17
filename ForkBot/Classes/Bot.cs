@@ -196,11 +196,7 @@ namespace ForkBot
         public async Task HandleLeave(SocketGuildUser user)
         {
             await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
-            /*Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
-            Var.leaveBanned.Add(user);
-            Var.unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
-            await user.Guild.AddBanAsync(user, reason: "Tempban for leaving server. Done automatically by ForkBot to prevent spam leave-joining. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
-        */}
+        }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
             var msg = cache.Value;
@@ -244,25 +240,7 @@ namespace ForkBot
                 emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;
                 emb.Author.Name = "MESSAGE EDITED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
-
-                int max = 0;
-                if (cache.Value.Content.Count() > msg.Content.Count()) max = cache.Value.Content.Count();
-                else max = msg.Content.Count();
-
-                int first = -1;
-                int last = -1;
-
-                for (int i = 0; i < max; i++)
-                {
-                    if (cache.Value.Content[i] != msg.Content[i])
-                    {
-                        if (first == -1) first = i;
-                        last = i;
-                    }
-                }
-
                 
-
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "ORIGINAL:";
@@ -273,7 +251,7 @@ namespace ForkBot
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "EDITED:";
-                    x.Text = msg.Content.Insert(first,"__**").Insert(last+5,"**__");
+                    x.Text = msg.Content;
                     x.Inline = true;
                 }));
 

@@ -673,7 +673,21 @@ namespace ForkBot
         [Command("allowance"), Summary("[FUN] Receive your daily free coins.")]
         public async Task Allowance()
         {
-
+            var u = Functions.GetUser(Context.User);
+            var lastAllowance = Functions.StringToDateTime(u.GetData("allowance"));
+            var ONE_DAY = new TimeSpan(24, 0, 0);
+            if ((lastAllowance + ONE_DAY) < DateTime.Now)
+            {
+                int allowance = rdm.Next(10, 51);
+                u.GiveCoins(allowance);
+                u.SetData("allowance", Functions.DateTimeToString(DateTime.Now));
+                await Context.Channel.SendMessageAsync(":moneybag: | Here's your daily allowance! ***+{allowance} coins.*** The next one will be available in 24 hours.");
+            }
+            else
+            {
+                var next = (lastAllowance + ONE_DAY) - DateTime.Now;
+                await Context.Channel.SendMessageAsync($"Your next allowance will be available in {next.Hours} hours, {next.Minutes} minutes, and {next.Seconds} seconds.");
+            }
         }
 
         #region Item Commands
