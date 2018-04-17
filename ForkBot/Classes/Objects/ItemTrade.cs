@@ -41,14 +41,14 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    if (u1.Coins >= coins)
+                    if (Convert.ToInt32(u1.GetData("coins")) >= coins)
                     {
                         coins1 += coins;
                         return true;
                     }
                 }
 
-                if (u1.Items.Contains(item)) 
+                if (u1.GetItemList().Contains(item)) 
                 {
                     items1.Add(item);
                     return true;
@@ -58,14 +58,14 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    if (u1.Coins >= coins)
+                    if (Convert.ToInt32(u1.GetData("coins")) >= coins)
                     {
                         coins2 += coins;
                         return true;
                     }
                 }
 
-                if (u2.Items.Contains(item))
+                if (u2.GetItemList().Contains(item))
                 {
                     items2.Add(item);
                     return true;
@@ -82,13 +82,14 @@ namespace ForkBot
         public Embed CreateMenu()
         {
             JEmbed emb = new JEmbed();
-
-            emb.Title = $"Trade: {u1.Username()} - {u2.Username()}";
+            string u1Name = Bot.client.GetUser(u1.ID).Username;
+            string u2Name = Bot.client.GetUser(u2.ID).Username;
+            emb.Title = $"Trade: {u1Name} - {u2Name}";
             emb.Description = "Use `;trade add [item]` to add an item, or `;trade add [number]` to add coins.\nWhen done, use `;trade finish` or use `;trade cancel` to cancel the trade.";
 
             emb.Fields.Add(new JEmbedField(x =>
             {
-                x.Header = u1.Username() + "'s Items";
+                x.Header = u1Name + "'s Items";
 
                 string itemlist = "";
                 foreach(string item in items1)  itemlist += ":" + item + ": ";
@@ -99,7 +100,7 @@ namespace ForkBot
             }));
             emb.Fields.Add(new JEmbedField(x =>
             {
-                x.Header = u2.Username() + "'s Items";
+                x.Header = u2Name + "'s Items";
 
                 string itemlist = "";
                 foreach (string item in items2) itemlist += ":" + item + ": ";
@@ -129,7 +130,7 @@ namespace ForkBot
 
         public IUser Starter()
         {
-            return Functions.GetUser(u1);
+            return Bot.client.GetUser(u1.ID);
         }
 
         public void Confirm(IUser user)
@@ -147,27 +148,26 @@ namespace ForkBot
         {
             foreach(string item in items1)
             {
-                u1.Items.Remove(item);
-                u2.Items.Add(item);
+                u1.RemoveItem(item);
+                u2.GiveItem(item);
                 if (coins1 > 0)
                 {
-                    Functions.GiveCoins(Functions.GetUser(u1.ID), -coins1);
-                    Functions.GiveCoins(Functions.GetUser(u2.ID), coins1);
+                    u1.GiveCoins(-coins1);
+                    u2.GiveCoins(coins1);
                 }
             }
 
             foreach (string item in items2)
             {
-                u2.Items.Remove(item);
-                u1.Items.Add(item);
+                u2.RemoveItem(item);
+                u1.GiveItem(item);
                 if (coins2 > 0)
                 {
-                    Functions.GiveCoins(Functions.GetUser(u1.ID), coins2);
-                    Functions.GiveCoins(Functions.GetUser(u2.ID), -coins2);
+                    u1.GiveCoins(coins2);
+                    u2.GiveCoins(-coins2);
                 }
             }
-
-            Functions.SaveUsers();
+            
             completed = true;
         }
 

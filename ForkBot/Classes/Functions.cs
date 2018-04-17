@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
-using TweetSharp;
 
 namespace ForkBot
 {
@@ -27,6 +26,7 @@ namespace ForkBot
             else return Constants.Colours.DEFAULT_COLOUR;
         }
 
+        /* Old user system
         public static void SaveUsers()
         {
             string toWrite = "";
@@ -43,7 +43,7 @@ namespace ForkBot
                 catch (Exception) { Console.WriteLine("Failed to save users.. trying again."); }
             }
         }
-
+        
         public static void LoadUsers()
         {
             foreach (string data in File.ReadLines("Files/users.txt"))
@@ -51,33 +51,37 @@ namespace ForkBot
                 Bot.users.Add(new User(data: data, load: true));
             }
         }
+        */
 
         public static User GetUser(IUser user) //gets User class for IUser, makes one if there isn't already one.
         {
-            int attempts = 0;
+            /*int attempts = 0;
             while (attempts < 5)
             {
                 foreach (User u in Bot.users) if (u.ID == user.Id) { SaveUsers(); return u; }
                 Bot.users.Add(new User(user.Id));
                 attempts++;
+            }*/
+
+            string userPath = @"Users\";
+            if (File.Exists(userPath + user.Id + ".user"))
+            {
+                return new User(user.Id);
             }
+            else
+            {
+                string newUser = "coins:0\nitems{\n}";
+                File.WriteAllText(@"Users\" + user.Id + ".user",newUser);
+            }
+
             return null;
         }
-        public static IUser GetUser(User user)
-        { 
-            return Bot.client.GetUser(user.ID);
-        }
+
         public static User GetUser(ulong userID)
         {
             return GetUser(Bot.client.GetUser(userID));
         }
-
-        public static void GiveCoins(User u, int amount)
-        {
-            u.Coins += amount;
-            SaveUsers();
-        }
-
+        
         public static string GetTID(string html)
         {
             var c = html.ToCharArray();
@@ -150,20 +154,6 @@ namespace ForkBot
                 }
             }
             return null;
-        }
-        
-        public static Embed EmbedTweet(TwitterStatus tweet)
-        {
-            JEmbed emb = new JEmbed();
-            emb.Author = new JEmbedAuthor
-            {
-                IconUrl = tweet.Author.ProfileImageUrl,
-                Name = tweet.Author.ScreenName
-            };
-            emb.ColorStripe = Constants.Colours.TWITTER_BLUE;
-            emb.Description = tweet.Text;
-            emb.Timestamp = tweet.CreatedDate;
-            return emb.Build();
         }
     }
     

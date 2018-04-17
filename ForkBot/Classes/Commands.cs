@@ -194,8 +194,7 @@ namespace ForkBot
                             Var.guessedChars.Add(c);
                         }
                         var u = Functions.GetUser(Context.User);
-                        u.Coins += 10;
-                        Functions.SaveUsers();
+                        u.GiveCoins(10);
                     }
 
                     hang[6] = "     |          ";
@@ -245,7 +244,7 @@ namespace ForkBot
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Coins:";
-                x.Text = Convert.ToString(u.Coins);
+                x.Text = Convert.ToString(u.GetData("coins"));
                 x.Inline = true;
             }));
 
@@ -266,7 +265,7 @@ namespace ForkBot
             {
                 x.Header = "Inventory:";
                 string text = "";
-                foreach (string item in u.Items)
+                foreach (string item in u.GetItemList())
                 {
                     text += item + ", ";
                 }
@@ -554,52 +553,11 @@ namespace ForkBot
             catch (Exception) { await Context.Channel.SendMessageAsync("Unable to find course."); }
 
         }
-
-        [Command("twitter"), Summary("Get the most recent tweet from a specified Twitter account. (BETA)")]
-        public async Task Twitter([Remainder]string account)
-        {
-            if (account.StartsWith("follow ") && (Context.User as IGuildUser).RoleIds.Contains(Constants.Roles.MOD))
-            {
-                account = account.Replace("follow ", "");
-                if (Properties.Settings.Default.followedTwitters.Contains(account))
-                {
-                    Properties.Settings.Default.followedTwitters.Remove(account);
-                    await Context.Channel.SendMessageAsync(":bird: | Successfully unfollowed " + account + "!");
-                }
-                else
-                {
-                    Properties.Settings.Default.followedTwitters.Add(account);
-                    var newArr = Properties.Settings.Default.lastTweet;
-                    Array.Resize(ref newArr, Properties.Settings.Default.followedTwitters.Count);
-                    Properties.Settings.Default.lastTweet = newArr;
-
-                    await Context.Channel.SendMessageAsync(":bird: | Successfully followed " + account + "!");
-                }
-                Properties.Settings.Default.Save();
-            }
-            else
-            {
-                try
-                {
-                    account = account.Replace(" ", "");
-                    var tweet = Bot.twit.ListTweetsOnUserTimeline(new TweetSharp.ListTweetsOnUserTimelineOptions
-                    {
-                        ScreenName = account,
-                        Count = 1,
-                        ExcludeReplies = true,
-                        IncludeRts = false,
-                        TrimUser = false
-                    }).First();
-                    await Context.Channel.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
-                }
-                catch (Exception) { await Context.Channel.SendMessageAsync("Twitter account not found"); }
-            }
-        }
-
+        
         [Command("meme"), Summary("[FUN] Memify STUFF.")]
         public async Task Meme() { await Meme(Context.User); }
 
-        [Command("meme"), Summary("[FUN] Memify STUFF.")]
+        [Command("meme")]
         public async Task Meme(IUser user)
         {
             string path = @"Files\Templates";
@@ -712,11 +670,17 @@ namespace ForkBot
             }
         }
 
+        [Command("allowance"), Summary("[FUN] Receive your daily free coins.")]
+        public async Task Allowance()
+        {
+
+        }
+
         #region Item Commands
         [Command("roll")]
         public async Task Roll(int max = 6)
         {
-            if (Functions.GetUser(Context.User).Items.Contains("game_die"))
+            if (Functions.GetUser(Context.User).GetItemList().Contains("game_die"))
             {
                 await Context.Channel.SendMessageAsync(":game_die: | " + Convert.ToString(rdm.Next(max) + 1));
             }
@@ -725,7 +689,7 @@ namespace ForkBot
         [Command("8ball")]
         public async Task EightBall([Remainder] string question ="")
         {
-            if (Functions.GetUser(Context.User).Items.Contains("8ball"))
+            if (Functions.GetUser(Context.User).GetItemList().Contains("8ball"))
             {
                 string[] answers = { "Yes", "No", "Ask again later", "Cannot predict now", "Unlikely", "Chances good", "Likely", "Lol no", "If you believe" };
                 await Context.Channel.SendMessageAsync(":8ball: | " + answers[rdm.Next(answers.Count())]);
@@ -736,9 +700,9 @@ namespace ForkBot
         public async Task Sell(string item)
         {
             var u = Functions.GetUser(Context.User);
-            if (u.Items.Contains(item))
+            if (u.GetItemList().Contains(item))
             {
-                u.Items.Remove(item);
+                u.RemoveItem(item);
                 var items = Functions.GetItemList();
                 int price = 0;
                 foreach (string line in items)
@@ -757,14 +721,13 @@ namespace ForkBot
                     var itemName = rItemData.Split('|')[0].Replace('_', ' ');
                     var rMessage = rItemData.Split('|')[1];
                     
-                    u.Items.Add(Var.present);
+                    u.GiveItem(Var.present);
                     await Context.Channel.SendMessageAsync($"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
                                                            $"A {itemName}! :{itemName}: {rMessage}");
                 }
                 else
                 {
-                    u.Coins += price;
-                    Functions.SaveUsers();
+                    u.GiveCoins(price);
                     await Context.Channel.SendMessageAsync($"You successfully sold your {item} for {price} coins!");
                 }
             }
@@ -905,11 +868,10 @@ namespace ForkBot
                         int price = Convert.ToInt32(data[2]) * 2;
                         if (price < 0) price *= -1;
 
-                        if (u.Coins >= price)
+                        if (Convert.ToInt32(u.GetData("coins")) >= price)
                         {
-                            u.Coins -= price;
-                            u.Items.Add(name);
-                            Functions.SaveUsers();
+                            u.GiveCoins(-price);
+                            u.GiveItem(name);
                             await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} :{name}: for {price} coins!");
                         }
                         else await Context.Channel.SendMessageAsync("You cannot afford this item.");
@@ -1143,7 +1105,7 @@ namespace ForkBot
             if (Context.User.Id == Constants.Users.BRADY)
             {
                 User u = Functions.GetUser(user);
-                u.Coins += amount;
+                u.GiveCoins(amount);
                 await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given {amount} coins.");
             }
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
@@ -1155,7 +1117,7 @@ namespace ForkBot
             if (Context.User.Id == Constants.Users.BRADY)
             {
                 User u = Functions.GetUser(user);
-                u.Items.Add(item);
+                u.GiveItem(item);
                 await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given: {item}.");
             }
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");

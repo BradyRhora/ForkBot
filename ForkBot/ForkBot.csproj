@@ -54,9 +54,6 @@
     <Reference Include="DuckDuckGo, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DuckDuckGo.Net.1.0.1\lib\DuckDuckGo.dll</HintPath>
     </Reference>
-    <Reference Include="Hammock.ClientProfile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c148cfba29ed1a4d, processorArchitecture=MSIL">
-      <HintPath>..\packages\TweetSharp.2.3.1\lib\4.0\Hammock.ClientProfile.dll</HintPath>
-    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.6.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.6.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -84,8 +81,8 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\Wiki\Dependencies\RestSharp.dll</HintPath>
@@ -164,9 +161,6 @@
     <Reference Include="System.Xml.XPath.XDocument, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.XPath.XDocument.4.3.0\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
-    <Reference Include="TweetSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c148cfba29ed1a4d, processorArchitecture=MSIL">
-      <HintPath>..\packages\TweetSharp.2.3.1\lib\4.0\TweetSharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Evaluate.cs" />
@@ -197,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="bin\Debug\ForkBot.exe.config" />
     <None Include="Classes\OxfordDictionariesAPI\Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -206,6 +201,19 @@
     <None Include="Scripts\jquery-2.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\Discord.Net.Commands.dll" />
+    <Content Include="bin\Debug\Discord.Net.Commands.xml" />
+    <Content Include="bin\Debug\Discord.Net.Core.dll" />
+    <Content Include="bin\Debug\Discord.Net.Core.xml" />
+    <Content Include="bin\Debug\Discord.Net.Rest.dll" />
+    <Content Include="bin\Debug\Discord.Net.Rest.xml" />
+    <Content Include="bin\Debug\Discord.Net.Rpc.dll" />
+    <Content Include="bin\Debug\Discord.Net.Rpc.xml" />
+    <Content Include="bin\Debug\Discord.Net.Webhook.dll" />
+    <Content Include="bin\Debug\Discord.Net.Webhook.xml" />
+    <Content Include="bin\Debug\Discord.Net.WebSocket.dll" />
+    <Content Include="bin\Debug\Discord.Net.WebSocket.xml" />
+    <Content Include="bin\Debug\DuckDuckGo.dll" />
     <Content Include="bin\Debug\Files\drawing.png" />
     <Content Include="bin\Debug\Files\Images\ForkBot.png" />
     <Content Include="bin\Debug\Files\Images\Hammer.png" />
@@ -217,6 +225,62 @@
     <Content Include="bin\Debug\Files\users.txt" />
     <Content Include="bin\Debug\Files\users_prepurge.txt" />
     <Content Include="bin\Debug\Files\wordlist.txt" />
+    <Content Include="bin\Debug\ForkBot.exe" />
+    <Content Include="bin\Debug\ForkBot.pdb" />
+    <Content Include="bin\Debug\HtmlAgilityPack.dll" />
+    <Content Include="bin\Debug\HtmlAgilityPack.pdb" />
+    <Content Include="bin\Debug\HtmlAgilityPack.xml" />
+    <Content Include="bin\Debug\ImageProcessor.dll" />
+    <Content Include="bin\Debug\ImageProcessor.xml" />
+    <Content Include="bin\Debug\libvideo.dll" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.CSharp.pdb" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.pdb" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.xml" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.CSharp.xml" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.pdb" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.Scripting.dll" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.Scripting.pdb" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.Scripting.xml" />
+    <Content Include="bin\Debug\Microsoft.CodeAnalysis.xml" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.dll" />
+    <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.xml" />
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+    <Content Include="bin\Debug\Newtonsoft.Json.xml" />
+    <Content Include="bin\Debug\RestSharp.dll" />
+    <Content Include="bin\Debug\System.AppContext.dll" />
+    <Content Include="bin\Debug\System.Collections.Immutable.dll" />
+    <Content Include="bin\Debug\System.Collections.Immutable.xml" />
+    <Content Include="bin\Debug\System.Console.dll" />
+    <Content Include="bin\Debug\System.Diagnostics.FileVersionInfo.dll" />
+    <Content Include="bin\Debug\System.Diagnostics.StackTrace.dll" />
+    <Content Include="bin\Debug\System.Interactive.Async.dll" />
+    <Content Include="bin\Debug\System.Interactive.Async.xml" />
+    <Content Include="bin\Debug\System.IO.FileSystem - Copy.dll" />
+    <Content Include="bin\Debug\System.IO.FileSystem.dll" />
+    <Content Include="bin\Debug\System.IO.FileSystem.Primitives - Copy.dll" />
+    <Content Include="bin\Debug\System.IO.FileSystem.Primitives.dll" />
+    <Content Include="bin\Debug\System.Reflection.Metadata - Copy.dll" />
+    <Content Include="bin\Debug\System.Reflection.Metadata - Copy.xml" />
+    <Content Include="bin\Debug\System.Reflection.Metadata.dll" />
+    <Content Include="bin\Debug\System.Reflection.Metadata.xml" />
+    <Content Include="bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <Content Include="bin\Debug\System.Security.Cryptography.Algorithms - Copy.dll" />
+    <Content Include="bin\Debug\System.Security.Cryptography.Algorithms.dll" />
+    <Content Include="bin\Debug\System.Security.Cryptography.Encoding.dll" />
+    <Content Include="bin\Debug\System.Security.Cryptography.Primitives.dll" />
+    <Content Include="bin\Debug\System.Security.Cryptography.X509Certificates.dll" />
+    <Content Include="bin\Debug\System.Text.Encoding.CodePages.dll" />
+    <Content Include="bin\Debug\System.Threading.Thread.dll" />
+    <Content Include="bin\Debug\System.ValueTuple.dll" />
+    <Content Include="bin\Debug\System.Xml.XmlDocument.dll" />
+    <Content Include="bin\Debug\System.Xml.XPath.dll" />
+    <Content Include="bin\Debug\System.Xml.XPath.XDocument.dll" />
+    <Content Include="bin\Debug\Users\108312797162541056.user" />
     <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />

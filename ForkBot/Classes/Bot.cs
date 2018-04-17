@@ -10,7 +10,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System.Net;
 using System.IO;
-using TweetSharp;
 
 namespace ForkBot
 {
@@ -23,8 +22,7 @@ namespace ForkBot
         public static DiscordSocketClient client;
         public static CommandService commands;
         public static List<User> users = new List<User>();
-
-        public static TwitterService twit;
+        
 
         public async Task Run()
         {
@@ -39,23 +37,13 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken"));
+                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
+                //await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                Functions.LoadUsers();
-
-
-                Console.WriteLine("Logging in to Twitter...");
-                var twitterLogin = File.ReadAllLines("Constants/twittertokens");
-                twit = new TwitterService(twitterLogin[0], twitterLogin[1]);
-                twit.AuthenticateWith(twitterLogin[2], twitterLogin[3]);
-                Console.WriteLine("Successfully authenticated Consumer and Access tokens.");
-                if (Properties.Settings.Default.followedTwitters == null) Properties.Settings.Default.followedTwitters = new System.Collections.Specialized.StringCollection();
-
-                Timer banCheck = new Timer(new TimerCallback(TimerCall), null, 0, 1000);
-                Timer halfHourlyTimer = new Timer(new TimerCallback(HalfHourly), null, 0, 1000 * 60 * 30);
-                Timer weeklyTimer = new Timer(new TimerCallback(Weekly), null, 0, 1000 * 60 * 60 * 24 * 7);
+                
+                //Timer weeklyTimer = new Timer(new TimerCallback(Weekly), null, 0, 1000 * 60 * 60 * 24 * 7);
 
                 await Task.Delay(-1);
             }
@@ -80,58 +68,9 @@ namespace ForkBot
                 goto Again;
             }
         }
-
-        async void TimerCall(object state) //code that is run every second
-        {
-            for (int i = 0; i < Var.leaveBanned.Count(); i++)
-            {
-                Console.WriteLine("Attempting to unban..");
-                if (DateTime.Now > Var.unbanTime[i])
-                {
-                    try
-                    {
-                        var user = Var.leaveBanned[i];
-                        var g = user.Guild;
-                        await g.RemoveBanAsync(user);
-                        Console.WriteLine($"{user} has been unbanned.");
-                        Var.leaveBanned.Remove(user);
-                        Var.unbanTime.Remove(Var.unbanTime[i]);
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"Unable to unban user. {e.Message}.");
-                    }
-                }
-            }
-        }
-
-        async void HalfHourly(object state) //code that is run every half hour
-        {
-            Functions.SaveUsers();
-            foreach (string twitter in Properties.Settings.Default.followedTwitters)
-            {
-                var tweets = twit.ListTweetsOnUserTimeline(new ListTweetsOnUserTimelineOptions
-                {
-                    ScreenName = twitter,
-                    Count = 3,
-                    ExcludeReplies = true,
-                    IncludeRts = false,
-                    TrimUser = false
-                });
-                var tweet = tweets.First();
-
-                if (tweet.Id != Properties.Settings.Default.lastTweet[Properties.Settings.Default.followedTwitters.IndexOf(twitter)])
-                {
-                    var gen2 = client.GetChannel(Constants.Channels.GENERAL_2) as IMessageChannel;
-                    await gen2.SendMessageAsync("", embed: Functions.EmbedTweet(tweet));
-                    Properties.Settings.Default.lastTweet[Properties.Settings.Default.followedTwitters.IndexOf(twitter)] = tweet.Id;
-                    Properties.Settings.Default.Save();
-                }
-            }
-
-        }
-        void Weekly(object state) //code that is run every week
+        
+        
+        /*void Weekly(object state) //code that is run every week
         {
             //user file purge
             string path = "Files/users.txt";
@@ -145,7 +84,7 @@ namespace ForkBot
                 }
             }
             File.WriteAllLines(path, data.ToArray());
-        }
+        }*/
 
         public async Task InstallCommands()
         {
@@ -209,13 +148,13 @@ namespace ForkBot
                     {
                         string sPresent = presents[rdm.Next(presents.Count())].Split('|')[0];
                         sMessage += ":" + sPresent + ": ";
-                        user.Items.Add(sPresent);
+                        user.GiveItem(sPresent);
                     }
                     await message.Channel.SendMessageAsync(sMessage);
 
                     Var.replaceable = false;
                 }
-                else user.Items.Add(Var.present);
+                else user.GiveItem(Var.present);
 
                 if (Var.replaceable)
                 {
@@ -226,7 +165,7 @@ namespace ForkBot
             }
             else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
             {
-                user.Items.Remove(Var.present);
+                user.RemoveItem(Var.present);
                 await message.Channel.SendMessageAsync("Okay! I'll be right back.");
                 await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{Var.rPresent}:");
                 await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
@@ -236,7 +175,7 @@ namespace ForkBot
             }
 
 
-            if (message.HasCharPrefix(';', ref argPos))
+            if (message.HasStringPrefix("t;", ref argPos))
             {
                 var context = new CommandContext(client, message);
                 var result = await commands.ExecuteAsync(context, argPos);
@@ -308,6 +247,24 @@ namespace ForkBot
                 emb.Author.Name = "MESSAGE EDITED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
 
+                int max = 0;
+                if (cache.Value.Content.Count() > msg.Content.Count()) max = cache.Value.Content.Count();
+                else max = msg.Content.Count();
+
+                int first = -1;
+                int last = -1;
+
+                for (int i = 0; i < max; i++)
+                {
+                    if (cache.Value.Content[i] != msg.Content[i])
+                    {
+                        if (first == -1) first = i;
+                        last = i;
+                    }
+                }
+
+                
+
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "ORIGINAL:";
@@ -318,7 +275,7 @@ namespace ForkBot
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "EDITED:";
-                    x.Text = msg.Content;
+                    x.Text = msg.Content.Insert(first,"__**").Insert(last+5,"**__");
                     x.Inline = true;
                 }));
 
