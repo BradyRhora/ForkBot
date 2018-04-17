@@ -101,11 +101,10 @@ namespace ForkBot
         {
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
-            if (message.Author.Id == client.CurrentUser.Id) return;
+            if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             int argPos = 0;
             
-            if (Var.blockedUsers.Contains(message.Author)) return;
-            
+            if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
             
             if (Var.recieving)
             {
@@ -128,7 +127,6 @@ namespace ForkBot
             }
 
             var user = Functions.GetUser(message.Author);
-
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {
                 Var.presentWaiting = false;
