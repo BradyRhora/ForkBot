@@ -173,7 +173,7 @@ namespace ForkBot
             }
 
 
-            if (message.HasStringPrefix("t;", ref argPos))
+            if (message.HasCharPrefix(';', ref argPos))
             {
                 var context = new CommandContext(client, message);
                 var result = await commands.ExecuteAsync(context, argPos);
