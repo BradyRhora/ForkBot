@@ -685,7 +685,7 @@ namespace ForkBot
                 int allowance = rdm.Next(10, 51);
                 u.GiveCoins(allowance);
                 u.SetData("allowance", Functions.DateTimeToString(DateTime.Now));
-                await Context.Channel.SendMessageAsync(":moneybag: | Here's your daily allowance! ***+{allowance} coins.*** The next one will be available in 24 hours.");
+                await Context.Channel.SendMessageAsync($":moneybag: | Here's your daily allowance! ***+{allowance} coins.*** The next one will be available in 24 hours.");
             }
             else
             {
