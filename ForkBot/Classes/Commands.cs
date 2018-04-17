@@ -674,7 +674,11 @@ namespace ForkBot
         public async Task Allowance()
         {
             var u = Functions.GetUser(Context.User);
-            var lastAllowance = Functions.StringToDateTime(u.GetData("allowance"));
+            var lA = u.GetData("allowance");
+            DateTime lastAllowance;
+            if (lA == "0") lastAllowance = new DateTime(0);
+            else lastAllowance = Functions.StringToDateTime(lA);
+            
             var ONE_DAY = new TimeSpan(24, 0, 0);
             if ((lastAllowance + ONE_DAY) < DateTime.Now)
             {
