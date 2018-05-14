@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using System.Net;
+using System.Xml;
 
 namespace ForkBot
 {
@@ -167,7 +169,21 @@ namespace ForkBot
             for (int i = 0; i < 5; i++) iData[i] = Convert.ToInt32(data[i]);
             return new DateTime(iData[0],iData[1],iData[2],iData[3],iData[4],0);
         }
-        
+
+        static WebClient web = new WebClient();
+        public static async void Respond(IMessage message)
+        {
+            var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
+                                                          "&application=7362540682895337949" +
+                                                          "&instance=22180784" +
+                                                          "&message="+message.Content);
+            XmlDocument response = new XmlDocument();
+            response.LoadXml(xml);
+            var n = response.GetElementsByTagName("message");
+            string responseMsg = n[0].InnerText;
+
+            await message.Channel.SendMessageAsync(responseMsg);
+        }
     }
     
 

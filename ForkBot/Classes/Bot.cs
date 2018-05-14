@@ -172,6 +172,7 @@ namespace ForkBot
                 Var.replaceable = false;
             }
 
+            
 
             if (message.HasCharPrefix(';', ref argPos))
             {
@@ -186,6 +187,10 @@ namespace ForkBot
                         await message.Channel.SendMessageAsync("", embed: emb);
                     }
                 }
+            }
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id)
+            {
+                Functions.Respond(message);
             }
             else return;
         }
