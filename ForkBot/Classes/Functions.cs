@@ -175,11 +175,12 @@ namespace ForkBot
         {
             try
             {
+                string msg = message.Content.Replace("<@377913570912108544>", "");
                 var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
                                                               "&application=7362540682895337949" +
                                                               "&instance=22180784" +
                                                               "&conversation=7180734243937505099" + 
-                                                              "&message=" + message.Content);
+                                                              "&message=" + msg);
                 XmlDocument response = new XmlDocument();
                 response.LoadXml(xml);
                 var n = response.GetElementsByTagName("message");
