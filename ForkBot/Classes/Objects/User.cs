@@ -88,9 +88,19 @@ namespace ForkBot
         }
         public void RemoveItem(string item)
         {
+            var items = GetItemList();
+            var list = items.ToList();
+            list.Remove(item);
             var uData = File.ReadAllText($@"Users\{ID}.user");
-            uData.Replace("items{", "items{\n" + item);
+            int index = uData.IndexOf("{");
+            uData = uData.Substring(0, index+1);
+            foreach(string i in list)
+            {
+                uData += "\r\n\t" + i;
+            }
+            uData += "\r\n}";
             Save(uData);
+
         }
         public string[] GetItemList()
         {

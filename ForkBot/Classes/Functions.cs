@@ -173,16 +173,25 @@ namespace ForkBot
         static WebClient web = new WebClient();
         public static async void Respond(IMessage message)
         {
-            var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
-                                                          "&application=7362540682895337949" +
-                                                          "&instance=22180784" +
-                                                          "&message="+message.Content);
-            XmlDocument response = new XmlDocument();
-            response.LoadXml(xml);
-            var n = response.GetElementsByTagName("message");
-            string responseMsg = n[0].InnerText;
+            try
+            {
+                var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
+                                                              "&application=7362540682895337949" +
+                                                              "&instance=22180784" +
+                                                              "&conversation=1234" + 
+                                                              "&message=" + message.Content);
+                XmlDocument response = new XmlDocument();
+                response.LoadXml(xml);
+                var n = response.GetElementsByTagName("message");
+                string responseMsg = n[0].InnerText;
 
-            await message.Channel.SendMessageAsync(responseMsg);
+                await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
+            }
+            catch (Exception e)
+            {
+                await message.Channel.SendMessageAsync(":robot::speech_balloon: I don't understand.");
+                Console.WriteLine(e.Message);
+            }
         }
     }
     
