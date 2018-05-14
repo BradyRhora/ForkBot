@@ -178,7 +178,7 @@ namespace ForkBot
                 var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
                                                               "&application=7362540682895337949" +
                                                               "&instance=22180784" +
-                                                              "&conversation=1234" + 
+                                                              "&conversation=7180734243937505099" + 
                                                               "&message=" + message.Content);
                 XmlDocument response = new XmlDocument();
                 response.LoadXml(xml);
