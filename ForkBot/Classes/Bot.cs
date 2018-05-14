@@ -172,7 +172,7 @@ namespace ForkBot
                 Var.replaceable = false;
             }
 
-            
+
 
             if (message.HasCharPrefix(';', ref argPos))
             {
@@ -188,11 +188,15 @@ namespace ForkBot
                     }
                 }
             }
-            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id)
+            //else if (message.MentionedUsers.First().Id == client.CurrentUser.Id)
+            //{
+            //    Functions.Respond(message);
+            //}
+            else
             {
                 Functions.Respond(message);
+                return;
             }
-            else return;
         }
         public async Task HandleJoin(SocketGuildUser user)
         {

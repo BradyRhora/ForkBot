@@ -186,11 +186,11 @@ namespace ForkBot
                 var n = response.GetElementsByTagName("message");
                 string responseMsg = n[0].InnerText;
 
-                await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
+                //await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
             }
             catch (Exception e)
             {
-                await message.Channel.SendMessageAsync(":robot::speech_balloon: I don't understand.");
+                //await message.Channel.SendMessageAsync(":robot::speech_balloon: I don't understand.");
                 Console.WriteLine(e.Message);
             }
         }
