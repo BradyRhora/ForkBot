@@ -715,41 +715,47 @@ namespace ForkBot
         }
 
         [Command("sell"), Summary("[FUN] Sell items from your inventory.")]
-        public async Task Sell(string item)
+        public async Task Sell(params string[] items)
         {
             var u = Functions.GetUser(Context.User);
-            if (u.GetItemList().Contains(item))
+            string msg = "";
+            var itemList = Functions.GetItemList();
+            var rItems = Functions.GetRareItemList();
+            foreach (string item in items)
             {
-                u.RemoveItem(item);
-                var items = Functions.GetItemList();
-                int price = 0;
-                foreach (string line in items)
+                if (u.GetItemList().Contains(item))
                 {
-                    if (line.Split('|')[0] == item)
+                    u.RemoveItem(item);
+                    int price = 0;
+                    foreach (string line in itemList)
                     {
-                        price = Convert.ToInt32(line.Split('|')[2]);
-                        break;
+                        if (line.Split('|')[0] == item)
+                        {
+                            price = Convert.ToInt32(line.Split('|')[2]);
+                            break;
+                        }
+                    }
+
+                    if (rdm.Next(100) < 5)
+                    {
+                        var rItemData = rItems[rdm.Next(rItems.Count())];
+                        var itemName = rItemData.Split('|')[0].Replace('_', ' ');
+                        var rMessage = rItemData.Split('|')[1];
+
+                        u.GiveItem(Var.present);
+                        msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
+                                                               $"A {itemName}! :{itemName}: {rMessage}\n";
+                    }
+                    else
+                    {
+                        u.GiveCoins(price);
+                        msg += $"You successfully sold your {item} for {price} coins!\n";
                     }
                 }
-
-                if (rdm.Next(100) < 5)
-                {
-                    var rItems = Functions.GetRareItemList();
-                    var rItemData = rItems[rdm.Next(rItems.Count())];
-                    var itemName = rItemData.Split('|')[0].Replace('_', ' ');
-                    var rMessage = rItemData.Split('|')[1];
-                    
-                    u.GiveItem(Var.present);
-                    await Context.Channel.SendMessageAsync($"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
-                                                           $"A {itemName}! :{itemName}: {rMessage}");
-                }
-                else
-                {
-                    u.GiveCoins(price);
-                    await Context.Channel.SendMessageAsync($"You successfully sold your {item} for {price} coins!");
-                }
+                else msg += $"You do not have an item called {item}!";
             }
-            else await Context.Channel.SendMessageAsync($"You do not have an item called {item}!");
+
+            await Context.Channel.SendMessageAsync(msg);
         }
         
         [Command("trade"), Summary("[FUN] Initiate a trade with another user!")]
