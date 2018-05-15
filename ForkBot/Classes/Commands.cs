@@ -1163,6 +1163,17 @@ namespace ForkBot
             }
 
         }
+
+        [Command("respond")]
+        public async Task Respond()
+        {
+            if (Context.User.Id == Constants.Users.BRADY)
+            {
+                Var.responding = !Var.responding;
+                if (Var.responding) await Context.Channel.SendMessageAsync("Responding");
+                else await Context.Channel.SendMessageAsync("Listening");
+            }
+        }
         #endregion
 
     }

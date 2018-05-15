@@ -188,13 +188,13 @@ namespace ForkBot
                     }
                 }
             }
-            //else if (message.MentionedUsers.First().Id == client.CurrentUser.Id)
-            //{
-            //    Functions.Respond(message);
-            //}
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id)
+            {
+                if (Var.responding) Functions.Respond(message);
+            }
             else
             {
-                Functions.Respond(message);
+                if (!Var.responding) Functions.Respond(message);
                 return;
             }
         }

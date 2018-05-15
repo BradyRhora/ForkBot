@@ -47,6 +47,6 @@ namespace ForkBot
         public static bool recieving = false;
         public static IMessageChannel recievingChannel;
 
-
+        public static bool responding = true;
     }
 }
