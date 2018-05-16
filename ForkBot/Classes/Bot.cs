@@ -188,7 +188,7 @@ namespace ForkBot
                     }
                 }
             }
-            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id)
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id)
             {
                 if (Var.responding) Functions.Respond(message);
             }

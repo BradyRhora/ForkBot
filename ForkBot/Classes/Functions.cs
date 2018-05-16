@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Discord;
 using System.Net;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace ForkBot
 {
@@ -186,11 +187,12 @@ namespace ForkBot
                 var n = response.GetElementsByTagName("message");
                 string responseMsg = n[0].InnerText;
 
+                responseMsg = Regex.Replace(responseMsg, "((<@.\\w+>))", "").Trim();
                 if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
             }
             catch (Exception e)
             {
-                if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: I don't understand.");
+                if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: Watch your profanity!");
                 Console.WriteLine(e.Message);
             }
         }
