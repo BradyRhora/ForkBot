@@ -43,7 +43,6 @@ namespace ForkBot
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
                 
-                //Timer weeklyTimer = new Timer(new TimerCallback(Weekly), null, 0, 1000 * 60 * 60 * 24 * 7);
 
                 await Task.Delay(-1);
             }
@@ -70,21 +69,6 @@ namespace ForkBot
         }
         
         
-        /*void Weekly(object state) //code that is run every week
-        {
-            //user file purge
-            string path = "Files/users.txt";
-            var userdata = File.ReadAllLines(path);
-            List<String> data = userdata.ToList();
-            for (int i = data.Count() - 1; i >= 0; i--)
-            {
-                if (data[i].Split('|')[1] == "0" && data[i].Split('|').Count() <= 2)
-                {
-                    data.Remove(data[i]);
-                }
-            }
-            File.WriteAllLines(path, data.ToArray());
-        }*/
 
         public async Task InstallCommands()
         {
@@ -106,26 +90,6 @@ namespace ForkBot
             
             if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
             
-            if (Var.recieving)
-            {
-                if (message.Channel == Var.recievingChannel)
-                {
-                    var bBunch = client.GetGuild(371695008157532160).GetChannel(381656424247197697) as IMessageChannel;
-                    
-                    JEmbed emb = new JEmbed();
-                    emb.Title = message.Author.Username + "#" + message.Author.Discriminator;
-                    emb.Author.Name = "MESSAGE RECIEVED";
-                    emb.ThumbnailUrl = message.Author.GetAvatarUrl();
-                    emb.Description = message.Content;
-
-                    string attachURL = null;
-                    if (message.Attachments.Count > 0) attachURL = message.Attachments.FirstOrDefault().ProxyUrl;
-                    if (attachURL != null) emb.ImageUrl = attachURL;
-
-                    await bBunch.SendMessageAsync("", embed: emb.Build());
-                }
-            }
-
             var user = Functions.GetUser(message.Author);
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {
@@ -144,8 +108,7 @@ namespace ForkBot
                     string sMessage = "";
                     for (int i = 0; i < 5; i++)
                     {
-                        string sPresent = presents[rdm.Next(presents.Count())].Split('|')[0];
-                        sMessage += ":" + sPresent + ": ";
+                        string sPresent = Functions.GetItemEmote(presents[rdm.Next(presents.Count())]);
                         user.GiveItem(sPresent);
                     }
                     await message.Channel.SendMessageAsync(sMessage);
@@ -171,9 +134,7 @@ namespace ForkBot
                 Var.replacing = false;
                 Var.replaceable = false;
             }
-
-
-
+            
             if (message.HasCharPrefix(';', ref argPos))
             {
                 var context = new CommandContext(client, message);

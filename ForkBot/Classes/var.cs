@@ -44,9 +44,6 @@ namespace ForkBot
 
         public static Shop currentShop = null;
 
-        public static bool recieving = false;
-        public static IMessageChannel recievingChannel;
-
         public static bool responding = true;
         public static string Conversation = "0";
     }

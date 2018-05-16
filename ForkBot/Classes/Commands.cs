@@ -85,17 +85,7 @@ namespace ForkBot
 
 
         }
-
-        /*[Command("play"), Summary("Play a song from Youtube.")]
-        public async Task Play(string song)
-        {
-
-            var youTube = YouTube.Default; // starting point for YouTube actions
-            var video = await youTube.GetVideoAsync(song); // gets a Video object with info about the video
-            File.WriteAllBytes(@"Video\" + video.FullName, video.GetBytes());
-            
-        }*/
-
+        
         [Command("hangman"), Summary("[FUN] Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
         public async Task HangMan()
         {
@@ -847,7 +837,7 @@ namespace ForkBot
                 for (int i = 0; i < 5; i++)
                 {
                     int itemID = rdm.Next(allItems.Length);
-                    if (!items.Contains(allItems[itemID])) items.Add(allItems[itemID]);
+                    if (!items.Contains(allItems[itemID]) && !allItems[itemID].Split('|').Contains("-")) items.Add(allItems[itemID]);
                     else i--;
                 }
 
@@ -868,13 +858,14 @@ namespace ForkBot
                 foreach (string item in Var.currentShop.Items())
                 {
                     var data = item.Split('|');
+                    string emote = Functions.GetItemEmote(item);
                     string name = data[0];
                     string desc = data[1];
                     int price = Convert.ToInt32(data[2]) * 2;
                     if (price < 0) price *= -1;
                     emb.Fields.Add(new JEmbedField(x =>
                     {
-                        x.Header = $":{name}: {name} - {price} coins";
+                        x.Header = $"{emote} {name} - {price} coins";
                         x.Text = desc;
                     }));
                 }
@@ -1155,17 +1146,8 @@ namespace ForkBot
                 IUserMessage msg = await ReplyAsync("Evaluating...");
                 string result = await EvalService.EvaluateAsync(Context as CommandContext, expression);
                 var user = Context.User as IGuildUser;
-                if (user.RoleIds.ToArray().Count() > 1)
-                {
-                    var role = Context.Guild.GetRole(user.RoleIds.ElementAtOrDefault(1));
-                    var emb = new EmbedBuilder().WithColor(role.Color).WithDescription(result).WithTitle("Evaluated").WithCurrentTimestamp();
-                    await Context.Channel.SendMessageAsync("", embed: emb);
-                }
-                else
-                {
-                    var emb = new EmbedBuilder().WithColor(new Discord.Color(147, 112, 219)).WithDescription(result).WithTitle("Evaluated").WithCurrentTimestamp();
-                    await Context.Channel.SendMessageAsync("", embed: emb);
-                }
+                var emb = new EmbedBuilder().WithColor(Functions.GetColor(Context.User)).WithDescription(result).WithTitle("Evaluated").WithCurrentTimestamp();
+                await Context.Channel.SendMessageAsync("", embed: emb);
             }
 
         }

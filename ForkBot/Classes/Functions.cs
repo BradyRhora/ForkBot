@@ -28,34 +28,7 @@ namespace ForkBot
             }
             else return Constants.Colours.DEFAULT_COLOUR;
         }
-
-        /* Old user system
-        public static void SaveUsers()
-        {
-            string toWrite = "";
-            foreach (User u in Bot.users)
-            {
-                toWrite += $"{u.ID}|{u.Coins}";
-                foreach (string s in u.Items) toWrite += $"|{s}";
-                toWrite += "\n";
-            }
-            bool unsaved = true;
-            while (unsaved)
-            {
-                try { File.WriteAllText("Files/users.txt", toWrite); unsaved = false; }
-                catch (Exception) { Console.WriteLine("Failed to save users.. trying again."); }
-            }
-        }
         
-        public static void LoadUsers()
-        {
-            foreach (string data in File.ReadLines("Files/users.txt"))
-            {
-                Bot.users.Add(new User(data: data, load: true));
-            }
-        }
-        */
-
         public static User GetUser(IUser user) //gets User class for IUser, makes one if there isn't already one.
         {
             /*int attempts = 0;
@@ -141,10 +114,15 @@ namespace ForkBot
         {
             return File.ReadAllLines("Files/items.txt");
         }
-
         public static string[] GetRareItemList()
         {
             return File.ReadAllLines("Files/rareitems.txt");
+        }
+        public static string GetItemEmote(string itemData)
+        {
+            var data = itemData.Split('|');
+            if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
+            return ":" + data[0] + ":";
         }
 
         public static ItemTrade GetTrade(IUser user)
