@@ -96,12 +96,13 @@ namespace ForkBot
                 Var.presentWaiting = false;
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
                 var presents = Functions.GetItemList();
-                var presentData = presents[rdm.Next(presents.Count())].Split('|');
+                int presRDM = rdm.Next(presents.Count());
+                var presentData = presents[presRDM].Split('|');
                 Var.present = presentData[0];
                 Var.rPresent = Var.present;
                 var presentName = Var.present.Replace('_', ' ');
                 var pMessage = presentData[1];
-                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName)}! :{Var.present}: {pMessage}");
+                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName)}! {Functions.GetItemEmote(presents[presRDM])} {pMessage}");
                 if (Var.present == "santa")
                 {
                     await message.Channel.SendMessageAsync("You got...");
