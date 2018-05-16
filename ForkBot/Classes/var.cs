@@ -48,5 +48,6 @@ namespace ForkBot
         public static IMessageChannel recievingChannel;
 
         public static bool responding = true;
+        public static string Conversation = "0";
     }
 }

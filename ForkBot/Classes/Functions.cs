@@ -176,19 +176,29 @@ namespace ForkBot
         {
             try
             {
-                string msg = message.Content.Replace("<@377913570912108544>", "");
+                string msg = Regex.Replace(message.Content, "(<.*@.*377913570912108544.*>)", "").Trim();
+                if (msg.ToLower() == "disconnect") msg = "&disconnect=true";
+                else msg = "&message=" + msg;
                 var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
                                                               "&application=7362540682895337949" +
                                                               "&instance=22180784" +
-                                                              "&conversation=7180734243937505099" + 
-                                                              "&message=" + msg);
-                XmlDocument response = new XmlDocument();
-                response.LoadXml(xml);
-                var n = response.GetElementsByTagName("message");
-                string responseMsg = n[0].InnerText;
-
-                responseMsg = Regex.Replace(responseMsg, "((<@.\\w+>))", "").Trim();
-                if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
+                                                              $"&conversation={Var.Conversation}" + 
+                                                               msg);
+                if (msg == "&disconnect=true")
+                {
+                    Var.Conversation = "0";
+                    await message.Channel.SendMessageAsync(":robot::speech_balloon: Goodbye.");
+                }
+                else
+                {
+                    XmlDocument response = new XmlDocument();
+                    response.LoadXml(xml);
+                    var n = response.GetElementsByTagName("message");
+                    string responseMsg = n[0].InnerText;
+                    if (Var.Conversation == "0") Var.Conversation = response.ChildNodes[1].Attributes[0].Value;
+                    responseMsg = Regex.Replace(responseMsg, "(<.*@.*\\w+.*>)", "").Trim();
+                    if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
+                }
             }
             catch (Exception e)
             {
