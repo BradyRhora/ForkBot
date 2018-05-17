@@ -68,8 +68,6 @@ namespace ForkBot
             }
         }
         
-        
-
         public async Task InstallCommands()
         {
             client.MessageReceived += HandleCommand;
@@ -95,6 +93,7 @@ namespace ForkBot
             {
                 Var.presentWaiting = false;
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
+                Var.claimant = message.Author.Username + " in " + (message.Channel as IGuildChannel).Guild.Name;
                 var presents = Functions.GetItemList();
                 int presRDM = rdm.Next(presents.Count());
                 var presentData = presents[presRDM].Split('|');
@@ -259,6 +258,7 @@ namespace ForkBot
                         if (react.Emote.Name == Constants.Emotes.hammer.Name) tag = "[MOD]";
                         else if (react.Emote.Name == Constants.Emotes.die.Name) tag = "[FUN]";
                         else if (react.Emote.Name == Constants.Emotes.question.Name) tag = "[OTHER]";
+                        else if (react.Emote.Name == Constants.Emotes.chad.Name) tag = "[P10]";
                         Var.awaitingHelp.Remove(msg);
                         await msg.DeleteAsync();
                         break;

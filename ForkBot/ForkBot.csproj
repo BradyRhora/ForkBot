@@ -219,6 +219,7 @@
     <Content Include="bin\Debug\Files\Images\Hammer.png" />
     <Content Include="bin\Debug\Files\Images\Kick.png" />
     <Content Include="bin\Debug\Files\items.txt" />
+    <Content Include="bin\Debug\Files\jobs.txt" />
     <Content Include="bin\Debug\Files\rareitems.txt" />
     <Content Include="bin\Debug\Files\reminders.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />

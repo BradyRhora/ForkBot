@@ -10,6 +10,7 @@ namespace ForkBot
         public class Guilds
         {
             public static ulong YORK_UNIVERSITY = 265998661606047744;
+            public static ulong P10_ENTERPRISES = 436016366672150531;
         }
 
         public class Users
@@ -66,6 +67,7 @@ namespace ForkBot
             public static Emoji hammer = new Emoji("🔨");
             public static Emoji die = new Emoji("🎲");
             public static Emoji question = new Emoji("❓");
+            public static Emote chad = Emote.Parse("<:CHAD:436784932820353024>");
             
 
         }

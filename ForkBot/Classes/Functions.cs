@@ -184,6 +184,11 @@ namespace ForkBot
                 Console.WriteLine(e.Message);
             }
         }
+
+        public static string[] GetJobList()
+        {
+            return File.ReadAllLines("Files/jobs.txt");
+        }
     }
     
 

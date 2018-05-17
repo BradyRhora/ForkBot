@@ -34,6 +34,7 @@ namespace ForkBot
         public static bool timerComplete = false;
         public static DateTime presentTime = new DateTime(1, 1, 1);
         public static TimeSpan presentWait = new TimeSpan(0,0,0);
+        public static string claimant;
         #endregion
 
         public static List<ItemTrade> trades = new List<ItemTrade>();

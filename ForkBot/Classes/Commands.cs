@@ -14,12 +14,15 @@ using System.Drawing;
 using System.Net;
 using ImageProcessor;
 using ImageProcessor.Imaging;
+using System.Text.RegularExpressions;
 
 namespace ForkBot
 {
     public class Commands : ModuleBase
     {
         Random rdm = new Random();
+
+        #region Useful
 
         [Command("help"), Summary("Displays commands and descriptions.")]
         public async Task Help()
@@ -53,6 +56,16 @@ namespace ForkBot
                 x.Inline = true;
             }));
 
+            if (Context.Guild.Id == Constants.Guilds.P10_ENTERPRISES)
+            {
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Text = "<:CHAD:436784932820353024>";
+                    x.Header = "ENTERPRISE COMMANDS";
+                    x.Inline = true;
+                }));
+            }
+
 
 
             var msg = await Context.Channel.SendMessageAsync("", embed: emb.Build());
@@ -60,235 +73,8 @@ namespace ForkBot
             await msg.AddReactionAsync(Constants.Emotes.hammer);
             await msg.AddReactionAsync(Constants.Emotes.die);
             await msg.AddReactionAsync(Constants.Emotes.question);
-
+            if (Context.Guild.Id == Constants.Guilds.P10_ENTERPRISES) await msg.AddReactionAsync(Constants.Emotes.chad);
             Var.awaitingHelp.Add(msg);
-
-            /*
-                foreach (CommandInfo command in Bot.commands.Commands)
-                {
-
-
-                    if (command.Summary != null && !command.Summary.StartsWith("[MOD]")) {
-                        emb.Fields.Add(new JEmbedField(x =>
-                        {
-                            string header = command.Name;
-                            foreach (String alias in command.Aliases) if (alias != command.Name) header += " (;" + alias + ") ";
-                            foreach (ParameterInfo parameter in command.Parameters) header += " [" + parameter.Name + "]";
-                            x.Header = header;
-                            x.Text = command.Summary;
-                        }));
-                    }
-                }
-                await Context.Channel.SendMessageAsync("", embed: emb.Build());
-                */
-
-
-
-        }
-        
-        [Command("hangman"), Summary("[FUN] Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
-        public async Task HangMan()
-        {
-            if (!Var.hangman)
-            {
-                var wordList = File.ReadAllLines("Files/wordlist.txt");
-                Var.hmWord = wordList[(rdm.Next(wordList.Count()))].ToLower();
-                Var.hangman = true;
-                Var.hmCount = 0;
-                Var.hmErrors = 0;
-                Var.guessedChars.Clear();
-                await HangMan("");
-            }
-            else
-            {
-                await Context.Channel.SendMessageAsync("There is already a game of HangMan running.");
-            }
-        }
-
-        [Command("hangman"), Alias(new string[] { "hm" })]
-        public async Task HangMan(string guess)
-        {
-            if (Var.hangman)
-            {
-                guess = guess.ToLower();
-                if (guess != "" && Var.guessedChars.Contains(guess[0]) && guess.Count() == 1) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
-                else
-                {
-                    if (guess.Count() == 1 && !Var.guessedChars.Contains(guess[0])) Var.guessedChars.Add(guess[0]);
-                    if (guess != "" && ((!Var.hmWord.Contains(guess[0]) && guess.Count() == 1) || (Var.hmWord != guess && guess.Count() > 1))) Var.hmErrors++;
-
-
-                    string[] hang = {
-            "       ______   " ,    //0
-            "      /      \\  " ,   //1
-            "     |          " ,    //2
-            "     |          " ,    //3
-            "     |          " ,    //4
-            "     |          " ,    //5
-            "     |          " ,    //6
-            "_____|_____     " };   //7
-
-
-                    for (int i = 0; i < Var.hmWord.Count(); i++)
-                    {
-                        if (Var.guessedChars.Contains(Var.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Var.hmWord[i])) + " ";
-                        else hang[6] += "_ ";
-                    }
-
-                    for (int i = 0; i < Var.hmErrors; i++)
-                    {
-                        if (i == 0)
-                        {
-                            var line = hang[2].ToCharArray();
-                            line[13] = 'O';
-                            hang[2] = new string(line);
-                        }
-                        if (i == 1)
-                        {
-                            var line = hang[3].ToCharArray();
-                            line[13] = '|';
-                            hang[3] = new string(line);
-                        }
-                        if (i == 2)
-                        {
-                            var line = hang[4].ToCharArray();
-                            line[12] = '/';
-                            hang[4] = new string(line);
-                        }
-                        if (i == 3)
-                        {
-                            var line = hang[4].ToCharArray();
-                            line[14] = '\\';
-                            hang[4] = new string(line);
-                        }
-                        if (i == 4)
-                        {
-                            var line = hang[3].ToCharArray();
-                            line[12] = '/';
-                            hang[3] = new string(line);
-                        }
-                        if (i == 5)
-                        {
-                            var line = hang[3].ToCharArray();
-                            line[14] = '\\';
-                            hang[3] = new string(line);
-                        }
-                    }
-
-                    if (!hang[6].Contains("_") || Var.hmWord == guess) //win
-                    {
-                        await Context.Channel.SendMessageAsync("You did it!");
-                        Var.hangman = false;
-                        foreach (char c in Var.hmWord)
-                        {
-                            Var.guessedChars.Add(c);
-                        }
-                        var u = Functions.GetUser(Context.User);
-                        u.GiveCoins(10);
-                    }
-
-                    hang[6] = "     |          ";
-                    for (int i = 0; i < Var.hmWord.Count(); i++)
-                    {
-                        if (Var.guessedChars.Contains(Var.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Var.hmWord[i])) + " ";
-                        else hang[6] += "_ ";
-                    }
-
-                    if (Var.hmErrors == 6)
-                    {
-                        await Context.Channel.SendMessageAsync("You lose! The word was: " + Var.hmWord);
-                        Var.hangman = false;
-                    }
-
-                    string msg = "```\n";
-                    foreach (String s in hang) msg += s + "\n";
-                    msg += "```";
-                    if (Var.hangman)
-                    {
-                        msg += "Guessed letters: ";
-                        foreach (char c in Var.guessedChars) msg += char.ToUpper(c) + " ";
-                        msg += "\nUse `;hangman [guess]` to guess a character or the entire word.";
-
-                    }
-                    await Context.Channel.SendMessageAsync(msg);
-                }
-            }
-            else
-            {
-                await HangMan();
-                await HangMan(guess);
-            }
-        }
-
-        [Command("profile"), Summary("View your or another users profile.")]
-        public async Task Profile(IUser user)
-        {
-            var u = Functions.GetUser(user);
-
-            var emb = new JEmbed();
-            emb.Author.Name = user.Username;
-            emb.Author.IconUrl = user.GetAvatarUrl();
-
-            emb.ColorStripe = Functions.GetColor(user);
-
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Coins:";
-                x.Text = Convert.ToString(u.GetData("coins"));
-                x.Inline = true;
-            }));
-
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Roles:";
-                string text = "";
-                foreach (ulong id in (user as IGuildUser).RoleIds)
-                {
-                    text += Context.Guild.GetRole(id).Name + "\n";
-                }
-
-                x.Text = Convert.ToString(text);
-                x.Inline = true;
-            }));
-
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Inventory:";
-                string text = "";
-                foreach (string item in u.GetItemList())
-                {
-                    text += item + ", ";
-                }
-                x.Text = Convert.ToString(text);
-            }));
-
-            await Context.Channel.SendMessageAsync("", embed: emb.Build());
-        }
-
-        [Command("profile")]
-        public async Task Profile() { await Profile(Context.User); }
-        
-        [Command("present"), Summary("[FUN] Get a cool gift!")]
-        public async Task Present()
-        {
-            if (!Var.presentWaiting)
-            {
-                if (Var.presentTime < DateTime.Now - Var.presentWait)
-                {
-                    Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
-                    Var.presentTime = DateTime.Now;
-                    Var.presentNum = rdm.Next(10);
-                    await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
-                    Var.presentWaiting = true;
-                    Var.replacing = false;
-                    Var.replaceable = true;
-                }
-                else
-                {
-                    var timeLeft = Var.presentTime - (DateTime.Now - Var.presentWait);
-                    await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! It should be ready in *about* {timeLeft.Hours + 1} hour(s)!");
-                }
-            }
         }
 
         [Command("whatis"), Alias(new string[] { "wi" }), Summary("Don't know what something is? Find out!")]
@@ -543,7 +329,337 @@ namespace ForkBot
             catch (Exception) { await Context.Channel.SendMessageAsync("Unable to find course."); }
 
         }
-        
+
+        #endregion
+
+        #region Item Commands
+        [Command("roll")]
+        public async Task Roll(int max = 6)
+        {
+            if (Functions.GetUser(Context.User).GetItemList().Contains("game_die"))
+            {
+                await Context.Channel.SendMessageAsync(":game_die: | " + Convert.ToString(rdm.Next(max) + 1));
+            }
+        }
+
+        [Command("8ball")]
+        public async Task EightBall([Remainder] string question = "")
+        {
+            if (Functions.GetUser(Context.User).GetItemList().Contains("8ball"))
+            {
+                string[] answers = { "Yes", "No", "Ask again later", "Cannot predict now", "Unlikely", "Chances good", "Likely", "Lol no", "If you believe" };
+                await Context.Channel.SendMessageAsync(":8ball: | " + answers[rdm.Next(answers.Count())]);
+            }
+        }
+
+        [Command("sell"), Summary("[FUN] Sell items from your inventory.")]
+        public async Task Sell(params string[] items)
+        {
+            var u = Functions.GetUser(Context.User);
+            string msg = "";
+            var itemList = Functions.GetItemList();
+            var rItems = Functions.GetRareItemList();
+            foreach (string item in items)
+            {
+                if (u.GetItemList().Contains(item))
+                {
+                    u.RemoveItem(item);
+                    int price = 0;
+                    foreach (string line in itemList)
+                    {
+                        if (line.Split('|')[0] == item)
+                        {
+                            price = Convert.ToInt32(line.Split('|')[2]);
+                            break;
+                        }
+                    }
+
+                    if (rdm.Next(100) < 5)
+                    {
+                        var rItemData = rItems[rdm.Next(rItems.Count())];
+                        var itemName = rItemData.Split('|')[0].Replace('_', ' ');
+                        var rMessage = rItemData.Split('|')[1];
+
+                        u.GiveItem(Var.present);
+                        msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
+                                                               $"A {itemName}! :{itemName}: {rMessage}\n";
+                    }
+                    else
+                    {
+                        u.GiveCoins(price);
+                        msg += $"You successfully sold your {item} for {price} coins!\n";
+                    }
+                }
+                else msg += $"You do not have an item called {item}!";
+            }
+
+            await Context.Channel.SendMessageAsync(msg);
+        }
+
+        [Command("trade"), Summary("[FUN] Initiate a trade with another user!")]
+        public async Task Trade(IUser user)
+        {
+            if (Functions.GetTrade(Context.User) == null && Functions.GetTrade(user) == null)
+            {
+                Var.trades.Add(new ItemTrade(Context.User, user));
+                await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE INVITE",
+                    user.Mention + "! " + Context.User.Username + " has invited you to trade."
+                    + " Type ';trade accept' to accept or ';trade deny' to deny!").Build());
+            }
+            else await Context.Channel.SendMessageAsync("Either you or the person you are attempting to trade with is already in a trade!"
+                                                    + " If you accidentally left a trade going, use `;trade cancel` to cancel the trade.");
+        }
+
+        [Command("trade")]
+        public async Task Trade(string command, string param = "")
+        {
+            bool showMenu = false;
+            var trade = Functions.GetTrade(Context.User);
+            if (trade != null)
+            {
+                switch (command)
+                {
+                    case "accept":
+                        if (!trade.Accepted) trade.Accept();
+                        showMenu = true;
+                        break;
+                    case "deny":
+                        if (!trade.Accepted)
+                        {
+                            await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE DENIED", $"{trade.Starter().Mention}, {Context.User.Username} has denied the trade request.").Build());
+                            Var.trades.Remove(trade);
+                        }
+                        break;
+                    case "add":
+                        if (param != "")
+                        {
+                            var success = trade.AddItem(Context.User, param);
+                            if (success == false)
+                            {
+                                await Context.Channel.SendMessageAsync("Unable to add item. Are you sure you have it?");
+                            }
+                            else showMenu = true;
+                        }
+                        else await Context.Channel.SendMessageAsync("Please specify the item to add!");
+                        break;
+                    case "finish":
+                        trade.Confirm(Context.User);
+                        if (trade.IsCompleted()) Var.trades.Remove(trade);
+                        else await Context.Channel.SendMessageAsync("Awaiting confirmation from other user.");
+                        break;
+                    case "cancel":
+                        await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE CANCELLED", $"{Context.User.Username} has cancelled the trade. All items have been returned.").Build());
+                        Var.trades.Remove(trade);
+                        break;
+                }
+            }
+            else await Context.Channel.SendMessageAsync("You are not currently part of a trade.");
+
+            if (showMenu) await Context.Channel.SendMessageAsync("", embed: trade.CreateMenu());
+
+            if (trade.IsCompleted())
+            {
+                await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE SUCCESSFUL", "The trade has been completed successfully.").Build());
+                Var.trades.Remove(trade);
+            }
+        }
+
+        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
+        public async Task Shop(string command = null)
+        {
+            var u = Functions.GetUser(Context.User);
+            DateTime day = new DateTime();
+            DateTime currentDay = new DateTime();
+            if (Var.currentShop != null)
+            {
+                day = Var.currentShop.Date();
+                currentDay = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+            }
+            if (Var.currentShop == null || day.DayOfYear < currentDay.DayOfYear && day.Year == currentDay.Year)
+            {
+                var nItems = Functions.GetItemList();
+                var rItems = Functions.GetRareItemList();
+                var allItems = nItems.Concat(rItems).ToArray();
+
+                List<string> items = new List<string>();
+                for (int i = 0; i < 5; i++)
+                {
+                    int itemID = rdm.Next(allItems.Length);
+                    if (!items.Contains(allItems[itemID]) && !allItems[itemID].Split('|').Contains("-")) items.Add(allItems[itemID]);
+                    else i--;
+                }
+
+                Var.currentShop = new Shop(items);
+            }
+
+            List<string> itemNames = new List<string>();
+            foreach (string item in Var.currentShop.Items()) itemNames.Add(item.Split('|')[0]);
+
+
+
+            if (command == null)
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = "Shop";
+                emb.ThumbnailUrl = Constants.Images.ForkBot;
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                foreach (string item in Var.currentShop.Items())
+                {
+                    var data = item.Split('|');
+                    string emote = Functions.GetItemEmote(item);
+                    string name = data[0];
+                    string desc = data[1];
+                    int price = Convert.ToInt32(data[2]) * 2;
+                    if (price < 0) price *= -1;
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = $"{emote} {name} - {price} coins";
+                        x.Text = desc;
+                    }));
+                }
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
+            }
+            else if (itemNames.Contains(command.ToLower()))
+            {
+                foreach (string item in Var.currentShop.Items())
+                {
+                    if (item.Split('|')[0] == command.ToLower())
+                    {
+                        var data = item.Split('|');
+                        string name = data[0];
+                        string desc = data[1];
+                        int price = Convert.ToInt32(data[2]) * 2;
+                        if (price < 0) price *= -1;
+
+                        if (Convert.ToInt32(u.GetData("coins")) >= price)
+                        {
+                            u.GiveCoins(-price);
+                            u.GiveItem(name);
+                            await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} :{name}: for {price} coins!");
+                        }
+                        else await Context.Channel.SendMessageAsync("You cannot afford this item.");
+                    }
+                }
+            }
+            else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
+        }
+        #endregion
+
+        /* temp disable
+        //for viewing a tag
+        [Command("tag"), Summary("Make or view a tag!")]
+        public async Task Tag(string tag)
+        {
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            string[] tags = File.ReadAllLines("Files/tags.txt");
+            bool sent = false;
+            string msg = "```";
+
+            foreach (string line in tags)
+            {
+
+                if (tag == "list")
+                {
+                    msg += "\n" + line.Split('|')[0];
+                }
+                else if (line.Split('|')[0] == tag)
+                {
+                    sent = true;
+                    await Context.Channel.SendMessageAsync(line.Split('|')[1]);
+                    break;
+                }
+            }
+            msg += "\n```";
+            if (tag == "list") await Context.Channel.SendMessageAsync(msg);
+            else if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
+
+        }
+
+        //for creating the tag
+        [Command("tag")]
+        public async Task Tag(string tag, [Remainder]string content)
+        {
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            bool exists = false;
+            if (tag == "list") exists = true;
+            else if (tag == "delete" && Context.User.Id == Constants.Users.BRADY)
+            {
+                var tags = File.ReadAllLines("Files/tags.txt").ToList();
+                for (int i = 0; i < tags.Count(); i++)
+                {
+                    if (tags[i].Split('|')[0] == content) { tags.Remove(tags[i]); break; }
+                }
+                File.WriteAllLines("Files/tags.txt", tags);
+            }
+            else
+            {
+                string[] tags = File.ReadAllLines("Files/tags.txt");
+                foreach (string line in tags)
+                {
+                    if (line.Split('|')[0] == tag) { exists = true; break; }
+                }
+
+                if (!exists)
+                {
+                    File.AppendAllText("Files/tags.txt", tag + "|" + content + "\n");
+                    await Context.Channel.SendMessageAsync("Tag created!");
+                }
+                else await Context.Channel.SendMessageAsync("Tag already exists!");
+            }
+        }
+        */
+
+        #region Fun
+
+        [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
+        public async Task Draw(int count)
+        {
+            if (count > 99999) count = 99999;
+            int size = 500;
+            using (Bitmap bmp = new Bitmap(size, size))
+            {
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    int x = rdm.Next(size);
+                    int y = rdm.Next(size);
+                    var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        Brush b = new SolidBrush(c);
+                        g.FillEllipse(b, x, y, 10, 10);
+                        int mult = 0;
+                        mult = rdm.Next(-1, 2);
+                        x += 5 * mult;
+                        mult = rdm.Next(-1, 2);
+                        y += 5 * mult;
+                        if (rdm.Next(100) == 1 || x > size || x < 0 || y > size || y < 0)
+                        {
+                            x = rdm.Next(size);
+                            y = rdm.Next(size);
+                            c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
+                        }
+                    }
+
+                    bmp.Save("Files/drawing.png");
+                    await Context.Channel.SendFileAsync("Files/drawing.png");
+
+                }
+            }
+        }
+
+        [Command("choose"), Summary("[FUN] Get ForkBot to make your decisions for you! Seperate choices with `|`")]
+        public async Task Choose([Remainder] string input)
+        {
+            var choices = input.Split('|');
+
+            var decision = choices[rdm.Next(choices.Count())];
+
+            await Context.Channel.SendMessageAsync($"{Context.User.Username}, I choose...");
+            await Context.Channel.SendMessageAsync(decision + "!");
+
+        }
+
         [Command("meme"), Summary("[FUN] Memify STUFF.")]
         public async Task Meme() { await Meme(Context.User); }
 
@@ -668,7 +784,7 @@ namespace ForkBot
             DateTime lastAllowance;
             if (lA == "0") lastAllowance = new DateTime(0);
             else lastAllowance = Functions.StringToDateTime(lA);
-            
+
             var ONE_DAY = new TimeSpan(24, 0, 0);
             if ((lastAllowance + ONE_DAY) < DateTime.Now)
             {
@@ -684,331 +800,278 @@ namespace ForkBot
             }
         }
 
-        #region Item Commands
-        [Command("roll")]
-        public async Task Roll(int max = 6)
+        [Command("hangman"), Summary("[FUN] Play a game of Hangman with the bot."), Alias(new string[] { "hm" })]
+        public async Task HangMan()
         {
-            if (Functions.GetUser(Context.User).GetItemList().Contains("game_die"))
+            if (!Var.hangman)
             {
-                await Context.Channel.SendMessageAsync(":game_die: | " + Convert.ToString(rdm.Next(max) + 1));
-            }
-        }
-        
-        [Command("8ball")]
-        public async Task EightBall([Remainder] string question ="")
-        {
-            if (Functions.GetUser(Context.User).GetItemList().Contains("8ball"))
-            {
-                string[] answers = { "Yes", "No", "Ask again later", "Cannot predict now", "Unlikely", "Chances good", "Likely", "Lol no", "If you believe" };
-                await Context.Channel.SendMessageAsync(":8ball: | " + answers[rdm.Next(answers.Count())]);
-            }
-        }
-
-        [Command("sell"), Summary("[FUN] Sell items from your inventory.")]
-        public async Task Sell(params string[] items)
-        {
-            var u = Functions.GetUser(Context.User);
-            string msg = "";
-            var itemList = Functions.GetItemList();
-            var rItems = Functions.GetRareItemList();
-            foreach (string item in items)
-            {
-                if (u.GetItemList().Contains(item))
-                {
-                    u.RemoveItem(item);
-                    int price = 0;
-                    foreach (string line in itemList)
-                    {
-                        if (line.Split('|')[0] == item)
-                        {
-                            price = Convert.ToInt32(line.Split('|')[2]);
-                            break;
-                        }
-                    }
-
-                    if (rdm.Next(100) < 5)
-                    {
-                        var rItemData = rItems[rdm.Next(rItems.Count())];
-                        var itemName = rItemData.Split('|')[0].Replace('_', ' ');
-                        var rMessage = rItemData.Split('|')[1];
-
-                        u.GiveItem(Var.present);
-                        msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
-                                                               $"A {itemName}! :{itemName}: {rMessage}\n";
-                    }
-                    else
-                    {
-                        u.GiveCoins(price);
-                        msg += $"You successfully sold your {item} for {price} coins!\n";
-                    }
-                }
-                else msg += $"You do not have an item called {item}!";
-            }
-
-            await Context.Channel.SendMessageAsync(msg);
-        }
-        
-        [Command("trade"), Summary("[FUN] Initiate a trade with another user!")]
-        public async Task Trade(IUser user)
-        {
-            if (Functions.GetTrade(Context.User) == null && Functions.GetTrade(user) == null)
-            {
-                Var.trades.Add(new ItemTrade(Context.User, user));
-                await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE INVITE",
-                    user.Mention + "! " + Context.User.Username + " has invited you to trade."
-                    + " Type ';trade accept' to accept or ';trade deny' to deny!").Build());
-            }
-            else await Context.Channel.SendMessageAsync("Either you or the person you are attempting to trade with is already in a trade!"
-                                                    +" If you accidentally left a trade going, use `;trade cancel` to cancel the trade.");
-        }
-        
-        [Command("trade")]
-        public async Task Trade(string command, string param = "")
-        {
-            bool showMenu = false;
-            var trade = Functions.GetTrade(Context.User);
-            if (trade != null)
-            {
-                switch (command)
-                {
-                    case "accept":
-                        if (!trade.Accepted) trade.Accept();
-                        showMenu = true;
-                        break;
-                    case "deny":
-                        if (!trade.Accepted)
-                        {
-                            await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE DENIED", $"{trade.Starter().Mention}, {Context.User.Username} has denied the trade request.").Build());
-                            Var.trades.Remove(trade);
-                        }
-                        break;
-                    case "add":
-                        if (param != "")
-                        {
-                            var success = trade.AddItem(Context.User, param);
-                            if (success == false)
-                            {
-                                await Context.Channel.SendMessageAsync("Unable to add item. Are you sure you have it?");
-                            }
-                            else showMenu = true;
-                        }
-                        else await Context.Channel.SendMessageAsync("Please specify the item to add!");
-                        break;
-                    case "finish":
-                        trade.Confirm(Context.User);
-                        if (trade.IsCompleted()) Var.trades.Remove(trade);
-                        else await Context.Channel.SendMessageAsync("Awaiting confirmation from other user.");
-                        break;
-                    case "cancel":
-                        await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE CANCELLED", $"{Context.User.Username} has cancelled the trade. All items have been returned.").Build());
-                        Var.trades.Remove(trade);
-                        break;
-                }
-            }
-            else await Context.Channel.SendMessageAsync("You are not currently part of a trade.");
-
-            if (showMenu) await Context.Channel.SendMessageAsync("", embed: trade.CreateMenu());
-
-            if (trade.IsCompleted())
-            {
-                await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE SUCCESSFUL", "The trade has been completed successfully.").Build());
-                Var.trades.Remove(trade);
-            }
-        }
-        
-        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
-        public async Task Shop(string command = null)
-        {
-            var u = Functions.GetUser(Context.User);
-            DateTime day = new DateTime();
-            DateTime currentDay = new DateTime();
-            if (Var.currentShop != null)
-            {
-                day = Var.currentShop.Date();
-                currentDay = DateTime.UtcNow - new TimeSpan(5, 0, 0);
-            }
-            if (Var.currentShop == null || day.DayOfYear < currentDay.DayOfYear && day.Year == currentDay.Year)
-            {
-                var nItems = Functions.GetItemList();
-                var rItems = Functions.GetRareItemList();
-                var allItems = nItems.Concat(rItems).ToArray();
-
-                List<string> items = new List<string>();
-                for (int i = 0; i < 5; i++)
-                {
-                    int itemID = rdm.Next(allItems.Length);
-                    if (!items.Contains(allItems[itemID]) && !allItems[itemID].Split('|').Contains("-")) items.Add(allItems[itemID]);
-                    else i--;
-                }
-
-                Var.currentShop = new Shop(items);
-            }
-
-            List<string> itemNames = new List<string>();
-            foreach (string item in Var.currentShop.Items()) itemNames.Add(item.Split('|')[0]);
-
-
-
-            if (command == null)
-            {
-                JEmbed emb = new JEmbed();
-                emb.Title = "Shop";
-                emb.ThumbnailUrl = Constants.Images.ForkBot;
-                emb.ColorStripe = Constants.Colours.YORK_RED;
-                foreach (string item in Var.currentShop.Items())
-                {
-                    var data = item.Split('|');
-                    string emote = Functions.GetItemEmote(item);
-                    string name = data[0];
-                    string desc = data[1];
-                    int price = Convert.ToInt32(data[2]) * 2;
-                    if (price < 0) price *= -1;
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        x.Header = $"{emote} {name} - {price} coins";
-                        x.Text = desc;
-                    }));
-                }
-                await Context.Channel.SendMessageAsync("", embed: emb.Build());
-            }
-            else if (itemNames.Contains(command.ToLower()))
-            {
-                foreach(string item in Var.currentShop.Items())
-                {
-                    if (item.Split('|')[0] == command.ToLower())
-                    {
-                        var data = item.Split('|');
-                        string name = data[0];
-                        string desc = data[1];
-                        int price = Convert.ToInt32(data[2]) * 2;
-                        if (price < 0) price *= -1;
-
-                        if (Convert.ToInt32(u.GetData("coins")) >= price)
-                        {
-                            u.GiveCoins(-price);
-                            u.GiveItem(name);
-                            await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} :{name}: for {price} coins!");
-                        }
-                        else await Context.Channel.SendMessageAsync("You cannot afford this item.");
-                    }
-                }
-            }
-            else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
-        }
-        #endregion
-
-        /* temp disable
-        //for viewing a tag
-        [Command("tag"), Summary("Make or view a tag!")]
-        public async Task Tag(string tag)
-        {
-            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
-            string[] tags = File.ReadAllLines("Files/tags.txt");
-            bool sent = false;
-            string msg = "```";
-
-            foreach (string line in tags)
-            {
-
-                if (tag == "list")
-                {
-                    msg += "\n" + line.Split('|')[0];
-                }
-                else if (line.Split('|')[0] == tag)
-                {
-                    sent = true;
-                    await Context.Channel.SendMessageAsync(line.Split('|')[1]);
-                    break;
-                }
-            }
-            msg += "\n```";
-            if (tag == "list") await Context.Channel.SendMessageAsync(msg);
-            else if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
-
-        }
-
-        //for creating the tag
-        [Command("tag")]
-        public async Task Tag(string tag, [Remainder]string content)
-        {
-            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
-            bool exists = false;
-            if (tag == "list") exists = true;
-            else if (tag == "delete" && Context.User.Id == Constants.Users.BRADY)
-            {
-                var tags = File.ReadAllLines("Files/tags.txt").ToList();
-                for (int i = 0; i < tags.Count(); i++)
-                {
-                    if (tags[i].Split('|')[0] == content) { tags.Remove(tags[i]); break; }
-                }
-                File.WriteAllLines("Files/tags.txt", tags);
+                var wordList = File.ReadAllLines("Files/wordlist.txt");
+                Var.hmWord = wordList[(rdm.Next(wordList.Count()))].ToLower();
+                Var.hangman = true;
+                Var.hmCount = 0;
+                Var.hmErrors = 0;
+                Var.guessedChars.Clear();
+                await HangMan("");
             }
             else
             {
-                string[] tags = File.ReadAllLines("Files/tags.txt");
-                foreach (string line in tags)
-                {
-                    if (line.Split('|')[0] == tag) { exists = true; break; }
-                }
-
-                if (!exists)
-                {
-                    File.AppendAllText("Files/tags.txt", tag + "|" + content + "\n");
-                    await Context.Channel.SendMessageAsync("Tag created!");
-                }
-                else await Context.Channel.SendMessageAsync("Tag already exists!");
+                await Context.Channel.SendMessageAsync("There is already a game of HangMan running.");
             }
         }
-        */
-        [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
-        public async Task Draw(int count)
+
+        [Command("hangman"), Alias(new string[] { "hm" })]
+        public async Task HangMan(string guess)
         {
-            if (count > 99999) count = 99999;
-            int size = 500;
-            using (Bitmap bmp = new Bitmap(size, size))
+            if (Var.hangman)
             {
-                using (Graphics g = Graphics.FromImage(bmp))
+                guess = guess.ToLower();
+                if (guess != "" && Var.guessedChars.Contains(guess[0]) && guess.Count() == 1) await Context.Channel.SendMessageAsync("You've already guessed " + Char.ToUpper(guess[0]));
+                else
                 {
-                    int x = rdm.Next(size);
-                    int y = rdm.Next(size);
-                    var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
-                    
-                    for (int i = 0; i < count; i++)
+                    if (guess.Count() == 1 && !Var.guessedChars.Contains(guess[0])) Var.guessedChars.Add(guess[0]);
+                    if (guess != "" && ((!Var.hmWord.Contains(guess[0]) && guess.Count() == 1) || (Var.hmWord != guess && guess.Count() > 1))) Var.hmErrors++;
+
+
+                    string[] hang = {
+            "       ______   " ,    //0
+            "      /      \\  " ,   //1
+            "     |          " ,    //2
+            "     |          " ,    //3
+            "     |          " ,    //4
+            "     |          " ,    //5
+            "     |          " ,    //6
+            "_____|_____     " };   //7
+
+
+                    for (int i = 0; i < Var.hmWord.Count(); i++)
                     {
-                        Brush b = new SolidBrush(c);
-                        g.FillEllipse(b, x, y, 10, 10);
-                        int mult = 0;
-                        mult = rdm.Next(-1, 2);
-                        x += 5 * mult;
-                        mult = rdm.Next(-1, 2);
-                        y += 5 * mult;
-                        if (rdm.Next(100) == 1 || x > size || x < 0 || y > size || y < 0)
+                        if (Var.guessedChars.Contains(Var.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Var.hmWord[i])) + " ";
+                        else hang[6] += "_ ";
+                    }
+
+                    for (int i = 0; i < Var.hmErrors; i++)
+                    {
+                        if (i == 0)
                         {
-                            x = rdm.Next(size);
-                            y = rdm.Next(size);
-                            c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
+                            var line = hang[2].ToCharArray();
+                            line[13] = 'O';
+                            hang[2] = new string(line);
+                        }
+                        if (i == 1)
+                        {
+                            var line = hang[3].ToCharArray();
+                            line[13] = '|';
+                            hang[3] = new string(line);
+                        }
+                        if (i == 2)
+                        {
+                            var line = hang[4].ToCharArray();
+                            line[12] = '/';
+                            hang[4] = new string(line);
+                        }
+                        if (i == 3)
+                        {
+                            var line = hang[4].ToCharArray();
+                            line[14] = '\\';
+                            hang[4] = new string(line);
+                        }
+                        if (i == 4)
+                        {
+                            var line = hang[3].ToCharArray();
+                            line[12] = '/';
+                            hang[3] = new string(line);
+                        }
+                        if (i == 5)
+                        {
+                            var line = hang[3].ToCharArray();
+                            line[14] = '\\';
+                            hang[3] = new string(line);
                         }
                     }
 
-                    bmp.Save("Files/drawing.png");
-                    await Context.Channel.SendFileAsync("Files/drawing.png");
+                    if (!hang[6].Contains("_") || Var.hmWord == guess) //win
+                    {
+                        await Context.Channel.SendMessageAsync("You did it!");
+                        Var.hangman = false;
+                        foreach (char c in Var.hmWord)
+                        {
+                            Var.guessedChars.Add(c);
+                        }
+                        var u = Functions.GetUser(Context.User);
+                        u.GiveCoins(10);
+                    }
 
+                    hang[6] = "     |          ";
+                    for (int i = 0; i < Var.hmWord.Count(); i++)
+                    {
+                        if (Var.guessedChars.Contains(Var.hmWord[i])) hang[6] += Char.ToUpper(Convert.ToChar(Var.hmWord[i])) + " ";
+                        else hang[6] += "_ ";
+                    }
+
+                    if (Var.hmErrors == 6)
+                    {
+                        await Context.Channel.SendMessageAsync("You lose! The word was: " + Var.hmWord);
+                        Var.hangman = false;
+                    }
+
+                    string msg = "```\n";
+                    foreach (String s in hang) msg += s + "\n";
+                    msg += "```";
+                    if (Var.hangman)
+                    {
+                        msg += "Guessed letters: ";
+                        foreach (char c in Var.guessedChars) msg += char.ToUpper(c) + " ";
+                        msg += "\nUse `;hangman [guess]` to guess a character or the entire word.";
+
+                    }
+                    await Context.Channel.SendMessageAsync(msg);
+                }
+            }
+            else
+            {
+                await HangMan();
+                await HangMan(guess);
+            }
+        }
+
+        [Command("profile"), Summary("View your or another users profile.")]
+        public async Task Profile(IUser user)
+        {
+            var u = Functions.GetUser(user);
+
+            var emb = new JEmbed();
+            emb.Author.Name = user.Username;
+            emb.Author.IconUrl = user.GetAvatarUrl();
+
+            emb.ColorStripe = Functions.GetColor(user);
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Coins:";
+                x.Text = Convert.ToString(u.GetData("coins"));
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Roles:";
+                string text = "";
+                foreach (ulong id in (user as IGuildUser).RoleIds)
+                {
+                    text += Context.Guild.GetRole(id).Name + "\n";
+                }
+
+                x.Text = Convert.ToString(text);
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Inventory:";
+                string text = "";
+                foreach (string item in u.GetItemList())
+                {
+                    text += item + ", ";
+                }
+                x.Text = Convert.ToString(text);
+            }));
+
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
+        }
+
+        [Command("profile")]
+        public async Task Profile() { await Profile(Context.User); }
+
+        [Command("present"), Summary("[FUN] Get a cool gift!")]
+        public async Task Present()
+        {
+            if (!Var.presentWaiting)
+            {
+                if (Var.presentTime < DateTime.Now - Var.presentWait)
+                {
+                    Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
+                    Var.presentTime = DateTime.Now;
+                    Var.presentNum = rdm.Next(10);
+                    await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
+                    Var.presentWaiting = true;
+                    Var.replacing = false;
+                    Var.replaceable = true;
+                }
+                else
+                {
+                    var timeLeft = Var.presentTime - (DateTime.Now - Var.presentWait);
+                    await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! It should be ready in *about* {timeLeft.Hours + 1} hour(s)!\n"+
+                                                            "***The last present was claimed by: " + Var.claimant + "***");
                 }
             }
         }
-        
-        [Command("choose"), Summary("[FUN] Get ForkBot to make your decisions for you! Seperate choices with `|`")]
-        public async Task Choose([Remainder] string input)
+
+        #endregion
+
+        #region P10
+
+        [Command("apply"), Summary("[P10] Apply for a job. To see current open positions simply type `;apply`")]
+        public async Task Apply(string choice = "")
         {
-            var choices = input.Split('|');
 
-            var decision = choices[rdm.Next(choices.Count())];
-
-            await Context.Channel.SendMessageAsync($"{Context.User.Username}, I choose...");
-            await Context.Channel.SendMessageAsync(decision + "!");
-            
         }
-        
+
+        [Command("manage"), Summary("[P10] Used to manage position details, such as their title and pay rate."),RequireUserPermission(GuildPermission.Administrator)]
+        public async Task Manage(params string[] parameters)
+        {
+            if (parameters.Count() == 0)
+                await Context.Channel.SendMessageAsync("Use one of the following parameters:\n```\n" +
+                                                       ";manage list (Lists all jobs)\n" + 
+                                                       ";manage addposition [Title] [Payrate (Coins weekly)] (Adds a new position, E.G. ;manage addposition CEO 10000000\n" +
+                                                       ";manage changename [OldTitle] [NewTitle] (Changes the name of an already added position\n" +
+                                                       ";manage changepay [JobTitle] [NewPay] (Changed the payrate of an already added position\n" +
+                                                       ";manage applications (Lists all current job applications)\n```");
+            else if (parameters[0] == "list")
+            {
+                var jobs = Functions.GetJobList();
+                string listMSG = "```";
+                foreach(string job in jobs)
+                {
+                    string jobTitle = job.Split('|')[0];
+                    string jobPay = job.Split('|')[1];
+                    listMSG += jobTitle + ": " + jobPay + " coins weekly\n";
+                }
+                listMSG += "````";
+                await Context.Channel.SendMessageAsync(listMSG);
+            }
+            else if (parameters[0] == "addposition")
+            {
+                File.AppendAllText("Files/jobs.txt", parameters[1] + "|" + parameters[2]);
+                await Context.Channel.SendMessageAsync("Successfully added new job: " + parameters[1] + ".");
+            }
+            else if (parameters[0] == "changename")
+            {
+                File.WriteAllText("Files/jobs.txt", File.ReadAllText("Files/jobs.txt").Replace(parameters[1],parameters[2]));
+                await Context.Channel.SendMessageAsync($"Changed titles with \"{parameters[1]}\" to: " + parameters[2] + ".");
+            }
+            else if (parameters[0] == "changepay")
+            {
+                var jobs = Functions.GetJobList();
+                for(int i = 0; i < jobs.Count(); i++)
+                {
+                    if (jobs[i].StartsWith(parameters[1]))
+                    {
+                        jobs[i] = Regex.Replace(jobs[i], "(\\|\\w+)", "|" + parameters[2]);
+                        File.WriteAllLines("Files/jobs.txt", jobs);
+                        await Context.Channel.SendMessageAsync($"Successfully changed {parameters[1]}'s pay to {parameters[2]} coins weekly.");
+                        return;
+                    }
+                }
+                await Context.Channel.SendMessageAsync("Could not find that job title. Make sure it's created by checking `;manage list`");
+            }
+            else if (parameters[0] == "applications")
+            {
+
+            }
+        }
+
+        #endregion
+
         #region Mod Commands
 
         [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
