@@ -149,15 +149,11 @@ namespace ForkBot
                     }
                 }
             }
-            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id)
-            {
-                if (Var.responding) Functions.Respond(message);
-            }
-            else
-            {
-                if (!Var.responding) Functions.Respond(message);
-                return;
-            }
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)
+                Functions.Respond(message);
+            else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
+                Functions.Respond(message);
+            else return;
         }
         public async Task HandleJoin(SocketGuildUser user)
         {

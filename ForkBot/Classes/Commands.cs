@@ -1001,7 +1001,7 @@ namespace ForkBot
                 {
                     var timeLeft = Var.presentTime - (DateTime.Now - Var.presentWait);
                     await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! It should be ready in *about* {timeLeft.Hours + 1} hour(s)!\n"+
-                                                            "***The last present was claimed by: " + Var.claimant + "***");
+                                                            "**The last present was claimed by: " + Var.claimant + ".**");
                 }
             }
         }
