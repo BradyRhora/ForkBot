@@ -1013,7 +1013,7 @@ namespace ForkBot
         [Command("apply"), Summary("[P10] Apply for a job. To see current open positions simply type `;apply`")]
         public async Task Apply(string choice = "")
         {
-
+            throw new NotImplementedException("This feature has not yet been implemented.");
         }
 
         [Command("manage"), Summary("[P10] Used to manage position details, such as their title and pay rate."),RequireUserPermission(GuildPermission.Administrator)]
@@ -1036,12 +1036,12 @@ namespace ForkBot
                     string jobPay = job.Split('|')[1];
                     listMSG += jobTitle + ": " + jobPay + " coins weekly\n";
                 }
-                listMSG += "````";
+                listMSG += "```";
                 await Context.Channel.SendMessageAsync(listMSG);
             }
             else if (parameters[0] == "addposition")
             {
-                File.AppendAllText("Files/jobs.txt", parameters[1] + "|" + parameters[2]);
+                File.AppendAllText("Files/jobs.txt", "\n" + parameters[1] + "|" + parameters[2]);
                 await Context.Channel.SendMessageAsync("Successfully added new job: " + parameters[1] + ".");
             }
             else if (parameters[0] == "changename")
@@ -1066,7 +1066,7 @@ namespace ForkBot
             }
             else if (parameters[0] == "applications")
             {
-
+                throw new NotImplementedException("This feature has not yet been implemented.");
             }
         }
 

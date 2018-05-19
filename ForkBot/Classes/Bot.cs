@@ -108,8 +108,10 @@ namespace ForkBot
                     string sMessage = "";
                     for (int i = 0; i < 5; i++)
                     {
-                        string sPresent = Functions.GetItemEmote(presents[rdm.Next(presents.Count())]);
-                        user.GiveItem(sPresent);
+                        var sPresentData = presents[rdm.Next(presents.Count())];
+                        string sPresentName = sPresentData.Split('|')[0];
+                        user.GiveItem(sPresentName);
+                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
                     }
                     await message.Channel.SendMessageAsync(sMessage);
 
