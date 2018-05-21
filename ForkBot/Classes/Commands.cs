@@ -1006,6 +1006,39 @@ namespace ForkBot
             }
         }
 
+        [Command("poll"), Summary("[FUN] Create a poll for users to vote on.")]
+        public async Task Poll(string command = "", params string[] parameters)
+        {
+            if (command == "")
+            {
+                if (Var.currentPoll != null && !Var.currentPoll.completed) await Context.Channel.SendMessageAsync("", embed: Var.currentPoll.GenerateEmbed());
+                else await Context.Channel.SendMessageAsync("There is currently no poll. Create one with `;poll create [question] [option1] [option2] etc..`");
+            }
+            else if (command == "create")
+            {
+                if (Var.currentPoll == null || Var.currentPoll.completed)
+                {
+                    Var.currentPoll = new Poll(Context.Channel, 5, parameters[0], parameters.Where(x => x != parameters[0]).ToArray());
+                    await Context.Channel.SendMessageAsync("Poll created!", embed: Var.currentPoll.GenerateEmbed());
+                }
+                else await Context.Channel.SendMessageAsync("There is already a poll running.");
+            }
+            else if (command == "vote")
+            {
+                if (Var.currentPoll != null && !Var.currentPoll.completed)
+                {
+                    if (!Var.currentPoll.HasVoted(Context.User.Id))
+                    {
+                        Var.currentPoll.Vote(Char.Parse(parameters[0]));
+                        Var.currentPoll.voted.Add(Context.User.Id);
+                        await Context.Channel.SendMessageAsync("You have successfully voted for option " + parameters[0] + ".");
+                    }
+                    else await Context.Channel.SendMessageAsync("You have already voted!");
+                }
+                else await Context.Channel.SendMessageAsync("There is currently no poll.");
+            }
+        }
+
         #endregion
 
         #region P10

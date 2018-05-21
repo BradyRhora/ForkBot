@@ -47,5 +47,7 @@ namespace ForkBot
 
         public static bool responding = true;
         public static string Conversation = "0";
+
+        public static Poll currentPoll;
     }
 }

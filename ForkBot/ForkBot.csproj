@@ -171,6 +171,7 @@
     <Compile Include="Classes\Commands.cs" />
     <Compile Include="Classes\Objects\InfoEmbed.cs" />
     <Compile Include="Classes\Objects\ItemTrade.cs" />
+    <Compile Include="Classes\Objects\Poll.cs" />
     <Compile Include="Classes\Objects\Shop.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
