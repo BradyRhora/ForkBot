@@ -189,11 +189,12 @@ namespace ForkBot
         }
 
         [Command("gun")]
-        public async Task Gun() { await Context.Channel.SendMessageAsync("Choose someone to rob with `;gun [user]`..."); }
+        public async Task Gun() { if (Check(Context, "gun")) return; await Context.Channel.SendMessageAsync("Choose someone to rob with `;gun [user]`..."); }
 
         [Command("gun")]
         public async Task Gun(IUser user)
         {
+            if (Check(Context, "gun")) return;
             var u1 = Functions.GetUser(Context.User);
             var u2 = Functions.GetUser(user);
 
