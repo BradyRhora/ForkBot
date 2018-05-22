@@ -57,6 +57,11 @@ namespace ForkBot
             }
             return false;
         }
+        public void AddData(string data, int addition)
+        {
+            int newData = Convert.ToInt32(GetData(data)) + addition;
+            SetData(data, Convert.ToString(newData));
+        }
 
         private void Save(string data)
         {
@@ -122,5 +127,9 @@ namespace ForkBot
             SetData("coins", Convert.ToString(Convert.ToInt32(GetData("coins")) + amount));
         }
         
+        public string[] GetStats()
+        {
+            return File.ReadAllLines($@"Users\{ID}.user").Where(x => x.StartsWith("stat.")).ToArray();
+        }
     }
 }

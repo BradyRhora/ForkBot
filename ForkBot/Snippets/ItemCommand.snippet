@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>Item Command</Title>
+			<Author>Brady Rhora</Author>
+			<Description>Inputs the basic item command form.</Description>
+			<Shortcut>item</Shortcut>
+        </Header>
+        <Snippet>
+            <Code Language="CSharp">
+                <![CDATA[[Command("")]
+        public async Task ITEM()
+        {
+            if (Check(Context, "item")) return;
+            await Context.Channel.SendMessageAsync(":item: msg\n**Stat+0**");
+            Functions.GetUser(Context.User).AddData("stat.stat", 0);
+        }
+]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

@@ -166,6 +166,7 @@
     <Compile Include="Classes\Evaluate.cs" />
     <Compile Include="Classes\Globals.cs" />
     <Compile Include="Classes\Interfaces.cs" />
+    <Compile Include="Classes\ItemCommands.cs" />
     <Compile Include="Classes\Objects\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />

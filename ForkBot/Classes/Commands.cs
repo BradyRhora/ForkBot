@@ -333,25 +333,6 @@ namespace ForkBot
         #endregion
 
         #region Item Commands
-        [Command("roll")]
-        public async Task Roll(int max = 6)
-        {
-            if (Functions.GetUser(Context.User).GetItemList().Contains("game_die"))
-            {
-                await Context.Channel.SendMessageAsync(":game_die: | " + Convert.ToString(rdm.Next(max) + 1));
-            }
-        }
-
-        [Command("8ball")]
-        public async Task EightBall([Remainder] string question = "")
-        {
-            if (Functions.GetUser(Context.User).GetItemList().Contains("8ball"))
-            {
-                string[] answers = { "Yes", "No", "Ask again later", "Cannot predict now", "Unlikely", "Chances good", "Likely", "Lol no", "If you believe" };
-                await Context.Channel.SendMessageAsync(":8ball: | " + answers[rdm.Next(answers.Count())]);
-            }
-        }
-
         [Command("sell"), Summary("[FUN] Sell items from your inventory.")]
         public async Task Sell(params string[] items)
         {
@@ -972,6 +953,19 @@ namespace ForkBot
                 foreach (string item in u.GetItemList())
                 {
                     text += item + ", ";
+                }
+                x.Text = Convert.ToString(text);
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Stats:";
+                string text = "";
+                foreach (string stat in u.GetStats())
+                {
+                    var s = stat.Replace("stat.", "");
+                    var info = s.Split(':');
+                    text += info[0] + ": " + info[1] + "\n";
                 }
                 x.Text = Convert.ToString(text);
             }));
