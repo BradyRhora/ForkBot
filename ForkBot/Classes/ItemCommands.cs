@@ -204,12 +204,14 @@ namespace ForkBot
                 while (amount <= Convert.ToInt32(u2.GetData("coins")));
                 u1.GiveCoins(amount);
                 u2.GiveCoins(-amount);
-                await Context.Channel.SendMessageAsync(":gun: " + (u2 as IGuildUser).Mention + "! " + (u1 as IGuildUser).Mention + " has stolen " + amount + " coins from you!");
+                await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
             }
             else
             {
                 string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
-                await Context.Channel.SendMessageAsync(":gun: " + (u2 as IGuildUser).Mention + "! " + (u1 as IGuildUser).Mention + " has stolen your " + item + " from you!");
+                u1.GiveItem(item);
+                u2.RemoveItem(item);
+                await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
             }
         }
 

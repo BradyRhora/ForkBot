@@ -117,7 +117,6 @@ namespace ForkBot
                 if (uData[i].Contains("}")) break;
                 else if (items) itemList.Add(uData[i].Replace("\t",""));
                 else if (uData[i].Contains("items{")) items = true;
-                
             }
             return itemList.ToArray();
         }
