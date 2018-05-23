@@ -202,7 +202,7 @@ namespace ForkBot
             {
                 int amount;
                 do amount = rdm.Next(500);
-                while (amount <= Convert.ToInt32(u2.GetData("coins")));
+                while (amount > Convert.ToInt32(u2.GetData("coins")));
                 u1.GiveCoins(amount);
                 u2.GiveCoins(-amount);
                 await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
