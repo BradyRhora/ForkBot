@@ -76,6 +76,7 @@ namespace ForkBot
             client.MessageDeleted += HandleDelete;
             client.ReactionAdded += HandleReact;
             client.MessageUpdated += HandleEdit;
+            client.UserVoiceStateUpdated += HandleVoiceUpdate;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
@@ -300,6 +301,15 @@ namespace ForkBot
                     await channel.SendMessageAsync("", embed: emb.Build());
                 }
 
+            }
+        }
+        public async Task HandleVoiceUpdate(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState)
+        {
+            var gUser = user as IGuildUser;
+            if (gUser.GuildId == Constants.Guilds.YORK_UNIVERSITY)
+            {
+                if (newState.VoiceChannel != null) await gUser.AddRoleAsync(gUser.Guild.GetRole(Constants.Roles.TTS));
+                else await gUser.RemoveRoleAsync(gUser.Guild.GetRole(Constants.Roles.TTS));
             }
         }
     }

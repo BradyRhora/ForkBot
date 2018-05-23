@@ -87,7 +87,7 @@ namespace ForkBot
         public async Task DarkSunglasses()
         {
             if (Check(Context, "dark_sunglasses")) return;
-            await Context.Channel.SendMessageAsync(":dark_sunglasses: You equip your sunglasses... and get a whole lot cooler.\n**Fashin+20**");
+            await Context.Channel.SendMessageAsync(":dark_sunglasses: You equip your sunglasses... and get a whole lot cooler.\n**Fashion+20**");
             Functions.GetUser(Context.User).AddData("stat.fashion", 20);
         }
         
