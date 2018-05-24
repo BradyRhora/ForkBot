@@ -150,24 +150,26 @@ namespace ForkBot
             {
                 u1.RemoveItem(item);
                 u2.GiveItem(item);
-                if (coins1 > 0)
-                {
-                    u1.GiveCoins(-coins1);
-                    u2.GiveCoins(coins1);
-                }
+            }
+
+            if (coins1 > 0)
+            {
+                u1.GiveCoins(-coins1);
+                u2.GiveCoins(coins1);
             }
 
             foreach (string item in items2)
             {
                 u2.RemoveItem(item);
                 u1.GiveItem(item);
-                if (coins2 > 0)
-                {
-                    u1.GiveCoins(coins2);
-                    u2.GiveCoins(-coins2);
-                }
             }
-            
+
+            if (coins2 > 0)
+            {
+                u1.GiveCoins(coins2);
+                u2.GiveCoins(-coins2);
+            }
+
             completed = true;
         }
 

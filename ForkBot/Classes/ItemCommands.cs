@@ -188,10 +188,10 @@ namespace ForkBot
             
         }
 
-        [Command("gun")]
+        [Command("gun"), Alias(new string[] { "rob" })]
         public async Task Gun() { if (Check(Context, "gun", false)) return; await Context.Channel.SendMessageAsync("Choose someone to rob with `;gun [user]`..."); }
 
-        [Command("gun")]
+        [Command("gun"), Alias(new string[] { "rob" })]
         public async Task Gun(IUser user)
         {
             if (Check(Context, "gun")) return;

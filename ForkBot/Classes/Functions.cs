@@ -189,6 +189,35 @@ namespace ForkBot
         {
             return File.ReadAllLines("Files/jobs.txt");
         }
+
+        public static string[] GetTopList(string stat = "")
+        {
+            var userFiles = Directory.GetFiles(@"Users");
+            var userIDs = userFiles.Select(x => Convert.ToUInt64(Path.GetFileName(x).Replace(".user", ""))).ToArray();
+            List<User> users = new List<User>();
+            foreach (ulong id in userIDs) try { users.Add(GetUser(id)); }
+                catch (Exception) { Console.WriteLine("Unable to get user for ID: " + id + "\nDeleted."); File.Delete($@"Users\{id}.user"); }
+            Dictionary<ulong, string[]> stats = new Dictionary<ulong, string[]>();
+            foreach (User u in users) stats.Add(u.ID, u.GetStats());
+            for (int i = stats.Count() - 1; i >= 0; i--) if (stats.ElementAt(i).Value.Count() <= 0) stats.Remove(stats.ElementAt(i).Key);
+            Dictionary<ulong, int> totalStats = new Dictionary<ulong, int>();
+            foreach (var d in stats)
+            {
+                int totalStat = 0;
+                foreach (var s in d.Value) if (s.Split(':')[0].Contains(stat)) totalStat += Convert.ToInt32(s.Split(':')[1]);
+                totalStats.Add(d.Key, totalStat);
+            }
+
+            var list = totalStats.ToList();
+            var ordered = list.OrderBy(x => x.Value);
+
+            string[] top5 = new string[5];
+            int amount;
+            if (ordered.Count() >= 5) amount = 5;
+            else amount = -(ordered.Count() - 5) - 1;
+            for (int i = 0; i < amount; i++) top5[i] = Bot.client.GetUser(ordered.ToArray()[i].Key).Username + " - " + ordered.ToArray()[i].Value;
+            return top5;
+        }
     }
     
 

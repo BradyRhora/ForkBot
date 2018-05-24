@@ -1033,6 +1033,18 @@ namespace ForkBot
             }
         }
 
+        [Command("top"), Summary("[FUN] View the top users of ForkBot based on their stats. Use a stat as the parameter in order to see specific stat rankings.")]
+        public async Task Top(string stat = "")
+        {
+            var top5 = Functions.GetTopList(stat);
+            string msg = "```\nTop five users:\n";
+            for(int i = 4; i >= 0; i--)
+            {
+                msg += $"[{i+1}] {top5[i]}\n";
+            }
+            msg += "```";
+            await Context.Channel.SendMessageAsync(msg);
+        }
         #endregion
 
         #region P10
