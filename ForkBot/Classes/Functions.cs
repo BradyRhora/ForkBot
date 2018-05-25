@@ -31,31 +31,24 @@ namespace ForkBot
         
         public static User GetUser(IUser user) //gets User class for IUser, makes one if there isn't already one.
         {
-            /*int attempts = 0;
-            while (attempts < 5)
-            {
-                foreach (User u in Bot.users) if (u.ID == user.Id) { SaveUsers(); return u; }
-                Bot.users.Add(new User(user.Id));
-                attempts++;
-            }*/
-
-            string userPath = @"Users\";
-            if (File.Exists(userPath + user.Id + ".user"))
-            {
-                return new User(user.Id);
-            }
-            else
-            {
-                string newUser = "coins:0\nitems{\n}";
-                File.WriteAllText(@"Users\" + user.Id + ".user",newUser);
-            }
-
-            return null;
+            return GetUser(user.Id);
         }
 
         public static User GetUser(ulong userID)
         {
-            return GetUser(Bot.client.GetUser(userID));
+
+            string userPath = @"Users\";
+            if (File.Exists(userPath + userID + ".user"))
+            {
+                return new User(userID);
+            }
+            else
+            {
+                string newUser = "coins:0\nitems{\n}";
+                File.WriteAllText(@"Users\" + userID + ".user", newUser);
+            }
+
+            return null;
         }
         
         public static string GetTID(string html)
@@ -190,13 +183,16 @@ namespace ForkBot
             return File.ReadAllLines("Files/jobs.txt");
         }
 
-        public static string[] GetTopList(string stat = "")
+        public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
         {
             var userFiles = Directory.GetFiles(@"Users");
             var userIDs = userFiles.Select(x => Convert.ToUInt64(Path.GetFileName(x).Replace(".user", ""))).ToArray();
             List<User> users = new List<User>();
-            foreach (ulong id in userIDs) try { users.Add(GetUser(id)); }
-                catch (Exception) { Console.WriteLine("Unable to get user for ID: " + id + "\nDeleted."); File.Delete($@"Users\{id}.user"); }
+            foreach (ulong id in userIDs) try {
+                    var u = GetUser(id);
+                    users.Add(u);
+                }
+                catch (Exception) {  }
             Dictionary<ulong, string[]> stats = new Dictionary<ulong, string[]>();
             foreach (User u in users) stats.Add(u.ID, u.GetStats());
             for (int i = stats.Count() - 1; i >= 0; i--) if (stats.ElementAt(i).Value.Count() <= 0) stats.Remove(stats.ElementAt(i).Key);
@@ -211,12 +207,12 @@ namespace ForkBot
             var list = totalStats.ToList();
             var ordered = list.OrderBy(x => x.Value);
 
-            string[] top5 = new string[5];
+            Dictionary<ulong,int> top5 = new Dictionary<ulong, int>();
             int amount;
             if (ordered.Count() >= 5) amount = 5;
             else amount = -(ordered.Count() - 5) - 1;
-            for (int i = 0; i < amount; i++) top5[i] = Bot.client.GetUser(ordered.ToArray()[i].Key).Username + " - " + ordered.ToArray()[i].Value;
-            return top5;
+            for (int i = ordered.Count()-1; i >= ordered.Count()-amount; i--) top5.Add(ordered.ToArray()[i].Key, ordered.ToArray()[i].Value);
+            return top5.ToList().ToArray();
         }
     }
     

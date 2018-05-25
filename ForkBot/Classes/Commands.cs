@@ -1038,9 +1038,10 @@ namespace ForkBot
         {
             var top5 = Functions.GetTopList(stat);
             string msg = "```\nTop five users:\n";
-            for(int i = 4; i >= 0; i--)
+            for(int i = 0; i < 5; i++)
             {
-                msg += $"[{i+1}] {top5[i]}\n";
+                string userName = Bot.client.GetUser(top5[i].Key).Username;
+                msg += $"[{i+1}] {userName} - {top5[i].Value} {stat}\n";
             }
             msg += "```";
             await Context.Channel.SendMessageAsync(msg);
