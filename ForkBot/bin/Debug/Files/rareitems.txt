@@ -1,4 +1,4 @@
-﻿unicorn|The mythical horse with a single horn! Maybe it'll grant you a wish?|350
+﻿unicorn|The mythical horse with a single horn! Maybe it'll grant you a wish?|-
 alien|Alien! E.T.! Extraterrestrial! It comes in peace!|150
 slot_machine|Test your lock on the slots! Gamble responsibly!|50
 hole|It's... a hole? What's down there?|10

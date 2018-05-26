@@ -33,7 +33,7 @@ knife|Careful, it's sharp!|15
 bomb|How did that get in there|50
 gun|Hahah hey whoa... watch it buddy..|15
 telescope|Now you can see the universe! Or into your neighbours window.|12
-gift|Oh! I wonder what's inside?|-
+gift|Oh! I wonder what's inside?|150
 scissors|Don't run with them!|5
 pen_ballpoint|It's a pen. What else can I say.|3
 paintbrush|I believe, every day's a good day when you paint.|3

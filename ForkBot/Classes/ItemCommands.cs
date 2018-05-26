@@ -188,10 +188,10 @@ namespace ForkBot
             
         }
 
-        [Command("gun"), Alias(new string[] { "rob" })]
+        [Command("gun"), Alias("rob")]
         public async Task Gun() { if (Check(Context, "gun", false)) return; await Context.Channel.SendMessageAsync("Choose someone to rob with `;gun [user]`..."); }
 
-        [Command("gun"), Alias(new string[] { "rob" })]
+        [Command("gun"), Alias("rob")]
         public async Task Gun(IUser user)
         {
             if (Check(Context, "gun")) return;
@@ -209,10 +209,20 @@ namespace ForkBot
             }
             else
             {
-                string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
-                u1.GiveItem(item);
-                u2.RemoveItem(item);
-                await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
+                var items = u2.GetItemList();
+                if (items.Count() == 0)
+                {
+                    await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!"+
+                                                           $" You drop your gun and run before the police arrive. {(user as IGuildUser).Mention} picks up the gun!");
+                    u2.GiveItem("gun");
+                }
+                else
+                {
+                    string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
+                    u1.GiveItem(item);
+                    u2.RemoveItem(item);
+                    await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
+                }
             }
         }
 
@@ -231,7 +241,71 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":dog: You pet your pupper :blush:\n**Happiness+30**");
             Functions.GetUser(Context.User).AddData("stat.happiness", 30);
         }
+        
+        [Command("unicorn")]
+        public async Task Unicorn()
+        {
+            if (Check(Context, "unicorn", false)) return;
+            await Context.Channel.SendMessageAsync(":unicorn: A magical unicorn appears! Make a wish!\n" +
+                                                   "`;wish 1` *\"I want to be rich!\"*" +
+                                                   "`;wish 2` *\"Make me beautiful!\"*" +
+                                                   "`;wish 3` *\"Give me some items!\"*" +
+                                                   "`;wish 4` *\"Make me happy!\"*" +
+                                                   "`;wish 5` *\"You decide!\"*");
+        }
+        
+        [Command("wish")]
+        public async Task Wish(int choice)
+        {
+            if (Check(Context, "unicorn")) return;
+            if (choice <= 0 || choice > 5) return;
+            var user = Functions.GetUser(Context.User);
+            string msg = ":unicorn: Your wish is my command!\n";
+            bool repeat;
+            do
+            {
+                repeat = false;
+                switch (choice)
+                {
+                    case 1:
+                        int coinAmount = rdm.Next(1000, 3000);
+                        msg += $"**+{coinAmount} coins!";
+                        break;
+                    case 2:
+                        int amount = rdm.Next(50, 200);
+                        msg += $"**Fashion+{amount}";
+                        break;
+                    case 3:
+                        await Context.Channel.SendMessageAsync("You got...");
+                        var presents = Functions.GetItemList();
+                        for (int i = 0; i < 3; i++)
+                        {
+                            var sPresentData = presents[rdm.Next(presents.Count())];
+                            string sPresentName = sPresentData.Split('|')[0];
+                            user.GiveItem(sPresentName);
+                            msg += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
+                        }
+                        break;
+                    case 4:
+                        int hAmount = rdm.Next(50, 200);
+                        msg += $"**Happiness+{hAmount}";
+                        break;
+                    case 5:
+                        choice = rdm.Next(4) + 1;
+                        repeat = true;
+                        break;
+                }
+            } while (repeat);
+            await Context.Channel.SendMessageAsync(msg);
+        }
 
-
+        [Command("crystal_ball"),Alias("crystalball","nextpresent")]
+        public async Task CrystalBall()
+        {
+            if (Check(Context,"crystal_ball")) return;
+            await Context.Channel.SendMessageAsync("You gaze into the crystal ball and... learn the exact time until the next present!");
+            var nextPres = (Var.presentTime + Var.presentWait) - DateTime.Now;
+            await Context.User.SendMessageAsync($"The next present will be ready in {nextPres.Hours} hours {nextPres.Minutes} minutes, and {nextPres.Seconds}!");
+        }
     }
 }

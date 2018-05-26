@@ -361,9 +361,9 @@ namespace ForkBot
                         var itemName = rItemData.Split('|')[0].Replace('_', ' ');
                         var rMessage = rItemData.Split('|')[1];
 
-                        u.GiveItem(Var.present);
+                        u.GiveItem(item.Replace(' ','_'));
                         msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
-                                                               $"A {itemName}! :{itemName}: {rMessage}\n";
+                                                               $"A {itemName}! {Functions.GetItemEmote(rItemData)} {rMessage}\n";
                     }
                     else
                     {
@@ -1037,7 +1037,9 @@ namespace ForkBot
         public async Task Top(string stat = "")
         {
             var top5 = Functions.GetTopList(stat);
-            string msg = "```\nTop five users:\n";
+            string msg = "```\nTop five users";
+            if (stat != "") msg += " [" + stat + "]:\n";
+            else msg += ":\n";
             for(int i = 0; i < 5; i++)
             {
                 string userName = Bot.client.GetUser(top5[i].Key).Username;
