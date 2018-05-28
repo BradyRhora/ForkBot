@@ -16,3 +16,5 @@ An amazing bot developed for the York University Discord server!
 ***And more!***
 
 To use the bot, join the server [here](https://discord.gg/HGECt3t) and type ;help!
+
+*Are you a dev? Want to help with the development of Forkbot? Go ahead and commit your own additions for it! I'll gladly review any suggestions.*
