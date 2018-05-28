@@ -1,6 +1,6 @@
 # ForkBot
 An amazing bot developed for the York University Discord server! 
-# Features
+## Features
 - Moderation
   - Purge messages
   - Kick/Ban users
@@ -12,6 +12,7 @@ An amazing bot developed for the York University Discord server!
 - Useful school commands!
   - Look up professors and courses
   - Define words
+  
 ***And more!***
 
 To use the bot, join the server [here](https://discord.gg/HGECt3t) and type ;help!
