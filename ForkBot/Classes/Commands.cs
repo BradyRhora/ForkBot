@@ -346,29 +346,37 @@ namespace ForkBot
                 {
                     u.RemoveItem(item);
                     int price = 0;
+                    bool unsold = false;
                     foreach (string line in itemList)
                     {
                         if (line.Split('|')[0] == item)
                         {
-                            price = Convert.ToInt32(line.Split('|')[2]);
+                            if (line.Split('|')[2] != "-")
+                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * .75);
+                            else unsold = true;
                             break;
                         }
                     }
 
-                    if (rdm.Next(100) < 5)
+                    if (rdm.Next(100) < 5 && !unsold)
                     {
                         var rItemData = rItems[rdm.Next(rItems.Count())];
                         var itemName = rItemData.Split('|')[0].Replace('_', ' ');
                         var rMessage = rItemData.Split('|')[1];
-
+                        u.GiveCoins(-price);
                         u.GiveItem(item.Replace(' ','_'));
                         msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
                                                                $"A {itemName}! {Functions.GetItemEmote(rItemData)} {rMessage}\n";
                     }
-                    else
+                    else if (!unsold)
                     {
                         u.GiveCoins(price);
                         msg += $"You successfully sold your {item} for {price} coins!\n";
+                    }
+                    else
+                    {
+                        u.GiveItem(item);
+                        msg += "This item cannot be sold. Have you tried using it's command?";
                     }
                 }
                 else msg += $"You do not have an item called {item}!";
@@ -490,7 +498,7 @@ namespace ForkBot
                     string emote = Functions.GetItemEmote(item);
                     string name = data[0];
                     string desc = data[1];
-                    int price = Convert.ToInt32(data[2]) * 2;
+                    int price = Convert.ToInt32(data[2]);
                     if (price < 0) price *= -1;
                     emb.Fields.Add(new JEmbedField(x =>
                     {
@@ -509,7 +517,7 @@ namespace ForkBot
                         var data = item.Split('|');
                         string name = data[0];
                         string desc = data[1];
-                        int price = Convert.ToInt32(data[2]) * 2;
+                        int price = Convert.ToInt32(data[2]);
                         if (price < 0) price *= -1;
 
                         if (Convert.ToInt32(u.GetData("coins")) >= price)

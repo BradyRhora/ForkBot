@@ -91,21 +91,13 @@ namespace ForkBot
             Functions.GetUser(Context.User).AddData("stat.fashion", 20);
         }
         
-        /*[Command("eyeglasses")]
-        public async Task ITEM()
+        [Command("eyeglasses")]
+        public async Task Eyeglasses()
         {
-            if (Check(Context, "item")) return;
-            await Context.Channel.SendMessageAsync(":item: msg\n**Stat+0**");
-            Functions.GetUser(Context.User).AddData("stat.stat", 0);
+            if (Check(Context, "eyeglasses")) return;
+            await Context.Channel.SendMessageAsync(":eyeglasses: You probably don't use these to see, but they look nice!\n**Fashion+5**");
+            Functions.GetUser(Context.User).AddData("stat.fashion", 10);
         }
-        
-        [Command("umbrella2")]
-        public async Task ITEM()
-        {
-            if (Check(Context, "item")) return;
-            await Context.Channel.SendMessageAsync(":item: msg\n**Stat+0**");
-            Functions.GetUser(Context.User).AddData("stat.stat", 0);
-        }*/
 
         [Command("briefcase")]
         public async Task Briefcase()
@@ -113,7 +105,6 @@ namespace ForkBot
             if (Check(Context, "briefcase")) return;
 
             int r = rdm.Next(50)+1;
-            string msg;
             int amount;
             if (r < 20) amount = rdm.Next(100) + 1;
             else amount = rdm.Next(100, 1000) + 1;
@@ -128,7 +119,6 @@ namespace ForkBot
             if (Check(Context, "purse")) return;
 
             int r = rdm.Next(50) + 1;
-            string msg;
             int amount;
             if (r < 20) amount = rdm.Next(50) + 1;
             else amount = rdm.Next(50, 200) + 1;
@@ -305,7 +295,129 @@ namespace ForkBot
             if (Check(Context,"crystal_ball")) return;
             await Context.Channel.SendMessageAsync("You gaze into the crystal ball and... learn the exact time until the next present!");
             var nextPres = (Var.presentTime + Var.presentWait) - DateTime.Now;
-            await Context.User.SendMessageAsync($"The next present will be ready in {nextPres.Hours} hours {nextPres.Minutes} minutes, and {nextPres.Seconds}!");
+            await Context.User.SendMessageAsync($"The next present will be ready in {nextPres.Hours} hours {nextPres.Minutes} minutes, and {nextPres.Seconds} seconds!");
         }
+        
+        [Command("eggplant")]
+        public async Task Eggplant()
+        {
+            if (Check(Context, "eggplant")) return;
+            await Context.Channel.SendMessageAsync(":eggplant: You eat the eggplant. What were you expecting?\n**Fullness+10**");
+            Functions.GetUser(Context.User).AddData("stat.fullness", 10);
+        }
+
+        [Command("apple")]
+        public async Task Apple()
+        {
+            if (Check(Context, "apple")) return;
+            await Context.Channel.SendMessageAsync(":apple: Keeps the doctor away!\n**Healthiness+5 Fullness+10**");
+            Functions.GetUser(Context.User).AddData("stat.fullness", 10);
+            Functions.GetUser(Context.User).AddData("stat.healthiness", 5);
+        }
+
+        [Command("egg")]
+        public async Task Egg()
+        {
+            if (Check(Context, "egg")) return;
+            int rand = rdm.Next(100) + 1;
+            string eggType;
+            if (rand < 30) eggType = "Boiled";
+            else if (rand < 60) eggType = "Scrambled";
+            else if (rand < 90) eggType = "Sunny Side Up";
+            else eggType = "Raw";
+
+            string msg;
+            if (eggType == "Raw")
+            {
+                msg = ":egg: Eugh! You eat the egg.. Raw!\n**Happiness-20 Fullness-10**";
+                Functions.GetUser(Context.User).AddData("stat.fullness", -10);
+                Functions.GetUser(Context.User).AddData("stat.happiness", -20);
+            }
+            else
+            {
+                msg = ":cooking: Yum! " + eggType + " eggs!\n**Fullness+20**";
+                Functions.GetUser(Context.User).AddData("stat.fullness", 20);
+            }
+        }
+
+        [Command("ramen")]
+        public async Task Ramen()
+        {
+            if (Check(Context, "ramen")) return;
+            await Context.Channel.SendMessageAsync(":ramen: Sweet sweet ramen...\n**Fullness+50**");
+            Functions.GetUser(Context.User).AddData("stat.Fullness", 50);
+        }
+
+        [Command("goose")]
+        public async Task Goose()
+        {
+            if (Check(Context, "goose")) return;
+            await Context.Channel.SendMessageAsync("<:goose:369992347314028554> A herd of geese fly by... eugh!\n**Happiness-35**");
+            Functions.GetUser(Context.User).AddData("stat.happiness", -35);
+            string msg = "You got...\n:poop: A goose poop!";
+            var user = Functions.GetUser(Context.User);
+            user.GiveItem("poop");
+            int poopCount = rdm.Next(5);
+            for (int i = 0; i < poopCount; i++)
+            {
+                msg += ":poop: Another goose poop!";
+                user.GiveItem("poop");
+            }
+            await Context.Channel.SendMessageAsync(msg);
+        }
+
+        [Command("youness")]
+        public async Task Youness()
+        {
+            if (Check(Context, "youness")) return;
+            
+            int rand = rdm.Next(50) + 1;
+            string msg;
+            var user = Functions.GetUser(Context.User);
+            if (rand < 10)
+            {
+                msg = "Youness winks at you.\n**Happiness+25**";
+                user.AddData("stat.happiness", 25);
+            }
+            else if (rand < 20)
+            {
+                msg = "Youness returns your test... You passed!\n**Happiness+20**";
+                user.AddData("stat.happiness", 20);
+            }
+            else if (rand < 30)
+            {
+                msg = "Youness returns your test... You failed...\n**Happiness-30**";
+                user.AddData("stat.happiness", -30);
+            }
+            else if (rand < 40)
+            {
+                msg = "Youness yells at the next class for coming in early. You sense his manliness.\n**Happiness+30**";
+                user.AddData("stat.happiness", 30);
+            }
+            else
+            {
+                msg = "Youness tells you there *is* one thing you can do to get that A+ you need...\n**Fullness+10(inches) Happiness+5**";
+                user.AddData("stat.fullness", 10);
+                user.AddData("stat.happiness", 5);
+            }
+
+            await Context.Channel.SendMessageAsync($"<:youness:373579959899258880> {msg}");
+        }
+
+        [Command("moneybag")]
+        public async Task Moneybag()
+        {
+            if (Check(Context, "moneybag")) return;
+
+            int r = rdm.Next(50) + 1;
+            int amount;
+            if (r < 20) amount = rdm.Next(100) + 1;
+            else amount = rdm.Next(100, 1000) + 1;
+
+            await Context.Channel.SendMessageAsync($":moneybag: Loads of coins come out of the bag!!\n**+{amount} coins**");
+            Functions.GetUser(Context.User).GiveCoins(amount);
+        }
+
+
     }
 }
