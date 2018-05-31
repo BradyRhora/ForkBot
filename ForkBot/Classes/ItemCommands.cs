@@ -418,6 +418,12 @@ namespace ForkBot
             Functions.GetUser(Context.User).GiveCoins(amount);
         }
 
-
+        [Command("shopping_cart"), Alias("shoppingcart","cart")]
+        public async Task ShoppingCart()
+        {
+            if (Check(Context, "shopping_cart")) return;
+            Var.currentShop = new Shop();
+            await Context.Channel.SendMessageAsync(":shopping_cart: The items for sale in `;shop` have changed!");
+        }
     }
 }

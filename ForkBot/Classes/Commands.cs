@@ -329,7 +329,15 @@ namespace ForkBot
             catch (Exception) { await Context.Channel.SendMessageAsync("Unable to find course."); }
 
         }
-
+        
+        [Command("suggest"), Summary("Suggest something for ForkBot, whether it's an item, an item's function, a new command, or anything else! People who abuse this will be blocked from using it.")]
+        public async Task Suggest([Remainder] string suggestion)
+        {
+            var brady = Bot.client.GetUser(Constants.Users.BRADY);
+            if (Properties.Settings.Default.sBlocked.Contains(Convert.ToString(Context.User.Id))) return;
+            await brady.SendMessageAsync("", embed: new InfoEmbed("SUGGESTION FROM: " + Context.User.Username, suggestion).Build());
+            await Context.Channel.SendMessageAsync("Suggestion submitted.");
+        }
         #endregion
 
         #region Item Commands
@@ -466,19 +474,7 @@ namespace ForkBot
             }
             if (Var.currentShop == null || day.DayOfYear < currentDay.DayOfYear && day.Year == currentDay.Year)
             {
-                var nItems = Functions.GetItemList();
-                var rItems = Functions.GetRareItemList();
-                var allItems = nItems.Concat(rItems).ToArray();
-
-                List<string> items = new List<string>();
-                for (int i = 0; i < 5; i++)
-                {
-                    int itemID = rdm.Next(allItems.Length);
-                    if (!items.Contains(allItems[itemID]) && !allItems[itemID].Split('|').Contains("-")) items.Add(allItems[itemID]);
-                    else i--;
-                }
-
-                Var.currentShop = new Shop(items);
+                Var.currentShop = new Shop();
             }
 
             List<string> itemNames = new List<string>();
@@ -1274,6 +1270,14 @@ namespace ForkBot
                 if (Var.responding) await Context.Channel.SendMessageAsync("Responding");
                 else await Context.Channel.SendMessageAsync("Listening");
             }
+        }
+
+        [Command("sblock")]
+        public async Task SuggestionBlock(IUser user)
+        {
+            Properties.Settings.Default.sBlocked.Add(Convert.ToString(user.Id));
+            Properties.Settings.Default.Save();
+            await Context.Channel.SendMessageAsync("Blocked");
         }
         #endregion
 

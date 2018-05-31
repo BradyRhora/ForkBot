@@ -9,7 +9,7 @@
   &lt;long&gt;0&lt;/long&gt;
 &lt;/ArrayOfLong&gt;</Value>
     </Setting>
-    <Setting Name="followedTwitters" Type="System.Collections.Specialized.StringCollection" Scope="User">
+    <Setting Name="sBlocked" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
