@@ -10,7 +10,7 @@ namespace ForkBot
     {
         List<string> items;
         DateTime date;
-        Random rdm;
+        Random rdm = new Random();
 
         public Shop(List<string> items)
         {

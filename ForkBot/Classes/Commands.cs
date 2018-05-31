@@ -329,11 +329,12 @@ namespace ForkBot
             catch (Exception) { await Context.Channel.SendMessageAsync("Unable to find course."); }
 
         }
-        
+
         [Command("suggest"), Summary("Suggest something for ForkBot, whether it's an item, an item's function, a new command, or anything else! People who abuse this will be blocked from using it.")]
         public async Task Suggest([Remainder] string suggestion)
         {
             var brady = Bot.client.GetUser(Constants.Users.BRADY);
+            if (Properties.Settings.Default.sBlocked == null) { Properties.Settings.Default.sBlocked = new System.Collections.Specialized.StringCollection(); Properties.Settings.Default.Save(); }
             if (Properties.Settings.Default.sBlocked.Contains(Convert.ToString(Context.User.Id))) return;
             await brady.SendMessageAsync("", embed: new InfoEmbed("SUGGESTION FROM: " + Context.User.Username, suggestion).Build());
             await Context.Channel.SendMessageAsync("Suggestion submitted.");
