@@ -230,8 +230,6 @@
     <Content Include="bin\Debug\Files\rareitems.txt" />
     <Content Include="bin\Debug\Files\reminders.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />
-    <Content Include="bin\Debug\Files\users.txt" />
-    <Content Include="bin\Debug\Files\users_prepurge.txt" />
     <Content Include="bin\Debug\Files\wordlist.txt" />
     <Content Include="bin\Debug\ForkBot.exe" />
     <Content Include="bin\Debug\ForkBot.pdb" />

@@ -17,7 +17,7 @@ namespace ForkBot
         public static Color GetColor(IUser User)
         {
             var user = User as IGuildUser;
-            if (user == null)
+            if (user != null)
             {
                 if (user.RoleIds.ToArray().Count() > 1)
                 {

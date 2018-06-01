@@ -951,16 +951,35 @@ namespace ForkBot
                 x.Inline = true;
             }));
 
-            emb.Fields.Add(new JEmbedField(x =>
+            bool moreItems = true;
+            string[] items = u.GetItemList();
+            string invTitle = "Inventory";
+            while (moreItems)
             {
-                x.Header = "Inventory:";
-                string text = "";
-                foreach (string item in u.GetItemList())
+                List<string> extraItems = new List<string>();
+                moreItems = false;
+                emb.Fields.Add(new JEmbedField(x =>
                 {
-                    text += item + ", ";
-                }
-                x.Text = Convert.ToString(text);
-            }));
+                    x.Header = invTitle + ":";
+                    string text = "";
+                    foreach (string item in items)
+                    {
+                        if (moreItems) extraItems.Add(item);
+                        else
+                        {
+                            if (text.Length + (item + ", ").Length > 1024)
+                            {
+                                moreItems = true;
+                                extraItems.Add(item);
+                                invTitle += " (cont)";
+                            }
+                            else text += item + ", ";
+                        }
+                    }
+                    x.Text = Convert.ToString(text);
+                    if (moreItems) items = extraItems.ToArray();
+                }));
+            }
 
             emb.Fields.Add(new JEmbedField(x =>
             {
@@ -974,7 +993,7 @@ namespace ForkBot
                 }
                 x.Text = Convert.ToString(text);
             }));
-
+            
             await Context.Channel.SendMessageAsync("", embed: emb.Build());
         }
 
