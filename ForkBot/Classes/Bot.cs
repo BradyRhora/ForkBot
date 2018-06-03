@@ -150,7 +150,7 @@ namespace ForkBot
                         IInvite inv = await client.GetInviteAsync(id);
                         if (inv.GuildId == Constants.Guilds.FORKU)
                         {
-                            await message.DeleteAsync();
+                            await messageParam.DeleteAsync();
                         }
                         return;
                     }
