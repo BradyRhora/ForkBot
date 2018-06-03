@@ -11,6 +11,7 @@ namespace ForkBot
         {
             public static ulong YORK_UNIVERSITY = 265998661606047744;
             public static ulong P10_ENTERPRISES = 436016366672150531;
+            public static ulong FORKU = 342836847187329024;
         }
 
         public class Users

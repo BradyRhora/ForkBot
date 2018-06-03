@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 using System.Net;
 using System.Xml;
 using System.Text.RegularExpressions;
@@ -21,7 +22,7 @@ namespace ForkBot
             {
                 if (user.RoleIds.ToArray().Count() > 1)
                 {
-                    var role = Bot.client.GetGuild(Constants.Guilds.YORK_UNIVERSITY).GetRole(user.RoleIds.ElementAtOrDefault(1));
+                    var role = user.Guild.GetRole(user.RoleIds.ElementAtOrDefault(1));
                     return role.Color;
                 }
                 else return Constants.Colours.DEFAULT_COLOUR;
@@ -214,6 +215,7 @@ namespace ForkBot
             for (int i = ordered.Count()-1; i >= ordered.Count()-amount; i--) top5.Add(ordered.ToArray()[i].Key, ordered.ToArray()[i].Value);
             return top5.ToList().ToArray();
         }
+
     }
     
 

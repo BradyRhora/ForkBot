@@ -37,8 +37,8 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
-                //await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
+                //await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
+                await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
@@ -86,10 +86,10 @@ namespace ForkBot
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             int argPos = 0;
-            
+
             if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
             
-            var user = Functions.GetUser(message.Author);
+            var user = Functions.GetUser(message.Author); //present stuff
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {
                 Var.presentWaiting = false;
@@ -138,6 +138,25 @@ namespace ForkBot
                 Var.replaceable = false;
             }
             
+            //detects invites for unwanted servers and deletes them
+            if (message.Content.Contains("discord.gg") || message.Content.Contains("discordapp.com/invite"))
+            {
+                var words = message.Content.Split(' ');
+                foreach(string word in words)
+                {
+                    if (word.Contains("discord"))
+                    {
+                        string id = word.Split('/')[word.Split('/').Count() - 1];
+                        IInvite inv = await client.GetInviteAsync(id);
+                        if (inv.GuildId == Constants.Guilds.FORKU)
+                        {
+                            await message.DeleteAsync();
+                        }
+                        return;
+                    }
+                }
+            }
+
             if (message.HasCharPrefix(';', ref argPos))
             {
                 var context = new CommandContext(client, message);
