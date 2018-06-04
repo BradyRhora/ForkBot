@@ -1005,21 +1005,35 @@ namespace ForkBot
         {
             if (!Var.presentWaiting)
             {
-                if (Var.presentTime < DateTime.Now - Var.presentWait)
+                if (Var.presentTime < DateTime.Now - Var.presentWait) Var.presentCount = rdm.Next(4) + 1;
+                if (Var.presentCount > 0 && !Var.presentClaims.Any(x => x.Id == Context.User.Id))
                 {
-                    Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
-                    Var.presentTime = DateTime.Now;
+                    if (Var.presentClaims.Count() <= 0)
+                    {
+                        Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
+                        Var.presentTime = DateTime.Now;
+                    }
+                    Var.presentCount--;
+                    Var.presentClaims.Add(Context.User as IGuildUser);
                     Var.presentNum = rdm.Next(10);
                     await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
                     Var.presentWaiting = true;
                     Var.replacing = false;
                     Var.replaceable = true;
+
+
                 }
                 else
                 {
                     var timeLeft = Var.presentTime - (DateTime.Now - Var.presentWait);
-                    await Context.Channel.SendMessageAsync($"The next present is not available yet! Please be patient! It should be ready in *about* {timeLeft.Hours + 1} hour(s)!\n"+
-                                                            "**The last present was claimed by: " + Var.claimant + ".**");
+                    var msg = $"The next presents are not available yet! Please be patient! They should be ready in *about* {timeLeft.Hours + 1} hour(s)!\nThere are {Var.presentCount} presents left!";
+                    if (Var.presentClaims.Count() > 0)
+                    {
+                        msg += "\nLast claimed by:\n```\n";
+                        foreach (IGuildUser user in Var.presentClaims) msg += $"\n{user.Username} in {user.Guild}";
+                        msg += "\n```";
+                    }
+                    await Context.Channel.SendMessageAsync(msg);
                 }
             }
         }
