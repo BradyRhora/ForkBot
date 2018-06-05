@@ -1005,7 +1005,12 @@ namespace ForkBot
         {
             if (!Var.presentWaiting)
             {
-                if (Var.presentTime < DateTime.Now - Var.presentWait) Var.presentCount = rdm.Next(4) + 1;
+                if (Var.presentTime < DateTime.Now - Var.presentWait)
+                {
+                    Var.presentCount = rdm.Next(4) + 1;
+                    Var.presentClaims.Clear();
+                }
+
                 if (Var.presentCount > 0 && !Var.presentClaims.Any(x => x.Id == Context.User.Id))
                 {
                     if (Var.presentClaims.Count() <= 0)
