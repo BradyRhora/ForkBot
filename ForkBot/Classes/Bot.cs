@@ -138,7 +138,7 @@ namespace ForkBot
             }
             
             //detects invites for unwanted servers and deletes them
-            if (message.Content.Contains("discord.gg") || message.Content.Contains("discordapp.com/invite"))
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && message.Content.ToLower().Contains("discord.gg") || message.Content.ToLower().Contains("discordapp.com/invite"))
             {
                 var words = message.Content.Split(' ');
                 foreach(string word in words)

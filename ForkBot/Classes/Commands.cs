@@ -367,7 +367,7 @@ namespace ForkBot
                         }
                     }
 
-                    if (rdm.Next(100) < 5 && !unsold)
+                    /*if (rdm.Next(100) < 5 && !unsold)
                     {
                         var rItemData = rItems[rdm.Next(rItems.Count())];
                         var itemName = rItemData.Split('|')[0].Replace('_', ' ');
@@ -377,7 +377,7 @@ namespace ForkBot
                         msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
                                                                $"A {itemName}! {Functions.GetItemEmote(rItemData)} {rMessage}\n";
                     }
-                    else if (!unsold)
+                    else */if (!unsold)
                     {
                         u.GiveCoins(price);
                         msg += $"You successfully sold your {item} for {price} coins!\n";
