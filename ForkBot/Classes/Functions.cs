@@ -118,6 +118,14 @@ namespace ForkBot
             if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
             return ":" + data[0] + ":";
         }
+        public static string GetItemData(string item)
+        {
+            foreach(string data in GetItemList().Concat(GetRareItemList()))
+            {
+                if (data.StartsWith(item)) return data;
+            }
+            return null;
+        }
 
         public static ItemTrade GetTrade(IUser user)
         {

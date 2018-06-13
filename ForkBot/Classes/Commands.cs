@@ -537,7 +537,7 @@ namespace ForkBot
                         {
                             u.GiveCoins(-price);
                             u.GiveItem(name);
-                            await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} :{name}: for {price} coins!");
+                            await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {Functions.GetItemEmote(Functions.GetItemData(name))} for {price} coins!");
                         }
                         else await Context.Channel.SendMessageAsync("You cannot afford this item.");
                     }
