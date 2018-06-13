@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using ImageProcessor;
+using System.Net;
 
 namespace ForkBot
 {
@@ -425,5 +427,117 @@ namespace ForkBot
             Var.currentShop = new Shop();
             await Context.Channel.SendMessageAsync(":shopping_cart: The items for sale in `;shop` have changed!");
         }
+        
+        [Command("knife")]
+        public async Task Knife(IUser user)
+        {
+            if (Check(Context, "knife")) return;
+            var u1 = Functions.GetUser(Context.User);
+            var u2 = Functions.GetUser(user);
+
+            if (rdm.Next(100) < 60)
+            {
+                if (rdm.Next(100) > 80)
+                {
+                    int amount;
+                    do amount = rdm.Next(500);
+                    while (amount > Convert.ToInt32(u2.GetData("coins")));
+                    u1.GiveCoins(amount);
+                    u2.GiveCoins(-amount);
+                    await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
+                }
+                else
+                {
+                    var items = u2.GetItemList();
+                    if (items.Count() == 0)
+                    {
+                        await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
+                                                               $" You drop your knife and run before the police arrive. {(user as IGuildUser).Mention} picks up the knife!");
+                        u2.GiveItem("knife");
+                    }
+                    else
+                    {
+                        string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
+                        u1.GiveItem(item);
+                        u2.RemoveItem(item);
+                        await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
+                    }
+                }
+            }
+            else await Context.Channel.SendMessageAsync($":knife: Your attempt to rob {user.Username} fails! You get nothing.");
+        }
+
+        [Command("beer")]
+        public async Task Beer()
+        {
+            if (Check(Context, "beer")) return;
+            await Context.Channel.SendMessageAsync(":beer: You drink the beer and feel a little tipsy.\n**Sobriety-5 Happiness+10**");
+            Functions.GetUser(Context.User).AddData("stat.sobriety", -5);
+            Functions.GetUser(Context.User).AddData("stat.happiness", 10);
+        }
+
+        [Command("paintbrush")]
+        public async Task Paintbrush()
+        {
+            if (Check(Context, "paintbrush")) return;
+            using (ImageFactory fact = new ImageFactory())
+            {
+                using (WebClient web = new WebClient())
+                {
+                    bool downloaded = false;
+                    while (!downloaded)
+                    {
+                        try { web.DownloadFile(Context.User.GetAvatarUrl(), @"Files\paintbrush.png"); downloaded = true; }
+                        catch (Exception) { }
+                    }
+                    fact.Load(@"Files\paintbrush.png");
+                }
+                int[] effects = new int[5];
+                for (int i = 0; i < effects.Count(); i++)
+                {
+                    effects[i] = rdm.Next(10);
+                }
+                System.Drawing.Color colour = System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1);
+                foreach (int effect in effects) {
+                    switch (effect)
+                    {
+                        case 0:
+                            fact.Hue(rdm.Next(359) + 1);
+                            break;
+                        case 1:
+                            fact.Brightness(rdm.Next(100) + 1);
+                            break;
+                        case 2:
+                            fact.Contrast(rdm.Next(100) + 1);
+                            break;
+                        case 3:
+                            fact.Gamma(rdm.Next(5) + (rdm.Next(10) / 2));
+                            break;
+                        case 4:
+                            fact.Halftone(true);
+                            break;
+                        case 5:
+                            fact.Pixelate(rdm.Next(fact.Image.Size.Height / 10));
+                            break;
+                        case 6:
+                            fact.Saturation(rdm.Next(100) + 1);
+                            break;
+                        case 7:
+                            fact.Vignette(colour);
+                            break;
+                        case 8:
+                            fact.Tint(colour);
+                            break;
+                        case 9:
+                            fact.ReplaceColor(colour, System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1),50);
+                            break;
+
+                    }
+                }
+                fact.Save(@"Files\paintbrush_edited.png");
+            }
+            await Context.Channel.SendFileAsync(@"Files\paintbrush_edited.png");
+        }
+
     }
 }

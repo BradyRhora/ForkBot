@@ -66,6 +66,15 @@ namespace ForkBot
                 }));
             }
 
+            if (Context.User.Id == Constants.Users.BRADY)
+            {
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Text = "<:Bradyf:342410957026230272>";
+                    x.Header = "BRADY COMMANDS";
+                    x.Inline = true;
+                }));
+            }
 
 
             var msg = await Context.Channel.SendMessageAsync("", embed: emb.Build());
@@ -339,6 +348,13 @@ namespace ForkBot
             await brady.SendMessageAsync("", embed: new InfoEmbed("SUGGESTION FROM: " + Context.User.Username, suggestion).Build());
             await Context.Channel.SendMessageAsync("Suggestion submitted.");
         }
+        
+        [Command("updates"), Summary("See the most recent update log.")]
+        public async Task Updates()
+        {
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.4\n-Added more item commands [See below]\n-Added message for when item does nothing\n-Added reminder remover\nITEM CHANGES:\nAdded: knife, paintbrush, beer\n```");
+        }
+
         #endregion
 
         #region Item Commands
@@ -596,7 +612,7 @@ namespace ForkBot
         */
 
         #region Fun
-
+        
         [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
         public async Task Draw(int count)
         {
@@ -1244,15 +1260,35 @@ namespace ForkBot
 
         #region Brady Commands
 
-        [Command("remind")]
+        [Command("remind"), Summary("[BRADY] View, add, and remove reminders.")]
         public async Task Remind([Remainder] string reminder = "")
         {
             if (reminder != "")
             {
                 if (Context.User.Id == Constants.Users.BRADY)
                 {
-                    File.AppendAllText("Files/reminders.txt", reminder + "\n");
-                    await Context.Channel.SendMessageAsync("Added");
+                    if (reminder.Trim().StartsWith("-"))
+                    {
+                        bool removed = false;
+                        List<string> reminders = File.ReadAllLines("Files/reminders.txt").ToList();
+                        for (int i = 0; i < reminders.Count(); i++)
+                        {
+                            if (reminders[i].ToLower().StartsWith(reminder.Trim().Replace("-", "").Trim().ToLower()))
+                            {
+                                reminders.RemoveAt(i);
+                                File.WriteAllLines("Files/reminders.txt", reminders);
+                                removed = true;
+                                break;
+                            }
+                        }
+                        if (removed) await Context.Channel.SendMessageAsync("Successfully removed reminder.");
+                        else await Context.Channel.SendMessageAsync("Specified reminder not found.");
+                    }
+                    else
+                    {
+                        File.AppendAllText("Files/reminders.txt", reminder + "\n");
+                        await Context.Channel.SendMessageAsync("Added");
+                    }
                 }
             }
             else
@@ -1262,7 +1298,7 @@ namespace ForkBot
             }
         }
         
-        [Command("givecoins")]
+        [Command("givecoins"), Summary("[BRADY] Give a user [amount] coins.")]
         public async Task Give(IUser user, int amount)
         {
             if (Context.User.Id == Constants.Users.BRADY)
@@ -1274,7 +1310,7 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
 
-        [Command("giveitem")]
+        [Command("giveitem"), Summary("[BRADY]Give a user [item] item")]
         public async Task Give(IUser user, string item)
         {
             if (Context.User.Id == Constants.Users.BRADY)
@@ -1286,7 +1322,7 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
 
-        [Command("eval")]
+        [Command("eval"), Summary("[BRADY] Evaluates inputted C# code.")]
         public async Task EvaluateCmd([Remainder] string expression)
         {
             if (Context.User.Id == Constants.Users.BRADY)
@@ -1300,7 +1336,7 @@ namespace ForkBot
 
         }
 
-        [Command("respond")]
+        [Command("respond"), Summary("[BRADY] Toggles whether the bot should listen or respond to messages with AI")]
         public async Task Respond()
         {
             if (Context.User.Id == Constants.Users.BRADY)
@@ -1311,7 +1347,7 @@ namespace ForkBot
             }
         }
 
-        [Command("sblock")]
+        [Command("sblock"), Summary("[BRADY] Blocks specified [user] from giving suggestions.")]
         public async Task SuggestionBlock(IUser user)
         {
             Properties.Settings.Default.sBlocked.Add(Convert.ToString(user.Id));

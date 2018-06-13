@@ -137,7 +137,7 @@ namespace ForkBot
                 Var.replaceable = false;
             }
             
-            //detects invites for unwanted servers and deletes them
+            //detects invites for unwanted servers (in yorku server) and deletes them
             if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && message.Content.ToLower().Contains("discord.gg") || message.Content.ToLower().Contains("discordapp.com/invite"))
             {
                 var words = message.Content.Split(' ');
@@ -167,6 +167,13 @@ namespace ForkBot
                         Console.WriteLine(result.ErrorReason);
                         var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
                         await message.Channel.SendMessageAsync("", embed: emb);
+                    }
+                    else
+                    {
+                        if (user.GetItemList().Contains(message.Content.Replace(";", "")))
+                        {
+                            await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
+                        }
                     }
                 }
             }
@@ -276,6 +283,7 @@ namespace ForkBot
                         else if (react.Emote.Name == Constants.Emotes.die.Name) tag = "[FUN]";
                         else if (react.Emote.Name == Constants.Emotes.question.Name) tag = "[OTHER]";
                         else if (react.Emote.Name == Constants.Emotes.chad.Name) tag = "[P10]";
+                        else if (react.Emote.Name == Constants.Emotes.BRADY.Name) tag = "[BRADY]";
                         Var.awaitingHelp.Remove(msg);
                         await msg.DeleteAsync();
                         break;

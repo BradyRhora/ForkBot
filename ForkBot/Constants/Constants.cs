@@ -70,6 +70,7 @@ namespace ForkBot
             public static Emoji die = new Emoji("🎲");
             public static Emoji question = new Emoji("❓");
             public static Emote chad = Emote.Parse("<:CHAD:436784932820353024>");
+            public static Emote BRADY = Emote.Parse("<:Bradyf:342410957026230272>");
             
 
         }
