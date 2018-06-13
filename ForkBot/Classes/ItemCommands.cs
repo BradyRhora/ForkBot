@@ -46,7 +46,7 @@ namespace ForkBot
             }
             else
             {
-                msg = "This... this is the best poop you've ever had in your life! You feel fantastic!\n**Hygiene+40 Happiness+20";
+                msg = "This... this is the best poop you've ever had in your life! You feel fantastic!\n**Hygiene+40 Happiness+20**";
                 user.AddData("stat.hygiene", 40);
                 user.AddData("stat.happiness", 20);
             }
