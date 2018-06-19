@@ -12,9 +12,9 @@ baby|Oh, I guess you're a parent now.|100
 santa|Merry Christmas! You get five more gifts!|-
 cat|Meow|40
 dog|Bork|40
-eggplant|Oh my.. So.... *Phallic...*|10
 apple|An apple a day...|6
 egg|EGG.|6
+eggplant|Oh my.. So.... *Phallic...*|10
 ramen|Aka gods gift to humanity.|25
 beer|Drink responsibly!|10
 spoon|Well, it's not a fork but it'll do.|5
@@ -36,7 +36,7 @@ telescope|Now you can see the universe! Or into your neighbours window.|12
 gift|Oh! I wonder what's inside?|150
 scissors|Don't run with them!\n***DON'T LOSE YOUR WAAAY!***|5
 pen_ballpoint|It's a pen. What else can I say.|3
-paintbrush|I believe, every day's a good day when you paint.|3
+paintbrush|I believe, every day's a good day when you paint.|50
 mag|Burn the ants! Or read, I guess.|5
 crayon|Colour in between the lines!|3
 milk|Calcium! Strong bones! COW JUICE!|5

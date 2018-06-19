@@ -179,6 +179,7 @@
     <Compile Include="Classes\Timers.cs" />
     <Compile Include="Classes\Objects\User.cs" />
     <Compile Include="Classes\Var.cs" />
+    <Compile Include="Classes\XMLToolbox.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />
     <Compile Include="Classes\Objects\JEmbed.cs" />
@@ -227,6 +228,7 @@
     <Content Include="bin\Debug\Files\Images\Kick.png" />
     <Content Include="bin\Debug\Files\items.txt" />
     <Content Include="bin\Debug\Files\jobs.txt" />
+    <Content Include="bin\Debug\Files\MarketItems.xml" />
     <Content Include="bin\Debug\Files\rareitems.txt" />
     <Content Include="bin\Debug\Files\reminders.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />

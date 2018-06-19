@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using System.Net;
 using System.Xml;
@@ -122,7 +123,8 @@ namespace ForkBot
         {
             foreach(string data in GetItemList().Concat(GetRareItemList()))
             {
-                if (data.StartsWith(item)) return data;
+                if (data.StartsWith(item))
+                    return data;
             }
             return null;
         }
@@ -224,6 +226,15 @@ namespace ForkBot
             return top5.ToList().ToArray();
         }
 
+        public static bool CheckUserHasItem(User user, string item, bool remove = true)
+        {
+            if (user.GetItemList().Contains(item))
+            {
+                if (remove) user.RemoveItem(item);
+                return false;
+            }
+            return true;
+        }
     }
     
 

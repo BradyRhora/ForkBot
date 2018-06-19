@@ -15,6 +15,7 @@ using System.Net;
 using ImageProcessor;
 using ImageProcessor.Imaging;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace ForkBot
 {
@@ -83,6 +84,7 @@ namespace ForkBot
             await msg.AddReactionAsync(Constants.Emotes.die);
             await msg.AddReactionAsync(Constants.Emotes.question);
             if (Context.Guild.Id == Constants.Guilds.P10_ENTERPRISES) await msg.AddReactionAsync(Constants.Emotes.chad);
+            if (Context.User.Id == Constants.Users.BRADY) await msg.AddReactionAsync(Constants.Emotes.BRADY);
             Var.awaitingHelp.Add(msg);
         }
 
@@ -276,9 +278,14 @@ namespace ForkBot
             }
         }
 
-        [Command("course"), Summary("Shows details for course from inputted course code.")]
+        [Command("course"), Summary("Shows details for course from inputted course code. [OUT OF SERVICE]")]
         public async Task Course([Remainder] string code)
         {
+            throw new NotImplementedException("This command currently is not working due to York website being dumb. I am looking for a solution to the problem.");
+
+            //Out of service
+
+            /*
             try
             {
                 if (code.Count() == 8 && int.TryParse(code.Substring(4), out int output))
@@ -336,7 +343,7 @@ namespace ForkBot
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             catch (Exception) { await Context.Channel.SendMessageAsync("Unable to find course."); }
-
+            */
         }
 
         [Command("suggest"), Summary("Suggest something for ForkBot, whether it's an item, an item's function, a new command, or anything else! People who abuse this will be blocked from using it.")]
@@ -348,11 +355,11 @@ namespace ForkBot
             await brady.SendMessageAsync("", embed: new InfoEmbed("SUGGESTION FROM: " + Context.User.Username, suggestion).Build());
             await Context.Channel.SendMessageAsync("Suggestion submitted.");
         }
-        
+
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.4\n-Added more item commands [See below]\n-Added message for when item does nothing\n-Added reminder remover\nITEM CHANGES:\nAdded: knife, paintbrush, beer\n```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.41\n-Fixed Ramen stat bug\n-gave paintbrush infinite uses\n-started (and almost finished) free market\n-temp disabled ;course\n```");
         }
 
         #endregion
@@ -393,7 +400,8 @@ namespace ForkBot
                         msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
                                                                $"A {itemName}! {Functions.GetItemEmote(rItemData)} {rMessage}\n";
                     }
-                    else */if (!unsold)
+                    else */
+                    if (!unsold)
                     {
                         u.GiveCoins(price);
                         msg += $"You successfully sold your {item} for {price} coins!\n";
@@ -545,6 +553,135 @@ namespace ForkBot
             }
             else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
         }
+
+        [Command("freemarket"), Alias("fm", "market"), Summary("[FUN] Sell items to other users! Choose your own price!")]
+        public async Task FreeMarket(params string[] command)
+        {
+            throw new NotImplementedException("Not ready for public.");
+            
+
+            if (command.Count() == 0) await ReplyAsync("Use one of the following commands!\n```\n;fm view\n;fm sell [item] [price]\n;fm buy [item_id]\n```");
+            else if (command[0] == "view")
+            {
+                FileStream fs = new FileStream("Files/MarketItems.xml", FileMode.Open);
+                List<string> itemList = new List<string>();
+                using (XmlReader reader = XmlReader.Create(fs))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.Name == "market") reader.Read();
+                        if (reader.NodeType != XmlNodeType.Whitespace && reader.NodeType != XmlNodeType.None)
+                        {
+                            string id = reader.GetAttribute("id");
+                            string cost = reader.GetAttribute("cost");
+                            var user = Bot.client.GetUser(Convert.ToUInt64(reader.GetAttribute("seller")));
+                            string itemName = reader.GetAttribute("name");
+                            string emote = Functions.GetItemEmote(Functions.GetItemData(itemName));
+                            itemList.Add($"{emote} {itemName} - {cost} coins ~ {user.Username}|[{id}] ");
+                        }
+                    }
+                }
+
+                JEmbed emb = new JEmbed();
+                emb.Author.Name = "Free Market";
+
+                foreach (string item in itemList)
+                {
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = item.Split('|')[0];
+                        x.Text = item.Split('|')[1];
+                    }));
+                }
+
+                emb.Footer.Text = "Use \';fm sell [item] [price]\' or \';fm buy [item_id]\'";
+
+                await ReplyAsync("", embed: emb.Build());
+
+            }
+            else if (command[0] == "sell")
+            {
+                string item = command[1];
+                string price = command[2];
+                User user = Functions.GetUser(Context.User);
+                if (Functions.CheckUserHasItem(user, item))
+                {
+                    await ReplyAsync("You do not have an item called: " + item + ".");
+                    return;
+                }
+
+                XmlDocument doc = new XmlDocument();
+                using (FileStream fs = new FileStream("Files/MarketItems.xml", FileMode.Open))
+                {
+                    doc.Load(fs);
+                    bool idSet = false;
+                    string id = "";
+                    char asciiA = 'A';
+                    char asciiZ = 'Z';
+                    do
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            id += rdm.Next(10);
+                            id += (char)rdm.Next(asciiA, asciiZ + 1);
+                        }
+
+                        foreach (XmlElement element in doc.GetElementsByTagName("item"))
+                        {
+                            if (element.GetAttribute("id") != id) idSet = true;
+                        }
+                    } while (!idSet);
+
+                    var lastChild = doc.LastChild;
+                    XmlElement elem = doc.CreateElement("item");
+                    elem.SetAttribute("name", item);
+                    elem.SetAttribute("id", id);
+                    elem.SetAttribute("cost", price);
+                    elem.SetAttribute("seller", Convert.ToString(Context.User.Id));
+                    doc.FirstChild.AppendChild(elem);
+                    doc.Save("Files/MarketItems.xml");
+
+                    await ReplyAsync($"{item} successfully added to Free Market at {price} coin(s) with ID: {id}");
+                }
+            }
+            else if (command[0] == "buy")
+            {
+                string id = command[1];
+                XmlDocument document = new XmlDocument();
+
+                using (FileStream fs = new FileStream("Files/MarketItems.xml", FileMode.Open))
+                {
+                    document.Load(fs);
+                    foreach (XmlElement element in document.FirstChild)
+                    {
+                        if (element.HasAttributes)
+                        {
+                            if (element.GetAttribute("id") == id)
+                            {
+                                var user = Functions.GetUser(Context.User);
+                                int userCoins = Convert.ToInt32(user.GetData("coins"));
+                                int price = Convert.ToInt32(element.GetAttribute("cost"));
+                                if (userCoins >= price)
+                                {
+                                    user.GiveCoins(-price);
+                                    user.GiveItem(element.GetAttribute("name"));
+                                    var sellerUser = Bot.client.GetUser(Convert.ToUInt64(element.GetAttribute("seller")));
+                                    var seller = Functions.GetUser(sellerUser);
+                                    await sellerUser.SendMessageAsync($"{Context.User.Username} has purchased your {element.GetAttribute("name")} for {price} coins!");
+                                    seller.GiveCoins(price);
+                                    await ReplyAsync("Successfully purchased item.");
+                                    document.FirstChild.RemoveChild(element);
+                                    document.Save(fs);
+                                    fs.Close();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         #endregion
 
         /* temp disable
@@ -612,7 +749,7 @@ namespace ForkBot
         */
 
         #region Fun
-        
+
         [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
         public async Task Draw(int count)
         {
@@ -1014,7 +1151,7 @@ namespace ForkBot
         }
 
         [Command("profile")]
-        public async Task Profile() { await Profile(Context.User); }
+        public async Task Profile() => await Profile(Context.User);
 
         [Command("present"), Summary("[FUN] Get a cool gift!")]
         public async Task Present()
@@ -1310,7 +1447,7 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
 
-        [Command("giveitem"), Summary("[BRADY]Give a user [item] item")]
+        [Command("giveitem"), Summary("[BRADY] Give a user [item] item")]
         public async Task Give(IUser user, string item)
         {
             if (Context.User.Id == Constants.Users.BRADY)

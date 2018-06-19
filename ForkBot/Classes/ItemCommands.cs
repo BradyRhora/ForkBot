@@ -347,7 +347,7 @@ namespace ForkBot
         {
             if (Check(Context, "ramen")) return;
             await Context.Channel.SendMessageAsync(":ramen: Sweet sweet ramen...\n**Fullness+50**");
-            Functions.GetUser(Context.User).AddData("stat.Fullness", 50);
+            Functions.GetUser(Context.User).AddData("stat.fullness", 50);
         }
 
         [Command("goose")]
@@ -479,7 +479,7 @@ namespace ForkBot
         [Command("paintbrush")]
         public async Task Paintbrush()
         {
-            if (Check(Context, "paintbrush")) return;
+            if (Check(Context, "paintbrush", false)) return;
             using (ImageFactory fact = new ImageFactory())
             {
                 using (WebClient web = new WebClient())
