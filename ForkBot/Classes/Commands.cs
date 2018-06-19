@@ -215,7 +215,7 @@ namespace ForkBot
                         }
                     }
                 }
-                string[] commonWords = { "i", "me", "at", "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1] };
+                string[] commonWords = { "i", "me", "at", "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1], "we" };
                 foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
 
                 JEmbed emb = new JEmbed();
@@ -526,7 +526,7 @@ namespace ForkBot
                 }
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            else if (itemNames.Contains(command.ToLower().Replace(" ","_"))
+            else if (itemNames.Contains(command.ToLower().Replace(" ","_")))
             {
                 foreach (string item in Var.currentShop.Items())
                 {
