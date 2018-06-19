@@ -282,10 +282,7 @@ namespace ForkBot
         public async Task Course([Remainder] string code)
         {
             throw new NotImplementedException("This command currently is not working due to York website being dumb. I am looking for a solution to the problem.");
-
-            //Out of service
-
-            /*
+            
             try
             {
                 if (code.Count() == 8 && int.TryParse(code.Substring(4), out int output))
@@ -343,7 +340,7 @@ namespace ForkBot
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             catch (Exception) { await Context.Channel.SendMessageAsync("Unable to find course."); }
-            */
+            
         }
 
         [Command("suggest"), Summary("Suggest something for ForkBot, whether it's an item, an item's function, a new command, or anything else! People who abuse this will be blocked from using it.")]

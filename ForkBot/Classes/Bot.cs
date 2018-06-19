@@ -275,6 +275,7 @@ namespace ForkBot
             if ((react.UserId != client.CurrentUser.Id))
             {
                 string tag = null;
+                Discord.Rest.RestUserMessage message = null;
                 foreach (IMessage msg in Var.awaitingHelp)
                 {
                     if (msg.Id == cache.Value.Id)
@@ -284,8 +285,8 @@ namespace ForkBot
                         else if (react.Emote.Name == Constants.Emotes.question.Name) tag = "[OTHER]";
                         else if (react.Emote.Name == Constants.Emotes.chad.Name) tag = "[P10]";
                         else if (react.Emote.Name == Constants.Emotes.BRADY.Name) tag = "[BRADY]";
+                        message = msg as Discord.Rest.RestUserMessage;
                         Var.awaitingHelp.Remove(msg);
-                        await msg.DeleteAsync();
                         break;
                     }
                 }
@@ -324,7 +325,7 @@ namespace ForkBot
                             }));
                         }
                     }
-                    await channel.SendMessageAsync("", embed: emb.Build());
+                    await message.ModifyAsync(x => x.Embed = emb.Build())
                 }
 
             }
