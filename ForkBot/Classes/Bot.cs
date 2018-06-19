@@ -23,7 +23,6 @@ namespace ForkBot
         public static CommandService commands;
         public static List<User> users = new List<User>();
         
-
         public async Task Run()
         {
             Start:
@@ -67,7 +66,6 @@ namespace ForkBot
                 goto Again;
             }
         }
-        
         public async Task InstallCommands()
         {
             client.MessageReceived += HandleCommand;
@@ -325,7 +323,7 @@ namespace ForkBot
                             }));
                         }
                     }
-                    await message.ModifyAsync(x => x.Embed = emb.Build())
+                    await message.ModifyAsync(x => x.Embed = emb.Build());
                 }
 
             }

@@ -484,7 +484,7 @@ namespace ForkBot
         }
 
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
-        public async Task Shop(string command = null)
+        public async Task Shop([Remainder] string command = null)
         {
             var u = Functions.GetUser(Context.User);
             DateTime day = new DateTime();
@@ -520,13 +520,13 @@ namespace ForkBot
                     if (price < 0) price *= -1;
                     emb.Fields.Add(new JEmbedField(x =>
                     {
-                        x.Header = $"{emote} {name} - {price} coins";
+                        x.Header = $"{emote} {name.Replace("_"," ")} - {price} coins";
                         x.Text = desc;
                     }));
                 }
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            else if (itemNames.Contains(command.ToLower()))
+            else if (itemNames.Contains(command.ToLower().Replace(" ","_"))
             {
                 foreach (string item in Var.currentShop.Items())
                 {
