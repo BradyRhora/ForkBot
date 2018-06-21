@@ -539,5 +539,25 @@ namespace ForkBot
             await Context.Channel.SendFileAsync(@"Files\paintbrush_edited.png");
         }
 
+        [Command("santa")]
+        public async Task Santa()
+        {
+            if (Check(Context, "santa")) return;
+
+            await Context.Channel.SendMessageAsync("You got...");
+            string sMessage = ""; var user = Functions.GetUser(Context.User);
+            var presents = Functions.GetItemList();
+            for (int i = 0; i < 5; i++)
+            {
+                var sPresentData = presents[rdm.Next(presents.Count())];
+                string sPresentName = sPresentData.Split('|')[0];
+                user.GiveItem(sPresentName);
+                sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
+            }
+            await Context.Channel.SendMessageAsync(sMessage);
+
+            Var.replaceable = false;
+        }
+
     }
 }
