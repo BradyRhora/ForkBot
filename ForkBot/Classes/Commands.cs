@@ -281,8 +281,6 @@ namespace ForkBot
         [Command("course"), Summary("Shows details for course from inputted course code. [OUT OF SERVICE]")]
         public async Task Course([Remainder] string code)
         {
-            throw new NotImplementedException("This command currently is not working due to York website being dumb. I am looking for a solution to the problem.");
-            
             try
             {
                 if (code.Count() == 8 && int.TryParse(code.Substring(4), out int output))
@@ -290,47 +288,28 @@ namespace ForkBot
                     code = code.Substring(0, 4) + " " + code.Substring(4);
                 }
 
-
-                string searchLink = "http://www.google.com/search?q=w2prod " + code;
                 HtmlWeb web = new HtmlWeb();
-                bool found = false;
-                string desc, title;
-                int searchIndex = 0;
-                do
+                string desc, title, link="";
+
+                var courses = File.ReadAllLines("Files/courselist.txt");
+                foreach(string course in courses)
                 {
-                    var page = web.Load(searchLink);
-                    var html = page.ParsedText;
-                    var index = html.IndexOf("<h3 class=\"r\">", searchIndex);
-                    searchIndex = index + 20;
-                    int start = 0, end = 0;
-
-                    //make better
-
-                    for (int i = index; i < html.Count(); i++)
+                    if (course.ToLower().Contains(code.ToLower()))
                     {
-                        if (html.Substring(i, 2) == "q=")
-                        {
-                            start = i + 2;
-                            for (int o = start; o < html.Count(); o++)
-                            {
-                                if (html[o] == '&')
-                                {
-                                    end = o;
-                                    break;
-                                }
-                            }
-                            break;
-                        }
+                        var info = course.Split(' ');
+                        var department = info[0].Split('/')[0];
+                        var subject = info[0].Split('/')[1];
+                        var coursecode = info[1];
+                        var credit = info[2].Split('\t')[0];
+                        link = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={department}&sj={subject}&cn={coursecode}&cr={credit}&ay=2018&ss=FW";
                     }
-                    string newLink = "";
-                    newLink = html.Substring(start, end - start).Replace("%3F", "?").Replace("%3D", "=").Replace("%26", "&");
-                    page = web.Load(newLink);
-                    desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
-                    title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
-                    desc = desc.Replace("&quot;", "\"");
-                    if (title.ToLower().Contains(code.ToLower())) found = true;
-
-                } while (!found);
+                }
+                
+                if (link == "") throw new Exception("Unable to find course.");
+                var page = web.Load(link);
+                desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+                title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
+                desc = desc.Replace("&quot;", "\"");
 
                 JEmbed emb = new JEmbed();
                 emb.Title = title;
@@ -339,7 +318,7 @@ namespace ForkBot
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            catch (Exception) { await Context.Channel.SendMessageAsync("Unable to find course."); }
+            catch (Exception) { await Context.Channel.SendMessageAsync("There was an error loading the course page."); }
             
         }
 
