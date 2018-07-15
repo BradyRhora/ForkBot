@@ -6,7 +6,7 @@ athletic_shoe|Now you can go for a run!|16
 dark_sunglasses|Don't look directly into the sun!|10
 eyeglasses|Do you need these? No? Oh well!|12
 umbrella2|For those rainy days!|12
-briefcase|Now you can, uh.. hold stuff.|14
+briefcase|Now you can, uh.. hold stuff.|1000000
 purse|I know you like it.|16
 baby|Oh, I guess you're a parent now.|100
 santa|Merry Christmas! You get five more gifts!|-
@@ -31,7 +31,7 @@ joystick|For the classics!|20
 moneybag|The best but lamest gift!|-
 knife|Careful, it's sharp!|15
 bomb|How did that get in there|50
-gun|Hahah hey whoa... watch it buddy..|15
+gun|Hahah hey whoa... watch it buddy..|1000
 telescope|Now you can see the universe! Or into your neighbours window.|12
 gift|Oh! I wonder what's inside?|150
 scissors|Don't run with them!\n***DON'T LOSE YOUR WAAAY!***|5
@@ -42,7 +42,8 @@ crayon|Colour in between the lines!|3
 milk|Calcium! Strong bones! COW JUICE!|5
 heart|I'm giving my heart to you! What? You don't want it? Oh..|25
 basketball|Get out there and play some ball, kiddo.|10
-goose|FUCK|0|369992347314028554
+goose|FUCK|40|369992347314028554
 youness|Lucky you.... :weary:|25|373579959899258880
 ttc|Best public transit of the year!|10|381689166179598356
+bug|OUT|5
 shopping_cart|Time to go shopping!|500
