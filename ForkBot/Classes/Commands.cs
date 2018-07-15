@@ -289,10 +289,10 @@ namespace ForkBot
                 }
 
                 HtmlWeb web = new HtmlWeb();
-                string desc, title, link="";
+                string desc, title, link = "";
 
                 var courses = File.ReadAllLines("Files/courselist.txt");
-                foreach(string course in courses)
+                foreach (string course in courses)
                 {
                     if (course.ToLower().Contains(code.ToLower()))
                     {
@@ -304,9 +304,11 @@ namespace ForkBot
                         link = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={department}&sj={subject}&cn={coursecode}&cr={credit}&ay=2018&ss=FW";
                     }
                 }
-                
+
                 if (link == "") throw new Exception("Unable to find course.");
                 var page = web.Load(link);
+                //var errorNode = page.DocumentNode.SelectNodes("/html/body/p/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td/p/b");
+                //if (errorNode != null) { await ReplyAsync(errorNode.InnerText); return; }
                 desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
                 title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
                 desc = desc.Replace("&quot;", "\"");
@@ -318,7 +320,7 @@ namespace ForkBot
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            catch (Exception) { await Context.Channel.SendMessageAsync("There was an error loading the course page."); }
+            catch (Exception) { await Context.Channel.SendMessageAsync("There was an error loading the course page. (Possibly not available this term)"); }
             
         }
 
@@ -335,7 +337,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.41\n-Fixed Ramen stat bug\n-gave paintbrush infinite uses\n-started (and almost finished) free market\n-temp disabled ;course\n```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.5\n-Fixed ;top and ;course\n-Fixed item message for scissors```");
         }
 
         #endregion
@@ -1212,9 +1214,14 @@ namespace ForkBot
             string msg = "```\nTop five users";
             if (stat != "") msg += " [" + stat + "]:\n";
             else msg += ":\n";
-            for(int i = 0; i < 5; i++)
+            int amount = 5;
+            if (top5.Count() < 5) amount = top5.Count();
+            for(int i = 0; i < amount; i++)
             {
-                string userName = Bot.client.GetUser(top5[i].Key).Username;
+                var user = Bot.client.GetUser(top5[i].Key);
+                string userName;
+                if (user == null) userName = $"User[{top5[i].Key}]";
+                else userName = user.Username;
                 msg += $"[{i+1}] {userName} - {top5[i].Value} {stat}\n";
             }
             msg += "```";
