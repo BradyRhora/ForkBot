@@ -167,9 +167,6 @@ namespace ForkBot
                 {
                     if (tagsNode.ChildNodes[i].Name == "span") tags.Add(tagsNode.ChildNodes[i].InnerText);
                 }
-
-                var hotness = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[3]/div/figure/img").Attributes[0].Value;
-                var hotnessIMG = "http://www.ratemyprofessors.com" + hotness;
                 string imageURL = null;
                 if (imageNode != null) imageURL = imageNode.Attributes[0].Value;
 
@@ -222,7 +219,6 @@ namespace ForkBot
 
                 emb.Title = profName + " - " + university;
                 if (imageURL != null) emb.ImageUrl = imageURL;
-                emb.ThumbnailUrl = hotnessIMG;
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "Rating:";
@@ -306,17 +302,47 @@ namespace ForkBot
                 }
 
                 if (link == "") throw new Exception("Unable to find course.");
-                var page = web.Load(link);
-                //var errorNode = page.DocumentNode.SelectNodes("/html/body/p/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td/p/b");
-                //if (errorNode != null) { await ReplyAsync(errorNode.InnerText); return; }
-                desc = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
-                title = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
+                var pageDoc = web.Load(link).DocumentNode;
+                
+                desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+                title = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
                 desc = desc.Replace("&quot;", "\"");
+                var scheduleNode = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/p[7]/a[1]");
+                var scheduleLink = "https://w2prod.sis.yorku.ca" + scheduleNode.Attributes[0].Value;
 
+            
                 JEmbed emb = new JEmbed();
                 emb.Title = title;
-                emb.Description = desc;
+                emb.Description = desc + "\n\n";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
+
+                pageDoc = web.Load(scheduleLink).DocumentNode;
+                var table = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[2]");
+                foreach (HtmlNode child in table.ChildNodes)
+                {
+                    if (child.Name == "tr")
+                    {
+                        var termSec = child.SelectSingleNode($"td/table/tr[1]").InnerText.Replace("\n", "").Replace("\t", "").Replace("&nbsp;", "").Trim();
+                        var sessionDir = child.SelectSingleNode($"td/table/tr[2]").InnerText.Replace("Please click here to see availability.", "").Replace("&nbsp;", "").Trim();
+                        var schedule = child.SelectSingleNode($"td/table/tr[3]/td/table/tr[2]");
+                        var type = schedule.ChildNodes[0].InnerText;
+                        var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ","|").Replace(" ","").Split('|');
+                        
+                        emb.Description += $"\n{termSec} - {sessionDir}";
+
+                        for (int i = 0; i < timedayInfo.Count(); i++)
+                        {
+                            string day = Convert.ToString(timedayInfo[i][0]);
+                            string time = "";
+                            for (int o = 2; o < timedayInfo[i].Length; o++)
+                            {
+                                if (timedayInfo[i][o - 2] == ':') time = timedayInfo[i].Substring(1, o);
+                            }
+                            emb.Description += $"\n\t\t{day} - {time}";
+                        }
+
+                    }
+                }
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
@@ -337,7 +363,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.5\n-Fixed ;top and ;course\n-Fixed item message for scissors```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.55\n-Big update on ;course. Added professor and schedule info.```");
         }
 
         #endregion
