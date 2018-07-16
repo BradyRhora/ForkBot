@@ -239,10 +239,10 @@ namespace ForkBot
         {
             if (Check(Context, "unicorn", false)) return;
             await Context.Channel.SendMessageAsync(":unicorn: A magical unicorn appears! Make a wish!\n" +
-                                                   "`;wish 1` *\"I want to be rich!\"*" +
-                                                   "`;wish 2` *\"Make me beautiful!\"*" +
-                                                   "`;wish 3` *\"Give me some items!\"*" +
-                                                   "`;wish 4` *\"Make me happy!\"*" +
+                                                   "`;wish 1` *\"I want to be rich!\"*\n" +
+                                                   "`;wish 2` *\"Make me beautiful!\"*\n" +
+                                                   "`;wish 3` *\"Give me some items!\"*\n" +
+                                                   "`;wish 4` *\"Make me happy!\"*\n" +
                                                    "`;wish 5` *\"You decide!\"*");
         }
         
@@ -261,11 +261,12 @@ namespace ForkBot
                 {
                     case 1:
                         int coinAmount = rdm.Next(1000, 3000);
-                        msg += $"**+{coinAmount} coins!";
+                        user.GiveCoins(coinAmount);
+                        msg += $"**+{coinAmount} coins!**";
                         break;
                     case 2:
                         int amount = rdm.Next(50, 200);
-                        msg += $"**Fashion+{amount}";
+                        msg += $"**Fashion+{amount}**";
                         break;
                     case 3:
                         await Context.Channel.SendMessageAsync("You got...");
