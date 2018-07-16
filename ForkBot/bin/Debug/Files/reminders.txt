@@ -1,7 +1,14 @@
-remove underscore
 fix umbrella2
-forkbot stats
-add more error messages (more specific ones i guess)
-remove gift from ;shop
-
-add tag deletion message
+Heroku
+torrent franbo
+make a crafting system
+fix unicorn coins
+seperate lines on unicorn
+not italics!!!!!! `_`!!!
+add 🛡
+make watch tell time
+remove some commands from <#265998661606047744>
+make bad poops extra bad
+fix scissor message
+fix ;top
+fix selfbot pain v
