@@ -7,7 +7,7 @@ dark_sunglasses|Don't look directly into the sun!|10
 eyeglasses|Do you need these? No? Oh well!|12
 umbrella2|For those rainy days!|12
 briefcase|Now you can, uh.. hold stuff.|1000000
-purse|I know you like it.|16
+purse|I know you like it.|1000000
 baby|Oh, I guess you're a parent now.|100
 santa|Merry Christmas! You get five more gifts!|-
 cat|Meow|40
