@@ -41,7 +41,7 @@ namespace ForkBot
             }
             else if (r < 75)
             {
-                msg = "You've been holding this in for a while.. Poop gets everywhere and is a pain to clean up.\n**Hygiene-10**";
+                msg = "You've been holding this in for a while.. Poop gets everywhere and is a pain to clean up.\n**Hygiene-50**";
                 user.AddData("stat.hygiene", -50);
             }
             else
