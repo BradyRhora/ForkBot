@@ -126,13 +126,21 @@ namespace ForkBot
             }
             else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
             {
-                user.RemoveItem(Var.present);
-                await message.Channel.SendMessageAsync("Okay! I'll be right back.");
-                await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{Var.rPresent}:");
-                await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
-                Var.presentWaiting = true;
-                Var.replacing = false;
-                Var.replaceable = false;
+                if (user.GetItemList().Contains(Var.present))
+                {
+                    user.RemoveItem(Var.present);
+                    await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $":{Var.rPresent}:");
+                    await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
+                    Var.presentWaiting = true;
+                    Var.replacing = false;
+                    Var.replaceable = false;
+                }
+                else
+                {
+                    await message.Channel.SendMessageAsync("You no longer have the present, so you cannot replace it!");
+                    Var.replacing = false;
+                    Var.replaceable = false;
+                }
             }
             
             //detects invites for unwanted servers (in yorku server) and deletes them
@@ -324,6 +332,7 @@ namespace ForkBot
                         }
                     }
                     await message.ModifyAsync(x => x.Embed = emb.Build());
+                    await message.RemoveAllReactionsAsync();
                 }
 
             }
