@@ -29,7 +29,7 @@ watch|And an expensive one too!|75
 iphone|The latest in mobile technology!|100
 joystick|For the classics!|20
 moneybag|The best but lamest gift!|-
-knife|Careful, it's sharp!|15
+knife|Careful, it's sharp!|100
 bomb|How did that get in there|50
 gun|Hahah hey whoa... watch it buddy..|1000
 telescope|Now you can see the universe! Or into your neighbours window.|12

@@ -42,7 +42,7 @@ namespace ForkBot
             else if (r < 75)
             {
                 msg = "You've been holding this in for a while.. Poop gets everywhere and is a pain to clean up.\n**Hygiene-10**";
-                user.AddData("stat.hygiene", -10);
+                user.AddData("stat.hygiene", -50);
             }
             else
             {
@@ -559,6 +559,14 @@ namespace ForkBot
 
             Var.replaceable = false;
         }
+        
+        [Command("watch")]
+        public async Task Watch()
+        {
+            if (Check(Context, "watch")) return;
+            await Context.Channel.SendMessageAsync(":watch: " + (DateTime.UtcNow-new TimeSpan(5,0,0)).TimeOfDay);
+        }
+
 
     }
 }

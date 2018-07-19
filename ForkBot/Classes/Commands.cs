@@ -274,7 +274,7 @@ namespace ForkBot
             }
         }
 
-        [Command("course"), Summary("Shows details for course from inputted course code. [OUT OF SERVICE]")]
+        [Command("course"), Summary("Shows details for course from inputted course code.")]
         public async Task Course([Remainder] string code)
         {
             try
@@ -363,7 +363,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.55\n-Big update on ;course. Added professor and schedule info.```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.6\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse```");
         }
 
         #endregion
