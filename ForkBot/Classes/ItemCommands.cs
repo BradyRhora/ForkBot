@@ -564,7 +564,7 @@ namespace ForkBot
         public async Task Watch()
         {
             if (Check(Context, "watch")) return;
-            await Context.Channel.SendMessageAsync(":watch: " + (DateTime.UtcNow-new TimeSpan(5,0,0)).TimeOfDay);
+            await Context.Channel.SendMessageAsync(":watch: `" + (DateTime.UtcNow-new TimeSpan(4,0,0)).ToLocalTime()+"`");
         }
 
 
