@@ -599,7 +599,7 @@ namespace ForkBot
                 {
                     string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
                     u2.RemoveItem(item);
-                    await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burnt your {item} from you!");
+                    await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burnt your {item}!");
                 }
             }
         }
