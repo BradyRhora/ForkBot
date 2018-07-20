@@ -279,9 +279,10 @@ namespace ForkBot
         {
             try
             {
-                if (code.Count() == 8 && int.TryParse(code.Substring(4), out int output))
+                if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
                 {
-                    code = code.Substring(0, 4) + " " + code.Substring(4);
+                    var splits = Regex.Split(code, "(\\d+|\\D+)").Where(x=>x!="").ToArray();
+                    code = splits[0].Trim() + " " + splits[1].Trim();
                 }
 
                 HtmlWeb web = new HtmlWeb();
@@ -303,14 +304,14 @@ namespace ForkBot
 
                 if (link == "") throw new Exception("Unable to find course.");
                 var pageDoc = web.Load(link).DocumentNode;
-                
+
                 desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
                 title = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
                 desc = desc.Replace("&quot;", "\"");
                 var scheduleNode = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/p[7]/a[1]");
                 var scheduleLink = "https://w2prod.sis.yorku.ca" + scheduleNode.Attributes[0].Value;
 
-            
+
                 JEmbed emb = new JEmbed();
                 emb.Title = title;
                 emb.Description = desc + "\n\n";
@@ -326,8 +327,8 @@ namespace ForkBot
                         var sessionDir = child.SelectSingleNode($"td/table/tr[2]").InnerText.Replace("Please click here to see availability.", "").Replace("&nbsp;", "").Trim();
                         var schedule = child.SelectSingleNode($"td/table/tr[3]/td/table/tr[2]");
                         var type = schedule.ChildNodes[0].InnerText;
-                        var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ","|").Replace(" ","").Split('|');
-                        
+                        var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ", "|").Replace(" ", "").Split('|');
+
                         emb.Description += $"\n{termSec} - {sessionDir}";
 
                         for (int i = 0; i < timedayInfo.Count(); i++)
@@ -347,7 +348,7 @@ namespace ForkBot
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             catch (Exception) { await Context.Channel.SendMessageAsync("There was an error loading the course page. (Possibly not available this term)"); }
-            
+
         }
 
         [Command("suggest"), Summary("Suggest something for ForkBot, whether it's an item, an item's function, a new command, or anything else! People who abuse this will be blocked from using it.")]
@@ -363,7 +364,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.6\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.61\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code```");
         }
 
         #endregion
@@ -527,13 +528,13 @@ namespace ForkBot
                     if (price < 0) price *= -1;
                     emb.Fields.Add(new JEmbedField(x =>
                     {
-                        x.Header = $"{emote} {name.Replace("_"," ")} - {price} coins";
+                        x.Header = $"{emote} {name.Replace("_", " ")} - {price} coins";
                         x.Text = desc;
                     }));
                 }
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            else if (itemNames.Contains(command.ToLower().Replace(" ","_")))
+            else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
             {
                 foreach (string item in Var.currentShop.Items())
                 {
@@ -562,7 +563,7 @@ namespace ForkBot
         public async Task FreeMarket(params string[] command)
         {
             throw new NotImplementedException("Not ready for public.");
-            
+
 
             if (command.Count() == 0) await ReplyAsync("Use one of the following commands!\n```\n;fm view\n;fm sell [item] [price]\n;fm buy [item_id]\n```");
             else if (command[0] == "view")
@@ -685,7 +686,7 @@ namespace ForkBot
                 }
             }
         }
-        
+
         #endregion
 
         /* temp disable
@@ -1150,7 +1151,7 @@ namespace ForkBot
                 }
                 x.Text = Convert.ToString(text);
             }));
-            
+
             await Context.Channel.SendMessageAsync("", embed: emb.Build());
         }
 
@@ -1242,17 +1243,24 @@ namespace ForkBot
             else msg += ":\n";
             int amount = 5;
             if (top5.Count() < 5) amount = top5.Count();
-            for(int i = 0; i < amount; i++)
+            for (int i = 0; i < amount; i++)
             {
                 var user = Bot.client.GetUser(top5[i].Key);
                 string userName;
                 if (user == null) userName = $"User[{top5[i].Key}]";
                 else userName = user.Username;
-                msg += $"[{i+1}] {userName} - {top5[i].Value} {stat}\n";
+                msg += $"[{i + 1}] {userName} - {top5[i].Value} {stat}\n";
             }
             msg += "```";
             await Context.Channel.SendMessageAsync(msg);
         }
+
+        [Command("forkopoly"), Summary("[FUN] Play a game of Forkopoly™ with your best pals!"), Alias(new string[]{"fp"})]
+        public async Task Forkopoly(string command)
+        {
+            
+        }
+
         #endregion
 
         #region P10
