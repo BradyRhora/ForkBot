@@ -341,6 +341,7 @@ namespace ForkBot
                 msg = ":cooking: Yum! " + eggType + " eggs!\n**Fullness+20**";
                 Functions.GetUser(Context.User).AddData("stat.fullness", 20);
             }
+            await ReplyAsync(msg);
         }
 
         [Command("ramen")]
