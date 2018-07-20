@@ -364,7 +364,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.61\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.62\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code\n-added ;mag```");
         }
 
         #endregion

@@ -428,8 +428,11 @@ namespace ForkBot
             Var.currentShop = new Shop();
             await Context.Channel.SendMessageAsync(":shopping_cart: The items for sale in `;shop` have changed!");
         }
+
+        [Command("knife"), Alias("stab")]
+        public async Task Knife() { if (Check(Context, "knife", false)) return; await Context.Channel.SendMessageAsync("Choose someone to rob with `;knife [user]`..."); }
         
-        [Command("knife")]
+        [Command("knife"), Alias("stab")]
         public async Task Knife(IUser user)
         {
             if (Check(Context, "knife")) return;
@@ -567,6 +570,39 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":watch: `" + (DateTime.UtcNow-new TimeSpan(4,0,0)).ToLocalTime()+"`");
         }
 
+        [Command("mag"), Alias("burn")]
+        public async Task Mag() { if (Check(Context, "gun", false)) return; await Context.Channel.SendMessageAsync("Choose someone to burn with `;mag [user]`..."); }
+
+        [Command("mag"), Alias("burn")]
+        public async Task Mag(IUser user)
+        {
+            if (Check(Context, "mag")) return;
+            var u1 = Functions.GetUser(Context.User);
+            var u2 = Functions.GetUser(user);
+
+            if (rdm.Next(100) > 80)
+            {
+                int amount;
+                do amount = rdm.Next(500);
+                while (amount > Convert.ToInt32(u2.GetData("coins")));
+                u2.GiveCoins(-amount);
+                await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burned {amount} of your coins!");
+            }
+            else
+            {
+                var items = u2.GetItemList();
+                if (items.Count() == 0)
+                {
+                    await Context.Channel.SendMessageAsync($"You try to burn one of {user.Username}'s items... but they have nothing!");
+                }
+                else
+                {
+                    string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
+                    u2.RemoveItem(item);
+                    await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burnt your {item} from you!");
+                }
+            }
+        }
 
     }
 }
