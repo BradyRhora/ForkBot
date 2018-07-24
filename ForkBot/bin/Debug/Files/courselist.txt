@@ -1,3 +1,5 @@
+AP/CCY 1999 6.00	Introduction to Children, Childhood & Youth Studies
+
 SB/ACTG 2010 3.00	Introduction To Financial Accounting I	 
 SB/ACTG 2011 3.00	Introduction To Financial Actg II	 
 SB/ACTG 2020 3.00	Management Accounting Concepts	 
@@ -1132,6 +1134,7 @@ GS/EDUC 5915 3.00	Practium Seminar
 
 LE/EECS 1001 1.00	Research Directions in Computing	 
 LE/EECS 1011 3.00	Computational Thinking through Mechatronics	 
+LE/EECS 1012 3.00	Net-centric Introduction to Computing
 LE/EECS 1019 3.00	Discrete Mathematics for Computer Science	 
 LE/EECS 1020 3.00	Introduction to Computer Science I	 
 LE/EECS 1021 3.00	Object Oriented Programming from Sensors to Actuators	 

@@ -344,6 +344,14 @@ namespace ForkBot
             await ReplyAsync(msg);
         }
 
+        [Command("egg")]
+        public async Task Egg(IUser user)
+        {
+            if (Check(Context, "egg")) return;
+            await Context.Channel.SendMessageAsync($":egg: You throw your egg at {user.Username}!\n**Their Happiness-10**");
+            Functions.GetUser(user).AddData("stat.happiness", -10);
+        }
+        
         [Command("ramen")]
         public async Task Ramen()
         {
@@ -603,6 +611,15 @@ namespace ForkBot
                     await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burnt your {item}!");
                 }
             }
+        }
+
+        [Command("bomb")]
+        public async Task Bomb()
+        {
+            if (Check(Context, "bomb")) return;
+            await Context.Message.DeleteAsync();
+            await Context.User.SendMessageAsync("You have successfully rigged the next present! Make sure you're not the one to open it!");
+            Var.presentRigged = true;
         }
 
     }

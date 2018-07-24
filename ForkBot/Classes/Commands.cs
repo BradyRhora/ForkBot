@@ -364,7 +364,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.62\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code\n-added ;mag```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.63\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code\n-added ;mag\nadded ;bomb and present rigging```");
         }
 
         #endregion
@@ -1179,10 +1179,28 @@ namespace ForkBot
                     Var.presentCount--;
                     Var.presentClaims.Add(Context.User as IGuildUser);
                     Var.presentNum = rdm.Next(10);
-                    await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
-                    Var.presentWaiting = true;
-                    Var.replacing = false;
-                    Var.replaceable = true;
+                    if (!Var.presentRigged)
+                    {
+                        await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
+                        Var.presentWaiting = true;
+                        Var.replacing = false;
+                        Var.replaceable = true;
+                    }
+                    else
+                    {
+                        Var.presentRigged = false;
+                        User user = Functions.GetUser(Context.User);
+                        int lossCount = rdm.Next(5) + 1;
+                        if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
+                        string msg = "Oh no! The present was rigged and you lost:\n```";
+                        for (int i = 0; i < lossCount; i++)
+                        {
+                            string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                            user.RemoveItem(item);
+                            msg += item + "\n";
+                        }
+                        await ReplyAsync(msg + "```");
+                    }
 
 
                 }

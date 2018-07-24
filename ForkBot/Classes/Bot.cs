@@ -41,7 +41,7 @@ namespace ForkBot
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                
+                await client.SetGameAsync("On Strike", streamType: StreamType.Twitch);
 
                 await Task.Delay(-1);
             }
@@ -80,7 +80,7 @@ namespace ForkBot
 
         public async Task HandleCommand(SocketMessage messageParam)
         {
-            var message = messageParam as SocketUserMessage;
+            SocketUserMessage message = messageParam as SocketUserMessage;
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             int argPos = 0;
