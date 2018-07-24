@@ -620,6 +620,7 @@ namespace ForkBot
             await Context.Message.DeleteAsync();
             await Context.User.SendMessageAsync("You have successfully rigged the next present! Make sure you're not the one to open it!");
             Var.presentRigged = true;
+            Var.presentRigger = Context.User;
         }
 
     }

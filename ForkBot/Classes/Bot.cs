@@ -201,7 +201,7 @@ namespace ForkBot
         {
             var msg = cache.Value;
             
-            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging)
+            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging && msg.Content != ";bomb")
             {
                 JEmbed emb = new JEmbed();
                 emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;

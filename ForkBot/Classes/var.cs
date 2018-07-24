@@ -37,6 +37,7 @@ namespace ForkBot
         public static int presentCount;
         public static List<IGuildUser> presentClaims = new List<IGuildUser>();
         public static bool presentRigged = false;
+        public static IUser presentRigger;
         #endregion
 
         public static List<ItemTrade> trades = new List<ItemTrade>();
