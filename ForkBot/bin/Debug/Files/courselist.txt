@@ -1,4 +1,4 @@
-AP/CCY 1999 6.00	Introduction to Children, Childhood & Youth Studies
+﻿AP/CCY 1999 6.00	Introduction to Children, Childhood & Youth Studies
 
 SB/ACTG 2010 3.00	Introduction To Financial Accounting I	 
 SB/ACTG 2011 3.00	Introduction To Financial Actg II	 
@@ -6348,3 +6348,4 @@ FA/YSDN 4900 3.00	Independent Studies: Design Practicum
 FA/YSDN 4900 6.00	Independent Studies: Design Practicum	 
 FA/YSDN 4901 3.00	Independent Studies: Design Studies	 
 FA/YSDN 4901 6.00	Independent Studies: Design Studies
+LE/EECS 4404 3.00	Introduction to Machine Learning and Pattern Recognition
