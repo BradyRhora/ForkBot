@@ -22,7 +22,7 @@ namespace ForkBot
     public class Commands : ModuleBase
     {
         Random rdm = new Random();
-
+        readonly Exception NotBradyException = new Exception("This command can only be used by Brady.");
         #region Useful
 
         [Command("help"), Summary("Displays commands and descriptions.")]
@@ -364,7 +364,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.64\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code\n-added ;mag\nadded ;bomb and present rigging```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.65\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code\n-added ;mag\nadded ;bomb and present rigging```");
         }
 
         #endregion
@@ -1522,11 +1522,25 @@ namespace ForkBot
         [Command("sblock"), Summary("[BRADY] Blocks specified [user] from giving suggestions.")]
         public async Task SuggestionBlock(IUser user)
         {
+            if (Context.User.Id != Constants.Users.BRADY) throw NotBradyException;
             Properties.Settings.Default.sBlocked.Add(Convert.ToString(user.Id));
             Properties.Settings.Default.Save();
             await Context.Channel.SendMessageAsync("Blocked");
         }
         
+        [Command("addcourse"), Summary("[BRADY] Adds the specified course to the course list.")]
+        public async Task AddCourse([Remainder]string course = "")
+        {
+            if (Context.User.Id != Constants.Users.BRADY) throw NotBradyException;
+            if (course != "")
+            {
+                File.AppendAllText("Files/courselist.txt", "\n" + course);
+                await ReplyAsync("Successfully added course.");
+            }
+            else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
+        }
+
+
         #endregion
 
     }

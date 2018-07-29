@@ -6348,4 +6348,6 @@ FA/YSDN 4900 3.00	Independent Studies: Design Practicum
 FA/YSDN 4900 6.00	Independent Studies: Design Practicum	 
 FA/YSDN 4901 3.00	Independent Studies: Design Studies	 
 FA/YSDN 4901 6.00	Independent Studies: Design Studies
+
+#addcourse Added Courses
 LE/EECS 4404 3.00	Introduction to Machine Learning and Pattern Recognition
