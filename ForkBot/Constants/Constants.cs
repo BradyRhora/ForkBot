@@ -66,10 +66,10 @@ namespace ForkBot
         public class Emotes
         {
 
-            public static Emoji hammer = new Emoji("🔨");
-            public static Emoji die = new Emoji("🎲");
-            public static Emoji question = new Emoji("❓");
-            public static Emote chad = Emote.Parse("<:CHAD:436784932820353024>");
+            public static Emoji HAMMER = new Emoji("🔨");
+            public static Emoji DIE = new Emoji("🎲");
+            public static Emoji QUESTION = new Emoji("❓");
+            public static Emote CHAD = Emote.Parse("<:CHAD:436784932820353024>");
             public static Emote BRADY = Emote.Parse("<:brady:465359176575614980>");
             
 

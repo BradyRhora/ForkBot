@@ -71,7 +71,7 @@ namespace ForkBot
             {
                 emb.Fields.Add(new JEmbedField(x =>
                 {
-                    x.Text = "<:Bradyf:342410957026230272>";
+                    x.Text = "<:brady:465359176575614980>";
                     x.Header = "BRADY COMMANDS";
                     x.Inline = true;
                 }));
@@ -80,10 +80,10 @@ namespace ForkBot
 
             var msg = await Context.Channel.SendMessageAsync("", embed: emb.Build());
 
-            await msg.AddReactionAsync(Constants.Emotes.hammer);
-            await msg.AddReactionAsync(Constants.Emotes.die);
-            await msg.AddReactionAsync(Constants.Emotes.question);
-            if (Context.Guild.Id == Constants.Guilds.P10_ENTERPRISES) await msg.AddReactionAsync(Constants.Emotes.chad);
+            await msg.AddReactionAsync(Constants.Emotes.HAMMER);
+            await msg.AddReactionAsync(Constants.Emotes.DIE);
+            await msg.AddReactionAsync(Constants.Emotes.QUESTION);
+            if (Context.Guild.Id == Constants.Guilds.P10_ENTERPRISES) await msg.AddReactionAsync(Constants.Emotes.CHAD);
             if (Context.User.Id == Constants.Users.BRADY) await msg.AddReactionAsync(Constants.Emotes.BRADY);
             Var.awaitingHelp.Add(msg);
         }
