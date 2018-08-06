@@ -86,13 +86,12 @@ namespace ForkBot
             int argPos = 0;
 
             //checks if message contains any blocked words
-            // temp disable to test
-            /*if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
             {
                 await message.DeleteAsync();
                 return;
             }
-            */ 
+             
             if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
             
             var user = Functions.GetUser(message.Author); //present stuff
@@ -241,7 +240,7 @@ namespace ForkBot
         public async Task HandleEdit(Cacheable<IMessage, ulong> cache, SocketMessage msg, ISocketMessageChannel channel)
         {
             if (msg.Content == cache.Value.Content) return;
-            if (Functions.Filter(msg.Content))
+            if ((msg.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(msg.Content))
             {
                 await msg.DeleteAsync();
                 return;

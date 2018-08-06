@@ -1432,9 +1432,8 @@ namespace ForkBot
         [Command("blockword"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Adds the inputted word to the word filter.")]
         public async Task BlockWord([Remainder] string word)
         {
-            if (!File.Exists("Constants/blockedWords")) File.Create("Constants/blockedWords");
-            File.AppendAllText("Constants/blockedWords", "\n" + word);
-
+            Properties.Settings.Default.blockedWords += word + "|";
+            Properties.Settings.Default.Save();
             await ReplyAsync("", embed: new InfoEmbed("Word Blocked", "Word successfully added to filter.").Build());
             await Context.Message.DeleteAsync();
         }

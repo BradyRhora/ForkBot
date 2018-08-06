@@ -47,5 +47,17 @@ namespace ForkBot.Properties {
                 this["sBlocked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string blockedWords {
+            get {
+                return ((string)(this["blockedWords"]));
+            }
+            set {
+                this["blockedWords"] = value;
+            }
+        }
     }
 }

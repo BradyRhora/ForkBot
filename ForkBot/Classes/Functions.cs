@@ -238,10 +238,11 @@ namespace ForkBot
 
         public static bool Filter(string msg)
         {
-            string[] blockedWords = File.ReadAllLines("Constants/blockedWords");
+            string[] blockedWords = Properties.Settings.Default.blockedWords.Split('|');
             foreach(string word in blockedWords)
             {
-                if (msg.ToLower().Contains(word)) return true;
+                if (word != "")
+                    if (msg.ToLower().Contains(word)) return true;
             }
             return false;
         }
