@@ -364,7 +364,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.65\n-Fixed present replacing bug\n-added ;watch command\n-adjusted knife price\n-made poops worse\n-Fixed ;course for courses with less than four letters in code\n-added ;mag\nadded ;bomb and present rigging```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.7\nAdded word filter and ;blockword command for mods```");
         }
 
         #endregion
@@ -688,12 +688,12 @@ namespace ForkBot
         }
 
         #endregion
-
-        /* temp disable
-        //for viewing a tag
+        
+        //viewing tag
         [Command("tag"), Summary("Make or view a tag!")]
         public async Task Tag(string tag)
         {
+            if (Context.Guild.Id == Constants.Guilds.YORK_UNIVERSITY) return;
             if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
             string[] tags = File.ReadAllLines("Files/tags.txt");
             bool sent = false;
@@ -723,6 +723,7 @@ namespace ForkBot
         [Command("tag")]
         public async Task Tag(string tag, [Remainder]string content)
         {
+            if (Context.Guild.Id == Constants.Guilds.YORK_UNIVERSITY) return;
             if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
             bool exists = false;
             if (tag == "list") exists = true;
@@ -751,8 +752,7 @@ namespace ForkBot
                 else await Context.Channel.SendMessageAsync("Tag already exists!");
             }
         }
-        */
-
+        
         #region Fun
 
         [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
@@ -1428,6 +1428,17 @@ namespace ForkBot
             else Var.blockedUsers.Add(u);
             
         }
+        
+        [Command("blockword"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Adds the inputted word to the word filter.")]
+        public async Task BlockWord([Remainder] string word)
+        {
+            if (!File.Exists("Constants/blockedWords")) File.Create("Constants/blockedWords");
+            File.AppendAllText("Constants/blockedWords", "\n" + word);
+
+            await ReplyAsync("", embed: new InfoEmbed("Word Blocked", "Word successfully added to filter.").Build());
+            await Context.Message.DeleteAsync();
+        }
+
         #endregion
 
         #region Brady Commands

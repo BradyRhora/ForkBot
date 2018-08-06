@@ -237,6 +237,11 @@ namespace ForkBot
         public async Task HandleEdit(Cacheable<IMessage, ulong> cache, SocketMessage msg, ISocketMessageChannel channel)
         {
             if (msg.Content == cache.Value.Content) return;
+            if (Functions.Filter(msg.Content))
+            {
+                await msg.DeleteAsync();
+                return;
+            }
 
             if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging)
             {
