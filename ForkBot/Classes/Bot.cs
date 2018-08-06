@@ -84,11 +84,15 @@ namespace ForkBot
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             int argPos = 0;
-            if (Functions.Filter(message.Content))
+
+            //checks if message contains any blocked words
+            // temp disable to test
+            /*if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
             {
                 await message.DeleteAsync();
                 return;
             }
+            */ 
             if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
             
             var user = Functions.GetUser(message.Author); //present stuff
