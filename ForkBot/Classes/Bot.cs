@@ -28,7 +28,7 @@ namespace ForkBot
             Start:
             try
             {
-                DiscordSocketConfig config = new DiscordSocketConfig() { MessageCacheSize = 500 };
+                DiscordSocketConfig config = new DiscordSocketConfig() { MessageCacheSize = 1000 };
                 Console.WriteLine("Welcome. Initializing ForkBot...");
                 client = new DiscordSocketClient(config);
                 Console.WriteLine("Client Initialized.");
@@ -41,7 +41,7 @@ namespace ForkBot
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                await client.SetGameAsync("On Strike", streamType: StreamType.Twitch);
+                await client.SetGameAsync("Off Strike?", streamType: StreamType.Twitch);
 
                 await Task.Delay(-1);
             }
@@ -84,7 +84,11 @@ namespace ForkBot
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             int argPos = 0;
-
+            if (Functions.Filter(message.Content))
+            {
+                await message.DeleteAsync();
+                return;
+            }
             if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
             
             var user = Functions.GetUser(message.Author); //present stuff

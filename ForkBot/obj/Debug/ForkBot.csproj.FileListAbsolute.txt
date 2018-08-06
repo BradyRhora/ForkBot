@@ -156,3 +156,7 @@ C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.Properties.Resourc
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.GenerateResource.cache
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
+C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\libtensorflow.dll
+C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.dll
+C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.ValueTuple.xml
+C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.xml

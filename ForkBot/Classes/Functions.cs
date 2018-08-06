@@ -235,6 +235,16 @@ namespace ForkBot
             }
             return true;
         }
+
+        public static bool Filter(string msg)
+        {
+            string[] blockedWords = File.ReadAllLines("Constants/blockedWords");
+            foreach(string word in blockedWords)
+            {
+                if (msg.ToLower().Contains(word)) return true;
+            }
+            return false;
+        }
     }
     
 
