@@ -301,7 +301,6 @@ namespace ForkBot
                         if (react.Emote.Name == Constants.Emotes.HAMMER.Name) tag = "[MOD]";
                         else if (react.Emote.Name == Constants.Emotes.DIE.Name) tag = "[FUN]";
                         else if (react.Emote.Name == Constants.Emotes.QUESTION.Name) tag = "[OTHER]";
-                        else if (react.Emote.Name == Constants.Emotes.CHAD.Name) tag = "[P10]";
                         else if (react.Emote.Name == Constants.Emotes.BRADY.Name) tag = "[BRADY]";
                         message = msg as Discord.Rest.RestUserMessage;
                         Var.awaitingHelp.Remove(msg);

@@ -90,7 +90,7 @@ namespace ForkBot
             anim = Animation;
             varEmote = var;
             frameCount = 1;
-            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", varEmote));
+            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", GetItemEmote(varEmote)));
             animTimer = new Timer(new TimerCallback(AnimateTimerCallback), null, 1000, 1000);
         }
 
@@ -205,14 +205,22 @@ namespace ForkBot
                 }
                 catch (Exception) {  }
             Dictionary<ulong, string[]> stats = new Dictionary<ulong, string[]>();
-            foreach (User u in users) stats.Add(u.ID, u.GetStats());
-            for (int i = stats.Count() - 1; i >= 0; i--) if (stats.ElementAt(i).Value.Count() <= 0) stats.Remove(stats.ElementAt(i).Key);
             Dictionary<ulong, int> totalStats = new Dictionary<ulong, int>();
-            foreach (var d in stats)
+
+            if (stat != "coins")
             {
-                int totalStat = 0;
-                foreach (var s in d.Value) if (s.Split(':')[0].Contains(stat)) totalStat += Convert.ToInt32(s.Split(':')[1]);
-                totalStats.Add(d.Key, totalStat);
+                foreach (User u in users) stats.Add(u.ID, u.GetStats());
+                for (int i = stats.Count() - 1; i >= 0; i--) if (stats.ElementAt(i).Value.Count() <= 0) stats.Remove(stats.ElementAt(i).Key);
+                foreach (var d in stats)
+                {
+                    int totalStat = 0;
+                    foreach (var s in d.Value) if (s.Split(':')[0].Contains(stat)) totalStat += Convert.ToInt32(s.Split(':')[1]);
+                    totalStats.Add(d.Key, totalStat);
+                }
+            }
+            else
+            {
+                foreach (User u in users) totalStats.Add(u.ID, Convert.ToInt32(u.GetData("coins")));
             }
 
             var list = totalStats.ToList();
@@ -246,8 +254,50 @@ namespace ForkBot
             }
             return false;
         }
+        
+        //splits a message into multiple message when its too long (over 2000 chars)
+        public static string[] SplitMessage(string msg)
+        {
+            List<string> msgs = new List<string>();
+            int start = 0;
+            for(; msg.Length !=start; )
+            {
+                //find good spot to split
+                int splitIndex = -1;
+                if (msg.Length - start < 2000)
+                {
+                    splitIndex = msg.Length - 1;
+                }
+                else
+                {
+                    for (int j = start + 1900; j < start + 1999; j++)
+                    {
+                        if (msg[j] == '\n')
+                        {
+                            splitIndex = j;
+                            break;
+                        }
+                    }
+                    if (splitIndex == -1)
+                        for (int j = start + 1900; j < start + 1999; j++)
+                        {
+                            if (msg[j] == ' ')
+                            {
+                                splitIndex = j;
+                                break;
+                            }
+                        }
+                    if (splitIndex == -1) splitIndex = start + 1999;
+                }
+                int end = splitIndex - start;
+                msgs.Add(msg.Substring(start, end));
+                start = splitIndex + 1;
+            }
+            return msgs.ToArray();
+            
+        }
     }
-    
+
 
     static class Func
     {

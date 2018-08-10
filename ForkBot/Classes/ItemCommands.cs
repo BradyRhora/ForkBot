@@ -50,7 +50,7 @@ namespace ForkBot
                 user.AddData("stat.hygiene", 40);
                 user.AddData("stat.happiness", 20);
             }
-            await Context.Channel.SendMessageAsync(":poop: | " + msg);
+            await Context.Channel.SendMessageAsync(":poop: " + msg);
         }
 
         [Command("shirt")]

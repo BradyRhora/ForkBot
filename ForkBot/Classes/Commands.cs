@@ -16,7 +16,6 @@ using ImageProcessor;
 using ImageProcessor.Imaging;
 using System.Text.RegularExpressions;
 using System.Xml;
-
 namespace ForkBot
 {
     public class Commands : ModuleBase
@@ -56,17 +55,7 @@ namespace ForkBot
                 x.Header = "OTHER COMMANDS";
                 x.Inline = true;
             }));
-
-            if (Context.Guild.Id == Constants.Guilds.P10_ENTERPRISES)
-            {
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Text = "<:CHAD:436784932820353024>";
-                    x.Header = "ENTERPRISE COMMANDS";
-                    x.Inline = true;
-                }));
-            }
-
+            
             if (Context.User.Id == Constants.Users.BRADY)
             {
                 emb.Fields.Add(new JEmbedField(x =>
@@ -83,7 +72,6 @@ namespace ForkBot
             await msg.AddReactionAsync(Constants.Emotes.HAMMER);
             await msg.AddReactionAsync(Constants.Emotes.DIE);
             await msg.AddReactionAsync(Constants.Emotes.QUESTION);
-            if (Context.Guild.Id == Constants.Guilds.P10_ENTERPRISES) await msg.AddReactionAsync(Constants.Emotes.CHAD);
             if (Context.User.Id == Constants.Users.BRADY) await msg.AddReactionAsync(Constants.Emotes.BRADY);
             Var.awaitingHelp.Add(msg);
         }
@@ -364,7 +352,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.7\nAdded word filter and ;blockword command for mods```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.75\nAdded word filter and ;blockword command for mods\n-fixed tag stuff and other bugs\n-added map?\n-deleted p10 enterprise stuff```");
         }
 
         #endregion
@@ -697,11 +685,9 @@ namespace ForkBot
             if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
             string[] tags = File.ReadAllLines("Files/tags.txt");
             bool sent = false;
-            string msg = "```";
-
+            string msg = "";
             foreach (string line in tags)
             {
-
                 if (tag == "list")
                 {
                     msg += "\n" + line.Split('|')[0];
@@ -713,8 +699,15 @@ namespace ForkBot
                     break;
                 }
             }
-            msg += "\n```";
-            if (tag == "list") await Context.Channel.SendMessageAsync(msg);
+
+            if (tag == "list")
+            {
+                var msgs = Functions.SplitMessage(msg);
+                foreach(string message in msgs)
+                {
+                    await ReplyAsync($"```\n{message}\n```");
+                }
+            }
             else if (!sent) await Context.Channel.SendMessageAsync("Tag not found!");
 
         }
@@ -1281,70 +1274,6 @@ namespace ForkBot
 
         #endregion
 
-        #region P10
-
-        [Command("apply"), Summary("[P10] Apply for a job. To see current open positions simply type `;apply`")]
-        public async Task Apply(string choice = "")
-        {
-            throw new NotImplementedException("This feature has not yet been implemented.");
-        }
-
-        [Command("manage"), Summary("[P10] Used to manage position details, such as their title and pay rate."),RequireUserPermission(GuildPermission.Administrator)]
-        public async Task Manage(params string[] parameters)
-        {
-            if (parameters.Count() == 0)
-                await Context.Channel.SendMessageAsync("Use one of the following parameters:\n```\n" +
-                                                       ";manage list (Lists all jobs)\n" + 
-                                                       ";manage addposition [Title] [Payrate (Coins weekly)] (Adds a new position, E.G. ;manage addposition CEO 10000000\n" +
-                                                       ";manage changename [OldTitle] [NewTitle] (Changes the name of an already added position\n" +
-                                                       ";manage changepay [JobTitle] [NewPay] (Changed the payrate of an already added position\n" +
-                                                       ";manage applications (Lists all current job applications)\n```");
-            else if (parameters[0] == "list")
-            {
-                var jobs = Functions.GetJobList();
-                string listMSG = "```";
-                foreach(string job in jobs)
-                {
-                    string jobTitle = job.Split('|')[0];
-                    string jobPay = job.Split('|')[1];
-                    listMSG += jobTitle + ": " + jobPay + " coins weekly\n";
-                }
-                listMSG += "```";
-                await Context.Channel.SendMessageAsync(listMSG);
-            }
-            else if (parameters[0] == "addposition")
-            {
-                File.AppendAllText("Files/jobs.txt", "\n" + parameters[1] + "|" + parameters[2]);
-                await Context.Channel.SendMessageAsync("Successfully added new job: " + parameters[1] + ".");
-            }
-            else if (parameters[0] == "changename")
-            {
-                File.WriteAllText("Files/jobs.txt", File.ReadAllText("Files/jobs.txt").Replace(parameters[1],parameters[2]));
-                await Context.Channel.SendMessageAsync($"Changed titles with \"{parameters[1]}\" to: " + parameters[2] + ".");
-            }
-            else if (parameters[0] == "changepay")
-            {
-                var jobs = Functions.GetJobList();
-                for(int i = 0; i < jobs.Count(); i++)
-                {
-                    if (jobs[i].StartsWith(parameters[1]))
-                    {
-                        jobs[i] = Regex.Replace(jobs[i], "(\\|\\w+)", "|" + parameters[2]);
-                        File.WriteAllLines("Files/jobs.txt", jobs);
-                        await Context.Channel.SendMessageAsync($"Successfully changed {parameters[1]}'s pay to {parameters[2]} coins weekly.");
-                        return;
-                    }
-                }
-                await Context.Channel.SendMessageAsync("Could not find that job title. Make sure it's created by checking `;manage list`");
-            }
-            else if (parameters[0] == "applications")
-            {
-                throw new NotImplementedException("This feature has not yet been implemented.");
-            }
-        }
-
-        #endregion
-
         #region Mod Commands
 
         [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
@@ -1544,12 +1473,29 @@ namespace ForkBot
             if (Context.User.Id != Constants.Users.BRADY) throw NotBradyException;
             if (course != "")
             {
+                course.Replace("\\t", "\t");
                 File.AppendAllText("Files/courselist.txt", "\n" + course);
                 await ReplyAsync("Successfully added course.");
             }
             else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
         }
 
+        [Command("map"), Summary("Return an image of a map of the inputted area.")]
+        public async Task Map([Remainder] string area)
+        {
+            string token = File.ReadAllText("Constants/sstoken");
+            string url = "https://www.google.ca/maps/search/" + area + "?hl=en-GB";
+            string link = $"https://api.thumbnail.ws/api/{token}/thumbnail/get?url={url}&width=1000";
+            WebRequest web = WebRequest.Create(link);
+            using (WebResponse response = await web.GetResponseAsync())
+            {
+                await Context.Channel.SendFileAsync(response.GetResponseStream(), "map.jpg");
+            }
+        }
+
+
+
+        
 
         #endregion
 

@@ -160,3 +160,6 @@ C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\libtensorflow.dll
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.dll
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.ValueTuple.xml
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.xml
+C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.dll
+C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.pdb
+C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.xml
