@@ -1480,18 +1480,6 @@ namespace ForkBot
             else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
         }
 
-        [Command("map"), Summary("Return an image of a map of the inputted area.")]
-        public async Task Map([Remainder] string area)
-        {
-            string token = File.ReadAllText("Constants/sstoken");
-            string url = "https://www.google.ca/maps/search/" + area + "?hl=en-GB";
-            string link = $"https://api.thumbnail.ws/api/{token}/thumbnail/get?url={url}&width=1000";
-            WebRequest web = WebRequest.Create(link);
-            using (WebResponse response = await web.GetResponseAsync())
-            {
-                await Context.Channel.SendFileAsync(response.GetResponseStream(), "map.jpg");
-            }
-        }
 
 
 
