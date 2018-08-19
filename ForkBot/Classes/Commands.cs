@@ -1185,14 +1185,21 @@ namespace ForkBot
                         User user = Functions.GetUser(Context.User);
                         int lossCount = rdm.Next(5) + 1;
                         if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
-                        string msg = $":bomb: | Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
-                        for (int i = 0; i < lossCount; i++)
+                        if (lossCount == 0)
                         {
-                            string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
-                            user.RemoveItem(item);
-                            msg += item + "\n";
+                            await ReplyAsync($":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost... Nothing??\n:boom::boom::boom::boom:");
                         }
-                        await ReplyAsync(msg + "```\n:boom::boom::boom::boom:");
+                        else
+                        {
+                            string msg = $":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
+                            for (int i = 0; i < lossCount; i++)
+                            {
+                                string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                                user.RemoveItem(item);
+                                msg += item + "\n";
+                            }
+                            await ReplyAsync(msg + "```\n:boom::boom::boom::boom:");
+                        }
                     }
 
 
