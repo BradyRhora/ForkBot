@@ -112,7 +112,8 @@ namespace ForkBot
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
             int argPos = 0;
-            
+
+            if (message.Author.IsBot) return;
             if (Var.blockedUsers.Contains(message.Author)) return;
 
             var user = Functions.GetUser(message.Author);
@@ -176,7 +177,7 @@ namespace ForkBot
                 emb.Author.Name = "MESSAGE DELETED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
                 emb.Description = msg.Content;
-
+                
                 string attachURL = null;
                 if (msg.Attachments.Count>0) attachURL= msg.Attachments.FirstOrDefault().ProxyUrl;
                 if (attachURL != null) emb.ImageUrl = attachURL;

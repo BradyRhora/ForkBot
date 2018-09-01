@@ -9,3 +9,4 @@ limit draw amount
 fix image deletion
 remove unknown command error message
 forkbot stats
+remove `I` from common prof comments
