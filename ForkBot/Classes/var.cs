@@ -22,7 +22,24 @@ namespace ForkBot
         public static List<char> guessedChars = new List<char>();
         public static int hmErrors = 0;
         #endregion
-        
+
+        #region Present
+        public static string present;
+        public static bool presentWaiting = false;
+        public static int presentNum = 0;
+        public static bool replacing = false;
+        public static IUser presentReplacer = null;
+        public static string rPresent;
+        public static bool replaceable = true;
+        public static bool timerComplete = false;
+        public static DateTime presentTime = new DateTime(1, 1, 1);
+        public static TimeSpan presentWait = new TimeSpan(0,0,0);
+        public static int presentCount;
+        public static List<IGuildUser> presentClaims = new List<IGuildUser>();
+        public static bool presentRigged = false;
+        public static IUser presentRigger;
+        #endregion
+
         public static List<ItemTrade> trades = new List<ItemTrade>();
 
         public static List<IUser> blockedUsers = new List<IUser>();
@@ -31,9 +48,9 @@ namespace ForkBot
 
         public static Shop currentShop = null;
 
-        public static bool recieving = false;
-        public static IMessageChannel recievingChannel;
+        public static bool responding = true;
+        public static string Conversation = "0";
 
-
+        public static Poll currentPoll;
     }
 }

@@ -22,13 +22,13 @@ namespace ForkBot
         public static DiscordSocketClient client;
         public static CommandService commands;
         public static List<User> users = new List<User>();
-
+        
         public async Task Run()
         {
             Start:
             try
             {
-                DiscordSocketConfig config = new DiscordSocketConfig() { MessageCacheSize = 500 };
+                DiscordSocketConfig config = new DiscordSocketConfig() { MessageCacheSize = 1000 };
                 Console.WriteLine("Welcome. Initializing ForkBot...");
                 client = new DiscordSocketClient(config);
                 Console.WriteLine("Client Initialized.");
@@ -36,13 +36,13 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken"));
+                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
+                //await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
-                Functions.LoadUsers();
-                Timer banCheck = new Timer(new TimerCallback(TimerCall), null, 0, 1000);
-                Timer hourlyTimer = new Timer(new TimerCallback(Hourly), null, 0, 1000 * 60 * 60);
+                await client.SetGameAsync("Off Strike?", streamType: StreamType.Twitch);
+
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -66,37 +66,6 @@ namespace ForkBot
                 goto Again;
             }
         }
-
-        async void TimerCall(object state) //code that is run every second
-        {
-            for (int i = 0; i < Var.leaveBanned.Count(); i++)
-            {
-                Console.WriteLine("Attempting to unban..");
-                if (DateTime.Now > Var.unbanTime[i])
-                {
-                    try
-                    {
-                        var user = Var.leaveBanned[i];
-                        var g = user.Guild;
-                        await g.RemoveBanAsync(user);
-                        Console.WriteLine($"{user} has been unbanned.");
-                        Var.leaveBanned.Remove(user);
-                        Var.unbanTime.Remove(Var.unbanTime[i]);
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"Unable to unban user. {e.Message}.");
-                    }
-                }
-            }
-        }
-
-        void Hourly(object state) //code that is run every hour
-        {
-            Functions.SaveUsers();
-        }
-
         public async Task InstallCommands()
         {
             client.MessageReceived += HandleCommand;
@@ -104,37 +73,102 @@ namespace ForkBot
             client.UserLeft += HandleLeave;
             client.MessageDeleted += HandleDelete;
             client.ReactionAdded += HandleReact;
+            client.MessageUpdated += HandleEdit;
+            client.UserVoiceStateUpdated += HandleVoiceUpdate;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
         public async Task HandleCommand(SocketMessage messageParam)
         {
-            var message = messageParam as SocketUserMessage;
+            SocketUserMessage message = messageParam as SocketUserMessage;
             if (message == null) return;
+            if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             int argPos = 0;
 
-            if (message.Author.IsBot) return;
-            if (Var.blockedUsers.Contains(message.Author)) return;
-
-            var user = Functions.GetUser(message.Author);
-            
-            if (Var.recieving)
+            //checks if message contains any blocked words
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
             {
-                if (message.Channel == Var.recievingChannel)
+                await message.DeleteAsync();
+                return;
+            }
+             
+            if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
+
+            if (message.Author.IsBot) return;
+            
+            
+            var user = Functions.GetUser(message.Author); //present stuff
+            if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
+            {
+                Var.presentWaiting = false;
+                await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
+                var presents = Functions.GetItemList();
+                int presRDM = rdm.Next(presents.Count());
+                var presentData = presents[presRDM].Split('|');
+                Var.present = presentData[0];
+                Var.rPresent = Var.present;
+                var presentName = Var.present.Replace('_', ' ');
+                var pMessage = presentData[1];
+                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName)}! {Functions.GetItemEmote(presents[presRDM])} {pMessage}");
+                if (Var.present == "santa")
                 {
-                    var bBunch = client.GetGuild(371695008157532160).GetChannel(381656424247197697) as IMessageChannel;
-                    
-                    JEmbed emb = new JEmbed();
-                    emb.Title = message.Author.Username + "#" + message.Author.Discriminator;
-                    emb.Author.Name = "MESSAGE RECIEVED";
-                    emb.ThumbnailUrl = message.Author.GetAvatarUrl();
-                    emb.Description = message.Content;
+                    await message.Channel.SendMessageAsync("You got...");
+                    string sMessage = "";
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var sPresentData = presents[rdm.Next(presents.Count())];
+                        string sPresentName = sPresentData.Split('|')[0];
+                        user.GiveItem(sPresentName);
+                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
+                    }
+                    await message.Channel.SendMessageAsync(sMessage);
 
-                    string attachURL = null;
-                    if (message.Attachments.Count > 0) attachURL = message.Attachments.FirstOrDefault().ProxyUrl;
-                    if (attachURL != null) emb.ImageUrl = attachURL;
+                    Var.replaceable = false;
+                }
+                else user.GiveItem(Var.present);
 
-                    await bBunch.SendMessageAsync("", embed: emb.Build());
+                if (Var.replaceable)
+                {
+                    await message.Channel.SendMessageAsync($"Don't like this gift? Press {Var.presentNum} again to replace it once!");
+                    Var.replacing = true;
+                    Var.presentReplacer = message.Author;
+                }
+            }
+            else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
+            {
+                if (user.GetItemList().Contains(Var.present))
+                {
+                    user.RemoveItem(Var.present);
+                    await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $"{Var.rPresent}");
+                    await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
+                    Var.presentWaiting = true;
+                    Var.replacing = false;
+                    Var.replaceable = false;
+                }
+                else
+                {
+                    await message.Channel.SendMessageAsync("You no longer have the present, so you cannot replace it!");
+                    Var.replacing = false;
+                    Var.replaceable = false;
+                }
+            }
+            
+            //detects invites for unwanted servers (in yorku server) and deletes them
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && message.Content.ToLower().Contains("discord.gg") || message.Content.ToLower().Contains("discordapp.com/invite"))
+            {
+                var words = message.Content.Split(' ');
+                foreach(string word in words)
+                {
+                    if (word.Contains("discord"))
+                    {
+                        string id = word.Split('/')[word.Split('/').Count() - 1];
+                        IInvite inv = await client.GetInviteAsync(id);
+                        if (inv.GuildId == Constants.Guilds.FORKU)
+                        {
+                            await messageParam.DeleteAsync();
+                        }
+                        return;
+                    }
                 }
             }
 
@@ -150,8 +184,19 @@ namespace ForkBot
                         var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
                         await message.Channel.SendMessageAsync("", embed: emb);
                     }
+                    else
+                    {
+                        if (user.GetItemList().Contains(message.Content.Replace(";", "")))
+                        {
+                            await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
+                        }
+                    }
                 }
             }
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)
+                Functions.Respond(message);
+            else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
+                Functions.Respond(message);
             else return;
         }
         public async Task HandleJoin(SocketGuildUser user)
@@ -161,16 +206,12 @@ namespace ForkBot
         public async Task HandleLeave(SocketGuildUser user)
         {
             await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
-            Console.WriteLine($"{user.Username} has been banned for 15 mins due to leaving the server.");
-            Var.leaveBanned.Add(user);
-            Var.unbanTime.Add(DateTime.Now + new TimeSpan(0, 15, 0));
-            await user.Guild.AddBanAsync(user, reason: "Tempban for leaving server. Done automatically by ForkBot to prevent spam leave-joining. To be unbanned at: " + (DateTime.Now + new TimeSpan(0, 15, 0)).TimeOfDay);
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
             var msg = cache.Value;
             
-            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging)
+            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging && msg.Content != ";bomb")
             {
                 JEmbed emb = new JEmbed();
                 emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;
@@ -199,20 +240,73 @@ namespace ForkBot
                 await chan.SendMessageAsync("", embed: emb.Build());
             }
         }
+        public async Task HandleEdit(Cacheable<IMessage, ulong> cache, SocketMessage msg, ISocketMessageChannel channel)
+        {
+            if (msg.Content == cache.Value.Content) return;
+            if ((msg.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(msg.Content))
+            {
+                await msg.DeleteAsync();
+                return;
+            }
+
+            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging)
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;
+                emb.Author.Name = "MESSAGE EDITED";
+                emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
+                
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "ORIGINAL:";
+                    x.Text = cache.Value.Content;
+                    x.Inline = true;
+                }));
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "EDITED:";
+                    x.Text = msg.Content;
+                    x.Inline = true;
+                }));
+
+                string attachURL = null;
+                if (msg.Attachments.Count > 0) attachURL = msg.Attachments.FirstOrDefault().ProxyUrl;
+                if (attachURL != null) emb.ImageUrl = attachURL;
+
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Location";
+                    x.Text = msg.Channel + " in " + (msg.Channel as IGuildChannel).Guild;
+                    x.Inline = false;
+                }));
+
+                emb.ColorStripe = Constants.Colours.TWITTER_BLUE;
+                var datetime = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+                emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString() + " | " +
+                    msg.Author.Username + "#" + msg.Author.Discriminator + " ID: " + msg.Author.Id;
+
+
+                var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
+                await chan.SendMessageAsync("", embed: emb.Build());
+            }
+        }
         public async Task HandleReact(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction react)
         {
             if ((react.UserId != client.CurrentUser.Id))
             {
                 string tag = null;
+                Discord.Rest.RestUserMessage message = null;
                 foreach (IMessage msg in Var.awaitingHelp)
                 {
                     if (msg.Id == cache.Value.Id)
                     {
-                        if (react.Emote.Name == Constants.Emotes.hammer.Name) tag = "[MOD]";
-                        else if (react.Emote.Name == Constants.Emotes.die.Name) tag = "[FUN]";
-                        else if (react.Emote.Name == Constants.Emotes.question.Name) tag = "[OTHER]";
+                        if (react.Emote.Name == Constants.Emotes.HAMMER.Name) tag = "[MOD]";
+                        else if (react.Emote.Name == Constants.Emotes.DIE.Name) tag = "[FUN]";
+                        else if (react.Emote.Name == Constants.Emotes.QUESTION.Name) tag = "[OTHER]";
+                        else if (react.Emote.Name == Constants.Emotes.BRADY.Name) tag = "[BRADY]";
+                        message = msg as Discord.Rest.RestUserMessage;
                         Var.awaitingHelp.Remove(msg);
-                        await msg.DeleteAsync();
                         break;
                     }
                 }
@@ -251,9 +345,19 @@ namespace ForkBot
                             }));
                         }
                     }
-                    await channel.SendMessageAsync("", embed: emb.Build());
+                    await message.ModifyAsync(x => x.Embed = emb.Build());
+                    await message.RemoveAllReactionsAsync();
                 }
 
+            }
+        }
+        public async Task HandleVoiceUpdate(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState)
+        {
+            var gUser = user as IGuildUser;
+            if (gUser.GuildId == Constants.Guilds.YORK_UNIVERSITY)
+            {
+                if (newState.VoiceChannel != null) await gUser.AddRoleAsync(gUser.Guild.GetRole(Constants.Roles.TTS));
+                else await gUser.RemoveRoleAsync(gUser.Guild.GetRole(Constants.Roles.TTS));
             }
         }
     }

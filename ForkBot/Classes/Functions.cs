@@ -6,6 +6,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using System.Net;
+using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace ForkBot
 {
@@ -14,64 +19,40 @@ namespace ForkBot
         public static Color GetColor(IUser User)
         {
             var user = User as IGuildUser;
-            if (user == null)
+            if (user != null)
             {
                 if (user.RoleIds.ToArray().Count() > 1)
                 {
-                    var role = Bot.client.GetGuild(Constants.Guilds.YORK_UNIVERSITY).GetRole(user.RoleIds.ElementAtOrDefault(1));
+                    var role = user.Guild.GetRole(user.RoleIds.ElementAtOrDefault(1));
                     return role.Color;
                 }
                 else return Constants.Colours.DEFAULT_COLOUR;
             }
             else return Constants.Colours.DEFAULT_COLOUR;
         }
-
-        public static void SaveUsers()
-        {
-            string toWrite = "";
-            foreach (User u in Bot.users)
-            {
-                toWrite += $"{u.ID}|{u.Coins}";
-                foreach (string s in u.Items) toWrite += $"|{s}";
-                toWrite += "\n";
-            }
-            File.WriteAllText("Files/users.txt", toWrite);
-        }
-
-        public static void LoadUsers()
-        {
-            foreach (string data in File.ReadLines("Files/users.txt"))
-            {
-                Bot.users.Add(new User(data: data, load: true));
-            }
-        }
-
+        
         public static User GetUser(IUser user) //gets User class for IUser, makes one if there isn't already one.
         {
-            int attempts = 0;
-            while (attempts < 5)
-            {
-                foreach (User u in Bot.users) if (u.ID == user.Id) { SaveUsers(); return u; }
-                Bot.users.Add(new User(user.Id));
-                attempts++;
-            }
-            return null;
+            return GetUser(user.Id);
         }
-        public static IUser GetUser(User user)
-        { 
-            return Bot.client.GetUser(user.ID);
-        }
+
         public static User GetUser(ulong userID)
         {
-            return GetUser(Bot.client.GetUser(userID));
-        }
 
-        public static void GiveCoins(User u, int amount)
-        {
-            u.Coins += amount;
-            SaveUsers();
-        }
+            string userPath = @"Users\";
+            if (File.Exists(userPath + userID + ".user"))
+            {
+                return new User(userID);
+            }
+            else
+            {
+                string newUser = "coins:0\nitems{\n}";
+                File.WriteAllText(@"Users\" + userID + ".user", newUser);
+            }
 
+            return null;
+        }
+        
         public static string GetTID(string html)
         {
             var c = html.ToCharArray();
@@ -104,22 +85,22 @@ namespace ForkBot
         static string varEmote;
         static int frameCount;
         static Timer animTimer;
-        public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation Animation, string var)
+        public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation Animation, string emote)
         {
             anim = Animation;
-            varEmote = var;
+            varEmote = emote;
             frameCount = 1;
-            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", varEmote));
+            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", GetItemEmote(varEmote)));
             animTimer = new Timer(new TimerCallback(AnimateTimerCallback), null, 1000, 1000);
         }
 
         static async void AnimateTimerCallback(object state)
         {
-            await animation.ModifyAsync(x => x.Content = anim.frames[frameCount].Replace("%", varEmote));
+            await animation.ModifyAsync(x => x.Content = anim.frames[frameCount].Replace("%", GetItemEmote(varEmote)));
             frameCount++;
             if (frameCount >= anim.frames.Count())
             {
-                //Var.timerComplete = true;
+                Var.timerComplete = true;
                 animTimer.Dispose();
             }
         }
@@ -128,10 +109,24 @@ namespace ForkBot
         {
             return File.ReadAllLines("Files/items.txt");
         }
-
         public static string[] GetRareItemList()
         {
             return File.ReadAllLines("Files/rareitems.txt");
+        }
+        public static string GetItemEmote(string itemData)
+        {
+            var data = itemData.Split('|');
+            if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
+            return ":" + data[0] + ":";
+        }
+        public static string GetItemData(string item)
+        {
+            foreach(string data in GetItemList().Concat(GetRareItemList()))
+            {
+                if (data.StartsWith(item))
+                    return data;
+            }
+            return null;
         }
 
         public static ItemTrade GetTrade(IUser user)
@@ -145,9 +140,164 @@ namespace ForkBot
             }
             return null;
         }
+
+        public static string DateTimeToString(DateTime d)
+        {
+            return $"{d.Year}:{d.Month}:{d.Day}:{d.Hour}:{d.Minute}";
+        }
+        public static DateTime StringToDateTime(string s)
+        {
+            var data = s.Split(':');
+            int[] iData = new int[5];
+            for (int i = 0; i < 5; i++) iData[i] = Convert.ToInt32(data[i]);
+            return new DateTime(iData[0],iData[1],iData[2],iData[3],iData[4],0);
+        }
+
+        static WebClient web = new WebClient();
+        public static async void Respond(IMessage message)
+        {
+            try
+            {
+                string msg = Regex.Replace(message.Content, "(<.*@.*377913570912108544.*>)", "").Trim();
+                if (msg.ToLower() == "disconnect") msg = "&disconnect=true";
+                else msg = "&message=" + msg;
+                var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
+                                                              "&application=7362540682895337949" +
+                                                              "&instance=22180784" +
+                                                              $"&conversation={Var.Conversation}" + 
+                                                               msg);
+                if (msg == "&disconnect=true")
+                {
+                    Var.Conversation = "0";
+                    await message.Channel.SendMessageAsync(":robot::speech_balloon: Goodbye.");
+                }
+                else
+                {
+                    XmlDocument response = new XmlDocument();
+                    response.LoadXml(xml);
+                    var n = response.GetElementsByTagName("message");
+                    string responseMsg = n[0].InnerText;
+                    if (Var.Conversation == "0") Var.Conversation = response.ChildNodes[1].Attributes[0].Value;
+                    responseMsg = Regex.Replace(responseMsg, "(<.*@.*\\w+.*>)", "").Trim();
+                    if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
+                }
+            }
+            catch (Exception e)
+            {
+                if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: Watch your profanity!");
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public static string[] GetJobList()
+        {
+            return File.ReadAllLines("Files/jobs.txt");
+        }
+
+        public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
+        {
+            var userFiles = Directory.GetFiles(@"Users");
+            var userIDs = userFiles.Select(x => Convert.ToUInt64(Path.GetFileName(x).Replace(".user", ""))).ToArray();
+            List<User> users = new List<User>();
+            foreach (ulong id in userIDs) try {
+                    var u = GetUser(id);
+                    users.Add(u);
+                }
+                catch (Exception) {  }
+            Dictionary<ulong, string[]> stats = new Dictionary<ulong, string[]>();
+            Dictionary<ulong, int> totalStats = new Dictionary<ulong, int>();
+
+            if (stat != "coins")
+            {
+                foreach (User u in users) stats.Add(u.ID, u.GetStats());
+                for (int i = stats.Count() - 1; i >= 0; i--) if (stats.ElementAt(i).Value.Count() <= 0) stats.Remove(stats.ElementAt(i).Key);
+                foreach (var d in stats)
+                {
+                    int totalStat = 0;
+                    foreach (var s in d.Value) if (s.Split(':')[0].Contains(stat)) totalStat += Convert.ToInt32(s.Split(':')[1]);
+                    totalStats.Add(d.Key, totalStat);
+                }
+            }
+            else
+            {
+                foreach (User u in users) totalStats.Add(u.ID, Convert.ToInt32(u.GetData("coins")));
+            }
+
+            var list = totalStats.ToList();
+            var ordered = list.OrderBy(x => x.Value);
+
+            Dictionary<ulong,int> top5 = new Dictionary<ulong, int>();
+            int amount;
+            if (ordered.Count() >= 5) amount = 5;
+            else amount = -(ordered.Count() - 5) - 1;
+            for (int i = ordered.Count()-1; i >= ordered.Count()-amount; i--) top5.Add(ordered.ToArray()[i].Key, ordered.ToArray()[i].Value);
+            return top5.ToList().ToArray();
+        }
+
+        public static bool CheckUserHasItem(User user, string item, bool remove = true)
+        {
+            if (user.GetItemList().Contains(item))
+            {
+                if (remove) user.RemoveItem(item);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool Filter(string msg)
+        {
+            string[] blockedWords = Properties.Settings.Default.blockedWords.Split('|');
+            foreach(string word in blockedWords)
+            {
+                if (word != "")
+                    if (msg.ToLower().Contains(word)) return true;
+            }
+            return false;
+        }
         
+        //splits a message into multiple message when its too long (over 2000 chars)
+        public static string[] SplitMessage(string msg)
+        {
+            List<string> msgs = new List<string>();
+            int start = 0;
+            for(; msg.Length !=start; )
+            {
+                //find good spot to split
+                int splitIndex = -1;
+                if (msg.Length - start < 2000)
+                {
+                    splitIndex = msg.Length - 1;
+                }
+                else
+                {
+                    for (int j = start + 1900; j < start + 1999; j++)
+                    {
+                        if (msg[j] == '\n')
+                        {
+                            splitIndex = j;
+                            break;
+                        }
+                    }
+                    if (splitIndex == -1)
+                        for (int j = start + 1900; j < start + 1999; j++)
+                        {
+                            if (msg[j] == ' ')
+                            {
+                                splitIndex = j;
+                                break;
+                            }
+                        }
+                    if (splitIndex == -1) splitIndex = start + 1999;
+                }
+                int end = splitIndex - start;
+                msgs.Add(msg.Substring(start, end));
+                start = splitIndex + 1;
+            }
+            return msgs.ToArray();
+            
+        }
     }
-    
+
 
     static class Func
     {
