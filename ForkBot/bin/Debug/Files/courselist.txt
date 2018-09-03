@@ -6351,3 +6351,7 @@ FA/YSDN 4901 6.00	Independent Studies: Design Studies
 
 #addcourse Added Courses
 LE/EECS 4404 3.00	Introduction to Machine Learning and Pattern Recognition
+
+LE/EECS 1022 3.0
+0	Mobile Something
+AP/ADMS 1000 3.00	Introduction to Administrative Studies
