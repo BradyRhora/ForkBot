@@ -1,4 +1,4 @@
-make a crafting system
+﻿make a crafting system
 remove some commands from <#265998661606047744>
 add more games
 rigged presents don't show all lost items
@@ -9,3 +9,5 @@ remove colons from present return
 apples are OP
 ***FIX BOMB MESSAGE***
 make something for 🎰 SLOTS
+add ;sell all
+forkbot stats

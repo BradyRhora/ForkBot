@@ -93,6 +93,9 @@ namespace ForkBot
             }
              
             if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
+
+            if (message.Author.IsBot) return;
+            
             
             var user = Functions.GetUser(message.Author); //present stuff
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
@@ -215,7 +218,7 @@ namespace ForkBot
                 emb.Author.Name = "MESSAGE DELETED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
                 emb.Description = msg.Content;
-
+                
                 string attachURL = null;
                 if (msg.Attachments.Count>0) attachURL= msg.Attachments.FirstOrDefault().ProxyUrl;
                 if (attachURL != null) emb.ImageUrl = attachURL;
