@@ -492,6 +492,12 @@ namespace ForkBot
         [Command("paintbrush")]
         public async Task Paintbrush()
         {
+            Paintbrush(Context.User);
+        }
+
+        [Command("paintbrush")]
+        public async Task Paintbrush(IUser user)
+        {
             if (Check(Context, "paintbrush", false)) return;
             using (ImageFactory fact = new ImageFactory())
             {
@@ -500,7 +506,7 @@ namespace ForkBot
                     bool downloaded = false;
                     while (!downloaded)
                     {
-                        try { web.DownloadFile(Context.User.GetAvatarUrl(), @"Files\paintbrush.png"); downloaded = true; }
+                        try { web.DownloadFile(user.GetAvatarUrl(), @"Files\paintbrush.png"); downloaded = true; }
                         catch (Exception) { }
                     }
                     fact.Load(@"Files\paintbrush.png");
@@ -511,7 +517,8 @@ namespace ForkBot
                     effects[i] = rdm.Next(10);
                 }
                 System.Drawing.Color colour = System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1);
-                foreach (int effect in effects) {
+                foreach (int effect in effects)
+                {
                     switch (effect)
                     {
                         case 0:
@@ -542,7 +549,7 @@ namespace ForkBot
                             fact.Tint(colour);
                             break;
                         case 9:
-                            fact.ReplaceColor(colour, System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1),50);
+                            fact.ReplaceColor(colour, System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1), 50);
                             break;
 
                     }
@@ -575,12 +582,12 @@ namespace ForkBot
         [Command("watch")]
         public async Task Watch()
         {
-            if (Check(Context, "watch")) return;
+            if (Check(Context, "watch",false)) return;
             await Context.Channel.SendMessageAsync(":watch: `" + (DateTime.UtcNow-new TimeSpan(4,0,0)).ToLocalTime()+"`");
         }
 
         [Command("mag"), Alias("burn")]
-        public async Task Mag() { if (Check(Context, "gun", false)) return; await Context.Channel.SendMessageAsync("Choose someone to burn with `;mag [user]`..."); }
+        public async Task Mag() { if (Check(Context, "mag", false)) return; await Context.Channel.SendMessageAsync("Choose someone to burn with `;mag [user]`..."); }
 
         [Command("mag"), Alias("burn")]
         public async Task Mag(IUser user)
