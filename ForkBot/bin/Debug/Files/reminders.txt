@@ -1,6 +1,13 @@
-fix umbrella2
-fix coin trades
-limit draw amount
-fix image deletion
-remove unknown command error message
+﻿make a crafting system
+remove some commands from <#265998661606047744>
+add more games
+rigged presents don't show all lost items
+make ;paintbrush usable on other users
+item that increases present count?
+item that somehow manipulates present time?
+remove colons from present return
+apples are OP
+***FIX BOMB MESSAGE***
+make something for 🎰 SLOTS
+add ;sell all
 forkbot stats
