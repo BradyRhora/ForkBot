@@ -1,2 +1,6 @@
-add ;sell all
+fix umbrella2
+fix coin trades
+limit draw amount
+fix image deletion
+remove unknown command error message
 forkbot stats
