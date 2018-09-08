@@ -521,8 +521,7 @@ namespace ForkBot
                         x.Text = desc;
                     }));
                 }
-                emb.Footer.IconUrl = "https://discordapp.com/assets/ccebe0b729ff7530c5e37dbbd9f9938c.svg";
-                emb.Footer.Text = $"You have: {u.GetCoins()} coins.";
+                emb.Footer.Text = $"You have: {u.GetCoins()} coins";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
