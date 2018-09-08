@@ -352,7 +352,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.8\nadded ;top bottom and ;slots```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.81\nadded ;top bottom and ;slots```");
         }
 
         #endregion
