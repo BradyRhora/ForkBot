@@ -215,7 +215,7 @@ namespace ForkBot
             
 
             //put users and stats into dictionary
-            if (stat != "coins")
+            if (stat == "coins")
             {
                 foreach (User u in users) totalStats.Add(u.ID, u.GetCoins());
             }
@@ -232,9 +232,8 @@ namespace ForkBot
             }
 
             var list = totalStats.ToList();
-            List<KeyValuePair<ulong, int>> ordered = new List<KeyValuePair<ulong, int>>();
-            if (stat == "bottom") list.OrderByDescending(x => x.Value);
-            else list.OrderBy(x => x.Value);
+            var ordered = list.OrderBy(x => x.Value);
+            if (bottom) ordered = list.OrderByDescending(x => x.Value);
 
             Dictionary<ulong,int> top5 = new Dictionary<ulong, int>();
             int amount;

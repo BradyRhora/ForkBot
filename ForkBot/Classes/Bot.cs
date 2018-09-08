@@ -36,8 +36,8 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
-                //await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
+                //await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
+                await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
