@@ -352,7 +352,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.81\nadded ;top bottom and ;slots```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.82\nadded ;top bottom and ;slots```");
         }
 
         #endregion
@@ -482,7 +482,7 @@ namespace ForkBot
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
         public async Task Shop([Remainder] string command = null)
         {
-            command = command.Replace("_", " ");
+            if (command != null) command = command.Replace("_", " ");
             var u = Functions.GetUser(Context.User);
             DateTime day = new DateTime();
             DateTime currentDay = new DateTime();
