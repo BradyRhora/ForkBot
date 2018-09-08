@@ -352,7 +352,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.75\nAdded word filter and ;blockword command for mods\n-fixed tag stuff and other bugs\n-added map?\n-deleted p10 enterprise stuff```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.8\nadded ;top bottom and ;slots```");
         }
 
         #endregion
@@ -482,6 +482,7 @@ namespace ForkBot
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
         public async Task Shop([Remainder] string command = null)
         {
+            command = command.Replace("_", " ");
             var u = Functions.GetUser(Context.User);
             DateTime day = new DateTime();
             DateTime currentDay = new DateTime();
@@ -520,6 +521,8 @@ namespace ForkBot
                         x.Text = desc;
                     }));
                 }
+                emb.Footer.IconUrl = "https://discordapp.com/assets/ccebe0b729ff7530c5e37dbbd9f9938c.svg";
+                emb.Footer.Text = $"You have: {u.GetCoins()} coins.";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
@@ -534,7 +537,7 @@ namespace ForkBot
                         int price = Convert.ToInt32(data[2]);
                         if (price < 0) price *= -1;
 
-                        if (Convert.ToInt32(u.GetData("coins")) >= price)
+                        if (Convert.ToInt32(u.GetCoins()) >= price)
                         {
                             u.GiveCoins(-price);
                             u.GiveItem(name);
@@ -652,7 +655,7 @@ namespace ForkBot
                             if (element.GetAttribute("id") == id)
                             {
                                 var user = Functions.GetUser(Context.User);
-                                int userCoins = Convert.ToInt32(user.GetData("coins"));
+                                int userCoins = user.GetCoins();
                                 int price = Convert.ToInt32(element.GetAttribute("cost"));
                                 if (userCoins >= price)
                                 {
@@ -1085,7 +1088,7 @@ namespace ForkBot
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Coins:";
-                x.Text = Convert.ToString(u.GetData("coins"));
+                x.Text = u.GetCoins().ToString();
                 x.Inline = true;
             }));
 

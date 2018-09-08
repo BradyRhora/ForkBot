@@ -194,7 +194,7 @@ namespace ForkBot
             {
                 int amount;
                 do amount = rdm.Next(500);
-                while (amount > Convert.ToInt32(u2.GetData("coins")));
+                while (amount > u2.GetCoins());
                 u1.GiveCoins(amount);
                 u2.GiveCoins(-amount);
                 await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
@@ -454,7 +454,7 @@ namespace ForkBot
                 {
                     int amount;
                     do amount = rdm.Next(500);
-                    while (amount > Convert.ToInt32(u2.GetData("coins")));
+                    while (amount > u2.GetCoins());
                     u1.GiveCoins(amount);
                     u2.GiveCoins(-amount);
                     await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
@@ -600,7 +600,7 @@ namespace ForkBot
             {
                 int amount;
                 do amount = rdm.Next(500);
-                while (amount > Convert.ToInt32(u2.GetData("coins")));
+                while (amount > u2.GetCoins());
                 u2.GiveCoins(-amount);
                 await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burned {amount} of your coins!");
             }
@@ -630,5 +630,32 @@ namespace ForkBot
             Var.presentRigger = Context.User;
         }
 
+        [Command("slots"), Summary("Spin the slots and win cash!"), Alias(new string[] { "slot", "slot_machine" })]
+        public async Task Slots(int bet = 0)
+        {
+            Check(Context, "slot_machine",false);
+            try
+            {
+                if (bet < 100) { await ReplyAsync("You need to bet at least 100 coins to use this! `;slots [bet]`"); return; }
+                var user = Functions.GetUser(Context.User);
+
+                if (user.GetCoins() < bet) await Context.Channel.SendMessageAsync(":slot_machine: | You do not have that many coins!");
+                else if (bet <= 0) await Context.Channel.SendMessageAsync(":slot_machine: | Your bet must be above 0.");
+                else
+                {
+                    Properties.Settings.Default.jackpot += bet;
+                    Properties.Settings.Default.Save();
+                    user.GiveCoins(-bet);
+                    SlotMachine sm = new SlotMachine(Context.User, bet);
+                    var result = sm.Spin();
+                    var msg = await Context.Channel.SendMessageAsync(sm.Generate() + "\n" + result);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Slots error!\n" + e.Message);
+                await ReplyAsync("Slots error.\n" + e.Message);
+            }
+        }
     }
 }

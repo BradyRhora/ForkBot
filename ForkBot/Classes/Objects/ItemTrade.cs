@@ -41,7 +41,7 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    if (Convert.ToInt32(u1.GetData("coins")) >= coins)
+                    if (u1.GetCoins() >= coins)
                     {
                         coins1 += coins;
                         return true;
@@ -58,7 +58,7 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    if (Convert.ToInt32(u1.GetData("coins")) >= coins)
+                    if (u1.GetCoins() >= coins)
                     {
                         coins2 += coins;
                         return true;

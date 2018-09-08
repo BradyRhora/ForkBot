@@ -47,3 +47,4 @@ youness|Lucky you.... :weary:|25|373579959899258880
 ttc|Best public transit of the year!|10|381689166179598356
 bug|OUT|5
 shopping_cart|Time to go shopping!|500
+slot_machine|Test your lock on the slots! Gamble responsibly!|50

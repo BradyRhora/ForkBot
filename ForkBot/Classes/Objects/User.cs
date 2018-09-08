@@ -123,9 +123,9 @@ namespace ForkBot
 
         public void GiveCoins(int amount)
         {
-            SetData("coins", Convert.ToString(Convert.ToInt32(GetData("coins")) + amount));
+            SetData("coins", Convert.ToString(GetCoins() + amount));
         }
-        
+        public int GetCoins() { return Convert.ToInt32(GetData("coins")); }
         public string[] GetStats()
         {
             return File.ReadAllLines($@"Users\{ID}.user").Where(x => x.StartsWith("stat.")).ToArray();

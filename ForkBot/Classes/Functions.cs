@@ -196,6 +196,12 @@ namespace ForkBot
 
         public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
         {
+            var bottom = false;
+            if (stat == "bottom")
+            {
+                bottom = true;
+                stat = "";
+            }
             var userFiles = Directory.GetFiles(@"Users");
             var userIDs = userFiles.Select(x => Convert.ToUInt64(Path.GetFileName(x).Replace(".user", ""))).ToArray();
             List<User> users = new List<User>();
@@ -206,8 +212,14 @@ namespace ForkBot
                 catch (Exception) {  }
             Dictionary<ulong, string[]> stats = new Dictionary<ulong, string[]>();
             Dictionary<ulong, int> totalStats = new Dictionary<ulong, int>();
+            
 
+            //put users and stats into dictionary
             if (stat != "coins")
+            {
+                foreach (User u in users) totalStats.Add(u.ID, u.GetCoins());
+            }
+            else
             {
                 foreach (User u in users) stats.Add(u.ID, u.GetStats());
                 for (int i = stats.Count() - 1; i >= 0; i--) if (stats.ElementAt(i).Value.Count() <= 0) stats.Remove(stats.ElementAt(i).Key);
@@ -215,16 +227,14 @@ namespace ForkBot
                 {
                     int totalStat = 0;
                     foreach (var s in d.Value) if (s.Split(':')[0].Contains(stat)) totalStat += Convert.ToInt32(s.Split(':')[1]);
-                    totalStats.Add(d.Key, totalStat);
+                    if (!bottom || bottom && totalStat != 0) totalStats.Add(d.Key, totalStat);
                 }
-            }
-            else
-            {
-                foreach (User u in users) totalStats.Add(u.ID, Convert.ToInt32(u.GetData("coins")));
             }
 
             var list = totalStats.ToList();
-            var ordered = list.OrderBy(x => x.Value);
+            List<KeyValuePair<ulong, int>> ordered = new List<KeyValuePair<ulong, int>>();
+            if (stat == "bottom") list.OrderByDescending(x => x.Value);
+            else list.OrderBy(x => x.Value);
 
             Dictionary<ulong,int> top5 = new Dictionary<ulong, int>();
             int amount;
