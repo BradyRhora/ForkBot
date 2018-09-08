@@ -27,13 +27,13 @@ namespace ForkBot
         Slot[] slots =
         {
             BlankSlot,
-            new Slot("apple",2,"fruit"),
-            new Slot("grapes",3,"fruit"),
-            new Slot("cherries",10,"fruit"),
+            new Slot("apple",1.2,"fruit"),
+            new Slot("grapes",1.5,"fruit"),
+            new Slot("cherries",5,"fruit"),
             BlankSlot,
-            new Slot("bell",20),
-            new Slot("seven",50),
-            new Slot("moneybag",100),
+            new Slot("bell",10),
+            new Slot("seven",20),
+            new Slot("moneybag",50),
             new Slot("gem",0)
         };
 
@@ -84,10 +84,10 @@ namespace ForkBot
                     return jackpot;
                 }
                 else if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue() * bet;
-                else if (SlotCount("seven") == 2) return 10 * bet;
-                else if (CategoryCount("fruit") == 3) return 5 * bet;
-                else if (CategoryCount("fruit") == 2) return 3 * bet;
-                else if (SlotCount("cherries") == 2) return 5 * bet;
+                else if (SlotCount("seven") == 2) return 5 * bet;
+                else if (CategoryCount("fruit") == 3) return 2.5 * bet;
+                else if (CategoryCount("fruit") == 2) return 2 * bet;
+                else if (SlotCount("cherries") == 2) return 3.5 * bet;
             }
             return 0;
         }

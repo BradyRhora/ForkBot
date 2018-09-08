@@ -12,13 +12,13 @@ namespace ForkBot
         string symbol;
         string category;
 
-        public Slot(string symbol, int value)
+        public Slot(string symbol, double value)
         {
             this.symbol = $":{symbol}:";
             this.value = value;
             category = "none";
         }
-        public Slot(string symbol, int value, string category)
+        public Slot(string symbol, double value, string category)
         {
             this.symbol = $":{symbol}:";
             this.value = value;

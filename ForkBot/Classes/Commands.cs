@@ -1259,6 +1259,7 @@ namespace ForkBot
         public async Task Top(string stat = "")
         {
             var top5 = Functions.GetTopList(stat);
+            if (stat == "bottom") stat = "";
             string msg = "```\nTop five users";
             if (stat != "") msg += " [" + stat + "]:\n";
             else msg += ":\n";

@@ -633,7 +633,7 @@ namespace ForkBot
         [Command("slots"), Summary("Spin the slots and win cash!"), Alias(new string[] { "slot", "slot_machine" })]
         public async Task Slots(int bet = 0)
         {
-            Check(Context, "slot_machine",false);
+            if (Check(Context, "slot_machine", false)) return;
             try
             {
                 if (bet < 100) { await ReplyAsync("You need to bet at least 100 coins to use this! `;slots [bet]`"); return; }
