@@ -352,7 +352,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.82\nadded ;top bottom and ;slots```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.83\n-added ;top bottom and ;slots\n-fixed shop bug```");
         }
 
         #endregion
@@ -482,7 +482,6 @@ namespace ForkBot
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
         public async Task Shop([Remainder] string command = null)
         {
-            if (command != null) command = command.Replace("_", " ");
             var u = Functions.GetUser(Context.User);
             DateTime day = new DateTime();
             DateTime currentDay = new DateTime();
@@ -514,14 +513,13 @@ namespace ForkBot
                     string name = data[0];
                     string desc = data[1];
                     int price = Convert.ToInt32(data[2]);
-                    if (price < 0) price *= -1;
+                    if (price < 0) price = -price;
                     emb.Fields.Add(new JEmbedField(x =>
                     {
                         x.Header = $"{emote} {name.Replace("_", " ")} - {price} coins";
                         x.Text = desc;
                     }));
                 }
-                emb.Footer.IconUrl = "https://discordapp.com/assets/ccebe0b729ff7530c5e37dbbd9f9938c.svg";
                 emb.Footer.Text = $"You have: {u.GetCoins()} coins.";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
@@ -529,7 +527,7 @@ namespace ForkBot
             {
                 foreach (string item in Var.currentShop.Items())
                 {
-                    if (item.Split('|')[0] == command.ToLower())
+                    if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
                     {
                         var data = item.Split('|');
                         string name = data[0];
