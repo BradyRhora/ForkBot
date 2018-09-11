@@ -267,71 +267,27 @@ namespace ForkBot
         {
             try
             {
+                //format course code correctly
                 if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
                 {
                     var splits = Regex.Split(code, "(\\d+|\\D+)").Where(x=>x!="").ToArray();
                     code = splits[0].Trim() + " " + splits[1].Trim();
                 }
 
-                HtmlWeb web = new HtmlWeb();
-                string desc, title, link = "";
-
-                var courses = File.ReadAllLines("Files/courselist.txt");
-                foreach (string course in courses)
-                {
-                    if (course.ToLower().Contains(code.ToLower()))
-                    {
-                        var info = course.Split(' ');
-                        var department = info[0].Split('/')[0];
-                        var subject = info[0].Split('/')[1];
-                        var coursecode = info[1];
-                        var credit = info[2].Split('\t')[0];
-                        link = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={department}&sj={subject}&cn={coursecode}&cr={credit}&ay=2018&ss=FW";
-                    }
-                }
-
-                if (link == "") throw new Exception("Unable to find course.");
-                var pageDoc = web.Load(link).DocumentNode;
-
-                desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
-                title = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
-                desc = desc.Replace("&quot;", "\"");
-                var scheduleNode = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/p[7]/a[1]");
-                var scheduleLink = "https://w2prod.sis.yorku.ca" + scheduleNode.Attributes[0].Value;
-
+                Course course = new Course(code);
+                               
 
                 JEmbed emb = new JEmbed();
-                emb.Title = title;
-                emb.Description = desc + "\n\n";
+                emb.Title = course.Title;
+                emb.Description = course.Description + "\n\n";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
-                pageDoc = web.Load(scheduleLink).DocumentNode;
-                var table = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[2]");
-                foreach (HtmlNode child in table.ChildNodes)
+                foreach(CourseDay day in course.Schedule.Days)
                 {
-                    if (child.Name == "tr")
-                    {
-                        var termSec = child.SelectSingleNode($"td/table/tr[1]").InnerText.Replace("\n", "").Replace("\t", "").Replace("&nbsp;", "").Trim();
-                        var sessionDir = child.SelectSingleNode($"td/table/tr[2]").InnerText.Replace("Please click here to see availability.", "").Replace("&nbsp;", "").Trim();
-                        var schedule = child.SelectSingleNode($"td/table/tr[3]/td/table/tr[2]");
-                        var type = schedule.ChildNodes[0].InnerText;
-                        var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ", "|").Replace(" ", "").Split('|');
-
-                        emb.Description += $"\n{termSec} - {sessionDir}";
-
-                        for (int i = 0; i < timedayInfo.Count(); i++)
-                        {
-                            string day = Convert.ToString(timedayInfo[i][0]);
-                            string time = "";
-                            for (int o = 2; o < timedayInfo[i].Length; o++)
-                            {
-                                if (timedayInfo[i][o - 2] == ':') time = timedayInfo[i].Substring(1, o);
-                            }
-                            emb.Description += $"\n\t\t{day} - {time}";
-                        }
-
-                    }
+                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}";
+                    emb.Description += $"\n{day.WeekDay} - {day.Time}";
                 }
+                
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
@@ -352,7 +308,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.83\n-added ;top bottom and ;slots\n-fixed shop bug```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.85\n-added ;top bottom and ;slots\n-fixed shop bug\n-added items! tickets! lootboxes!```");
         }
 
         #endregion
@@ -1362,6 +1318,7 @@ namespace ForkBot
         [Command("block"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Temporarily stops users from being able to use the bot.")]
         public async Task Block(IUser u)
         {
+            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) { await ReplyAsync("This can only be used in the York University server."); return; }
             if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
             else Var.blockedUsers.Add(u);
             
@@ -1370,6 +1327,7 @@ namespace ForkBot
         [Command("blockword"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Adds the inputted word to the word filter.")]
         public async Task BlockWord([Remainder] string word)
         {
+            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) { await ReplyAsync("This can only be used in the York University server."); return; }
             Properties.Settings.Default.blockedWords += word + "|";
             Properties.Settings.Default.Save();
             await ReplyAsync("", embed: new InfoEmbed("Word Blocked", "Word successfully added to filter.").Build());
@@ -1488,9 +1446,6 @@ namespace ForkBot
             }
             else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
         }
-
-
-
 
         
 

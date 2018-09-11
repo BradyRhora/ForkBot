@@ -184,6 +184,9 @@
     <Compile Include="Classes\Objects\Shop.cs" />
     <Compile Include="Classes\Objects\Slot.cs" />
     <Compile Include="Classes\Objects\SlotMachine.cs" />
+    <Compile Include="Classes\Objects\YorkAPI\Course.cs" />
+    <Compile Include="Classes\Objects\YorkAPI\CourseDay.cs" />
+    <Compile Include="Classes\Objects\YorkAPI\CourseSchedule.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
     <Compile Include="Classes\Timers.cs" />
