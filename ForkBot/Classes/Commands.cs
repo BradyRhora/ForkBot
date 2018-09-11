@@ -644,7 +644,7 @@ namespace ForkBot
                 {
                     var itemInfo = i.Split('|');
                     JEmbed emb = new JEmbed();
-                    emb.Title = Func.ToTitleCase(itemInfo[0]);
+                    emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]);
                     emb.Description = itemInfo[1];
                     emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
                     await ReplyAsync("", embed: emb.Build());
