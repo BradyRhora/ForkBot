@@ -671,11 +671,11 @@ namespace ForkBot
         [Command("key"), Alias(new string[] { "package","lootbox"})]
         public async Task Key()
         {
-            if (!(Check(Context, "key", false) && Check(Context, "package", false)))
+            User u = Functions.GetUser(Context.User);
+            if (u.GetItemList().Contains("key") && u.GetItemList().Contains("package"))
             {
                 string[] lootboxItems = { "gun", "knife", "poop", "paintbrush", "bomb", "ticket", "slots", "mag", "watch", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "shirt", "dress", "bug", "apple", "dog", "cat", "milk", "egg" };
 
-                User u = Functions.GetUser(Context.User);
                 u.RemoveItem("key");
                 u.RemoveItem("package");
                 
