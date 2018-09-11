@@ -265,13 +265,14 @@ namespace ForkBot
                         msg += $"**+{coinAmount} coins!**";
                         break;
                     case 2:
-                        int amount = rdm.Next(50, 200);
+                        int amount = rdm.Next(2000, 5000);
                         msg += $"**Fashion+{amount}**";
+                        user.AddData("stat.fashion", amount);
                         break;
                     case 3:
                         await Context.Channel.SendMessageAsync("You got...");
                         var presents = Functions.GetItemList();
-                        for (int i = 0; i < 3; i++)
+                        for (int i = 0; i < 10; i++)
                         {
                             var sPresentData = presents[rdm.Next(presents.Count())];
                             string sPresentName = sPresentData.Split('|')[0];
@@ -280,8 +281,9 @@ namespace ForkBot
                         }
                         break;
                     case 4:
-                        int hAmount = rdm.Next(50, 200);
+                        int hAmount = rdm.Next(2000, 5000);
                         msg += $"**Happiness+{hAmount}";
+                        user.AddData("stat.happiness", hAmount);
                         break;
                     case 5:
                         choice = rdm.Next(4) + 1;
@@ -657,5 +659,38 @@ namespace ForkBot
                 await ReplyAsync("Slots error.\n" + e.Message);
             }
         }
+        
+        [Command("ticket")]
+        public async Task Ticket()
+        {
+            if (Check(Context, "ticket")) return;
+            Var.presentCount += 2;
+            await Context.Channel.SendMessageAsync(":ticket: The present count has increased by 2!");
+        }
+        
+        [Command("key"), Alias(new string[] { "package","lootbox"})]
+        public async Task Key()
+        {
+            if (!(Check(Context, "key", false) && Check(Context, "package", false)))
+            {
+                string[] lootboxItems = { "gun", "knife", "poop", "paintbrush", "bomb", "ticket", "slots", "mag", "watch", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "shirt", "dress", "bug", "apple", "dog", "cat", "milk", "egg" };
+
+                User u = Functions.GetUser(Context.User);
+                u.RemoveItem("key");
+                u.RemoveItem("package");
+                
+                var num1 = rdm.Next(lootboxItems.Count());
+                var num2 = rdm.Next(lootboxItems.Count());
+                var num3 = rdm.Next(lootboxItems.Count());
+
+                u.GiveItem(lootboxItems[num1]);
+                u.GiveItem(lootboxItems[num2]);
+                u.GiveItem(lootboxItems[num3]);
+
+                await ReplyAsync("Your lootbox bursts open!\n" +
+                                 $":sparkles: {Functions.GetItemEmote(lootboxItems[num1])} :tada: {Functions.GetItemEmote(lootboxItems[num2])} :confetti_ball: {Functions.GetItemEmote(lootboxItems[num3])} :champagne:");
+            }
+        }
+
     }
 }
