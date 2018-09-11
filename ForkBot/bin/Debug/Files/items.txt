@@ -49,5 +49,5 @@ bug|OUT|5
 shopping_cart|Time to go shopping!|500
 slot_machine|Test your lock on the slots! Gamble responsibly!|50
 ticket|Good for two (2) presents!|250
-package|A lootbox! What could be inside? Buy keys now!|10
+package|A lootbox! What could be inside? Buy keys now!|-
 key|Unlock your lootboxes! What's Pay-To-Win?|500
