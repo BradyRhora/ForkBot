@@ -640,7 +640,7 @@ namespace ForkBot
             var items = Functions.GetItemList().Concat(Functions.GetRareItemList()).ToArray();
             foreach(string i in items)
             {
-                if (i == item)
+                if (i.StartsWith(item))
                 {
                     var itemInfo = i.Split('|');
                     JEmbed emb = new JEmbed();
@@ -648,6 +648,7 @@ namespace ForkBot
                     emb.Description = itemInfo[1];
                     emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
                     await ReplyAsync("", embed: emb.Build());
+                    return;
                 }
             }
             await ReplyAsync("Item not found.");
