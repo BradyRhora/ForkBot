@@ -688,7 +688,7 @@ namespace ForkBot
                 u.GiveItem(lootboxItems[num3]);
 
                 await ReplyAsync("Your lootbox bursts open!\n" +
-                                 $":sparkles: {Functions.GetItemEmote(lootboxItems[num1])} :tada: {Functions.GetItemEmote(lootboxItems[num2])} :confetti_ball: {Functions.GetItemEmote(lootboxItems[num3])} :champagne:");
+                                 $":sparkles: {Functions.GetItemEmote(lootboxItems[num1])} {lootboxItems[num1]}! :tada: {Functions.GetItemEmote(lootboxItems[num2])} {lootboxItems[num1]}! :confetti_ball: {Functions.GetItemEmote(lootboxItems[num3])} {lootboxItems[num1]}! :champagne:");
             }
         }
 
