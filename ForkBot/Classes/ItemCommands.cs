@@ -678,7 +678,7 @@ namespace ForkBot
 
                 u.RemoveItem("key");
                 u.RemoveItem("package");
-                
+
                 var num1 = rdm.Next(lootboxItems.Count());
                 var num2 = rdm.Next(lootboxItems.Count());
                 var num3 = rdm.Next(lootboxItems.Count());
@@ -690,6 +690,8 @@ namespace ForkBot
                 await ReplyAsync("Your lootbox bursts open!\n" +
                                  $":sparkles: {Functions.GetItemEmote(lootboxItems[num1])} {lootboxItems[num1]}! :tada: {Functions.GetItemEmote(lootboxItems[num2])} {lootboxItems[num1]}! :confetti_ball: {Functions.GetItemEmote(lootboxItems[num3])} {lootboxItems[num1]}! :champagne:");
             }
+            else if (u.GetItemList().Contains("key")) await ReplyAsync("You have nothing to open with this key!");
+            else if (u.GetItemList().Contains("package")) await ReplyAsync("It's locked! You need a key to open it.");
         }
 
     }
