@@ -113,8 +113,9 @@ namespace ForkBot
         {
             return File.ReadAllLines("Files/rareitems.txt");
         }
-        public static string GetItemEmote(string itemData)
+        public static string GetItemEmote(string item)
         {
+            var itemData = GetItemData(item);
             var data = itemData.Split('|');
             if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
             return ":" + data[0] + ":";
