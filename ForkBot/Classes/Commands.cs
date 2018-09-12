@@ -308,12 +308,14 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.85\n-added ;top bottom and ;slots\n-fixed shop bug\n-added items! tickets! lootboxes!```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.851\n-added ;top bottom and ;slots\n-fixed shop bug\n-added items! tickets! lootboxes!\n-slot and other item adjustments\n-added ;iteminfo\n```");
         }
 
         #endregion
 
         #region Item Commands
+
+
         [Command("sell"), Summary("[FUN] Sell items from your inventory.")]
         public async Task Sell(params string[] items)
         {
@@ -630,6 +632,26 @@ namespace ForkBot
                     }
                 }
             }
+        }
+
+        [Command("iteminfo"), Summary("Its like a pokedex but for items.")]
+        public async Task ItemInfo(string item)
+        {
+            var items = Functions.GetItemList().Concat(Functions.GetRareItemList()).ToArray();
+            foreach(string i in items)
+            {
+                if (i.StartsWith(item))
+                {
+                    var itemInfo = i.Split('|');
+                    JEmbed emb = new JEmbed();
+                    emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]);
+                    emb.Description = itemInfo[1];
+                    emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
+                    await ReplyAsync("", embed: emb.Build());
+                    return;
+                }
+            }
+            await ReplyAsync("Item not found.");
         }
 
         #endregion
@@ -1213,9 +1235,10 @@ namespace ForkBot
         public async Task Top(string stat = "")
         {
             var top5 = Functions.GetTopList(stat);
-            if (stat == "bottom") stat = "";
             string msg = "```\nTop five users";
-            if (stat != "") msg += " [" + stat + "]:\n";
+            if (stat == "bottom") msg = msg.Replace("Top", "Bottom");
+            else if (stat != "") msg += " [" + stat + "]:\n";
+            
             else msg += ":\n";
             int amount = 5;
             if (top5.Count() < 5) amount = top5.Count();

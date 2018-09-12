@@ -52,5 +52,8 @@ namespace ForkBot
         public static string Conversation = "0";
 
         public static Poll currentPoll;
+
+        public static Dictionary<ulong, DateTime> lastMessage = new Dictionary<ulong, DateTime>();
+
     }
 }
