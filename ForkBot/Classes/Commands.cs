@@ -646,7 +646,8 @@ namespace ForkBot
                     JEmbed emb = new JEmbed();
                     emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]);
                     emb.Description = itemInfo[1];
-                    emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
+                    if (itemInfo[2] == "-") emb.Description = "\n\nCannot be purchased or sold. (Probably found through presents or lootboxes.)";
+                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
                     await ReplyAsync("", embed: emb.Build());
                     return;
                 }
