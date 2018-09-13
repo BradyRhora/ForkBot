@@ -147,6 +147,7 @@ namespace ForkBot
         }
         public static DateTime StringToDateTime(string s)
         {
+            if (s == "0") return new DateTime(0);
             var data = s.Split(':');
             int[] iData = new int[5];
             for (int i = 0; i < 5; i++) iData[i] = Convert.ToInt32(data[i]);

@@ -236,6 +236,7 @@
     <Content Include="bin\Debug\Discord.Net.WebSocket.xml" />
     <Content Include="bin\Debug\DuckDuckGo.dll" />
     <Content Include="bin\Debug\Files\courselist.txt" />
+    <Content Include="bin\Debug\Files\craftingRecipes.txt" />
     <Content Include="bin\Debug\Files\drawing.png" />
     <Content Include="bin\Debug\Files\Images\ForkBot.png" />
     <Content Include="bin\Debug\Files\Images\Hammer.png" />
@@ -302,7 +303,7 @@
     <Content Include="bin\Debug\System.Xml.XmlDocument.dll" />
     <Content Include="bin\Debug\System.Xml.XPath.dll" />
     <Content Include="bin\Debug\System.Xml.XPath.XDocument.dll" />
-    <Content Include="bin\Debug\Users\108312797162541056.user" />
+    <Content Include="bin\Debug\Files\Users\108312797162541056.user" />
     <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />

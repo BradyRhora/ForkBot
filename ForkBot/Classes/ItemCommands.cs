@@ -691,6 +691,15 @@ namespace ForkBot
                                  $":sparkles: {Functions.GetItemEmote(lootboxItems[num1])} :tada: {Functions.GetItemEmote(lootboxItems[num2])} :confetti_ball: {Functions.GetItemEmote(lootboxItems[num3])} :champagne:");
             }
         }
+        
+        [Command("stopwatch")]
+        public async Task Stopwatch()
+        {
+            if (Check(Context, "stopwatch")) return;
+            await Context.Channel.SendMessageAsync(":stopwatch: The present time has decreased by 75%!");
+            Var.presentWait -= new TimeSpan(Convert.ToInt32(Var.presentWait.TotalHours * .75), 0, 0);
+        }
+
 
     }
 }

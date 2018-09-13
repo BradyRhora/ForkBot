@@ -55,5 +55,7 @@ namespace ForkBot
 
         public static Dictionary<ulong, DateTime> lastMessage = new Dictionary<ulong, DateTime>();
 
+        public static string todaysLotto = "0";
+        public static DateTime lottoDay = new DateTime(0);
     }
 }

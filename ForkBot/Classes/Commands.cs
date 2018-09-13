@@ -22,6 +22,7 @@ namespace ForkBot
     {
         Random rdm = new Random();
         readonly Exception NotBradyException = new Exception("This command can only be used by Brady.");
+
         #region Useful
 
         [Command("help"), Summary("Displays commands and descriptions.")]
@@ -654,8 +655,17 @@ namespace ForkBot
             await ReplyAsync("Item not found.");
         }
 
+        [Command("craft"), Summary("[FUN] Combine bad items to make cool items!")]
+        public async Task Craft(params string[] items)
+        {
+            throw new NotImplementedException();
+        }
+
+
         #endregion
-        
+
+        #region Fun
+
         //viewing tag
         [Command("tag"), Summary("Make or view a tag!")]
         public async Task Tag(string tag)
@@ -725,8 +735,6 @@ namespace ForkBot
             }
         }
         
-        #region Fun
-
         [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
         public async Task Draw(int count)
         {
@@ -1259,6 +1267,102 @@ namespace ForkBot
         {
             
         }
+
+        [Command("lottery"), Summary("[FUN] The Happy Lucky Lottery! Buy a lotto card and check daily to see if your numbers match!")]
+        public async Task Lottery(string command = "")
+        {
+            User u = Functions.GetUser(Context.User);
+
+            if (command == "")
+            {
+                var currentDay = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+                if (Var.lottoDay.DayOfYear < currentDay.DayOfYear || Var.lottoDay.Year < currentDay.DayOfYear)
+                {
+                    Var.lottoDay = DateTime.Now;
+                    Var.todaysLotto = $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}";
+                }
+
+                JEmbed emb = new JEmbed();
+                emb.Title = "Happy Lucky Lottery";
+                emb.Description = "It's the Happy Lucky Lottery!\nMatch any of todays digits with your number to win prizes!\n\n" +
+                                  "Todays number: " + Var.todaysLotto;
+                emb.ColorStripe = Functions.GetColor(Context.User);
+
+                string uNum = u.GetData("lotto");
+                if (uNum == "0") emb.Footer.Text = "Get your number today with ';lottery buy'!";
+                else
+                {
+                    var lottoDay = Functions.StringToDateTime(u.GetData("lottoDay"));
+                    if (lottoDay.DayOfYear >= DateTime.Now.DayOfYear && lottoDay.Year == DateTime.Now.Year) await ReplyAsync("You've already checked the lottery today! Come back tomorrow!");
+                    else
+                    {
+                        u.SetData("lottoDay", Functions.DateTimeToString(DateTime.Now));
+                        int matchCount = 0;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (uNum[i] == Var.todaysLotto[i]) matchCount++;
+                        }
+
+                        emb.Fields.Add(new JEmbedField(x =>
+                        {
+                            x.Header = "Matches";
+                            x.Text = $"You got {matchCount} match(es)!";
+                            if (matchCount == 0) x.Text += "\nSorry!";
+                            else
+                            {
+                                x.Text += "\nCongratulations! ";
+                                switch (matchCount)
+                                {
+                                    case 1:
+                                        x.Text += "You got 50 coins!";
+                                        u.GiveCoins(50);
+                                        break;
+                                    case 2:
+                                        string[] level2Items = { "baby", "8ball", "paintbrush", "game_die", "watch", "gift" };
+                                        string item = level2Items[rdm.Next(level2Items.Count())];
+                                        x.Text += "You got 100 coins and a(n) {item}!";
+                                        break;
+                                    case 3:
+                                        break;
+                                    case 4:
+                                        break;
+                                }
+                            }
+                        }));
+                    }
+                    emb.Footer.Text = $"Your number: {uNum}";
+                }
+
+
+                await ReplyAsync("", embed: emb.Build());
+            }
+            else if (command == "buy")
+            {
+                string uNum = u.GetData("lotto");
+                if (uNum == "0") await ReplyAsync("Are you sure you want to buy a lottery ticket for 10 coins? Use `;lottery confirm` to confirm!");
+                else await ReplyAsync("Are you sure you want to buy a *new* lottery ticket for 100 coins? Use `;lottery confirm` to confirm!");
+            }
+            else if (command == "confirm")
+            {
+                string uNum = u.GetData("lotto");
+                int cost = 0;
+                if (uNum == "0") cost = 10;
+                else cost = 100;
+                
+                if (u.GetCoins() >= cost)
+                {
+                    u.GiveCoins(-cost);
+                    u.SetData("lotto", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
+                    await ReplyAsync($"You have successfully purchased a Happy Lucky Lottery Ticket for {cost} coins!");
+                }
+                else
+                {
+                    await ReplyAsync($"You cannot afford a ticket! You need {cost} coins.");
+                }
+            }
+        }
+
+
 
         #endregion
 
