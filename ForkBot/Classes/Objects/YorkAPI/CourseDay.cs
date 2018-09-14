@@ -11,6 +11,7 @@ namespace ForkBot
         public string Term { get; }
         public string Section { get; }
         public string Professor { get; }
+        public Dictionary<string, string> DayTimes = new Dictionary<string, string>();
         public string WeekDay { get; set; }
         public string Time { get; set; }
 
@@ -26,8 +27,7 @@ namespace ForkBot
 
         public void AddDayTime(string day, string time)
         {
-            WeekDay += day;
-            Time += time;
+            DayTimes.Add(day, time);
         }
     }
 }

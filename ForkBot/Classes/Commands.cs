@@ -268,7 +268,7 @@ namespace ForkBot
         {
             try
             {
-                //format course code correctly
+                //formats course code correctly
                 if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
                 {
                     var splits = Regex.Split(code, "(\\d+|\\D+)").Where(x=>x!="").ToArray();
@@ -285,9 +285,11 @@ namespace ForkBot
 
                 foreach(CourseDay day in course.Schedule.Days)
                 {
-                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}";
-                    emb.Description += $"\n{day.WeekDay} - {day.Time}";
+                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\n";
+                    foreach(var dayTime in day.DayTimes) emb.Description += $"\n{dayTime.Key} - {dayTime.Value}";
+                    emb.Description += "\n";
                 }
+
                 
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
@@ -1144,7 +1146,7 @@ namespace ForkBot
         {
             if (!Var.presentWaiting)
             {
-                if (Var.presentTime < DateTime.Now - Var.presentWait)
+                if (Var.presentTime < Var.CurrentDate() - Var.presentWait)
                 {
                     Var.presentCount = rdm.Next(4) + 1;
                     Var.presentClaims.Clear();
@@ -1155,7 +1157,7 @@ namespace ForkBot
                     if (Var.presentClaims.Count() <= 0)
                     {
                         Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
-                        Var.presentTime = DateTime.Now;
+                        Var.presentTime = Var.CurrentDate();
                     }
                     Var.presentCount--;
                     Var.presentClaims.Add(Context.User as IGuildUser);
@@ -1194,7 +1196,7 @@ namespace ForkBot
                 }
                 else
                 {
-                    var timeLeft = Var.presentTime - (DateTime.Now - Var.presentWait);
+                    var timeLeft = Var.presentTime - (Var.CurrentDate() - Var.presentWait);
                     var msg = $"The next presents are not available yet! Please be patient! They should be ready in *about* {timeLeft.Hours + 1} hour(s)!\nThere are {Var.presentCount} presents left!";
                     if (Var.presentClaims.Count() > 0)
                     {
@@ -1276,10 +1278,10 @@ namespace ForkBot
 
             if (command == "")
             {
-                var currentDay = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+                var currentDay = Var.CurrentDate();
                 if (Var.lottoDay.DayOfYear < currentDay.DayOfYear || Var.lottoDay.Year < currentDay.DayOfYear)
                 {
-                    Var.lottoDay = DateTime.Now;
+                    Var.lottoDay = Var.CurrentDate();
                     Var.todaysLotto = $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}";
                 }
 
@@ -1294,10 +1296,10 @@ namespace ForkBot
                 else
                 {
                     var lottoDay = Functions.StringToDateTime(u.GetData("lottoDay"));
-                    if (lottoDay.DayOfYear >= DateTime.Now.DayOfYear && lottoDay.Year == DateTime.Now.Year) await ReplyAsync("You've already checked the lottery today! Come back tomorrow!");
+                    if (lottoDay.DayOfYear >= Var.CurrentDate().DayOfYear && lottoDay.Year == Var.CurrentDate().Year) await ReplyAsync("You've already checked the lottery today! Come back tomorrow!");
                     else
                     {
-                        u.SetData("lottoDay", Functions.DateTimeToString(DateTime.Now));
+                        u.SetData("lottoDay", Functions.DateTimeToString(Var.CurrentDate()));
                         int matchCount = 0;
                         for (int i = 0; i < 4; i++)
                         {
@@ -1387,24 +1389,12 @@ namespace ForkBot
 
         #region Mod Commands
 
-        [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user. Can enter time in minutes that user is banned for, otherwise it is indefinite.")]
+        [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user.")]
         public async Task Ban(IGuildUser u, int minutes = 0, [Remainder]string reason = null)
         {
             string rText = ".";
             if (reason != null) rText = $" for: \"{reason}\".";
-
-            string tText = "";
-
-            if (minutes != 0)
-            {
-                TimeSpan tSpan = new TimeSpan(0, minutes, 0);
-                var unbanTime = DateTime.Now + tSpan;
-                Var.leaveBanned.Add(u);
-                Var.unbanTime.Add(unbanTime);
-                tText = $"\nThey have been banned until {unbanTime}.";
-            }
-
-            InfoEmbed banEmb = new InfoEmbed("USER BAN", $"User: {u} has been banned{rText}.{tText}", Constants.Images.Ban);
+            InfoEmbed banEmb = new InfoEmbed("USER BAN", $"User: {u} has been banned{rText}.", Constants.Images.Ban);
             await Context.Guild.AddBanAsync(u, reason: reason);
             await Context.Channel.SendMessageAsync("", embed: banEmb.Build());
         }
