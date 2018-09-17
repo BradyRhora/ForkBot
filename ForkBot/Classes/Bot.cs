@@ -36,8 +36,8 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
-                //await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
+                //await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
+                await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
@@ -107,9 +107,9 @@ namespace ForkBot
                 var presentData = presents[presRDM].Split('|');
                 Var.present = presentData[0];
                 Var.rPresent = Var.present;
-                var presentName = Var.present.Replace('_', ' ');
+                var presentName = Var.present;
                 var pMessage = presentData[1];
-                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName)}! {Functions.GetItemEmote(presents[presRDM])} {pMessage}");
+                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presents[presRDM])} {pMessage}");
                 if (Var.present == "santa")
                 {
                     await message.Channel.SendMessageAsync("You got...");

@@ -138,30 +138,32 @@ namespace ForkBot
             var user = Functions.GetUser(Context.User);
 
             await Context.Channel.SendMessageAsync($"{Context.User.Username}! You got...");
-            var presents = Functions.GetItemList();
-            int presRDM = rdm.Next(presents.Count());
-            var presentData = presents[presRDM].Split('|');
-            Var.present = presentData[0];
-            Var.rPresent = Var.present;
-            var presentName = Var.present.Replace('_', ' ');
-            var pMessage = presentData[1];
-            await Context.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName)}! {Functions.GetItemEmote(presentName)} {pMessage}");
-            if (Var.present == "santa")
-            {
-                await Context.Channel.SendMessageAsync("You got...");
-                string sMessage = "";
-                for (int i = 0; i < 5; i++)
+            
+                var presents = Functions.GetItemList();
+                int presRDM = rdm.Next(presents.Count());
+                var presentData = presents[presRDM].Split('|');
+                Var.present = presentData[0];
+                Var.rPresent = Var.present;
+                var presentName = Var.present;
+                var pMessage = presentData[1];
+                await Context.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presentName)} {pMessage}");
+                if (Var.present == "santa")
                 {
-                    var sPresentData = presents[rdm.Next(presents.Count())];
-                    string sPresentName = sPresentData.Split('|')[0];
-                    user.GiveItem(sPresentName);
-                    sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentName)} {sPresentData.Split('|')[1]}\n";
-                }
-                await Context.Channel.SendMessageAsync(sMessage);
+                    await Context.Channel.SendMessageAsync("You got...");
+                    string sMessage = "";
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var sPresentData = presents[rdm.Next(presents.Count())];
+                        string sPresentName = sPresentData.Split('|')[0];
+                        user.GiveItem(sPresentName);
+                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentName)} {sPresentData.Split('|')[1]}\n";
+                    }
+                    await Context.Channel.SendMessageAsync(sMessage);
 
-                Var.replaceable = false;
-            }
-            else user.GiveItem(Var.present);
+                    Var.replaceable = false;
+                }
+                else user.GiveItem(Var.present);
+            
         }
 
         [Command("roll")]

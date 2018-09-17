@@ -115,10 +115,20 @@ namespace ForkBot
         }
         public static string GetItemEmote(string item)
         {
-            var itemData = GetItemData(item);
-            var data = itemData.Split('|');
-            if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
-            return ":" + data[0] + ":";
+            string itemData;
+            string[] data;
+            try
+            {
+                itemData = GetItemData(item);
+                data = itemData.Split('|');
+                if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
+                return ":" + data[0] + ":";
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("literally eat my ass");
+                return null;
+            }
         }
         public static string GetItemData(string item)
         {
