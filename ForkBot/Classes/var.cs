@@ -57,5 +57,8 @@ namespace ForkBot
 
         public static string todaysLotto = "0";
         public static DateTime lottoDay = new DateTime(0);
+
+        //gets DateTime in EDT (Eastern Daylight Savings Time)
+        public static DateTime CurrentDate() { return DateTime.UtcNow - new TimeSpan(4, 0, 0); }
     }
 }

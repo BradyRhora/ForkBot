@@ -299,7 +299,7 @@ namespace ForkBot
         {
             if (Check(Context,"crystal_ball")) return;
             await Context.Channel.SendMessageAsync("You gaze into the crystal ball and... learn the exact time until the next present!");
-            var nextPres = (Var.presentTime + Var.presentWait) - DateTime.Now;
+            var nextPres = (Var.presentTime + Var.presentWait) - Var.CurrentDate();
             await Context.User.SendMessageAsync($"The next present will be ready in {nextPres.Hours} hours {nextPres.Minutes} minutes, and {nextPres.Seconds} seconds!");
         }
         

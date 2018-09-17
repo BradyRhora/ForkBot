@@ -36,8 +36,8 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                //await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
-                await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
+                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
+                //await client.LoginAsync(TokenType.Bot, "NDMzMzc2MjYxNTU0MDQ0OTM5.Da68oA.5s6xqDZtdO9rkVQlomi0nPQBSg0"); //forkbot test token
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
@@ -186,9 +186,9 @@ namespace ForkBot
                     //ensure user is in dictionary
                     if (u.Key == context.User.Id) { inLM = true; break; }
                 }
-                if (inLM == false) Var.lastMessage.Add(context.User.Id, DateTime.Now - new TimeSpan(1, 0, 1));
+                if (inLM == false) Var.lastMessage.Add(context.User.Id, Var.CurrentDate() - new TimeSpan(1, 0, 1));
                 //if chance of lootbox
-                if (Var.lastMessage[context.User.Id] <= DateTime.Now - new TimeSpan(1, 0, 0))
+                if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
                 {
                     //5% chance at lootbox
                     if (rdm.Next(100) + 1 < 5)
@@ -198,7 +198,7 @@ namespace ForkBot
                     }
                 }
                 //set last message time to now
-                Var.lastMessage[context.User.Id] = DateTime.Now;
+                Var.lastMessage[context.User.Id] = Var.CurrentDate();
 
                 if (!result.IsSuccess)
                 {
