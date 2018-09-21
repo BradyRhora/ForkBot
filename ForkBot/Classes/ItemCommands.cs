@@ -634,7 +634,7 @@ namespace ForkBot
             Var.presentRigger = Context.User;
         }
 
-        [Command("slots"), Summary("Spin the slots and win cash!"), Alias(new string[] { "slot", "slot_machine" })]
+        [Command("slots"), Alias(new string[] { "slot", "slot_machine" })]
         public async Task Slots(int bet = 0)
         {
             if (Check(Context, "slot_machine", false)) return;

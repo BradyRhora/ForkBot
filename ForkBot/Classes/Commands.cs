@@ -314,6 +314,35 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.851\n-added ;top bottom and ;slots\n-fixed shop bug\n-added items! tickets! lootboxes!\n-slot and other item adjustments\n-added ;iteminfo\n```");
         }
 
+        [Command("stats"), Summary("See stats regarding Forkbot.")]
+        public async Task Stats()
+        {
+            var guilds = Bot.client.Guilds;
+            int guildCount = guilds.Count();
+            int userCount = 0;
+            foreach(IGuild g in guilds)
+            {
+                userCount += (await g.GetUsersAsync()).Count();
+            }
+            var uptime = Var.CurrentDate() - Var.startTime;
+
+            JEmbed emb = new JEmbed();
+            emb.Title = "ForkBot Stats";
+            emb.Description = $"ForkBot is developed by Brady#1234 for use in the York University Discord server.\nIt has many uses, such as professor lookup, course lookup, word defining, and many fun commands.";
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Users";
+                x.Text = $"Serving {userCount} users in {guildCount} guilds.";
+            }));
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Uptime";
+                x.Text = $"{uptime.Days} days, {uptime.Hours} hours, {uptime.Minutes} minutes, {uptime.Seconds} seconds.";
+            }));
+        }
+
+
+
         #endregion
 
         #region Item Commands

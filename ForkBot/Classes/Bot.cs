@@ -41,6 +41,7 @@ namespace ForkBot
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
+                Var.startTime = Var.CurrentDate();
                 await client.SetGameAsync("Off Strike?", streamType: StreamType.Twitch);
 
                 await Task.Delay(-1);
