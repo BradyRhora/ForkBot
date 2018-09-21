@@ -372,18 +372,6 @@ namespace ForkBot
                             break;
                         }
                     }
-
-                    /*if (rdm.Next(100) < 5 && !unsold)
-                    {
-                        var rItemData = rItems[rdm.Next(rItems.Count())];
-                        var itemName = rItemData.Split('|')[0].Replace('_', ' ');
-                        var rMessage = rItemData.Split('|')[1];
-                        u.GiveCoins(-price);
-                        u.GiveItem(item.Replace(' ','_'));
-                        msg += $"Wait... Something is happening.... Your {Func.ToTitleCase(item)} floats up into the air and glows... It becomes.. My GOD... IT BECOMES....\n\n" +
-                                                               $"A {itemName}! {Functions.GetItemEmote(rItemData)} {rMessage}\n";
-                    }
-                    else */
                     if (!unsold)
                     {
                         u.GiveCoins(price);
@@ -392,10 +380,10 @@ namespace ForkBot
                     else
                     {
                         u.GiveItem(item);
-                        msg += "This item cannot be sold. Have you tried using it's command?";
+                        msg += $"{item} cannot be sold. Have you tried using it's command?\n";
                     }
                 }
-                else msg += $"You do not have an item called {item}!";
+                else msg += $"You do not have an item called {item}!\n";
             }
 
             await Context.Channel.SendMessageAsync(msg);
