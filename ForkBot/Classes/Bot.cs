@@ -235,8 +235,8 @@ namespace ForkBot
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {
             var msg = cache.Value;
-            
-            if ((msg.Author as IGuildUser).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && msg.Author.Id != client.CurrentUser.Id && !Var.purging && msg.Content != ";bomb")
+            var id = (msg.Author as IGuildUser).Guild.Id;
+            if ((id == Constants.Guilds.BASSIC || id == Constants.Guilds.YORK_UNIVERSITY) & msg.Author.Id != client.CurrentUser.Id && !Var.purging && msg.Content != ";bomb")
             {
                 JEmbed emb = new JEmbed();
                 emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;
@@ -260,8 +260,12 @@ namespace ForkBot
                 emb.Footer.Text = datetime.ToLongDateString() + " " + datetime.ToLongTimeString() + " | " +
                     msg.Author.Username + "#" + msg.Author.Discriminator + " ID: " + msg.Author.Id;
 
+                ulong msgChan = 0;
 
-                var chan = client.GetChannel(Constants.Channels.DELETED_MESSAGES) as IMessageChannel;
+                if (id == Constants.Guilds.YORK_UNIVERSITY) msgChan = Constants.Channels.DELETED_MESSAGES;
+                else msgChan = Constants.Channels.ASS_DELETED_MESSAGES;
+
+                var chan = client.GetChannel(msgChan) as IMessageChannel;
                 await chan.SendMessageAsync("", embed: emb.Build());
             }
         }

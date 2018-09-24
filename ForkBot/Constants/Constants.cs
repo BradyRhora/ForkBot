@@ -12,6 +12,7 @@ namespace ForkBot
             public static ulong YORK_UNIVERSITY = 265998661606047744;
             public static ulong P10_ENTERPRISES = 436016366672150531;
             public static ulong FORKU = 342836847187329024;
+            public static ulong BASSIC = 492147609532891136;
         }
 
         public class Users
@@ -43,6 +44,7 @@ namespace ForkBot
             public static ulong ANNOUNCEMENTS = 265999135503679488;
             public static ulong COMMANDS = 271843457121779712;
             public static ulong DELETED_MESSAGES = 306236074655612930;
+            public static ulong ASS_DELETED_MESSAGES = 493873769627254786;
         }
 
         public class EmoteAnimations
