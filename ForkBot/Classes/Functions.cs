@@ -127,7 +127,7 @@ namespace ForkBot
             catch (Exception e)
             {
                 Console.WriteLine("literally eat my ass");
-                return null;
+                return ":question:";
             }
         }
         public static string GetItemData(string item)

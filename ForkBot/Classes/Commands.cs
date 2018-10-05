@@ -658,8 +658,8 @@ namespace ForkBot
             await ReplyAsync("Item not found.");
         }
 
-        [Command("craft"), Summary("[FUN] Combine bad items to make cool items!")]
-        public async Task Craft(params string[] items)
+        [Command("combine"), Summary("[FUN] Combine lame items to make rad items!")]
+        public async Task Combine(params string[] items)
         {
             throw new NotImplementedException();
         }
@@ -738,43 +738,6 @@ namespace ForkBot
             }
         }
         
-        [Command("draw"), Summary("[FUN] Gets ForkBot to draw you a lovely picture")]
-        public async Task Draw(int count)
-        {
-            if (count > 99999) count = 99999;
-            int size = 500;
-            using (Bitmap bmp = new Bitmap(size, size))
-            {
-                using (Graphics g = Graphics.FromImage(bmp))
-                {
-                    int x = rdm.Next(size);
-                    int y = rdm.Next(size);
-                    var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
-
-                    for (int i = 0; i < count; i++)
-                    {
-                        Brush b = new SolidBrush(c);
-                        g.FillEllipse(b, x, y, 10, 10);
-                        int mult = 0;
-                        mult = rdm.Next(-1, 2);
-                        x += 5 * mult;
-                        mult = rdm.Next(-1, 2);
-                        y += 5 * mult;
-                        if (rdm.Next(100) == 1 || x > size || x < 0 || y > size || y < 0)
-                        {
-                            x = rdm.Next(size);
-                            y = rdm.Next(size);
-                            c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
-                        }
-                    }
-
-                    bmp.Save("Files/drawing.png");
-                    await Context.Channel.SendFileAsync("Files/drawing.png");
-
-                }
-            }
-        }
-
         [Command("choose"), Summary("[FUN] Get ForkBot to make your decisions for you! Seperate choices with `|`")]
         public async Task Choose([Remainder] string input)
         {
@@ -1247,10 +1210,14 @@ namespace ForkBot
         {
             var top5 = Functions.GetTopList(stat);
             string msg = "```\nTop five users";
-            if (stat == "bottom") msg = msg.Replace("Top", "Bottom");
-            else if (stat != "") msg += " [" + stat + "]:\n";
+            if (stat == "bottom")
+            {
+                msg = msg.Replace("Top", "Bottom");
+                stat = "";
+            }
+            else if (stat != "") msg += " [" + stat + "]";
+            msg += ":\n";
             
-            else msg += ":\n";
             int amount = 5;
             if (top5.Count() < 5) amount = top5.Count();
             for (int i = 0; i < amount; i++)

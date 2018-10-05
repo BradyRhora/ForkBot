@@ -9,6 +9,7 @@ using Discord;
 using Discord.Commands;
 using ImageProcessor;
 using System.Net;
+using System.Drawing;
 
 namespace ForkBot
 {
@@ -652,7 +653,8 @@ namespace ForkBot
                     user.GiveCoins(-bet);
                     SlotMachine sm = new SlotMachine(Context.User, bet);
                     var result = sm.Spin();
-                    var msg = await Context.Channel.SendMessageAsync(sm.Generate() + "\n" + result);
+
+                    var msg = await Context.Channel.SendMessageAsync(sm.Generate() + "\n" + result + $"\n*You have: {user.GetCoins()} coins.*");
                 }
             }
             catch (Exception e)
@@ -704,6 +706,42 @@ namespace ForkBot
             Var.presentWait -= new TimeSpan(Convert.ToInt32(Var.presentWait.TotalHours * .75), 0, 0);
         }
 
+        [Command("draw"), Alias(new string[] {"crayon"})]
+        public async Task Draw(int count)
+        {
+            if (Check(Context, "crayon", false)) return;
+            if (count > 99999) count = 99999;
+            int size = 500;
+            using (Bitmap bmp = new Bitmap(size, size))
+            {
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    int x = rdm.Next(size);
+                    int y = rdm.Next(size);
+                    var c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
 
+                    for (int i = 0; i < count; i++)
+                    {
+                        Brush b = new SolidBrush(c);
+                        g.FillEllipse(b, x, y, 10, 10);
+                        int mult = 0;
+                        mult = rdm.Next(-1, 2);
+                        x += 5 * mult;
+                        mult = rdm.Next(-1, 2);
+                        y += 5 * mult;
+                        if (rdm.Next(100) == 1 || x > size || x < 0 || y > size || y < 0)
+                        {
+                            x = rdm.Next(size);
+                            y = rdm.Next(size);
+                            c = System.Drawing.Color.FromArgb(rdm.Next(256), rdm.Next(256), rdm.Next(256));
+                        }
+                    }
+
+                    bmp.Save("Files/drawing.png");
+                    await Context.Channel.SendFileAsync("Files/drawing.png");
+
+                }
+            }
+        }
     }
 }
