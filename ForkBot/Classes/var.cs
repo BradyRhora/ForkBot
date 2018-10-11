@@ -62,5 +62,6 @@ namespace ForkBot
         public static DateTime CurrentDate() { return DateTime.UtcNow - new TimeSpan(4, 0, 0); }
 
         public static List<ChannelStats> channelStats = new List<ChannelStats>();
+        public static DateTime startTime;
     }
 }
