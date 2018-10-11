@@ -33,6 +33,7 @@ namespace ForkBot
         
         public static User GetUser(IUser user) //gets User class for IUser, makes one if there isn't already one.
         {
+            
             return GetUser(user.Id);
         }
 
