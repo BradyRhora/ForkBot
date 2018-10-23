@@ -42,7 +42,8 @@ namespace ForkBot
                 await client.StartAsync();
                 Console.WriteLine("ForkBot successfully intialized.");
                 Var.startTime = Var.CurrentDate();
-                await client.SetGameAsync("Off Strike?", streamType: StreamType.Twitch);
+                int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
+                await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
 
                 await Task.Delay(-1);
             }
@@ -79,12 +80,19 @@ namespace ForkBot
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }
 
+        DateTime lastDay = Var.CurrentDate();
         public async Task HandleCommand(SocketMessage messageParam)
         {
             SocketUserMessage message = messageParam as SocketUserMessage;
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             int argPos = 0;
+
+            if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
+            {
+                int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
+                await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
+            }
 
             //checks if message contains any blocked words
             if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))

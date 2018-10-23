@@ -272,7 +272,7 @@ namespace ForkBot
             foreach(string word in blockedWords)
             {
                 if (word != "")
-                    if (msg.ToLower().Contains(word)) return true;
+                    if (msg.ToLower().Contains(word.ToLower())) return true;
             }
             return false;
         }

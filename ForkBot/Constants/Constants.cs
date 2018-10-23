@@ -76,7 +76,10 @@ namespace ForkBot
 
         }
 
-
+        public class Dates
+        {
+            public static DateTime STRIKE_END = new DateTime(2018, 7, 25);
+        }
 
     }
 }
