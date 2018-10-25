@@ -1,3 +1,1 @@
-﻿unicorn|The mythical horse with a single horn! Maybe it'll grant you a wish?|-
-alien|Alien! E.T.! Extraterrestrial! It comes in peace!|150
-crystal_ball|Look deep into the ball... Witness your future.|100
+﻿

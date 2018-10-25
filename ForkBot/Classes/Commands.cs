@@ -354,7 +354,6 @@ namespace ForkBot
             var u = Functions.GetUser(Context.User);
             string msg = "";
             var itemList = Functions.GetItemList();
-            var rItems = Functions.GetRareItemList();
             foreach (string item in items)
             {
                 if (u.GetItemList().Contains(item))
@@ -657,7 +656,7 @@ namespace ForkBot
         [Command("iteminfo"), Summary("Its like a pokedex but for items.")]
         public async Task ItemInfo(string item)
         {
-            var items = Functions.GetItemList().Concat(Functions.GetRareItemList()).ToArray();
+            var items = Functions.GetItemList();
             foreach(string i in items)
             {
                 if (i.StartsWith(item))

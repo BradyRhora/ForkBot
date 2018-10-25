@@ -21,14 +21,12 @@ namespace ForkBot
         public Shop()
         {
             var nItems = Functions.GetItemList();
-            var rItems = Functions.GetRareItemList();
-            var allItems = nItems.Concat(rItems).ToArray();
 
             List<string> items = new List<string>();
             for (int i = 0; i < 5; i++)
             {
-                int itemID = rdm.Next(allItems.Length);
-                if (!items.Contains(allItems[itemID]) && !allItems[itemID].Split('|').Contains("-")) items.Add(allItems[itemID]);
+                int itemID = rdm.Next(nItems.Length);
+                if (!items.Contains(nItems[itemID]) && !nItems[itemID].Split('|').Contains("-")) items.Add(nItems[itemID]);
                 else i--;
             }
 

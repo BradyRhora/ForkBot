@@ -110,10 +110,6 @@ namespace ForkBot
         {
             return File.ReadAllLines("Files/items.txt");
         }
-        public static string[] GetRareItemList()
-        {
-            return File.ReadAllLines("Files/rareitems.txt");
-        }
         public static string GetItemEmote(string item)
         {
             string itemData;
@@ -133,7 +129,7 @@ namespace ForkBot
         }
         public static string GetItemData(string item)
         {
-            foreach(string data in GetItemList().Concat(GetRareItemList()))
+            foreach(string data in GetItemList())
             {
                 if (data.StartsWith(item))
                     return data;
