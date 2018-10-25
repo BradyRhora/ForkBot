@@ -1247,13 +1247,7 @@ namespace ForkBot
             msg += "```";
             await Context.Channel.SendMessageAsync(msg);
         }
-
-        [Command("forkopoly"), Summary("[FUN] Play a game of Forkopoly™ with your best pals!"), Alias(new string[]{"fp"})]
-        public async Task Forkopoly(string command)
-        {
-            
-        }
-
+        
         [Command("lottery"), Summary("[FUN] The Happy Lucky Lottery! Buy a lotto card and check daily to see if your numbers match!")]
         public async Task Lottery(string command = "")
         {
