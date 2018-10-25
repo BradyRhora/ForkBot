@@ -456,6 +456,21 @@ namespace ForkBot
             }
         }
 
+        [Command("donate"), Summary("[FUN] Give the specified user some of your coins!")]
+        public async Task Donate(IUser user, int coins)
+        {
+            User u1 = Functions.GetUser(Context.User);
+            if (u1.GetCoins() >= coins)
+            {
+                u1.GiveCoins(-coins);
+                Functions.GetUser(user).GiveCoins(coins);
+                await ReplyAsync($":moneybag: {user.Mention} has been given {coins} of your coins!");
+            }
+            else await ReplyAsync("You don't have enough coins.");
+            
+        }
+
+
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
         public async Task Shop([Remainder] string command = null)
         {
