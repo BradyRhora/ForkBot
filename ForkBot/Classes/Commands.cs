@@ -467,7 +467,6 @@ namespace ForkBot
                 await ReplyAsync($":moneybag: {user.Mention} has been given {coins} of your coins!");
             }
             else await ReplyAsync("You don't have enough coins.");
-            
         }
 
 
@@ -543,7 +542,7 @@ namespace ForkBot
         [Command("freemarket"), Alias("fm", "market"), Summary("[FUN] Sell items to other users! Choose your own price!")]
         public async Task FreeMarket(params string[] command)
         {
-            throw new NotImplementedException("Not ready for public.");
+            if (Context.User.Id!=Constants.Users.BRADY) throw new NotImplementedException("Not ready for public.");
 
 
             if (command.Count() == 0) await ReplyAsync("Use one of the following commands!\n```\n;fm view\n;fm sell [item] [price]\n;fm buy [item_id]\n```");
