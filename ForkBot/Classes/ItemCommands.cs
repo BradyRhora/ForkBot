@@ -117,8 +117,10 @@ namespace ForkBot
                             else msg += ":question:";
                             msg += " + ";
                         }
-                        msg.Trim(' ', '+');
-                        msg += " = " + Functions.GetItemEmote(ic.Result);
+                        msg = msg.Substring(0, msg.Length - 3);
+                        msg += " = ";
+                        if (uItems.Contains(ic.Result)) msg += Functions.GetItemEmote(ic.Result);
+                        else msg += ":question:";
                     }
                     await ReplyAsync(msg);
                     u.RemoveItem("eyeglasses");

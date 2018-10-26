@@ -71,3 +71,4 @@ jack_o_lantern|Spooky!|100
 candy|Enough sugar to kill a man!|25
 man|I can do that, hold my beer.|-*
 woman|Get back to the kitchen am I right hahaha.. ha...|*-
+tiger|He just wants a hug!|200
