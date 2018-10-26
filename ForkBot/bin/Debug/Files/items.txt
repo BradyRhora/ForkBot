@@ -40,7 +40,7 @@ paintbrush|I believe, every day's a good day when you paint.|50
 mag|Burn the ants! Or read, I guess.|200
 crayon|Colour in between the lines!|3
 milk|Calcium! Strong bones! COW JUICE!|5
-heart|I'm giving my heart to you! What? You don't want it? Oh..|25
+heart|Give me to someone!|50
 basketball|Get out there and play some ball, kiddo.|10
 goose|FUCK|40|369992347314028554
 youness|Lucky you.... :weary:|25|373579959899258880
@@ -69,3 +69,5 @@ pregnant_woman|Should have swallowed!|-*
 baby_symbol|What could it mean..|-*
 jack_o_lantern|Spooky!|100
 candy|Enough sugar to kill a man!|25
+man|I can do that, hold my beer.|-*
+woman|Get back to the kitchen am I right hahaha.. ha...|*-
