@@ -667,7 +667,7 @@ namespace ForkBot
             }
         }
 
-        [Command("iteminfo"), Summary("Its like a pokedex but for items.")]
+        [Command("iteminfo"), Summary("Its like a pokedex but for items!")]
         public async Task ItemInfo(string item)
         {
             var items = Functions.GetItemList();
@@ -691,7 +691,28 @@ namespace ForkBot
         [Command("combine"), Summary("[FUN] Combine lame items to make rad items!")]
         public async Task Combine(params string[] items)
         {
-            throw new NotImplementedException();
+            User u = Functions.GetUser(Context.User);
+            
+            foreach (string item in items)
+            {
+                if (!u.GetItemList().Contains(item))
+                {
+                    await ReplyAsync($"You do not have a(n) {item}!");
+                    return;
+                }
+            }
+
+            string result = ItemCombo.CheckCombo(items);
+            if (result != null)
+            {
+                foreach(string item in items) u.RemoveItem(item);
+                u.GiveItem(result);
+                await ReplyAsync($"You have successfully made a {result}! " + Functions.GetItemEmote(result));
+            }
+            else
+            {
+                await ReplyAsync("This combo doesn't exist!");
+            }
         }
 
 

@@ -123,7 +123,7 @@ namespace ForkBot
             }
             catch (Exception e)
             {
-                Console.WriteLine("literally eat my ass");
+                Console.WriteLine("literally eat my ass (item emote not working, possible incorrect name)");
                 return ":question:";
             }
         }

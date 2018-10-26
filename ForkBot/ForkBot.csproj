@@ -180,6 +180,7 @@
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
     <Compile Include="Classes\Objects\InfoEmbed.cs" />
+    <Compile Include="Classes\Objects\ItemCombo.cs" />
     <Compile Include="Classes\Objects\ItemTrade.cs" />
     <Compile Include="Classes\Objects\Poll.cs" />
     <Compile Include="Classes\Objects\Shop.cs" />
@@ -245,7 +246,6 @@
     <Content Include="bin\Debug\Files\items.txt" />
     <Content Include="bin\Debug\Files\jobs.txt" />
     <Content Include="bin\Debug\Files\MarketItems.xml" />
-    <Content Include="bin\Debug\Files\rareitems.txt" />
     <Content Include="bin\Debug\Files\reminders.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />
     <Content Include="bin\Debug\Files\wordlist.txt" />

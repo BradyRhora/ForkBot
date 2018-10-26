@@ -26,7 +26,7 @@ namespace ForkBot
             for (int i = 0; i < 5; i++)
             {
                 int itemID = rdm.Next(nItems.Length);
-                if (!items.Contains(nItems[itemID]) && !nItems[itemID].Split('|').Contains("-")) items.Add(nItems[itemID]);
+                if (!items.Contains(nItems[itemID]) && !nItems[itemID].Split('|')[2].Contains("-")) items.Add(nItems[itemID]);
                 else i--;
             }
 

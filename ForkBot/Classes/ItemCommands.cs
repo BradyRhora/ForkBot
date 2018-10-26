@@ -76,7 +76,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":high_heel: You feel fabulous.\n**Fashion+10**");
             Functions.GetUser(Context.User).AddData("stat.fashion", 10);
         }
-        
+
         [Command("athletic_shoe")]
         public async Task AthleticShoe()
         {
@@ -84,7 +84,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":athletic_shoe: You go for a nice run!\n**Fitness+20**");
             Functions.GetUser(Context.User).AddData("stat.fitness", 20);
         }
-        
+
         [Command("dark_sunglasses")]
         public async Task DarkSunglasses()
         {
@@ -92,13 +92,39 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":dark_sunglasses: You equip your sunglasses... and get a whole lot cooler.\n**Fashion+20**");
             Functions.GetUser(Context.User).AddData("stat.fashion", 20);
         }
-        
+
         [Command("eyeglasses")]
-        public async Task Eyeglasses()
+        public async Task Eyeglasses(string item)
         {
             if (Check(Context, "eyeglasses")) return;
-            await Context.Channel.SendMessageAsync(":eyeglasses: You probably don't use these to see, but they look nice!\n**Fashion+5**");
-            Functions.GetUser(Context.User).AddData("stat.fashion", 10);
+            User u = Functions.GetUser(Context.User);
+            var uItems = u.GetItemList();
+            if (uItems.Contains(item))
+            {
+                List<ItemCombo> possible = new List<ItemCombo>();
+                foreach (ItemCombo ic in ItemCombo.ItemCombos)
+                {
+                    if (ic.Items.Contains(item)) possible.Add(ic);
+                }
+                string msg = "Recipes:\n";
+                foreach (ItemCombo ic in possible)
+                {
+                    foreach (string i in ic.Items)
+                    {
+                        if (uItems.Contains(i)) msg += Functions.GetItemEmote(i);
+                        else msg += ":question:";
+                        msg += " + ";
+                    }
+                    msg.Trim(' ', '+');
+                    msg += " = " + Functions.GetItemEmote(ic.Result);
+                }
+
+                await ReplyAsync(msg);
+            }
+            else
+            {
+                await ReplyAsync("You don't have an item with that name!");
+            }
         }
 
         [Command("briefcase")]
@@ -106,7 +132,7 @@ namespace ForkBot
         {
             if (Check(Context, "briefcase")) return;
 
-            int r = rdm.Next(50)+1;
+            int r = rdm.Next(50) + 1;
             int amount;
             if (r < 20) amount = rdm.Next(100) + 1;
             else amount = rdm.Next(100, 1000) + 1;
@@ -138,32 +164,32 @@ namespace ForkBot
             var user = Functions.GetUser(Context.User);
 
             await Context.Channel.SendMessageAsync($"{Context.User.Username}! You got...");
-            
-                var presents = Functions.GetItemList();
-                int presRDM = rdm.Next(presents.Count());
-                var presentData = presents[presRDM].Split('|');
-                Var.present = presentData[0];
-                Var.rPresent = Var.present;
-                var presentName = Var.present;
-                var pMessage = presentData[1];
-                await Context.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presentName)} {pMessage}");
-                if (Var.present == "santa")
-                {
-                    await Context.Channel.SendMessageAsync("You got...");
-                    string sMessage = "";
-                    for (int i = 0; i < 5; i++)
-                    {
-                        var sPresentData = presents[rdm.Next(presents.Count())];
-                        string sPresentName = sPresentData.Split('|')[0];
-                        user.GiveItem(sPresentName);
-                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentName)} {sPresentData.Split('|')[1]}\n";
-                    }
-                    await Context.Channel.SendMessageAsync(sMessage);
 
-                    Var.replaceable = false;
+            var presents = Functions.GetItemList();
+            int presRDM = rdm.Next(presents.Count());
+            var presentData = presents[presRDM].Split('|');
+            Var.present = presentData[0];
+            Var.rPresent = Var.present;
+            var presentName = Var.present;
+            var pMessage = presentData[1];
+            await Context.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presentName)} {pMessage}");
+            if (Var.present == "santa")
+            {
+                await Context.Channel.SendMessageAsync("You got...");
+                string sMessage = "";
+                for (int i = 0; i < 5; i++)
+                {
+                    var sPresentData = presents[rdm.Next(presents.Count())];
+                    string sPresentName = sPresentData.Split('|')[0];
+                    user.GiveItem(sPresentName);
+                    sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentName)} {sPresentData.Split('|')[1]}\n";
                 }
-                else user.GiveItem(Var.present);
-            
+                await Context.Channel.SendMessageAsync(sMessage);
+
+                Var.replaceable = false;
+            }
+            else user.GiveItem(Var.present);
+
         }
 
         [Command("roll")]
@@ -179,7 +205,7 @@ namespace ForkBot
             if (Check(Context, "8ball", false)) return;
             string[] answers = { "Yes", "No", "Unlikely", "Chances good", "Likely", "Lol no", "If you believe", "Ask Brady" };
             await Context.Channel.SendMessageAsync(":8ball: " + answers[rdm.Next(answers.Count())]);
-            
+
         }
 
         [Command("gun"), Alias("rob")]
@@ -206,7 +232,7 @@ namespace ForkBot
                 var items = u2.GetItemList();
                 if (items.Count() == 0)
                 {
-                    await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!"+
+                    await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
                                                            $" You drop your gun and run before the police arrive. {(user as IGuildUser).Mention} picks up the gun!");
                     u2.GiveItem("gun");
                 }
@@ -235,7 +261,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":dog: You pet your pupper :blush:\n**Happiness+30**");
             Functions.GetUser(Context.User).AddData("stat.happiness", 30);
         }
-        
+
         [Command("unicorn")]
         public async Task Unicorn()
         {
@@ -247,7 +273,7 @@ namespace ForkBot
                                                    "`;wish 4` *\"Make me happy!\"*\n" +
                                                    "`;wish 5` *\"You decide!\"*");
         }
-        
+
         [Command("wish")]
         public async Task Wish(int choice)
         {
@@ -296,15 +322,15 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(msg);
         }
 
-        [Command("crystal_ball"),Alias("crystalball","nextpresent")]
+        [Command("crystal_ball"), Alias("crystalball", "nextpresent")]
         public async Task CrystalBall()
         {
-            if (Check(Context,"crystal_ball")) return;
+            if (Check(Context, "crystal_ball")) return;
             await Context.Channel.SendMessageAsync("You gaze into the crystal ball and... learn the exact time until the next present!");
             var nextPres = (Var.presentTime + Var.presentWait) - Var.CurrentDate();
             await Context.User.SendMessageAsync($"The next present will be ready in {nextPres.Hours} hours {nextPres.Minutes} minutes, and {nextPres.Seconds} seconds!");
         }
-        
+
         [Command("eggplant")]
         public async Task Eggplant()
         {
@@ -355,7 +381,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync($":egg: You throw your egg at {user.Username}!\n**Their Happiness-10**");
             Functions.GetUser(user).AddData("stat.happiness", -10);
         }
-        
+
         [Command("ramen")]
         public async Task Ramen()
         {
@@ -386,7 +412,7 @@ namespace ForkBot
         public async Task Youness()
         {
             if (Check(Context, "youness")) return;
-            
+
             int rand = rdm.Next(50) + 1;
             string msg;
             var user = Functions.GetUser(Context.User);
@@ -434,7 +460,7 @@ namespace ForkBot
             Functions.GetUser(Context.User).GiveCoins(amount);
         }
 
-        [Command("shopping_cart"), Alias("shoppingcart","cart")]
+        [Command("shopping_cart"), Alias("shoppingcart", "cart")]
         public async Task ShoppingCart()
         {
             if (Check(Context, "shopping_cart")) return;
@@ -444,7 +470,7 @@ namespace ForkBot
 
         [Command("knife"), Alias("stab")]
         public async Task Knife() { if (Check(Context, "knife", false)) return; await Context.Channel.SendMessageAsync("Choose someone to rob with `;knife [user]`..."); }
-        
+
         [Command("knife"), Alias("stab")]
         public async Task Knife(IUser user)
         {
@@ -582,12 +608,12 @@ namespace ForkBot
 
             Var.replaceable = false;
         }
-        
+
         [Command("watch")]
         public async Task Watch()
         {
-            if (Check(Context, "watch",false)) return;
-            await Context.Channel.SendMessageAsync(":watch: `" + (DateTime.UtcNow-new TimeSpan(4,0,0)).ToLocalTime()+"`");
+            if (Check(Context, "watch", false)) return;
+            await Context.Channel.SendMessageAsync(":watch: `" + (DateTime.UtcNow - new TimeSpan(4, 0, 0)).ToLocalTime() + "`");
         }
 
         [Command("mag"), Alias("burn")]
@@ -661,7 +687,7 @@ namespace ForkBot
                 await ReplyAsync("Slots error.\n" + e.Message);
             }
         }
-        
+
         [Command("ticket")]
         public async Task Ticket()
         {
@@ -669,8 +695,8 @@ namespace ForkBot
             Var.presentCount += 2;
             await Context.Channel.SendMessageAsync(":ticket: The present count has increased by 2!");
         }
-        
-        [Command("key"), Alias(new string[] { "package","lootbox"})]
+
+        [Command("key"), Alias(new string[] { "package", "lootbox" })]
         public async Task Key()
         {
             User u = Functions.GetUser(Context.User);
@@ -695,13 +721,56 @@ namespace ForkBot
             else if (u.GetItemList().Contains("key")) await ReplyAsync("You have nothing to open with this key!");
             else if (u.GetItemList().Contains("package")) await ReplyAsync("It's locked! You need a key to open it.");
         }
-        
+
         [Command("stopwatch")]
         public async Task Stopwatch()
         {
             if (Check(Context, "stopwatch")) return;
             await Context.Channel.SendMessageAsync(":stopwatch: The present time has decreased by 75%!");
             Var.presentWait -= new TimeSpan(Convert.ToInt32(Var.presentWait.TotalHours * .75), 0, 0);
+        }
+
+        [Command("baby_symbol")]
+        public async Task BabySymbol()
+        {
+            if (Check(Context, "baby_symbol")) return;
+            await Context.Channel.SendMessageAsync(":pregnant_woman: Her water broke!");
+            string msg = "You got...\n:baby: A baby!";
+            var user = Functions.GetUser(Context.User);
+            user.GiveItem("baby");
+            int poopCount = rdm.Next(7);
+            for (int i = 0; i < poopCount; i++)
+            {
+                msg += ":baby: Another baby!";
+                user.GiveItem("baby");
+            }
+            msg += "\nCongratulations! :older_woman:";
+            user.GiveItem("older_woman");
+            await Context.Channel.SendMessageAsync(msg);
+        }
+
+        [Command("jack_o_lantern"), Alias(new string[] {"jackolantern","pumpkin" })]
+        public async Task JackOLantern()
+        {
+            if (Check(Context, "item",false)) return;
+            var dt = Var.CurrentDate();
+            string msg = "";
+            if (dt.Month == 11 && dt.Day == 31)
+            {
+                User u = Functions.GetUser(Context.User);
+                msg += "Happy halloween!";
+                int candyCount = rdm.Next(11) + 5;
+                for(int i = 0; i < candyCount; i++)
+                {
+                    u.GiveItem("candy");
+                }
+                msg += $" You got {candyCount} candies!";
+                await ReplyAsync(msg);
+            }
+            else
+            {
+                await ReplyAsync("Nothing happens.. Maybe the time isn't right.");
+            }
         }
 
 

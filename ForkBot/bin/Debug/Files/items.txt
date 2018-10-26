@@ -4,7 +4,7 @@ dress|Oh! You'll look so pretty in this!|20
 high_heel|It's what the men like!|20
 athletic_shoe|Now you can go for a run!|16
 dark_sunglasses|Don't look directly into the sun!|10
-eyeglasses|Do you need these? No? Oh well!|12
+eyeglasses|They seem.. special?|100
 umbrella2|For those rainy days!|12
 briefcase|Now you can, uh.. hold stuff.|-
 purse|I know you like it.|-
@@ -16,7 +16,7 @@ apple|An apple a day...|6
 egg|EGG.|6
 eggplant|Oh my.. So.... *Phallic...*|10
 ramen|Aka gods gift to humanity.|25
-beer|Drink responsibly!|10
+beer|Drink responsibly!|50
 spoon|Well, it's not a fork but it'll do.|5
 8ball|Ask it a question with `;8ball`!|100
 bow_and_arrow|Watch where you're shooting!|20
@@ -55,3 +55,17 @@ stopwatch|Manipulate time itself! For presents at least.|200
 unicorn|The mythical horse with a single horn! Maybe it'll grant you a wish?|-
 alien|Alien! E.T.! Extraterrestrial! It comes in peace!|150
 crystal_ball|Look deep into the ball... Witness your future.|100
+box|It's.. an empty box?|10|295287651852877844
+gnome|Ho ho ho ha ha, ho ho ho he ha! Hello there, old chum!|40|504154900956184579
+emeraldstar|Let's head back to the Thousand Year Door!|250|347053887032655882
+weed|Legalized!|100|370708444719742976
+meat_on_bone|Delicious flesh!|40
+wine_glass|Tastes best if you're a single mother!|45
+skull|It's dead.|-*
+baby_bottle|Can be filled with more than milk!|40
+older_woman|Perhaps she'll die.|-*
+older_man|Perhaps he'll die.|-*
+pregnant_woman|Should have swallowed!|-*
+baby_symbol|What could it mean..|-*
+jack_o_lantern|Spooky!|100
+candy|Enough sugar to kill a man!|25

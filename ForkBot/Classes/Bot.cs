@@ -114,8 +114,13 @@ namespace ForkBot
                 Var.presentWaiting = false;
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
                 var presents = Functions.GetItemList();
-                int presRDM = rdm.Next(presents.Count());
-                var presentData = presents[presRDM].Split('|');
+                int presRDM;
+                string[] presentData;
+                do
+                {
+                    presRDM = rdm.Next(presents.Count());
+                    presentData = presents[presRDM].Split('|');
+                } while (presentData[2].Contains("*"));
                 Var.present = presentData[0];
                 Var.rPresent = Var.present;
                 var presentName = Var.present;
