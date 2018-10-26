@@ -759,7 +759,7 @@ namespace ForkBot
         [Command("jack_o_lantern"), Alias(new string[] {"jackolantern","pumpkin" })]
         public async Task JackOLantern()
         {
-            if (Check(Context, "item",false)) return;
+            if (Check(Context, "jack_o_lantern",false)) return;
             var dt = Var.CurrentDate();
             string msg = "";
             if (dt.Month == 11 && dt.Day == 31)
