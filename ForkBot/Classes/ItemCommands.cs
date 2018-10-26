@@ -96,7 +96,7 @@ namespace ForkBot
         [Command("eyeglasses")]
         public async Task Eyeglasses(string item)
         {
-            if (Check(Context, "eyeglasses")) return;
+            if (Check(Context, "eyeglasses",false)) return;
             User u = Functions.GetUser(Context.User);
             var uItems = u.GetItemList();
             if (uItems.Contains(item))
@@ -106,20 +106,27 @@ namespace ForkBot
                 {
                     if (ic.Items.Contains(item)) possible.Add(ic);
                 }
-                string msg = "Recipes:\n";
-                foreach (ItemCombo ic in possible)
+                if (possible.Count != 0)
                 {
-                    foreach (string i in ic.Items)
+                    string msg = "Recipes:\n";
+                    foreach (ItemCombo ic in possible)
                     {
-                        if (uItems.Contains(i)) msg += Functions.GetItemEmote(i);
-                        else msg += ":question:";
-                        msg += " + ";
+                        foreach (string i in ic.Items)
+                        {
+                            if (uItems.Contains(i)) msg += Functions.GetItemEmote(i);
+                            else msg += ":question:";
+                            msg += " + ";
+                        }
+                        msg.Trim(' ', '+');
+                        msg += " = " + Functions.GetItemEmote(ic.Result);
                     }
-                    msg.Trim(' ', '+');
-                    msg += " = " + Functions.GetItemEmote(ic.Result);
+                    await ReplyAsync(msg);
+                    u.RemoveItem("eyeglasses");
                 }
-
-                await ReplyAsync(msg);
+                else
+                {
+                    await ReplyAsync("No recipes available for this item!");
+                }
             }
             else
             {
@@ -758,6 +765,7 @@ namespace ForkBot
             if (dt.Month == 11 && dt.Day == 31)
             {
                 User u = Functions.GetUser(Context.User);
+                u.RemoveItem("jack_o_lantern");
                 msg += "Happy halloween!";
                 int candyCount = rdm.Next(11) + 5;
                 for(int i = 0; i < candyCount; i++)
