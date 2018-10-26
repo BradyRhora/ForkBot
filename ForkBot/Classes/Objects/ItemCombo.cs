@@ -34,7 +34,7 @@ namespace ForkBot
                 {
                     if (c.Items.Contains(item)) iCount++;
                 }
-                if (iCount == c.Items.Count()) return c.Result;
+                if (iCount == c.Items.Count() && iCount == items.Count()) return c.Result;
                 else iCount = 0;
             }
             return null;
