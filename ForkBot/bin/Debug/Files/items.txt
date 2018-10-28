@@ -57,8 +57,7 @@ alien|Alien! E.T.! Extraterrestrial! It comes in peace!|150
 crystal_ball|Look deep into the ball... Witness your future.|100
 box|It's.. an empty box?|10|295287651852877844
 gnome|Ho ho ho ha ha, ho ho ho he ha! Hello there, old chum!|40|504154900956184579
-emeraldstar|Let's head back to the Thousand Year Door!|250|347053887032655882
-weed|Legalized!|100|370708444719742976
+weed|Legalized!|100|506117312823427082
 meat_on_bone|Delicious flesh!|40
 wine_glass|Tastes best if you're a single mother!|45
 skull|It's dead.|-*

@@ -365,7 +365,7 @@ namespace ForkBot
                     {
                         if (line.Split('|')[0] == item)
                         {
-                            if (line.Split('|')[2] != "-")
+                            if (!line.Split('|')[2].Contains("-"))
                                 price = (int)(Convert.ToInt32(line.Split('|')[2]) * .75);
                             else unsold = true;
                             break;
@@ -379,7 +379,7 @@ namespace ForkBot
                     else
                     {
                         u.GiveItem(item);
-                        msg += $"{item} cannot be sold. Have you tried using it's command?\n";
+                        msg += $"{item} cannot be sold. Have you tried using it's command or combining it?\n";
                     }
                 }
                 else msg += $"You do not have an item called {item}!\n";
@@ -679,7 +679,7 @@ namespace ForkBot
                     JEmbed emb = new JEmbed();
                     emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]).Replace('_',' ');
                     emb.Description = itemInfo[1];
-                    if (itemInfo[2] == "-") emb.Description += "\n\nCannot be purchased or sold. (Probably found through presents or lootboxes.)";
+                    if (itemInfo[2].Contains("-")) emb.Description += "\n\nCannot be purchased or sold. (Probably found through presents or combining.)";
                     else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
                     await ReplyAsync("", embed: emb.Build());
                     return;
