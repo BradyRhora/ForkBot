@@ -701,6 +701,7 @@ namespace ForkBot
                     return;
                 }
             }
+            
 
             string result = ItemCombo.CheckCombo(items);
             if (result != null)
