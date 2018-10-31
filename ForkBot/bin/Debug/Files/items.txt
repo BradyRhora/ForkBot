@@ -55,7 +55,7 @@ stopwatch|Manipulate time itself! For presents at least.|200
 unicorn|The mythical horse with a single horn! Maybe it'll grant you a wish?|-
 alien|Alien! E.T.! Extraterrestrial! It comes in peace!|150
 crystal_ball|Look deep into the ball... Witness your future.|100
-box|It's.. an empty box?|10|295287651852877844
+box|It's.. an empty box?|-|507167137106886657
 gnome|Ho ho ho ha ha, ho ho ho he ha! Hello there, old chum!|40|504154900956184579
 weed|Legalized!|100|506117312823427082
 meat_on_bone|Delicious flesh!|40
@@ -70,4 +70,5 @@ jack_o_lantern|Spooky!|100
 candy|Enough sugar to kill a man!|25
 man|I can do that, hold my beer.|-*
 woman|Get back to the kitchen am I right hahaha.. ha...|*-
-tiger|He just wants a hug!|200
+tiger|He just wants a hug!|100
+ribbon|The finishing touch!|50

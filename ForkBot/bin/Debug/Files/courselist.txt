@@ -1,4 +1,4 @@
-ï»¿AP/CCY 1999 6.00	Introduction to Children, Childhood & Youth Studies
+AP/CCY 1999 6.00	Introduction to Children, Childhood & Youth Studies
 
 SB/ACTG 2010 3.00	Introduction To Financial Accounting I	 
 SB/ACTG 2011 3.00	Introduction To Financial Actg II	 
@@ -399,7 +399,7 @@ GS/BIOL 5086 1.50	Critical Skills in Ecology and Evolution
 GS/BIOL 5088 1.50	Advanced Topics in Ecology and Evolution	 
 GS/BIOL 5098 1.50	Conservation Biology	 
 GS/BIOL 5134 3.00	Vascular Biology in Health and Disease	 
-GS/BIOL 5136 3.00	Perception and ActionÂ”/Same as Biology 5136 3.0 and Kinesiology & Health Science 6161 3.0	 
+GS/BIOL 5136 3.00	Perception and Action?/Same as Biology 5136 3.0 and Kinesiology & Health Science 6161 3.0	 
 GS/BIOL 5137 3.00	Brain Mechanisms of Movement in Health and Disease	 
 GS/BIOL 5139 3.00	Advanced Exercise Physiology I: Muscle	 
 GS/BIOL 5144 3.00	Computer Programming for Experimental Psychology	 
@@ -454,17 +454,17 @@ GL/CDNS 1920 6.00	Comprendre le Canada contemporain
 AP/CDNS 1953 6.00	Canadian Writers in Person	 
 AP/CDNS 2200 6.00	Introduction to Canadian Studies	 
 GL/CDNS 2600 6.00	Introduction to Canadian Politics	 
-GL/CDNS 2600 6.00	Introduction Ã  la politique canadienne	 
+GL/CDNS 2600 6.00	Introduction à la politique canadienne	 
 GL/CDNS 2612 3.00	Sport in Canadian Society	 
 GL/CDNS 2618 3.00	Visual Arts of the Twentieth Century in Canada	 
 GL/CDNS 2630 3.00	Aboriginal Peoples of Canada	 
 GL/CDNS 2930 3.00	Regionalism, Culture and Identity in Canada	 
-GL/CDNS 2930 3.00	RÃ©gionalisme, culture et identitÃ© au Canada	 
+GL/CDNS 2930 3.00	Régionalisme, culture et identité au Canada	 
 GL/CDNS 3616 3.00	Case Studies in Canada's Aboriginal Languages	 
 GL/CDNS 3621 3.00	Canada in Global Perspective/Le Canada, perspective globale	 
 GL/CDNS 3646 3.00	English-Canadian Film	 
-GL/CDNS 3670 6.00	Le multiculturalisme et l'ethnicitÃ© au Canada	 
-GL/CDNS 3674 3.00	Cultures quÃ©bÃ©coise et francophone canadienne	 
+GL/CDNS 3670 6.00	Le multiculturalisme et l'ethnicité au Canada	 
+GL/CDNS 3674 3.00	Cultures québécoise et francophone canadienne	 
 GL/CDNS 3680 3.00	Logic of Social Inquiry: Qualitative Methods	 
 GL/CDNS 3690 3.00	The Logic of Social Inquiry: Quantitative Methods (Data Collection and Analysis)	 
 AP/CDNS 4100 6.00	Directed Reading	 
@@ -896,7 +896,7 @@ ED/DRAA 3051 6.00	Teaching Dramatic Arts in the Intermediate Senior Division	Fal
 GL/DRST 1000 6.00	Here and Now: Understanding Live Theatre	 
 GL/DRST 1200 6.00	Smoke and Mirrors: an Introduction to Technical Theatre	 
 GL/DRST 1210 3.00	Performance I	 
-GL/DRST 1215 3.00	Performance II/Arts de la scÃ¨ne II	 
+GL/DRST 1215 3.00	Performance II/Arts de la scène II	 
 GL/DRST 2617 6.00	Performing Texts: An Introduction	 
 GL/DRST 2632 6.00	Western Drama: Ancient to Modern	 
 GL/DRST 2634 6.00	Spatiality and Spatial Representation	 
@@ -904,11 +904,11 @@ GL/DRST 3000 3.00	Digital Stages: An Introduction to Scenography and 3D Computer
 GL/DRST 3620 6.00	Reading Shakespeare	 
 GL/DRST 3625 3.00	Medieval English Drama	 
 GL/DRST 3640 6.00	Art dramatique : texte et production	 
-GL/DRST 3650 3.00	ThÃ©Ã¢tre franÃ§ais du XXe siÃ¨cle	 
-GL/DRST 3925 3.00	Le franÃ§ais des stars	 
+GL/DRST 3650 3.00	Théâtre français du XXe siècle	 
+GL/DRST 3925 3.00	Le français des stars	 
 GL/DRST 3950 6.00	English-Speaking Theatre in Canada	 
 GL/DRST 4605 6.00	Spanish and/or Latin American Theatre: From Drama to Performance	 
-GL/DRST 4612 3.00	ThÃ©Ã¢tre du XVIIIe siÃ¨cle	 
+GL/DRST 4612 3.00	Théâtre du XVIIIe siècle	 
 GL/DRST 4619 6.00	Performing the Baroque	 
 GL/DRST 4625 6.00	Imagining the Past: Literary Uses of History in the Renaissance
 
@@ -926,10 +926,10 @@ LE/EATS 3280 3.00	Physics of the Space Environment
 
 AP/ECON 1000 3.00	Introduction to Microeconomics	 
 GL/ECON 1000 3.00	Introduction to Economics: Microeconomics	 
-GL/ECON 1000 3.00	Ã‰lÃ©ments d'Ã©conomique : l' analyse microÃ©conomique	 
+GL/ECON 1000 3.00	Éléments d'économique : l' analyse microéconomique	 
 AP/ECON 1010 3.00	Introduction to Macroeconomics	 
 GL/ECON 1010 3.00	Introduction to Economics: Macroeconomics	 
-GL/ECON 1010 3.00	Ã‰lÃ©ments d'Ã©conomique : l'analyse macroÃ©conomique	 
+GL/ECON 1010 3.00	Éléments d'économique : l'analyse macroéconomique	 
 AP/ECON 1530 3.00	Introductory Mathematical Economics I	 
 AP/ECON 1540 3.00	Introductory Mathematical Economics II	 
 GL/ECON 1680 6.00	Modern Economic History: A Canadian Perspective	 
@@ -937,7 +937,7 @@ AP/ECON 1900 3.00	Microeconomics for Life: Making Smart Choices
 SB/ECON 2000 3.00	Applied Macroeconomics	 
 GL/ECON 2100 6.00	Microeconomic Theory	 
 GL/ECON 2200 6.00	Macroeconomic Theory	 
-GL/ECON 2200 6.00	La thÃ©orie macroÃ©conomique	 
+GL/ECON 2200 6.00	La théorie macroéconomique	 
 AP/ECON 2300 3.00	Intermediate Microeconomic Theory I	 
 AP/ECON 2350 3.00	Intermediate Microeconomic Theory II	 
 AP/ECON 2400 3.00	Intermediate Macroeconomic Theory I	 
@@ -956,11 +956,11 @@ AP/ECON 3210 3.00	Use of Economic Data
 AP/ECON 3240 3.00	Labour Economics: Theory	 
 GL/ECON 3245 3.00	Marketing and Consumer Economics	 
 AP/ECON 3249 3.00	Labour Economics: Theory (Writing)	 
-GL/ECON 3250 3.00	Histoire de la pensÃ©e Ã©conomique	 
+GL/ECON 3250 3.00	Histoire de la pensée économique	 
 AP/ECON 3259 3.00	Labour Economics: Institutions (Writing)	 
 GL/ECON 3300 6.00	Management Economics	 
 AP/ECON 3340 3.00	Environmental Economics	 
-GL/ECON 3350 3.00	ThÃ©orie financiÃ¨re	 
+GL/ECON 3350 3.00	Théorie financière	 
 GL/ECON 3380 3.00	The Economics of Canadian Financial Institutions	 
 AP/ECON 3411 3.00	Managerial Economics and Strategy	 
 AP/ECON 3430 3.00	Monetary Economics I: Financial Markets and Institutions	 
@@ -975,19 +975,19 @@ AP/ECON 3530 3.00	Intermediate Mathematics for Economists
 AP/ECON 3550 3.00	Economic Growth and Development	 
 AP/ECON 3560 3.00	Economic Policy in Developing Countries	 
 AP/ECON 3569 3.00	Economic Policy in Developing Countries	 
-GL/ECON 3575 3.00	Ã‰conomie de l'innovation	 
+GL/ECON 3575 3.00	Économie de l'innovation	 
 AP/ECON 3580 3.00	International Monetary Economics	 
 GL/ECON 3620 3.00	The Economics of the Multinational Firm	 
 AP/ECON 3620 3.00	Economics of Unemployment	 
 GL/ECON 3642 3.00	Business Ethics	 
 GL/ECON 3645 3.00	Optimization with Applications to Economics	 
 GL/ECON 3670 3.00	Mathematical Statistics	 
-GL/ECON 3672 3.00	Capital humain, capital social et croissance Ã©conomique	 
+GL/ECON 3672 3.00	Capital humain, capital social et croissance économique	 
 AP/ECON 3709 3.00	Economics of Gender (Writing)	 
 GL/ECON 3710 3.00	Intermediate Financial Accounting 1	 
 GL/ECON 3720 3.00	Intermediate Financial Accounting 2	 
 AP/ECON 3810 3.00	The Economics of Project Appraisal and Feasibility	 
-GL/ECON 3920 3.00	Ã‰conomie du dÃ©veloppement	 
+GL/ECON 3920 3.00	Économie du développement	 
 AP/ECON 4000 3.00	Directed Reading	 
 AP/ECON 4010 3.00	Advanced Microeconomic Theory	 
 AP/ECON 4020 3.00	Advanced Macroeconomic Theory	 
@@ -1413,7 +1413,7 @@ GS/EN 6997 3.00	Issues in Contemporary Theory
 GS/EN 7000 0.00	Dissertation Proposal Writing Workshop
 
 LE/ENG 1101 4.00	Renaissance Engineer 1: Ethics, Communication & Problem Solving	 
-LE/ENG 1102 4.00	Renaissance Engineer 2 Â– Engineering Design Principles	 
+LE/ENG 1102 4.00	Renaissance Engineer 2 ? Engineering Design Principles	 
 LE/ENG 2001 3.00	""Engineering Projects: Management, Economics and Safety	 
 LE/ENG 2002 3.00	Mechanical and Materials Engineering	 
 LE/ENG 3000 3.00	Professional Engineering Practice	 
@@ -1943,7 +1943,7 @@ FA/FILM 4180 3.00	Acting and Directing II - Directing Actors for the Screen
 FA/FILM 4230 3.00	The Business of Film & Television	 
 FA/FILM 4280 3.00	Film Criticism: History, Theory and Practice	 
 FA/FILM 4713 3.00	Films of the Great War	 
-FA/FILM 4714 3.00	Reading Culture from its Public Spaces: flÃ¢nerie in film and photography	 
+FA/FILM 4714 3.00	Reading Culture from its Public Spaces: flânerie in film and photography	 
 FA/FILM 4800 3.00	Honours Thesis	 
 FA/FILM 4900 6.00	Independent Studies in Film/Television	 
 FA/FILM 4900 3.00	Independent Studies in Film/Television	 
@@ -2042,70 +2042,70 @@ AP/FR 4377 3.00	Contemporary Adventure Novel in French
 AP/FR 4900 6.00	Individualized Study	 
 AP/FR 4900 3.00	Individualized Study
 
-GL/FRAN 1740 3.00	Mise Ã  niveau en franÃ§ais Ã©crit I : cours pour francophones	 
-GL/FRAN 1745 3.00	Mise Ã  niveau en franÃ§ais Ã©crit II : cours pour francophones	 
-GL/FRAN 1840 3.00	Fondements de la rÃ©daction acadÃ©mique en franÃ§ais	 
-GL/FRAN 2210 3.00	Pratiques de rÃ©daction : rÃ©sumÃ© et synthÃ¨se	 
-GL/FRAN 2212 3.00	Pratiques de rÃ©daction : l'argumentation	 
-GL/FRAN 2335 6.00	Initiation Ã  la mÃ©thodologie littÃ©raire	 
-GL/FRAN 2600 6.00	Introduction Ã  la linguistique gÃ©nÃ©rale et franÃ§aise	 
-GL/FRAN 3214 3.00	RÃ©daction administrative et technologie du texte	 
-GL/FRAN 3240 3.00	Stylistique franÃ§aise I : Ã©criture d'un article	 
-GL/FRAN 3241 3.00	Stylistique franÃ§aise II : Ã©criture d'une nouvelle	 
-GL/FRAN 3319 3.00	Jeux et enjeux littÃ©raires : du Nouveau Roman Ã  aujourd'hui	 
-GL/FRAN 3321 3.00	Roman de la premiÃ¨re moitiÃ© du XXe siÃ¨cle en France	 
-GL/FRAN 3602 3.00	Introduction Ã  la linguistique appliquÃ©e	 
-GL/FRAN 3614 3.00	Grammaire raisonnÃ©e du franÃ§ais : approche Ã©nonciative	 
-GL/FRAN 3620 3.00	L'engagement de l'Ã©crivain dans la France du XVIIIe siÃ¨cle	 
-GL/FRAN 3621 3.00	PhonÃ©tique/Phonologie du franÃ§ais moderne	 
-GL/FRAN 3642 3.00	Introduction aux linguistiques du discours et de l'Ã©nonciation	 
-GL/FRAN 3650 3.00	ThÃ©Ã¢tre franÃ§ais du XXe siÃ¨cle	 
-GL/FRAN 3652 3.00	Syntaxe (domaine du franÃ§ais)	 
-GL/FRAN 3653 3.00	Morphologie (domaine du franÃ§ais)	 
-GL/FRAN 3910 3.00	CinÃ©ma quÃ©bÃ©cois	 
-GL/FRAN 3922 3.00	LittÃ©ratures belge et luxembourgeoise de langue franÃ§aise	 
+GL/FRAN 1740 3.00	Mise à niveau en français écrit I : cours pour francophones	 
+GL/FRAN 1745 3.00	Mise à niveau en français écrit II : cours pour francophones	 
+GL/FRAN 1840 3.00	Fondements de la rédaction académique en français	 
+GL/FRAN 2210 3.00	Pratiques de rédaction : résumé et synthèse	 
+GL/FRAN 2212 3.00	Pratiques de rédaction : l'argumentation	 
+GL/FRAN 2335 6.00	Initiation à la méthodologie littéraire	 
+GL/FRAN 2600 6.00	Introduction à la linguistique générale et française	 
+GL/FRAN 3214 3.00	Rédaction administrative et technologie du texte	 
+GL/FRAN 3240 3.00	Stylistique française I : écriture d'un article	 
+GL/FRAN 3241 3.00	Stylistique française II : écriture d'une nouvelle	 
+GL/FRAN 3319 3.00	Jeux et enjeux littéraires : du Nouveau Roman à aujourd'hui	 
+GL/FRAN 3321 3.00	Roman de la première moitié du XXe siècle en France	 
+GL/FRAN 3602 3.00	Introduction à la linguistique appliquée	 
+GL/FRAN 3614 3.00	Grammaire raisonnée du français : approche énonciative	 
+GL/FRAN 3620 3.00	L'engagement de l'écrivain dans la France du XVIIIe siècle	 
+GL/FRAN 3621 3.00	Phonétique/Phonologie du français moderne	 
+GL/FRAN 3642 3.00	Introduction aux linguistiques du discours et de l'énonciation	 
+GL/FRAN 3650 3.00	Théâtre français du XXe siècle	 
+GL/FRAN 3652 3.00	Syntaxe (domaine du français)	 
+GL/FRAN 3653 3.00	Morphologie (domaine du français)	 
+GL/FRAN 3910 3.00	Cinéma québécois	 
+GL/FRAN 3922 3.00	Littératures belge et luxembourgeoise de langue française	 
 GL/FRAN 4212 3.00	Conception et publication de documents	 
-GL/FRAN 4533 3.00	LittÃ©rature fantastique et science-fiction	 
-GL/FRAN 4612 3.00	ThÃ©Ã¢tre du XVIIIe siÃ¨cle	 
-GL/FRAN 4630 3.00	Francophonie et Ã©criture au fÃ©minin	 
-GL/FRAN 4640 3.00	LittÃ©rature maghrÃ©bine au pluriel	 
-GL/FRAN 4659 3.00	Structure et changement dans l'Ã©volution du franÃ§ais	 
-GL/FRAN 4662 3.00	Linguistique appliquÃ©e Ã  l'apprentissage et l'enseignement du franÃ§ais langue seconde
+GL/FRAN 4533 3.00	Littérature fantastique et science-fiction	 
+GL/FRAN 4612 3.00	Théâtre du XVIIIe siècle	 
+GL/FRAN 4630 3.00	Francophonie et écriture au féminin	 
+GL/FRAN 4640 3.00	Littérature maghrébine au pluriel	 
+GL/FRAN 4659 3.00	Structure et changement dans l'évolution du français	 
+GL/FRAN 4662 3.00	Linguistique appliquée à l'apprentissage et l'enseignement du français langue seconde
 
 ED/FREN 3041 3.00	Teaching French in the Intermediate Division	 
 ED/FREN 3051 6.00	Teaching French in the Intermediate Senior Division	 
-GS/FREN 5228 3.00	Annie Ernaux: : la mÃ©moire vÃ©cue et Ã©crite	 
-GS/FREN 5236 3.00	Mythe et littÃ©rature	 
+GS/FREN 5228 3.00	Annie Ernaux: : la mémoire vécue et écrite	 
+GS/FREN 5236 3.00	Mythe et littérature	 
 GS/FREN 5603 3.00	Temps,Aspect Et Mode En Francais Cont.	 
 GS/FREN 5611 3.00	L'approche diachronique et l'evolution historique du francais	 
 GS/FREN 5712 3.00	French Reading Course for Academic Purposes (Basic)	 
 GS/FREN 5713 3.00	French Reading Course for Academic Purposes (Intermediate)	 
 GS/FREN 5900 3.00	Cours de lecture dirigee	 
 GS/FREN 6206 3.00	Introduction to textology--Introduction B la textologie	 
-GS/FREN 6606 3.00	 SÃ©minaire sur lÂ’analyse du discours: continuum entre textualitÃ© et oralitÃ©	 
-GS/FREN 6900 3.00	Cours de lecture dirigÃ©e / Cours individuel (Directed reading)	 
+GS/FREN 6606 3.00	 Séminaire sur l?analyse du discours: continuum entre textualité et oralité	 
+GS/FREN 6900 3.00	Cours de lecture dirigée / Cours individuel (Directed reading)	 
 
-GL/FRLS 1035 3.00	FranÃ§ais Ã©crit et oral : rÃ©vision des fondements	 
-GL/FRLS 1040 3.00	FranÃ§ais de prÃ©spÃ©cialisation I	 
-GL/FRLS 1041 3.00	FranÃ§ais de prÃ©spÃ©cialisation II	 
-GL/FRLS 1140 3.00	FranÃ§ais de prÃ©spÃ©cialisation I (courant post-immersif)	 
-GL/FRLS 1141 3.00	FranÃ§ais de prÃ©spÃ©cialisation II (courant post-immersif)	 
-GL/FRLS 1240 3.00	FranÃ§ais de prÃ©spÃ©cialisation III	 
-GL/FRLS 1700 3.00	Pratiques phonÃ©tique, auditive et orale	 
-GL/FRLS 2240 6.00	FranÃ§ais Ã©crit pour spÃ©cialistes	 
-GL/FRLS 2700 3.00	Traits caractÃ©ristiques du franÃ§ais parlÃ©	 
-GL/FRLS 3240 3.00	Le franÃ§ais Ã©crit contemporain	 
-GL/FRLS 3241 3.00	Ã‰criture et style	 
-GL/FRLS 3700 3.00	Le franÃ§ais oral contemporain	 
-GL/FRLS 3925 3.00	Le franÃ§ais des stars	 
+GL/FRLS 1035 3.00	Français écrit et oral : révision des fondements	 
+GL/FRLS 1040 3.00	Français de préspécialisation I	 
+GL/FRLS 1041 3.00	Français de préspécialisation II	 
+GL/FRLS 1140 3.00	Français de préspécialisation I (courant post-immersif)	 
+GL/FRLS 1141 3.00	Français de préspécialisation II (courant post-immersif)	 
+GL/FRLS 1240 3.00	Français de préspécialisation III	 
+GL/FRLS 1700 3.00	Pratiques phonétique, auditive et orale	 
+GL/FRLS 2240 6.00	Français écrit pour spécialistes	 
+GL/FRLS 2700 3.00	Traits caractéristiques du français parlé	 
+GL/FRLS 3240 3.00	Le français écrit contemporain	 
+GL/FRLS 3241 3.00	Écriture et style	 
+GL/FRLS 3700 3.00	Le français oral contemporain	 
+GL/FRLS 3925 3.00	Le français des stars	 
 
-GL/FSL 1000 9.00	Les bases de la communication en franÃ§ais/Basic Communication Skills in French	 
-GL/FSL 1100 6.00	Communication Skills and Strategies in FSL/ StratÃ©gies de communication en FSL	 
-GL/FSL 1200 6.00	FranÃ§ais intermÃ©diaire : non-spÃ©cialistes	 
-GL/FSL 2000 3.00	Le franÃ§ais pour l'universitÃ© I	 
-GL/FSL 2010 3.00	Le franÃ§ais appliquÃ© Ã  la discipline	 
-GL/FSL 2100 3.00	Le franÃ§ais pour l'universitÃ© II	 
-GL/FSL 2200 3.00	Le franÃ§ais par l'expÃ©rience	 
+GL/FSL 1000 9.00	Les bases de la communication en français/Basic Communication Skills in French	 
+GL/FSL 1100 6.00	Communication Skills and Strategies in FSL/ Stratégies de communication en FSL	 
+GL/FSL 1200 6.00	Français intermédiaire : non-spécialistes	 
+GL/FSL 2000 3.00	Le français pour l'université I	 
+GL/FSL 2010 3.00	Le français appliqué à la discipline	 
+GL/FSL 2100 3.00	Le français pour l'université II	 
+GL/FSL 2200 3.00	Le français par l'expérience	 
 
 AP/GEOG 1000 6.00	The World Today: An Introduction to World Geography	  
 AP/GEOG 1400 6.00	Physical Geography	 
@@ -2267,9 +2267,9 @@ AP/GKM 4600 6.00	Topics in Modern Greek Culture: Literature, Cinema and Theatre
 
 AP/GWST 1501 9.00	Introduction to Gender and Women's Studies	  
 AP/GWST 1502 6.00	Introduction to Gender and Women's Studies	 
-AP/GWST 1502 6.00	Introduction aux Ã©tudes des femmes et de genre	 
+AP/GWST 1502 6.00	Introduction aux études des femmes et de genre	 
 GL/GWST 1502 6.00	Introduction to Gender and Women's Studies	 
-GL/GWST 1502 6.00	Introduction aux Ã©tudes des femmes et de genre	 
+GL/GWST 1502 6.00	Introduction aux études des femmes et de genre	 
 GL/GWST 2501 3.00	Language and Gender	 
 AP/GWST 2501 3.00	Language and Gender	 
 AP/GWST 2511 6.00	Sex, Gender and Popular Culture	 
@@ -2279,8 +2279,8 @@ AP/GWST 2513 6.00	Mothering and Motherhood
 AP/GWST 2600 6.00	Introduction to Critical Sexualities	 
 GL/GWST 2600 6.00	Introduction to Critical Sexualities	 
 GL/GWST 2685 3.00	La Famille	 
-AP/GWST 3502 6.00	Rapports sociaux d'ethnicitÃ© et de sexe	 
-GL/GWST 3502 6.00	Rapports sociaux d'ethnicitÃ© et de sexe	 
+AP/GWST 3502 6.00	Rapports sociaux d'ethnicité et de sexe	 
+GL/GWST 3502 6.00	Rapports sociaux d'ethnicité et de sexe	 
 AP/GWST 3504 6.00	Women and Aging	 
 GL/GWST 3504 6.00	Women and Aging	 
 AP/GWST 3505 3.00	Gender and the City	 
@@ -2294,14 +2294,14 @@ AP/GWST 3510 6.00	Women and Work: Production and Reproduction
 GL/GWST 3510 6.00	Women and Work: Production and Reproduction	 
 AP/GWST 3511 3.00	Women's Sexualities	 
 GL/GWST 3511 3.00	Women's Sexualities	 
-AP/GWST 3511 3.00	Femmes, sexualitÃ©s, pouvoir	 
-GL/GWST 3511 3.00	Femmes, sexualitÃ©s, pouvoir	 
+AP/GWST 3511 3.00	Femmes, sexualités, pouvoir	 
+GL/GWST 3511 3.00	Femmes, sexualités, pouvoir	 
 AP/GWST 3520 3.00	Women and the Professions: Feminist Perspectives on Professional Work	 
 GL/GWST 3520 3.00	Women and the Professions: Feminist Perspectives on Professional Work	 
 AP/GWST 3521 3.00	Women and Disabilities	 
 GL/GWST 3521 3.00	Women and Disabilities	 
-AP/GWST 3552 6.00	Approches fÃ©ministes du dÃ©veloppement	 
-GL/GWST 3552 6.00	Approches fÃ©ministes du dÃ©veloppement	 
+AP/GWST 3552 6.00	Approches féministes du développement	 
+GL/GWST 3552 6.00	Approches féministes du développement	 
 AP/GWST 3555 6.00	Genealogies of Feminist Theorizing	 
 GL/GWST 3555 6.00	Genealogies of Feminist Theorizing	 
 AP/GWST 3557 6.00	Superstition, Religion and Sexuality	 
@@ -2311,7 +2311,7 @@ AP/GWST 3563 3.00	The Monstrous Maternal in Literature: Writings on Motherhood a
 GL/GWST 3609 3.00	Women and Religion	 
 AP/GWST 3890 3.00	Gender, Religion and Human Rights in Cross-Cultural Perspective	 
 GL/GWST 3890 3.00	Gender, Religion and Human Rights in Cross-Cultural Perspective	 
-GL/GWST 3910 3.00	Sociologie du dÃ©veloppement	 
+GL/GWST 3910 3.00	Sociologie du développement	 
 AP/GWST 4502 3.00	La femme et la violence	 
 GL/GWST 4502 3.00	La femme et la violence	 
 AP/GWST 4502 6.00	Violence Against Women	 
@@ -2366,8 +2366,8 @@ GL/HIST 1615 6.00	The Roots of World Civilizations
 GL/HIST 1615 6.00	Les origines des civilisations du monde	 
 GL/HIST 1618 3.00	Ancient Roots of Modern History	 
 GL/HIST 1680 6.00	Modern Economic History: A Canadian Perspective	 
-GL/HIST 1690 6.00	Introduction Ã  la philosophie : les grands penseurs	 
-GL/HIST 2000 3.00	Comment Ã©tudier l'histoire	 
+GL/HIST 1690 6.00	Introduction à la philosophie : les grands penseurs	 
+GL/HIST 2000 3.00	Comment étudier l'histoire	 
 GL/HIST 2000 3.00	How to study History	 
 AP/HIST 2100 6.00	Ancient Greece and Rome	 
 AP/HIST 2110 6.00	The Ancient Near East	 
@@ -2387,8 +2387,8 @@ AP/HIST 2731 3.00	Introduction to Caribbean History
 AP/HIST 2750 6.00	African History, from 1800 to the Present	 
 AP/HIST 2790 6.00	Islamic Civilization, 622 - 1400	 
 GL/HIST 2901 6.00	Introduction to Latin American History	 
-GL/HIST 2905 6.00	Introduction Ã  l'histoire de l'Europe contemporaine de 1450 Ã  nos jours	 
-GL/HIST 2915 3.00	Le Moyen Ã‚ge en Occident	 
+GL/HIST 2905 6.00	Introduction à l'histoire de l'Europe contemporaine de 1450 à nos jours	 
+GL/HIST 2915 3.00	Le Moyen Âge en Occident	 
 GL/HIST 2920 6.00	Medieval Science: Thought and Practice	 
 GL/HIST 2930 6.00	The 20th Century: A Global Perspective	 
 GL/HIST 2935 3.00	Ancient History Part II	 
@@ -2402,7 +2402,7 @@ AP/HIST 3135 3.00	Spectacle and Society in Ancient Rome
 AP/HIST 3154 3.00	Egypt from Alexander to Cleopatra	 
 AP/HIST 3155 3.00	Egypt after Cleopatra: Society and Culture in a Roman Province	 
 AP/HIST 3200 3.00	Medieval Law and Institutions	 
-GL/HIST 3205 6.00	L'Ã©cole, la communautÃ© et la nation au Canada	 
+GL/HIST 3205 6.00	L'école, la communauté et la nation au Canada	 
 AP/HIST 3222 3.00	From the Norman Conquest to the Magna Carta and Beyond: England in the High Middle Ages	 
 AP/HIST 3234 3.00	Women and Gender in Early Modern Europe	 
 AP/HIST 3240 6.00	Renaissance and Reformation: Brand New or New Again	 
@@ -2428,7 +2428,7 @@ AP/HIST 3555 6.00	Canadian Jewish History
 AP/HIST 3561 3.00	Business and Government in Canada since Confederation	 
 AP/HIST 3580 6.00	20th-Century Canada	 
 AP/HIST 3591 6.00	Politics, Law and the Constitution in Modern Canada	 
-GL/HIST 3620 3.00	L'engagement de l'Ã©crivain dans la France du XVIIIe siÃ¨cle	 
+GL/HIST 3620 3.00	L'engagement de l'écrivain dans la France du XVIIIe siècle	 
 AP/HIST 3622 3.00	The U.S. Civil War in American History and Public Memory	 
 GL/HIST 3622 6.00	The Americas and Asia: Contact and Conflict in the Transpacific World	 
 GL/HIST 3632 6.00	History of Northern Canada: A Circumpolar World	 
@@ -2682,7 +2682,7 @@ GL/HUMA 1615 6.00	Les origines des civilisations du monde
 GL/HUMA 1618 3.00	Ancient Roots of Modern History	 
 GL/HUMA 1622 6.00	Introductory Latin	 
 AP/HUMA 1625 9.00	Fantasy and Topographies of Imagination	  
-GL/HUMA 1690 6.00	Introduction Ã  la philosophie : les grands penseurs	 
+GL/HUMA 1690 6.00	Introduction à la philosophie : les grands penseurs	 
 AP/HUMA 1700 9.00	Writing: Theory and Practice	  
 AP/HUMA 1710 6.00	The Roots of Western Culture. The Ancient World (circa 1000 BC-400 AD)	  
 AP/HUMA 1720 6.00	The Roots of Western Culture. The Modern Period (circa 1500-1900)	  
@@ -2746,8 +2746,8 @@ AP/HUMA 2791 6.00	Kino-Culture: German Cinema in Competition with Hollywood
 AP/HUMA 2800 6.00	Iranian Cinema: Aesthetics and Culture	 
 AP/HUMA 2830 6.00	The Founders of Christianity	 
 GL/HUMA 2901 6.00	Introduction to Latin American History	 
-GL/HUMA 2905 6.00	Introduction Ã  l'histoire de l'Europe contemporaine de 1450 Ã  nos jours	 
-GL/HUMA 2915 3.00	Le Moyen Ã‚ge en Occident	 
+GL/HUMA 2905 6.00	Introduction à l'histoire de l'Europe contemporaine de 1450 à nos jours	 
+GL/HUMA 2915 3.00	Le Moyen Âge en Occident	 
 AP/HUMA 2920 6.00	Knowledge, Technology and Culture	 
 GL/HUMA 2935 3.00	Ancient History Part II	 
 AP/HUMA 3000 6.00	Directed Reading	 
@@ -2761,7 +2761,7 @@ AP/HUMA 3105 6.00	Greek and Roman Religion
 AP/HUMA 3115 6.00	Myth in Ancient Greece: Texts and Theories	 
 AP/HUMA 3140 6.00	Digital Culture in the Humanities	 
 AP/HUMA 3160 3.00	Sound, Politics, and Media Art	 
-GL/HUMA 3200 6.00	Photographie numÃ©rique	 
+GL/HUMA 3200 6.00	Photographie numérique	 
 AP/HUMA 3201 6.00	Culture, Meaning & Form	 
 AP/HUMA 3210 3.00	The Scene of the Crime - Criminality and Modern Culture	 
 AP/HUMA 3230 6.00	Illness in the Popular Eye: Body, Spirit and Transformation	 
@@ -2781,16 +2781,16 @@ GL/HUMA 3604 6.00	Women and Aging
 AP/HUMA 3605 6.00	Imagining the European City in Literature and Film	 
 GL/HUMA 3609 3.00	Women and Religion	 
 AP/HUMA 3613 6.00	Modern Italian Culture (in translation)	 
-GL/HUMA 3620 3.00	L'engagement de l'Ã©crivain dans la France du XVIIIe siÃ¨cle	 
+GL/HUMA 3620 3.00	L'engagement de l'écrivain dans la France du XVIIIe siècle	 
 AP/HUMA 3630 6.00	Israeli Cinema: Culture, Values, Art	 
 GL/HUMA 3636 6.00	Children's Literature	 
 GL/HUMA 3640 6.00	Art dramatique : texte et production	 
 GL/HUMA 3646 3.00	English-Canadian Film	 
 GL/HUMA 3648 3.00	Music and Culture in Global Perspective	 
 GL/HUMA 3657 3.00	Philosophy of Mind	 
-GL/HUMA 3670 6.00	Le multiculturalisme et l'ethnicitÃ© au Canada	 
+GL/HUMA 3670 6.00	Le multiculturalisme et l'ethnicité au Canada	 
 AP/HUMA 3670 6.00	Fantasy in the Modern World	 
-GL/HUMA 3674 3.00	Cultures quÃ©bÃ©coise et francophone canadienne	 
+GL/HUMA 3674 3.00	Cultures québécoise et francophone canadienne	 
 AP/HUMA 3675 6.00	Fantastic Journeys in Western and Eastern Literature and Film	 
 AP/HUMA 3691 3.00	Picture Books in Children's Culture	 
 AP/HUMA 3692 6.00	Representations of Children's Alterity	 
@@ -2816,8 +2816,8 @@ AP/HUMA 3875 6.00	Metaphor, Mysticism & Spirituality
 AP/HUMA 3901 3.00	Consumer and Popular Culture	 
 AP/HUMA 3903 6.00	Popular Expression in North American Music	 
 GL/HUMA 3905 3.00	Descartes and the Reform of the Sciences	 
-GL/HUMA 3910 3.00	CinÃ©ma quÃ©bÃ©cois	 
-GL/HUMA 3922 3.00	LittÃ©ratures belge et luxembourgeoise de langue franÃ§aise	 
+GL/HUMA 3910 3.00	Cinéma québécois	 
+GL/HUMA 3922 3.00	Littératures belge et luxembourgeoise de langue française	 
 GL/HUMA 3950 6.00	English-Speaking Theatre in Canada	 
 AP/HUMA 3960 6.00	Mothering and Motherhood	 
 AP/HUMA 3980 3.00	Aspects of Ukrainian Culture I	 
@@ -2833,7 +2833,7 @@ AP/HUMA 4142 6.00	Contemporary Children's Culture
 AP/HUMA 4145 6.00	Fantasy and Children's Culture	 
 AP/HUMA 4150 6.00	Life Writing	 
 AP/HUMA 4160 6.00	Storytelling, Multicentered Worlds, and Resistance	 
-AP/HUMA 4180 6.00	Europe Ã  la mode: Fashion and the Critical Methodologies of European Studies	 
+AP/HUMA 4180 6.00	Europe à la mode: Fashion and the Critical Methodologies of European Studies	 
 AP/HUMA 4185 6.00	Modern Moods: Nostalgia and Melancholy	 
 AP/HUMA 4300 3.00	Aspects of Modern Latin American and Caribbean Studies: Culture and Politics	 
 AP/HUMA 4416 6.00	Citing the Classics: The "Premodern" in Modern Japanese Literature and Film	 
@@ -2842,10 +2842,10 @@ AP/HUMA 4501 6.00	Seminar in Science & Technology Studies
 AP/HUMA 4607 6.00	Literature of Transgression: From Marquis de Sade to Tamara Faith Berger	 
 AP/HUMA 4620 6.00	Works and Days: Writers on Their Art and Their Lives	 
 GL/HUMA 4622 6.00	Renaissance Italy	 
-GL/HUMA 4630 3.00	Francophonie et Ã©criture au fÃ©minin	 
+GL/HUMA 4630 3.00	Francophonie et écriture au féminin	 
 GL/HUMA 4636 3.00	History, Societies & Translation I	 
 GL/HUMA 4638 3.00	History, Societies & Translation II	 
-GL/HUMA 4640 3.00	LittÃ©rature maghrÃ©bine au pluriel	 
+GL/HUMA 4640 3.00	Littérature maghrébine au pluriel	 
 GL/HUMA 4644 3.00	The Golden Age of Children's Literature (1863-1911)	 
 GL/HUMA 4655 3.00	A Tarnished Age: Dystopias for Children	 
 GL/HUMA 4662 6.00	Early Modern Women Writers	 
@@ -2913,21 +2913,21 @@ HH/IHST 1010 3.00	Foundations of Health Studies I
 HH/IHST 1020 6.00	Agents of Change in a Global World
 
 GL/ILST 2200 6.00	International Society: History, Philosophy and Theories	 
-GL/ILST 2200 6.00	La SociÃ©tÃ© internationale : Histoire, Philosophie et ThÃ©ories	 
+GL/ILST 2200 6.00	La Société internationale : Histoire, Philosophie et Théories	 
 GL/ILST 2622 3.00	Culture, Globalization and International Civil Society	 
-GL/ILST 2622 3.00	Culture, mondialisation et sociÃ©tÃ© civile internationale	 
+GL/ILST 2622 3.00	Culture, mondialisation et société civile internationale	 
 GL/ILST 2655 6.00	Global Geography: Physical and Human Aspects	 
 GL/ILST 2920 6.00	Introduction to International Relations	 
 GL/ILST 2920 6.00	Introduction aux relations internationales	 
 GL/ILST 2930 6.00	The 20th Century: A Global Perspective	 
 GL/ILST 3250 3.00	International Economics and Development	 
-GL/ILST 3250 3.00	Ã‰conomie internationale et dÃ©veloppement	 
+GL/ILST 3250 3.00	Économie internationale et développement	 
 GL/ILST 3255 3.00	Global Politics of International Development	 
 GL/ILST 3260 3.00	The Environment and International Relations	 
 GL/ILST 3260 3.00	L'environnement et les relations internationales	 
 GL/ILST 3505 3.00	Research in International Studies	 
-GL/ILST 3505 3.00	Recherche en Ã‰tudes internationales	 
-GL/ILST 3552 6.00	Approches fÃ©ministes du dÃ©veloppement	 
+GL/ILST 3505 3.00	Recherche en Études internationales	 
+GL/ILST 3552 6.00	Approches féministes du développement	 
 GL/ILST 3615 6.00	International and Transnational Organizations	 
 GL/ILST 3620 3.00	The Economics of the Multinational Firm	 
 GL/ILST 3621 3.00	Canada in Global Perspective/Le Canada, perspective globale	 
@@ -2938,33 +2938,33 @@ GL/ILST 3639 3.00	Comparative Slavery and Emancipation in the Americas
 GL/ILST 3644 3.00	Global Sociology	 
 GL/ILST 3648 3.00	Music and Culture in Global Perspective	 
 GL/ILST 3650 3.00	International Peace, Security and Human Rights	 
-GL/ILST 3650 3.00	Paix, sÃ©curitÃ© et droits humains internationaux	 
+GL/ILST 3650 3.00	Paix, sécurité et droits humains internationaux	 
 GL/ILST 3652 3.00	Introduction to International Law	 
 GL/ILST 3660 3.00	Introduction to Social Psychology	 
 GL/ILST 3675 3.00	Brazil in the Atlantic World: the 16th to the 19th Centuries	 
-GL/ILST 3685 6.00	Politique comparÃ©e des pays en voie de dÃ©veloppement	 
-GL/ILST 3692 6.00	ThÃ©ories de la sociÃ©tÃ©	 
+GL/ILST 3685 6.00	Politique comparée des pays en voie de développement	 
+GL/ILST 3692 6.00	Théories de la société	 
 GL/ILST 3692 6.00	Theories of Society	 
-GL/ILST 3910 3.00	Sociologie du dÃ©veloppement	 
+GL/ILST 3910 3.00	Sociologie du développement	 
 GL/ILST 3915 3.00	Indigenous Peoples in International Relations	 
-GL/ILST 3917 3.00	CommunautÃ©s et sociÃ©tÃ©s	 
-GL/ILST 3920 3.00	Ã‰conomie du dÃ©veloppement	 
+GL/ILST 3917 3.00	Communautés et sociétés	 
+GL/ILST 3920 3.00	Économie du développement	 
 GL/ILST 4000 6.00	Honours Thesis	 
 GL/ILST 4100 6.00	Individual Studies	 
 GL/ILST 4100 3.00	Travaux individuels	 
 GL/ILST 4300 6.00	Professional Internship	 
 GL/ILST 4300 6.00	Stage pratique professionnel	 
 GL/ILST 4501 3.00	Capstone Seminar	 
-GL/ILST 4501 3.00	SÃ©minaire avancÃ©	 
+GL/ILST 4501 3.00	Séminaire avancé	 
 GL/ILST 4505 3.00	Seminar on Globalization in the Culture Industries	 
 GL/ILST 4510 6.00	Annual International Studies Symposium	 
 GL/ILST 4610 6.00	The Foreign Policy of the United States	 
-GL/ILST 4613 3.00	IntÃ©gration europÃ©enne	 
+GL/ILST 4613 3.00	Intégration européenne	 
 GL/ILST 4617 3.00	France in the Era of Decolonization	 
 GL/ILST 4618 3.00	La diplomatie	 
-GL/ILST 4625 3.00	L'EnquÃªte de terrain	 
+GL/ILST 4625 3.00	L'Enquête de terrain	 
 GL/ILST 4632 3.00	Science, Technology and International Society	 
-GL/ILST 4651 3.00	International Refugee Protection/Protection internationale des rÃ©fugiÃ©s	 
+GL/ILST 4651 3.00	International Refugee Protection/Protection internationale des réfugiés	 
 GL/ILST 4675 3.00	Global civil society and international economic organizations	 
 GL/ILST 4682 3.00	Transnational Crime and Corruption
 
@@ -3109,7 +3109,7 @@ AP/ITEC 2610 3.00	Object-Oriented Programming
 AP/ITEC 2615 3.00	Object Oriented Programming for Internationally Educated Professionals	 
 AP/ITEC 2620 3.00	Introduction to Data Structures	 
 GL/ITEC 2635 3.00	Creation and Management of a site on the WWW	 
-GL/ITEC 2635 3.00	La crÃ©ation et la gestion d'un site sur le WWW	 
+GL/ITEC 2635 3.00	La création et la gestion d'un site sur le WWW	 
 GL/ITEC 2655 3.00	Introduction to Computer Music and Digital Audio Editing	 
 GL/ITEC 2915 3.00	Computer Usage and Software Applications I	 
 GL/ITEC 2915 3.00	L'utilisation de l'ordinateur et des logiciels d'application	 
@@ -3169,7 +3169,7 @@ GS/KAHS 6149 3.00	Applications in Vision Science
 GS/KAHS 6150 3.00	Brain Mechanisms of Movement in Health and Disease	 
 GS/KAHS 6155 3.00	Fundamentals of Neuroscience I: Structures, Neurons and Synapses	 
 GS/KAHS 6156 3.00	Fundamentals of Neuroscience II: Circuits, Systems and Behaviour	 
-GS/KAHS 6161 3.00	Perception and ActionÂ”/Same as Biology 5136 3.0 and Kinesiology & Health Science 6161 3.0	 
+GS/KAHS 6161 3.00	Perception and Action?/Same as Biology 5136 3.0 and Kinesiology & Health Science 6161 3.0	 
 GS/KAHS 6210 3.00	Graduate Seminar	 
 GS/KAHS 6220 3.00	Readings in Special Topics	 
 GS/KAHS 6301 3.00	Vascular Biology in Health and Disease	 
@@ -3401,35 +3401,35 @@ GL/LIN 1603 6.00	Introduction to Linguistics
 GL/LIN 1622 6.00	Introductory Latin	 
 GL/LIN 1716 6.00	Logique formelle et informelle	 
 GL/LIN 2505 6.00	Romanian Language: a linguistic introduction	 
-GL/LIN 2600 6.00	Introduction Ã  la linguistique gÃ©nÃ©rale et franÃ§aise	 
+GL/LIN 2600 6.00	Introduction à la linguistique générale et française	 
 GL/LIN 2611 3.00	Phonetics	 
 GL/LIN 2613 3.00	Phonology	 
 GL/LIN 2622 6.00	Romanian culture in a semiotic perspective	 
 GL/LIN 2634 3.00	Language and Society	 
 GL/LIN 2640 6.00	Logic	 
 GL/LIN 2670 3.00	Catalan Language and Culture	 
-GL/LIN 3602 3.00	Introduction Ã  la linguistique appliquÃ©e	 
+GL/LIN 3602 3.00	Introduction à la linguistique appliquée	 
 GL/LIN 3605 6.00	Old English	 
 GL/LIN 3606 3.00	Learning English as a Second Language	 
 GL/LIN 3608 6.00	Modern English	 
 GL/LIN 3609 3.00	Pragmatics	 
-GL/LIN 3614 3.00	Grammaire raisonnÃ©e du franÃ§ais : approche Ã©nonciative	 
+GL/LIN 3614 3.00	Grammaire raisonnée du français : approche énonciative	 
 GL/LIN 3616 3.00	Case Studies in Canada's Aboriginal Languages	 
 GL/LIN 3619 3.00	Language Endangerment	 
-GL/LIN 3621 3.00	PhonÃ©tique/Phonologie du franÃ§ais moderne	 
+GL/LIN 3621 3.00	Phonétique/Phonologie du français moderne	 
 GL/LIN 3626 3.00	Contrasting Spanish with French	 
 GL/LIN 3640 3.00	Psychological Studies of Language	 
-GL/LIN 3642 3.00	Introduction aux linguistiques du discours et de l'Ã©nonciation	 
+GL/LIN 3642 3.00	Introduction aux linguistiques du discours et de l'énonciation	 
 GL/LIN 3650 6.00	Sociolinguistics	 
-GL/LIN 3652 3.00	Syntaxe (domaine du franÃ§ais)	 
-GL/LIN 3653 3.00	Morphologie (domaine du franÃ§ais)	 
+GL/LIN 3652 3.00	Syntaxe (domaine du français)	 
+GL/LIN 3653 3.00	Morphologie (domaine du français)	 
 GL/LIN 4215 3.00	Field Methods	 
 GL/LIN 4605 3.00	Linguistic Theory	 
 GL/LIN 4609 3.00	Advanced Phonetics and Phonology	 
 GL/LIN 4610 3.00	Studies in Canadian English	 
 GL/LIN 4617 3.00	Language Policy and Language Planning	 
-GL/LIN 4659 3.00	Structure et changement dans l'Ã©volution du franÃ§ais	 
-GL/LIN 4662 3.00	Linguistique appliquÃ©e Ã  l'apprentissage et l'enseignement du franÃ§ais langue seconde
+GL/LIN 4659 3.00	Structure et changement dans l'évolution du français	 
+GL/LIN 4662 3.00	Linguistique appliquée à l'apprentissage et l'enseignement du français langue seconde
 
 AP/LING 1000 6.00	Introduction to Linguistics	 
 AP/LING 2060 6.00	English Grammar	 
@@ -3486,9 +3486,9 @@ GL/MATH 1620 3.00	Introduction to Statistical Methods II
 GL/MATH 1650 3.00	Modes of Mathematical Reasoning	 
 GL/MATH 1670 6.00	Fundamentals of Mathematics	 
 GL/MATH 1930 3.00	Calculus I	 
-GL/MATH 1930 3.00	Calcul diffÃ©rentiel et intÃ©gral I	 
+GL/MATH 1930 3.00	Calcul différentiel et intégral I	 
 GL/MATH 1940 3.00	Calculus II	 
-GL/MATH 1940 3.00	Calcul diffÃ©rentiel et intÃ©gral II	 
+GL/MATH 1940 3.00	Calcul différentiel et intégral II	 
 SC/MATH 2001 3.00	Real Analysis l	 
 SC/MATH 2015 3.00	Applied Multivariate and Vector Calculus	 
 SC/MATH 2022 3.00	Linear Algebra II	 
@@ -3735,11 +3735,11 @@ AP/MODR 1730 6.00	Reasoning About Social Issues
 AP/MODR 1760 6.00	Reasoning About Morality and Values	  
 AP/MODR 1770 6.00	Techniques of Persuasion	  
 GL/MODR 1930 3.00	Calculus I	 
-GL/MODR 1930 3.00	Calcul diffÃ©rentiel et intÃ©gral I	 
+GL/MODR 1930 3.00	Calcul différentiel et intégral I	 
 GL/MODR 1940 3.00	Calculus II	 
-GL/MODR 1940 3.00	Calcul diffÃ©rentiel et intÃ©gral II	 
+GL/MODR 1940 3.00	Calcul différentiel et intégral II	 
 GL/MODR 2635 3.00	Creation and Management of a site on the WWW	 
-GL/MODR 2635 3.00	La crÃ©ation et la gestion d'un site sur le WWW	 
+GL/MODR 2635 3.00	La création et la gestion d'un site sur le WWW	 
 GL/MODR 2640 6.00	Logic	 
 GL/MODR 2650 3.00	Linear Algebra I	 
 GL/MODR 2655 3.00	Introduction to Computer Music and Digital Audio Editing	 
@@ -4453,7 +4453,7 @@ GS/MUSI 6510 3.00	Directed Reading
 GS/MUSI 6520 3.00	Directed Reading	 
 GS/MUSI 6530 3.00	Directed Reading
 
-GL/NATS 1500 6.00	Nutrition, santÃ© et sociÃ©tÃ©	  
+GL/NATS 1500 6.00	Nutrition, santé et société	  
 SC/NATS 1500 3.00	Statistics and Reasoning in Modern Society	  
 SC/NATS 1510 3.00	The History of the Environment	  
 SC/NATS 1520 3.00	The Science and Technology of Music	  
@@ -4493,15 +4493,15 @@ GL/NATS 1890 6.00	Introduction to the Science, Technology and Society
 SC/NATS 1920 6.00	The Nature and Growth of Ideas in Mathematics	  
 SC/NATS 1945 6.00	Physics and Technology for Future World Leaders	  
 GL/NATS 2203 6.00	Utilisation et conservation des ressources biologiques	 
-GL/NATS 2205 6.00	Ressources Ã©nergÃ©tiques et santÃ© des Ã©cosystÃ¨mes	 
+GL/NATS 2205 6.00	Ressources énergétiques et santé des écosystèmes	 
 GL/NATS 2300 3.00	General Ecology	 
 GL/NATS 2310 3.00	Conservation Biology	 
 GL/NATS 2920 6.00	Medieval Science: Thought and Practice	 
 GL/NATS 3206 3.00	Human parasitology	 
-GL/NATS 3230 6.00	GÃ©nÃ©tique et santÃ© humaine	 
+GL/NATS 3230 6.00	Génétique et santé humaine	 
 GL/NATS 3632 6.00	History of Northern Canada: A Circumpolar World	 
 GL/NATS 3635 3.00	Health Psychology	 
-GL/NATS 3635 3.00	Psychologie de la santÃ©	 
+GL/NATS 3635 3.00	Psychologie de la santé	 
 GL/NATS 3640 3.00	Psychological Studies of Language	 
 GL/NATS 3670 3.00	Psychobiology	 
 GL/NATS 3670 3.00	Psychobiologie	 
@@ -4640,7 +4640,7 @@ AP/PHIL 1000 6.00	Introduction to Philosophy
 AP/PHIL 1100 3.00	The Meaning of Life	 
 GL/PHIL 1611 3.00	Introduction to Philosophy I	 
 GL/PHIL 1612 3.00	Introduction to Philosophy II	 
-GL/PHIL 1690 6.00	Introduction Ã  la philosophie : les grands penseurs	 
+GL/PHIL 1690 6.00	Introduction à la philosophie : les grands penseurs	 
 AP/PHIL 2010 3.00	Origins of Western Philosophy	 
 AP/PHIL 2015 3.00	Plato and Aristotle	 
 AP/PHIL 2020 3.00	Descartes, Spinoza, and Leibniz	 
@@ -4666,7 +4666,7 @@ GL/PHIL 2615 3.00	Moral Questions and Social Policies
 GL/PHIL 2620 6.00	Reason and Feeling in Modern Philosophy	 
 GL/PHIL 2640 6.00	Logic	 
 GL/PHIL 2645 6.00	Ancient Philosophy and Political Theory	 
-GL/PHIL 2923 3.00	Introduction au droit et Ã  la pensÃ©e sociale	 
+GL/PHIL 2923 3.00	Introduction au droit et à la pensée sociale	 
 GL/PHIL 2923 3.00	Introduction to Law and Social Thought	 
 GL/PHIL 2925 3.00	Philosophie du droit	 
 GL/PHIL 2925 3.00	Philosophy of Law	 
@@ -4819,18 +4819,18 @@ GS/PHYS 7001G 3.00	Ph.D. Research Evaluation
 
 GS/PIA 6000 3.00	Public Management	 
 GS/PIA 6001 3.00	The Policy Process	 
-GS/PIA 6002 3.00	Ã‰conomie et politique publique	 
-GS/PIA 6003 3.00	MÃ©thodes de recherche	 
+GS/PIA 6002 3.00	Économie et politique publique	 
+GS/PIA 6003 3.00	Méthodes de recherche	 
 GS/PIA 6100 3.00	Capstone Seminar	 
 GS/PIA 6200 1.50	Colloquium: Canada and its Place in the World	 
 GS/PIA 6308 3.00	International Law and International Organizations	 
-GS/PIA 6313 3.00	FÃ©minisme, citoyennetÃ© politique et action collective	 
+GS/PIA 6313 3.00	Féminisme, citoyenneté politique et action collective	 
 GS/PIA 6314 3.00	The Environmental Crisis: International and Public Policy Implications	 
 GS/PIA 6320 3.00	Human Rights and Civil Liberties	 
 GS/PIA 6321 3.00	Indigenous Language Policy in Canada and the Americas	 
-GS/PIA 6322 3.00	La gestion de la diversitÃ©	 
+GS/PIA 6322 3.00	La gestion de la diversité	 
 GS/PIA 6328 3.00	Institutions and Instruments of Public Finance in Canada	 
-GS/PIA 6333 3.00	Histoire gÃ©opolitique du Moyen-Orient, de la chute de lÂ’empire ottoman au printemps arabe.
+GS/PIA 6333 3.00	Histoire géopolitique du Moyen-Orient, de la chute de l?empire ottoman au printemps arabe.
 
 HH/PKIN 0200 0.00	Swimming I	 
 HH/PKIN 0240 0.00	Lifesaving	 
@@ -4901,7 +4901,7 @@ AP/POLS 2300 6.00	Introduction to Empirical Theory
 GL/POLS 2490 6.00	The Birth of Politics	 
 GL/POLS 2510 6.00	Introduction to Comparative Politics	 
 GL/POLS 2600 6.00	Introduction to Canadian Politics	 
-GL/POLS 2600 6.00	Introduction Ã  la politique canadienne	 
+GL/POLS 2600 6.00	Introduction à la politique canadienne	 
 GL/POLS 2610 3.00	Introduction to Statistical Methods I	 
 GL/POLS 2620 3.00	Introduction to Statistical Methods II	 
 GL/POLS 2645 6.00	Ancient Philosophy and Political Theory	 
@@ -4946,7 +4946,7 @@ AP/POLS 3262 3.00	Popular Culture and International Politics
 AP/POLS 3270 3.00	Global Political Economy I: Theory and Approaches	 
 AP/POLS 3275 3.00	Global Political Economy II: Issues and Problems Since 1945	 
 AP/POLS 3300 6.00	Statistics for Social Sciences	 
-GL/POLS 3360 6.00	Politics in Quebec/La politique du QuÃ©bec	 
+GL/POLS 3360 6.00	Politics in Quebec/La politique du Québec	 
 AP/POLS 3401 3.00	Post-Communist Transformations: Can East Become West?	 
 AP/POLS 3450 3.00	Women and Politics	 
 AP/POLS 3500 3.00	The Rise and Fall of Communism in Russia and Eastern Europe	 
@@ -4961,16 +4961,16 @@ AP/POLS 3560 6.00	The Global South: Politics, Policy and Development
 AP/POLS 3561 6.00	Racism and the Law	 
 AP/POLS 3570 3.00	Africa: The Politics of Transition and Resistance	 
 GL/POLS 3615 6.00	International and Transnational Organizations	 
-GL/POLS 3647 3.00	MÃ©dias et politiques	 
+GL/POLS 3647 3.00	Médias et politiques	 
 GL/POLS 3650 3.00	International Peace, Security and Human Rights	 
-GL/POLS 3650 3.00	Paix, sÃ©curitÃ© et droits humains internationaux	 
+GL/POLS 3650 3.00	Paix, sécurité et droits humains internationaux	 
 GL/POLS 3652 3.00	Introduction to International Law	 
 GL/POLS 3660 6.00	Early Modern Political Theory	 
 GL/POLS 3672 3.00	La sociologie politique	 
 GL/POLS 3680 3.00	Logic of Social Inquiry: Qualitative Methods	 
-GL/POLS 3685 6.00	Politique comparÃ©e des pays en voie de dÃ©veloppement	 
+GL/POLS 3685 6.00	Politique comparée des pays en voie de développement	 
 GL/POLS 3690 3.00	The Logic of Social Inquiry: Quantitative Methods (Data Collection and Analysis)	 
-GL/POLS 3692 6.00	ThÃ©ories de la sociÃ©tÃ©	 
+GL/POLS 3692 6.00	Théories de la société	 
 GL/POLS 3692 6.00	Theories of Society	 
 AP/POLS 3900 3.00	Local to Global: City and Nation in the Age of Globalization	 
 AP/POLS 3990 6.00	Supervised Reading and Research	 
@@ -5032,12 +5032,12 @@ AP/POLS 4575 3.00	The Politics of Southern Africa
 AP/POLS 4576 3.00	Civil Society and the State in Africa	 
 GL/POLS 4603 3.00	Politics of the Canadian Women's Movement	 
 GL/POLS 4610 6.00	The Foreign Policy of the United States	 
-GL/POLS 4613 3.00	IntÃ©gration europÃ©enne	 
+GL/POLS 4613 3.00	Intégration européenne	 
 GL/POLS 4618 3.00	La diplomatie	 
 GL/POLS 4635 6.00	Topics in Law and Politics	 
-GL/POLS 4651 3.00	International Refugee Protection/Protection internationale des rÃ©fugiÃ©s	 
+GL/POLS 4651 3.00	International Refugee Protection/Protection internationale des réfugiés	 
 GL/POLS 4675 3.00	Global civil society and international economic organizations	 
-GL/POLS 4681 3.00	Politique et gestion de la diversitÃ©	 
+GL/POLS 4681 3.00	Politique et gestion de la diversité	 
 GL/POLS 4682 3.00	Transnational Crime and Corruption	 
 AP/POLS 4901 3.00	Development and Inequality in the Global South Capstone	 
 AP/POLS 4902 3.00	Global Politics Capstone	 
@@ -5211,10 +5211,10 @@ HH/PSYC 2220 3.00	Sensation and Perception I
 HH/PSYC 2230 3.00	Motivation	 
 HH/PSYC 2240 3.00	Biological Basis of Behaviour	 
 GL/PSYC 2510 6.00	Introduction to Psychology	 
-GL/PSYC 2510 6.00	Introduction Ã  la psychologie	 
-GL/PSYC 2520 3.00	Introduction Ã  la psychologie expÃ©rimentale	 
+GL/PSYC 2510 6.00	Introduction à la psychologie	 
+GL/PSYC 2520 3.00	Introduction à la psychologie expérimentale	 
 GL/PSYC 2520 3.00	Introduction to Experimental Psychology	 
-GL/PSYC 2530 3.00	Introduction Ã  la statistique	 
+GL/PSYC 2530 3.00	Introduction à la statistique	 
 GL/PSYC 2530 3.00	Introductory Statistics	 
 HH/PSYC 3010 3.00	Intermediate Research Methods	 
 HH/PSYC 3031 3.00	Intermediate Statistics Laboratory	 
@@ -5224,14 +5224,14 @@ HH/PSYC 3140 3.00	Abnormal Psychology
 HH/PSYC 3170 3.00	Health Psychology	 
 GL/PSYC 3220 3.00	Personality	 
 GL/PSYC 3230 3.00	Introduction to Abnormal Psychology (Psychopathology)	 
-GL/PSYC 3230 3.00	Introduction Ã  la psychologie anormale	 
+GL/PSYC 3230 3.00	Introduction à la psychologie anormale	 
 HH/PSYC 3250 3.00	Neural Basis of Behaviour	 
 HH/PSYC 3260 3.00	Cognition	 
 HH/PSYC 3265 3.00	Memory	 
 HH/PSYC 3270 3.00	Sensation and Perception II	 
 HH/PSYC 3290 3.00	Psycholinguistics	 
 GL/PSYC 3300 3.00	Introduction to Development: Infancy and Childhood	 
-GL/PSYC 3300 3.00	Introduction au dÃ©veloppement de l'enfant	 
+GL/PSYC 3300 3.00	Introduction au développement de l'enfant	 
 GL/PSYC 3310 3.00	Introduction to Development: Adolescence, Adulthood and Aging	 
 HH/PSYC 3310 3.00	Psychology and Law	 
 GL/PSYC 3350 3.00	Educational Psychology	 
@@ -5256,7 +5256,7 @@ GL/PSYC 3600 3.00	Psychology and Law
 HH/PSYC 3600 3.00	Community Psychology	 
 HH/PSYC 3630 3.00	The Psychology of the Family	 
 GL/PSYC 3635 3.00	Health Psychology	 
-GL/PSYC 3635 3.00	Psychologie de la santÃ©	 
+GL/PSYC 3635 3.00	Psychologie de la santé	 
 GL/PSYC 3640 3.00	Psychological Studies of Language	 
 GL/PSYC 3660 3.00	Introduction to Social Psychology	 
 GL/PSYC 3670 3.00	Psychobiology	 
@@ -5268,7 +5268,7 @@ HH/PSYC 3890 3.00	Independent Study
 HH/PSYC 3890 6.00	Independent Study	 
 HH/PSYC 4000 6.00	Honours Thesis	 
 GL/PSYC 4000 6.00	Honours Thesis	 
-GL/PSYC 4000 6.00	MÃ©moire avancÃ©	 
+GL/PSYC 4000 6.00	Mémoire avancé	 
 HH/PSYC 4001 6.00	Specialized Honours Thesis	 
 HH/PSYC 4010 3.00	Seminar in Developmental Psychology	 
 HH/PSYC 4010 6.00	Seminar in Developmental Psychology	 
@@ -5311,7 +5311,7 @@ GS/PSYC 6235 3.00	Brain Mechanisms of Movement in Health and Disease
 GS/PSYC 6245 3.00	Complex Systems Approach to Interpersonal Change	 
 GS/PSYC 6253 3.00	Fundamentals of Neuroscience II: Circuits, Systems and Behaviour	 
 GS/PSYC 6257 3.00	Fundamentals of Neuroscience I: Structures, Neurons and Synapses	 
-GS/PSYC 6265 3.00	Perception and ActionÂ”/Same as Biology 5136 3.0 and Kinesiology & Health Science 6161 3.0	 
+GS/PSYC 6265 3.00	Perception and Action?/Same as Biology 5136 3.0 and Kinesiology & Health Science 6161 3.0	 
 GS/PSYC 6273 3.00	Computer Programming for Experimental Psychology	 
 GS/PSYC 6320 3.00	Human neuropsychology: History and Syndromes	 
 GS/PSYC 6400 3.00	Contemporary Issues in Personality and Social Psychology	 
@@ -5470,7 +5470,7 @@ AP/SOCI 3480 6.00	Organizations, Work and Society
 AP/SOCI 3490 6.00	Formal Organizations	 
 AP/SOCI 3550 3.00	Sociology of Aging	 
 AP/SOCI 3550 6.00	Sociology of Aging	 
-GL/SOCI 3552 6.00	Approches fÃ©ministes du dÃ©veloppement	 
+GL/SOCI 3552 6.00	Approches féministes du développement	 
 AP/SOCI 3600 3.00	Sociology of Work and Industry	 
 GL/SOCI 3609 3.00	Women and Religion	 
 AP/SOCI 3615 3.00	The Sociology of Occupations and Professions	 
@@ -5489,14 +5489,14 @@ GL/SOCI 3680 3.00	Logic of Social Inquiry: Qualitative Methods
 GL/SOCI 3685 3.00	Popular Trials	 
 GL/SOCI 3690 3.00	The Logic of Social Inquiry: Quantitative Methods (Data Collection and Analysis)	 
 AP/SOCI 3690 6.00	Sociology of Gender	 
-GL/SOCI 3692 6.00	ThÃ©ories de la sociÃ©tÃ©	 
+GL/SOCI 3692 6.00	Théories de la société	 
 GL/SOCI 3692 6.00	Theories of Society	 
 AP/SOCI 3810 6.00	Criminalization and Regulation	 
 AP/SOCI 3820 6.00	Sociology of Health and Health Care	 
 AP/SOCI 3830 6.00	Sociology of Urban Life	 
 AP/SOCI 3860 6.00	Women, Work and Family	 
-GL/SOCI 3910 3.00	Sociologie du dÃ©veloppement	 
-GL/SOCI 3917 3.00	CommunautÃ©s et sociÃ©tÃ©s	 
+GL/SOCI 3910 3.00	Sociologie du développement	 
+GL/SOCI 3917 3.00	Communautés et sociétés	 
 AP/SOCI 3950 3.00	Exploring Disability: An Introduction to Disability Studies	 
 AP/SOCI 4000 6.00	Honours Thesis	 
 AP/SOCI 4030 6.00	Independent Study	 
@@ -5532,14 +5532,14 @@ AP/SOCI 4610 6.00	Women, the Welfare State and Social Policy
 AP/SOCI 4615 6.00	Feminist Theories and Methodologies	 
 GL/SOCI 4620 3.00	Urban Environmentalism and Urban Sociology	 
 AP/SOCI 4620 6.00	Issues in Sociology of Labour	 
-GL/SOCI 4625 3.00	L'EnquÃªte de terrain	 
+GL/SOCI 4625 3.00	L'Enquête de terrain	 
 AP/SOCI 4630 6.00	Schools, Employment and Transitions	 
 GL/SOCI 4632 3.00	Work in a Warming World: Issues in work, labour and climate change	 
 GL/SOCI 4645 6.00	Mobs, Manias and Delusions: Sociological and Psychoanalytic Perspectives	 
 AP/SOCI 4670 3.00	The Social Self	 
 GL/SOCI 4675 3.00	Global civil society and international economic organizations	 
 AP/SOCI 4680 3.00	Women and Aging	 
-GL/SOCI 4681 3.00	Politique et gestion de la diversitÃ©	 
+GL/SOCI 4681 3.00	Politique et gestion de la diversité	 
 AP/SOCI 4685 6.00	Feminist Perspectives on Families, Gender and the State	 
 AP/SOCI 4810 6.00	Women and the Criminal Justice System	 
 AP/SOCI 4830 3.00	Childhood and Violence	 
@@ -5596,7 +5596,7 @@ AP/SOSC 1375 3.00	Introductory Socio-legal Studies
 AP/SOSC 1430 9.00	Introduction to International Development Studies	  
 AP/SOSC 1439 9.00	Introduction to International Development Studies (ESL)	  
 GL/SOSC 1502 6.00	Introduction to Gender and Women's Studies	 
-GL/SOSC 1502 6.00	Introduction aux Ã©tudes des femmes et de genre	 
+GL/SOSC 1502 6.00	Introduction aux études des femmes et de genre	 
 AP/SOSC 1510 9.00	The Future of Work	  
 AP/SOSC 1510 6.00	The Future of Work	  
 AP/SOSC 1520 9.00	Markets and Democracy: The Development of Industrial Society	  
@@ -5631,7 +5631,7 @@ AP/SOSC 1940 6.00	Ontario: Problems and Prospects
 AP/SOSC 1950 6.00	Prospects and Perils in the 21st Century	  
 AP/SOSC 1960 6.00	Indigenous Resistance in Global Contexts	  
 AP/SOSC 2000 6.00	Interdisciplinary Approaches to Social Inquiry	 
-GL/SOSC 2100 6.00	Introduction to Communication: Theory and Practice/Introduction Ã  la communication: ThÃ©orie et pratique	 
+GL/SOSC 2100 6.00	Introduction to Communication: Theory and Practice/Introduction à la communication: Théorie et pratique	 
 AP/SOSC 2110 6.00	A Critical Study of Health and Society	 
 AP/SOSC 2150 6.00	Health in Crisis: Issues of Health Environments and Poverty	 
 AP/SOSC 2210 6.00	Labour Relations in Canada	 
@@ -5651,7 +5651,7 @@ GL/SOSC 2601 3.00	The History of Early Medieval Europe
 GL/SOSC 2612 3.00	Sport in Canadian Society	 
 GL/SOSC 2618 3.00	Educational Organizations	 
 GL/SOSC 2622 3.00	Culture, Globalization and International Civil Society	 
-GL/SOSC 2622 3.00	Culture, mondialisation et sociÃ©tÃ© civile internationale	 
+GL/SOSC 2622 3.00	Culture, mondialisation et société civile internationale	 
 GL/SOSC 2630 3.00	Aboriginal Peoples of Canada	 
 GL/SOSC 2634 3.00	Language and Society	 
 GL/SOSC 2645 6.00	Ancient Philosophy and Political Theory	 
@@ -5668,14 +5668,14 @@ AP/SOSC 2710 6.00	City Lives and City Forms: An Introduction to Urban Studies
 AP/SOSC 2800 6.00	Development in Comparative and Historical Perspective	 
 GL/SOSC 2900 3.00	Language and Gender	 
 GL/SOSC 2901 6.00	Introduction to Latin American History	 
-GL/SOSC 2905 6.00	Introduction Ã  l'histoire de l'Europe contemporaine de 1450 Ã  nos jours	 
-GL/SOSC 2915 3.00	Le Moyen Ã‚ge en Occident	 
-GL/SOSC 2923 3.00	Introduction au droit et Ã  la pensÃ©e sociale	 
+GL/SOSC 2905 6.00	Introduction à l'histoire de l'Europe contemporaine de 1450 à nos jours	 
+GL/SOSC 2915 3.00	Le Moyen Âge en Occident	 
+GL/SOSC 2923 3.00	Introduction au droit et à la pensée sociale	 
 GL/SOSC 2923 3.00	Introduction to Law and Social Thought	 
 GL/SOSC 2925 3.00	Philosophie du droit	 
 GL/SOSC 2925 3.00	Philosophy of Law	 
 GL/SOSC 2930 3.00	Regionalism, Culture and Identity in Canada	 
-GL/SOSC 2930 3.00	RÃ©gionalisme, culture et identitÃ© au Canada	 
+GL/SOSC 2930 3.00	Régionalisme, culture et identité au Canada	 
 GL/SOSC 2935 3.00	Ancient History Part II	 
 AP/SOSC 3040 6.00	Corporate Social Responsibility	 
 AP/SOSC 3041 6.00	The Social Economy and Alternative Development	 
@@ -5713,7 +5713,7 @@ AP/SOSC 3543 6.00	Introduction to Gender and Development: Key Themes in Critique
 AP/SOSC 3552 6.00	Political Economy as a Moral Science: The Economics of Marx and Keynes	 
 AP/SOSC 3561 3.00	History of Computing and Information Technology	 
 GL/SOSC 3600 3.00	Psychology and Law	 
-GL/SOSC 3602 6.00	Rapports sociaux d'ethnicitÃ© et de sexe	 
+GL/SOSC 3602 6.00	Rapports sociaux d'ethnicité et de sexe	 
 GL/SOSC 3608 6.00	Mothering and Motherhood	 
 GL/SOSC 3611 3.00	Political Philosophy I	 
 GL/SOSC 3616 3.00	Case Studies in Canada's Aboriginal Languages	 
@@ -5724,7 +5724,7 @@ GL/SOSC 3625 3.00	Women's Sexualities
 GL/SOSC 3631 3.00	Philosophy of Race	 
 GL/SOSC 3642 3.00	Business Ethics	 
 GL/SOSC 3646 3.00	English-Canadian Film	 
-GL/SOSC 3647 3.00	MÃ©dias et politiques	 
+GL/SOSC 3647 3.00	Médias et politiques	 
 GL/SOSC 3648 3.00	Music and Culture in Global Perspective	 
 GL/SOSC 3649 6.00	Sociology of Emotions	 
 AP/SOSC 3652 3.00	Ethnographies of Crime and Policing	 
@@ -5733,11 +5733,11 @@ AP/SOSC 3655 3.00	Policing
 AP/SOSC 3656 3.00	Punishment	 
 AP/SOSC 3657 3.00	Youth Crime	 
 AP/SOSC 3658 3.00	Crime, Science, and Technology	 
-GL/SOSC 3670 6.00	Le multiculturalisme et l'ethnicitÃ© au Canada	 
-GL/SOSC 3672 3.00	Capital humain, capital social et croissance Ã©conomique	 
-GL/SOSC 3674 3.00	Cultures quÃ©bÃ©coise et francophone canadienne	 
+GL/SOSC 3670 6.00	Le multiculturalisme et l'ethnicité au Canada	 
+GL/SOSC 3672 3.00	Capital humain, capital social et croissance économique	 
+GL/SOSC 3674 3.00	Cultures québécoise et francophone canadienne	 
 GL/SOSC 3685 3.00	Popular Trials	 
-GL/SOSC 3692 6.00	ThÃ©ories de la sociÃ©tÃ©	 
+GL/SOSC 3692 6.00	Théories de la société	 
 GL/SOSC 3692 6.00	Theories of Society	 
 AP/SOSC 3700 6.00	Urban Analysis	 
 AP/SOSC 3710 6.00	Theory and Practice of Urban Planning	 
@@ -5749,9 +5749,9 @@ AP/SOSC 3791 3.00	Gender and the City
 AP/SOSC 3800 6.00	Development Studies and Research Methods	 
 AP/SOSC 3801 6.00	Understanding Planning and Management for Development	 
 AP/SOSC 3815 3.00	Jobs, Unemployment and Canadian Labour Market Policy	 
-GL/SOSC 3910 3.00	CinÃ©ma quÃ©bÃ©cois	 
+GL/SOSC 3910 3.00	Cinéma québécois	 
 GL/SOSC 3915 3.00	Indigenous Peoples in International Relations	 
-GL/SOSC 3917 3.00	CommunautÃ©s et sociÃ©tÃ©s	 
+GL/SOSC 3917 3.00	Communautés et sociétés	 
 AP/SOSC 3917 6.00	Contemporary Jewish Life in North America	 
 AP/SOSC 3918 6.00	Sephardi Jews of Muslim Lands	 
 AP/SOSC 3920 6.00	Disability and Society: Historical, Socio-Cultural and International Perspectives	 
@@ -5760,7 +5760,7 @@ AP/SOSC 3930 6.00	University and Society
 AP/SOSC 3970 6.00	India: Culture and Society	 
 AP/SOSC 3980 3.00	Workers' Organizations	 
 AP/SOSC 3982 3.00	States, Markets and Work-Life Balance: Canadian Employment and Labour Policies	 
-GL/SOSC 3990 3.00	Femmes, sexualitÃ©s, pouvoir	 
+GL/SOSC 3990 3.00	Femmes, sexualités, pouvoir	 
 AP/SOSC 3992 6.00	Popular Trials	 
 AP/SOSC 3993 3.00	Strategies of Social Science Research	 
 AP/SOSC 4000 6.00	Topics in Social Science Research	 
@@ -5797,7 +5797,7 @@ AP/SOSC 4451 6.00	Caribbean Feminisms: Gendered Subversions, Rebellions and Resi
 AP/SOSC 4452 3.00	State and Civil Society in Latin America: Social Movements and Community Development in the 21st Century	 
 AP/SOSC 4500 6.00	The Emergence of Modernity	 
 AP/SOSC 4501 6.00	Seminar in Science & Technology Studies	 
-GL/SOSC 4505 6.00	Professional Communications Field Experience/ Communication professionnelle et expÃ©rience pratique	 
+GL/SOSC 4505 6.00	Professional Communications Field Experience/ Communication professionnelle et expérience pratique	 
 AP/SOSC 4510 6.00	African Popular Culture	 
 AP/SOSC 4511 6.00	Social and Political Thought Seminar	 
 AP/SOSC 4600 6.00	Advanced Seminar in International Development Studies	 
@@ -5805,7 +5805,7 @@ GL/SOSC 4602 3.00	La femme et la violence
 GL/SOSC 4602 6.00	Violence Against Women	 
 AP/SOSC 4604 3.00	Aspects of Development Research: the Field Experience	 
 GL/SOSC 4622 6.00	Critical perspectives on Canadian issues/Perspectives critiques sur le Canada	 
-GL/SOSC 4625 3.00	L'EnquÃªte de terrain	 
+GL/SOSC 4625 3.00	L'Enquête de terrain	 
 GL/SOSC 4632 3.00	Science, Technology and International Society	 
 GL/SOSC 4635 6.00	Topics in Law and Politics	 
 GL/SOSC 4645 6.00	Mobs, Manias and Delusions: Sociological and Psychoanalytic Perspectives	 
@@ -5884,18 +5884,18 @@ GS/SOWK 7040 3.00	Doctoral Seminar
 
 AP/SP 1000 6.00	Elementary Spanish	 
 GL/SP 1000 6.00	Elementary Spanish	 
-GL/SP 1000 6.00	Espagnol Ã©lÃ©mentaire	 
+GL/SP 1000 6.00	Espagnol élémentaire	 
 AP/SP 1001 3.00	Elementary Spanish for Professional Communication	 
 AP/SP 1002 3.00	Elementary Spanish Grammar & Writing	 
 GL/SP 2000 6.00	Second Level Spanish Language	 
-GL/SP 2000 6.00	Espagnol - deuxiÃ¨me niveau	 
+GL/SP 2000 6.00	Espagnol - deuxième niveau	 
 AP/SP 2000 6.00	Intermediate Spanish	 
 AP/SP 2010 6.00	Intermediate Spanish for Native Speakers	 
 GL/SP 2100 6.00	Introduction to Spanish Literary Texts	 
 AP/SP 2200 6.00	Introduction to Spanish Literature	 
 AP/SP 3000 6.00	Advanced Spanish Language and Grammar	 
 GL/SP 3000 6.00	Advanced Level Studies in Spanish Language and Stylistics	 
-GL/SP 3000 6.00	Ã‰tude avancÃ©e de la langue et de la stylistique espagnoles	 
+GL/SP 3000 6.00	Étude avancée de la langue et de la stylistique espagnoles	 
 AP/SP 3210 6.00	Aspects of Spanish-American Literature	 
 GL/SP 3300 6.00	Spanish Literature and Civilization	 
 GL/SP 3400 6.00	Spanish-american Literature, Culture and Society, from the Pre-Colonial Period to the Present	 
@@ -6120,40 +6120,40 @@ GS/THST 6540 3.00	"9/11" Theatre
 GS/THST 6761 3.00	Twentieth-Century Canadian Drama
 
 GL/TRAN 2210 3.00	Introduction to Translation into English I	 
-GL/TRAN 2210 3.00	Traduction gÃ©nÃ©rale I	 
+GL/TRAN 2210 3.00	Traduction générale I	 
 GL/TRAN 2220 3.00	Introduction to Translation into English II	 
-GL/TRAN 2220 3.00	Traduction gÃ©nÃ©rale II	 
+GL/TRAN 2220 3.00	Traduction générale II	 
 GL/TRAN 2250 3.00	Comparative Stylistics - English and French	 
-GL/TRAN 2250 3.00	Stylistique diffÃ©rentielle du franÃ§ais et de l'anglais	 
+GL/TRAN 2250 3.00	Stylistique différentielle du français et de l'anglais	 
 GL/TRAN 3200 3.00	Introduction to Spanish-English translation I	 
 GL/TRAN 3205 3.00	Introduction to Spanish-English translation 2	 
 GL/TRAN 3210 3.00	Translation of Specialized Texts Into English, Level I	 
-GL/TRAN 3210 3.00	Traduction spÃ©cialisÃ©e - MÃ©decine et sciences de la santÃ©	 
+GL/TRAN 3210 3.00	Traduction spécialisée - Médecine et sciences de la santé	 
 GL/TRAN 3220 3.00	Translation of Specialized Texts into English II	 
-GL/TRAN 3220 3.00	Traduction spÃ©cialisÃ©e - juridique, administrative, financiÃ¨re	 
-GL/TRAN 3260 3.00	Documentation/DocumentaciÃ³n	 
+GL/TRAN 3220 3.00	Traduction spécialisée - juridique, administrative, financière	 
+GL/TRAN 3260 3.00	Documentation/Documentación	 
 GL/TRAN 3260 3.00	Documentation	 
 GL/TRAN 3260 3.00	Documentation	 
-GL/TRAN 3270 3.00	Theory in Translation/TeorÃ­a de la traducciÃ³n	 
+GL/TRAN 3270 3.00	Theory in Translation/Teoría de la traducción	 
 GL/TRAN 3270 3.00	Theory of Translation	 
-GL/TRAN 3270 3.00	ThÃ©orie de la traduction	 
+GL/TRAN 3270 3.00	Théorie de la traduction	 
 GL/TRAN 3310 3.00	Problems in Professional Writing	 
 GL/TRAN 3500 3.00	Onsite Professional Internship	 
 GL/TRAN 3500 3.00	Stage professionnel en entreprise	 
 GL/TRAN 4225 3.00	Intro to Translation into English (cours pour Francophones)	 
-GL/TRAN 4225 3.00	Traductions de textes gÃ©nÃ©raux vers le franÃ§ais (cours pour Anglophones)	 
-GL/TRAN 4230 3.00	Traductions de textes spÃ©cialisÃ©s (cours pour Anglophones)	 
+GL/TRAN 4225 3.00	Traductions de textes généraux vers le français (cours pour Anglophones)	 
+GL/TRAN 4230 3.00	Traductions de textes spécialisés (cours pour Anglophones)	 
 GL/TRAN 4250 3.00	Techniques of Textual Revision	 
-GL/TRAN 4250 3.00	Technique de la rÃ©vision	 
+GL/TRAN 4250 3.00	Technique de la révision	 
 GL/TRAN 4310 3.00	Techniques in Business and Technical Writing I	 
 GL/TRAN 4320 3.00	Techniques in Business and Technical Writing II	 
 GL/TRAN 4330 3.00	Documentation in Business and Industry	 
-GL/TRAN 4370 3.00	Terminology/TerminologÃ­a	 
+GL/TRAN 4370 3.00	Terminology/Terminología	 
 GL/TRAN 4370 3.00	Terminology	 
 GL/TRAN 4370 3.00	Terminologie	 
 GL/TRAN 4500 3.00	Online Professional Internship	 
-GL/TRAN 4500 3.00	Stage professionnel Ã  distance	 
-GL/TRAN 4510 3.00	Projet avancÃ© de traduction - Gestion de projet	 
+GL/TRAN 4500 3.00	Stage professionnel à distance	 
+GL/TRAN 4510 3.00	Projet avancé de traduction - Gestion de projet	 
 GL/TRAN 4510 3.00	Advanced Translation Project/Project Management	 
 GL/TRAN 4636 3.00	History, Societies & Translation I	 
 GL/TRAN 4638 3.00	History, Societies & Translation II	 
@@ -6162,7 +6162,7 @@ GL/TRAN 4915 3.00	Specialized Spanish-English Translation: Literary and Humanist
 GL/TRAN 4920 3.00	Methodology of Spanish-English/English-Spanish Translation 2: Revision and project management	 
 GL/TRAN 4925 3.00	Translation Practicum/Advanced Translation Research	 
 GS/TRAN 5100 3.00	Translation Studies / Traductologies	 
-GS/TRAN 5155 3.00	Voyage, DÃ©placement, Traduction	 
+GS/TRAN 5155 3.00	Voyage, Déplacement, Traduction	 
 GS/TRAN 5300 3.00	Terminology	 
 GS/TRAN 5322 3.00	Specialized Translation (Medicine)	 
 GS/TRAN 5325 3.00	Traduction Litteraire	 
@@ -6243,7 +6243,7 @@ AP/WKLS 3211 6.00	Work for a Change: Strategic Research, Organizing and Communic
 
 GL/WKST 3610 6.00	Women and Work: Production and Reproduction
 
-GL/WMST 4630 3.00	Francophonie et Ã©criture au fÃ©minin	 
+GL/WMST 4630 3.00	Francophonie et écriture au féminin	 
 GL/WMST 4681 3.00	Medieval Women's Writing	 
 GS/WMST 6102 3.00	Nineteenth Century British Fiction	 
 GS/WMST 6113 3.00	Gender and the Construction of Global Markets	 
@@ -6252,7 +6252,7 @@ GS/WMST 6133 3.00	Gender and International Human Rights: Law, Citizenships and B
 GS/WMST 6207 3.00	The Political Economy of Work and Welfare	 
 GS/WMST 6210 3.00	Girlhood	 
 GS/WMST 6216 3.00	Transnational Sexualities	 
-GS/WMST 6217 3.00	FÃ©minisme, citoyennetÃ© politique et action collective	 
+GS/WMST 6217 3.00	Féminisme, citoyenneté politique et action collective	 
 GS/WMST 6219 3.00	Sexuality and Literature: Sexology vs. Fiction	 
 GS/WMST 6301 3.00	Fem.Issues In Anth. Hist.& Current Deb	 
 GS/WMST 6405 3.00	Issues in Comparative Women's and Gender History: Part I, The Late Eighteenth and Ninteenth Centuries	 
@@ -6355,3 +6355,7 @@ LE/EECS 4404 3.00	Introduction to Machine Learning and Pattern Recognition
 LE/EECS 1022 3.0
 0	Mobile Something
 AP/ADMS 1000 3.00	Introduction to Administrative Studies
+FA/DATT 2300 3.00   Game Development I
+LE/EECS 4401 3.00   ARTIFICIAL INTELLIGENCE
+SC/MATH 1300 3.00   Differential Calculus with Applications
+SC/NATS 1870 6.00   Understanding Colour

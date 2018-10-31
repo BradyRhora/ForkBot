@@ -206,8 +206,8 @@ namespace ForkBot
                 //if chance of lootbox
                 if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
                 {
-                    //5% chance at lootbox
-                    if (rdm.Next(100) + 1 < 5)
+                    //10% chance at lootbox
+                    if (rdm.Next(100) + 1 < 10)
                     {
                         await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
                         Functions.GetUser(context.User).GiveItem("package");
