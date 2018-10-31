@@ -764,7 +764,7 @@ namespace ForkBot
             if (Check(Context, "jack_o_lantern",false)) return;
             var dt = Var.CurrentDate();
             string msg = "";
-            if (dt.Month == 11 && dt.Day == 31)
+            if (dt.Month == 10 && dt.Day == 31)
             {
                 User u = Functions.GetUser(Context.User);
                 u.RemoveItem("jack_o_lantern");
@@ -782,7 +782,15 @@ namespace ForkBot
                 await ReplyAsync("Nothing happens.. Maybe the time isn't right.");
             }
         }
-
+        
+        [Command("candy")]
+        public async Task Candy()
+        {
+            if (Check(Context,"candy")) return;
+            await Context.Channel.SendMessageAsync(":candy: Don't forget to check for razors!\n**Fullness+10 Happiness+15**");
+            Functions.GetUser(Context.User).AddData("stat.fullness", 10);
+            Functions.GetUser(Context.User).AddData("stat.happiness", 15);
+        }
 
     }
 }
