@@ -17,6 +17,7 @@ namespace ForkBot
                                                           new ItemCombo("baby_symbol","pregnant_woman","watch"),
                                                           new ItemCombo("older_man","man","beer"),
                                                           new ItemCombo("gift","box","ribbon"),
+                                                          new ItemCombo("stopwatch","iphone","watch"),
                                                           new ItemCombo("tiger","cat","milk","meat_on_bone")};
         public string[] Items;
         public string Result;
