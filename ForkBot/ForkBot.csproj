@@ -171,15 +171,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Evaluate.cs" />
-    <Compile Include="Classes\Globals.cs" />
-    <Compile Include="Classes\Interfaces.cs" />
+    <Compile Include="Classes\Less Useful Stuff\Evaluate.cs" />
+    <Compile Include="Classes\Less Useful Stuff\Globals.cs" />
+    <Compile Include="Classes\Less Useful Stuff\Interfaces.cs" />
     <Compile Include="Classes\ItemCommands.cs" />
     <Compile Include="Classes\Objects\ChannelStats.cs" />
     <Compile Include="Classes\Objects\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
     <Compile Include="Classes\Objects\InfoEmbed.cs" />
+    <Compile Include="Classes\Objects\Item.cs" />
     <Compile Include="Classes\Objects\ItemCombo.cs" />
     <Compile Include="Classes\Objects\ItemTrade.cs" />
     <Compile Include="Classes\Objects\Poll.cs" />
@@ -191,10 +192,10 @@
     <Compile Include="Classes\Objects\YorkAPI\CourseSchedule.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
-    <Compile Include="Classes\Timers.cs" />
+    <Compile Include="Classes\Less Useful Stuff\Timers.cs" />
     <Compile Include="Classes\Objects\User.cs" />
-    <Compile Include="Classes\Var.cs" />
-    <Compile Include="Classes\XMLToolbox.cs" />
+    <Compile Include="Classes\Less Useful Stuff\Var.cs" />
+    <Compile Include="Classes\Less Useful Stuff\XMLToolbox.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />
     <Compile Include="Classes\Objects\JEmbed.cs" />
@@ -321,6 +322,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\Files\ChannelStats\" />
+    <Folder Include="bin\Debug\Files\Items\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\TensorFlowSharp.1.7.0\build\net45\TensorFlowSharp.targets" Condition="Exists('..\packages\TensorFlowSharp.1.7.0\build\net45\TensorFlowSharp.targets')" />

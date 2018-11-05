@@ -1596,7 +1596,47 @@ namespace ForkBot
             else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
         }
 
-        
+        [Command("genitems")]
+        public async Task GenItems()
+        {
+            if (Context.User.Id != Constants.Users.BRADY) throw NotBradyException;
+            foreach (string item in File.ReadLines("Files/items.txt"))
+            {
+                var itemData = item.Split('|');
+                var name = itemData[0];
+                var desc = itemData[1];
+                var costData = itemData[2];
+                bool custom = false;
+                string cEmote = "0";
+                if (itemData.Count() == 4) custom = true;
+                if (custom) cEmote = itemData[3];
+                bool shop = true, present = true;
+                if (costData.Contains("*")) present = false;
+                if (costData.Contains("-")) shop = false;
+                int cost = 0;
+                if (shop && present) cost = Convert.ToInt32(costData);
+
+                Item i = new Item();
+                i.Name = name;
+                i.Description = desc;
+                i.Custom = custom;
+                if (custom) i.ID = Convert.ToUInt64(cEmote);
+                i.Shoppable = shop;
+                i.Present = present;
+                i.Cost = cost;
+
+                i.Serialize();
+
+            }
+        }
+
+        [Command("fban"), Summary("[BRADY] Pretend to ban someone hahahahaha..")]
+        public async Task FBan(string user)
+        {
+            await Context.Message.DeleteAsync();
+            await ReplyAsync($"{user} has left the server.");
+        }
+
 
         #endregion
 
