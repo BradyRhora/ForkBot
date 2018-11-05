@@ -1633,6 +1633,7 @@ namespace ForkBot
         [Command("fban"), Summary("[BRADY] Pretend to ban someone hahahahaha..")]
         public async Task FBan(string user)
         {
+            if (Context.User.Id != Constants.Users.BRADY) throw NotBradyException;
             await Context.Message.DeleteAsync();
             await ReplyAsync($"{user} has left the server.");
         }
