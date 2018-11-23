@@ -36,6 +36,7 @@ namespace ForkBot
         /// <returns></returns>
         public bool AddItem(IUser u, string item)
         {
+            if (!Accepted) return false;
             int coins;
             if (u.Id == u1.ID)
             {

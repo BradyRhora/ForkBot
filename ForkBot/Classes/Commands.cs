@@ -385,7 +385,8 @@ namespace ForkBot
                 else msg += $"You do not have an item called {item}!\n";
             }
 
-            await Context.Channel.SendMessageAsync(msg);
+            var msgs = Functions.SplitMessage(msg);
+            foreach (string m in msgs) await ReplyAsync(m);
         }
 
         [Command("trade"), Summary("[FUN] Initiate a trade with another user!")]
@@ -428,7 +429,10 @@ namespace ForkBot
                             var success = trade.AddItem(Context.User, param);
                             if (success == false)
                             {
-                                await Context.Channel.SendMessageAsync("Unable to add item. Are you sure you have it?");
+                                if (trade.Accepted)
+                                    await Context.Channel.SendMessageAsync("Unable to add item. Are you sure you have it?");
+                                else
+                                    await ReplyAsync("The other user has not accepted the trade yet.");
                             }
                             else showMenu = true;
                         }
@@ -479,7 +483,7 @@ namespace ForkBot
             if (Var.currentShop != null)
             {
                 day = Var.currentShop.Date();
-                currentDay = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+                currentDay = Var.CurrentDate();
             }
             if (Var.currentShop == null || day.DayOfYear < currentDay.DayOfYear && day.Year == currentDay.Year)
             {
@@ -716,6 +720,23 @@ namespace ForkBot
             }
         }
 
+        [Command("trash"), Summary("[FUN] Throw items away.")]
+        public async Task Trash(params string[] items)
+        {
+            var u = Functions.GetUser(Context.User);
+            string msg = "";
+            foreach (string item in items)
+            {
+                if (u.GetItemList().Contains(item))
+                {
+                    u.RemoveItem(item);
+                    msg += ":recycle: You have succesfully thrown away your " + item + "!\n";
+                }
+                else msg += ":x: You do not have an item called " + item + "!\n";
+            }
+            var msgs = Functions.SplitMessage(msg);
+            foreach (string m in msgs) await ReplyAsync(m);
+        }
 
         #endregion
 
