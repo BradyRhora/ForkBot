@@ -537,7 +537,8 @@ namespace ForkBot
         [Command("paintbrush")]
         public async Task Paintbrush(IUser user)
         {
-            if (Check(Context, "paintbrush", false)) return;
+            
+             if (Check(Context, "paintbrush", false)) return;
             using (ImageFactory fact = new ImageFactory())
             {
                 using (WebClient web = new WebClient())
@@ -545,7 +546,13 @@ namespace ForkBot
                     bool downloaded = false;
                     while (!downloaded)
                     {
-                        try { web.DownloadFile(user.GetAvatarUrl(), @"Files\paintbrush.png"); downloaded = true; }
+                        var url = user.GetAvatarUrl();
+                        if (url == null)
+                        {
+                            await ReplyAsync("You must have uploaded a profile picture to use this command.");
+                            return;
+                        }
+                        try { web.DownloadFile(url, @"Files\paintbrush.png"); downloaded = true; }
                         catch (Exception) { }
                     }
                     fact.Load(@"Files\paintbrush.png");
