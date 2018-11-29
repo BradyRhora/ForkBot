@@ -11,7 +11,7 @@ namespace ForkBot
     {
         User u1, u2;
         List<string> items1, items2;
-        int coins1, coins2;
+        int coins1 = 0, coins2 = 0;
         public bool Accepted;
         bool confirmed1, confirmed2;
         bool completed = false;
@@ -45,6 +45,7 @@ namespace ForkBot
                     if (u1.GetCoins() >= coins)
                     {
                         coins1 += coins;
+                        u1.GiveCoins(-coins);
                         return true;
                     }
                 }
@@ -52,6 +53,7 @@ namespace ForkBot
                 if (u1.GetItemList().Contains(item)) 
                 {
                     items1.Add(item);
+                    u1.RemoveItem(item);
                     return true;
                 }
             }
@@ -62,6 +64,7 @@ namespace ForkBot
                     if (u1.GetCoins() >= coins)
                     {
                         coins2 += coins;
+                        u2.GiveCoins(-coins);
                         return true;
                     }
                 }
@@ -69,6 +72,7 @@ namespace ForkBot
                 if (u2.GetItemList().Contains(item))
                 {
                     items2.Add(item);
+                    u2.RemoveItem(item);
                     return true;
                 }
             }
@@ -94,7 +98,7 @@ namespace ForkBot
 
                 string itemlist = "";
                 foreach(string item in items1)  itemlist += ":" + item + ": ";
-                if(coins1 > 0) itemlist += coins1 + " coins";
+                if(coins1 > 0) itemlist += ":moneybag:" + coins1 + " coins";
 
                 x.Text = itemlist;
                 x.Inline = true;
@@ -149,20 +153,17 @@ namespace ForkBot
         {
             foreach(string item in items1)
             {
-                u1.RemoveItem(item);
                 if (item != "heart") u2.GiveItem(item);
                 else u2.GiveItem("gift");
             }
 
             if (coins1 > 0)
             {
-                u1.GiveCoins(-coins1);
                 u2.GiveCoins(coins1);
             }
 
             foreach (string item in items2)
             {
-                u2.RemoveItem(item);
                 if (item != "heart") u1.GiveItem(item);
                 else u1.GiveItem("gift");
             }
@@ -170,7 +171,6 @@ namespace ForkBot
             if (coins2 > 0)
             {
                 u1.GiveCoins(coins2);
-                u2.GiveCoins(-coins2);
             }
 
             completed = true;
@@ -179,6 +179,23 @@ namespace ForkBot
         public bool IsCompleted()
         {
             return completed;
+        }
+
+        public void Cancel()
+        {
+            Var.trades.Remove(this);
+            foreach(string item in items1)
+            {
+                u1.GiveItem(item);
+
+            }
+            u1.GiveCoins(coins1);
+            foreach (string item in items2)
+            {
+                u2.GiveItem(item);
+
+            }
+            u2.GiveCoins(coins2);
         }
     }
 }

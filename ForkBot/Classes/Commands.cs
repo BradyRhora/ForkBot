@@ -444,8 +444,8 @@ namespace ForkBot
                         else await Context.Channel.SendMessageAsync("Awaiting confirmation from other user.");
                         break;
                     case "cancel":
+                        trade.Cancel();
                         await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE CANCELLED", $"{Context.User.Username} has cancelled the trade. All items have been returned.").Build());
-                        Var.trades.Remove(trade);
                         break;
                 }
             }

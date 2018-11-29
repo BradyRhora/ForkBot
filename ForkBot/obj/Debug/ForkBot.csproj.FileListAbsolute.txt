@@ -41,7 +41,6 @@ C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.D
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csprojResolveAssemblyReference.cache
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.exe
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
 C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
@@ -166,3 +165,6 @@ C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Reflection.Meta
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.Properties.Resources.resources
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.GenerateResource.Cache
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
