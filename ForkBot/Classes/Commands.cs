@@ -491,7 +491,7 @@ namespace ForkBot
             }
 
             List<string> itemNames = new List<string>();
-            foreach (string item in Var.currentShop.Items()) itemNames.Add(item.Split('|')[0]);
+            foreach (string item in Var.currentShop.items) itemNames.Add(item.Split('|')[0]);
 
 
 
@@ -503,7 +503,7 @@ namespace ForkBot
             }
             else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
             {
-                foreach (string item in Var.currentShop.Items())
+                foreach (string item in Var.currentShop.items)
                 {
                     if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
                     {
@@ -512,14 +512,16 @@ namespace ForkBot
                         string desc = data[1];
                         int price = Convert.ToInt32(data[2]);
                         if (price < 0) price *= -1;
-
-                        if (Convert.ToInt32(u.GetCoins()) >= price)
+                        int stock = Var.currentShop.stock[Var.currentShop.items.IndexOf(item)];
+                        if (Convert.ToInt32(u.GetCoins()) >= price && stock > 0)
                         {
+                            stock--;
+                            Var.currentShop.stock[Var.currentShop.items.IndexOf(item)] = stock;
                             u.GiveCoins(-price);
                             u.GiveItem(name);
                             await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {Functions.GetItemEmote(Functions.GetItemData(name))} for {price} coins!");
                         }
-                        else await Context.Channel.SendMessageAsync("You cannot afford this item.");
+                        else await Context.Channel.SendMessageAsync("Either you cannot afford this item or it is not in stock.");
                     }
                 }
             }
