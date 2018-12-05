@@ -9,14 +9,15 @@ namespace ForkBot
     public class Shop
     {
         List<string> items;
+        List<int> stock;
         DateTime date;
         Random rdm = new Random();
 
-        public Shop(List<string> items)
+        /*public Shop(List<string> items)
         {
             this.items = items;
             date = DateTime.UtcNow - new TimeSpan(5, 0, 0);
-        }
+        }*/
 
         public Shop()
         {
@@ -25,16 +26,40 @@ namespace ForkBot
             List<string> items = new List<string>();
             for (int i = 0; i < 5; i++)
             {
+                
                 int itemID = rdm.Next(nItems.Length);
                 if (!items.Contains(nItems[itemID]) && !nItems[itemID].Split('|')[2].Contains("-")) items.Add(nItems[itemID]);
                 else i--;
             }
 
             this.items = items;
+            
             date = DateTime.UtcNow - new TimeSpan(5, 0, 0);
         }
 
         public DateTime Date() { return date; }
         public List<string> Items() { return items; }
+        public JEmbed Build()
+        {
+            JEmbed emb = new JEmbed();
+            emb.Title = "Shop";
+            emb.ThumbnailUrl = Constants.Images.ForkBot;
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+            foreach (string item in Var.currentShop.Items())
+            {
+                var data = item.Split('|');
+                string emote = Functions.GetItemEmote(item);
+                string name = data[0];
+                string desc = data[1];
+                int price = Convert.ToInt32(data[2]);
+                if (price < 0) price = -price;
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = $"{emote} {name.Replace("_", " ")} - {price} coins";
+                    x.Text = desc;
+                }));
+            }
+            return emb;
+        }
     }
 }

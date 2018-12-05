@@ -197,12 +197,7 @@ namespace ForkBot
                 Console.WriteLine(e.Message);
             }
         }
-
-        public static string[] GetJobList()
-        {
-            return File.ReadAllLines("Files/jobs.txt");
-        }
-
+        
         public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
         {
             var bottom = false;

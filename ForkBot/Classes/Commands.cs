@@ -497,24 +497,7 @@ namespace ForkBot
 
             if (command == null)
             {
-                JEmbed emb = new JEmbed();
-                emb.Title = "Shop";
-                emb.ThumbnailUrl = Constants.Images.ForkBot;
-                emb.ColorStripe = Constants.Colours.YORK_RED;
-                foreach (string item in Var.currentShop.Items())
-                {
-                    var data = item.Split('|');
-                    string emote = Functions.GetItemEmote(item);
-                    string name = data[0];
-                    string desc = data[1];
-                    int price = Convert.ToInt32(data[2]);
-                    if (price < 0) price = -price;
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        x.Header = $"{emote} {name.Replace("_", " ")} - {price} coins";
-                        x.Text = desc;
-                    }));
-                }
+                var emb = Var.currentShop.Build();
                 emb.Footer.Text = $"You have: {u.GetCoins()} coins.";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }

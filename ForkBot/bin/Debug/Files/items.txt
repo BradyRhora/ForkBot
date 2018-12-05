@@ -39,8 +39,8 @@ pen_ballpoint|It's a pen. What else can I say.|3
 paintbrush|I believe, every day's a good day when you paint.|50
 mag|Burn the ants! Or read, I guess.|200
 crayon|Colour in between the lines!|3
-milk|Calcium! Strong bones! COW JUICE!|5
-heart|Give me to someone!|50
+milk|Calcium! Strong bones! COW JUICE!|40
+heart|Give me to someone!|100
 basketball|Get out there and play some ball, kiddo.|10
 goose|FUCK|40|369992347314028554
 youness|Lucky you.... :weary:|25|373579959899258880
