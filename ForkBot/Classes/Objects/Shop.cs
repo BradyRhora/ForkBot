@@ -24,6 +24,7 @@ namespace ForkBot
             var nItems = Functions.GetItemList();
 
             List<string> items = new List<string>();
+            List<int> stock = new List<int>();
             for (int i = 0; i < 5; i++)
             {
                 int itemID = rdm.Next(nItems.Length);
