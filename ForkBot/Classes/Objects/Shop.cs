@@ -39,7 +39,7 @@ namespace ForkBot
             this.items = items;
             this.stock = stock;
 
-            date = DateTime.UtcNow - new TimeSpan(5, 0, 0);
+            date = Var.CurrentDate();
         }
 
         public DateTime Date() { return date; }

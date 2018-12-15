@@ -473,7 +473,6 @@ namespace ForkBot
             else await ReplyAsync("You don't have enough coins.");
         }
 
-
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
         public async Task Shop([Remainder] string command = null)
         {
