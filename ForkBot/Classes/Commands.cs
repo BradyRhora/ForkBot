@@ -298,6 +298,47 @@ namespace ForkBot
 
         }
 
+        [Command("courselist"), Summary("Displays all courses for the inputted subject.")]
+        public async Task CourseList(string subject, int page = 1)
+        {
+            if (page < 1)
+            {
+                await ReplyAsync("Please input a valid page number.");
+                return;
+            }
+
+            string[] courses = File.ReadAllLines("Files/courselist.txt");
+            string list = "";
+            foreach(string course in courses)
+            {
+                var data = course.Split('/');
+                if (data.Count() > 1)
+                    if (data[1].StartsWith(subject.ToUpper())) list += course + "\n";
+            }
+
+            if (list == "")
+            {
+                await ReplyAsync($"No courses found with subject: {subject}");
+                return;
+            }
+
+            string[] msgs = Functions.SplitMessage(list);
+
+
+            if (page >= msgs.Count()) page = msgs.Count()-1;
+
+            JEmbed courseEmb = new JEmbed();
+            courseEmb.Author.Name = $"{subject.ToUpper()} Course List";
+            courseEmb.Author.IconUrl = Constants.Images.ForkBot;
+            courseEmb.ColorStripe = Constants.Colours.YORK_RED;
+
+            courseEmb.Description = msgs[page];
+
+            courseEmb.Footer.Text = $"Page {page}/{msgs.Count()-1} (Use ';courselist {subject.ToUpper()} #' and replace the number with a page number!)";
+
+            await ReplyAsync("", embed: courseEmb.Build());
+        }
+
         [Command("suggest"), Summary("Suggest something for ForkBot, whether it's an item, an item's function, a new command, or anything else! People who abuse this will be blocked from using it.")]
         public async Task Suggest([Remainder] string suggestion)
         {
