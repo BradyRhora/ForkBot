@@ -325,16 +325,16 @@ namespace ForkBot
             string[] msgs = Functions.SplitMessage(list);
 
 
-            if (page >= msgs.Count()) page = msgs.Count()-1;
+            if (page > msgs.Count()) page = msgs.Count()-1;
 
             JEmbed courseEmb = new JEmbed();
             courseEmb.Author.Name = $"{subject.ToUpper()} Course List";
             courseEmb.Author.IconUrl = Constants.Images.ForkBot;
             courseEmb.ColorStripe = Constants.Colours.YORK_RED;
 
-            courseEmb.Description = msgs[page];
+            courseEmb.Description = msgs[page-1];
 
-            courseEmb.Footer.Text = $"Page {page}/{msgs.Count()-1} (Use ';courselist {subject.ToUpper()} #' and replace the number with a page number!)";
+            courseEmb.Footer.Text = $"Page {page}/{msgs.Count()} (Use ';courselist {subject.ToUpper()} #' and replace the number with a page number!)";
 
             await ReplyAsync("", embed: courseEmb.Build());
         }
