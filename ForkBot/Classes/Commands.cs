@@ -407,7 +407,7 @@ namespace ForkBot
                         if (line.Split('|')[0] == item)
                         {
                             if (!line.Split('|')[2].Contains("-"))
-                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * .75);
+                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * .50);
                             else unsold = true;
                             break;
                         }
@@ -1684,6 +1684,22 @@ namespace ForkBot
             await ReplyAsync($"{user} has left the server.");
         }
 
+        [Command("giveallitem")]
+        public async Task GiveAllItem(string item, [Remainder] string msg = "")
+        {
+            var users = Directory.GetFiles("Users");
+            foreach (string u in users)
+            {
+                var uID = u.Replace(".user", "").Split('\\')[1];
+                try
+                {
+                    var user = Bot.client.GetUser(Convert.ToUInt64(uID));
+                    Functions.GetUser(user).GiveItem(item);
+                }
+                catch (Exception) { Console.WriteLine($"Unable to give user ({u}) item."); }
+                if (msg != "") await ReplyAsync("", embed: new InfoEmbed("",msg,Constants.Images.ForkBot).Build());
+            }
+        }
 
         #endregion
 
