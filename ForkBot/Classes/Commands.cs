@@ -1684,7 +1684,7 @@ namespace ForkBot
             await ReplyAsync($"{user} has left the server.");
         }
 
-        [Command("giveallitem")]
+        [Command("giveallitem"), Summary("[BRADY] Give all users an item and optionally display a message.")]
         public async Task GiveAllItem(string item, [Remainder] string msg = "")
         {
             var users = Directory.GetFiles("Users");
@@ -1697,8 +1697,8 @@ namespace ForkBot
                     Functions.GetUser(user).GiveItem(item);
                 }
                 catch (Exception) { Console.WriteLine($"Unable to give user ({u}) item."); }
-                if (msg != "") await ReplyAsync("", embed: new InfoEmbed("",msg,Constants.Images.ForkBot).Build());
             }
+            if (msg != "") await ReplyAsync("", embed: new InfoEmbed("", msg += $"\nEveryone has recieved a(n) {item}!", Constants.Images.ForkBot).Build());
         }
 
         #endregion
