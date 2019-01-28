@@ -461,9 +461,7 @@ namespace ForkBot
             if (Check(Context, "moneybag")) return;
 
             int r = rdm.Next(50) + 1;
-            int amount;
-            if (r < 20) amount = rdm.Next(100) + 1;
-            else amount = rdm.Next(100, 1000) + 1;
+            int amount = rdm.Next(100, 1000) + 1;
 
             await Context.Channel.SendMessageAsync($":moneybag: Loads of coins come out of the bag!!\n**+{amount} coins**");
             Functions.GetUser(Context.User).GiveCoins(amount);

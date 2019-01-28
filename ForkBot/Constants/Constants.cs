@@ -81,5 +81,9 @@ namespace ForkBot
             public static DateTime STRIKE_END = new DateTime(2018, 7, 25);
         }
 
+        public class Values
+        {
+            public static double SELL_VAL = .50;
+        }
     }
 }

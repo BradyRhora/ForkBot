@@ -395,8 +395,9 @@ namespace ForkBot
             var u = Functions.GetUser(Context.User);
             string msg = "";
             var itemList = Functions.GetItemList();
-            foreach (string item in items)
+            foreach (string i in items)
             {
+                var item = i.Replace(":", "");
                 if (u.GetItemList().Contains(item))
                 {
                     u.RemoveItem(item);
@@ -407,7 +408,7 @@ namespace ForkBot
                         if (line.Split('|')[0] == item)
                         {
                             if (!line.Split('|')[2].Contains("-"))
-                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * .50);
+                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * Constants.Values.SELL_VAL);
                             else unsold = true;
                             break;
                         }
@@ -514,7 +515,7 @@ namespace ForkBot
             else await ReplyAsync("You don't have enough coins.");
         }
 
-        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
+        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day."), Alias(new string[] { "buy" })]
         public async Task Shop([Remainder] string command = null)
         {
             var u = Functions.GetUser(Context.User);
@@ -538,11 +539,12 @@ namespace ForkBot
             if (command == null)
             {
                 var emb = Var.currentShop.Build();
-                emb.Footer.Text = $"You have: {u.GetCoins()} coins.";
+                emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
             {
+                command = command.Replace(":", "");
                 foreach (string item in Var.currentShop.items)
                 {
                     if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
@@ -708,8 +710,9 @@ namespace ForkBot
                     JEmbed emb = new JEmbed();
                     emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]).Replace('_',' ');
                     emb.Description = itemInfo[1];
+                    emb.ColorStripe = Constants.Colours.YORK_RED;
                     if (itemInfo[2].Contains("-")) emb.Description += "\n\nCannot be purchased or sold. (Probably found through presents or combining.)";
-                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
+                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])* Constants.Values.SELL_VAL)} coins.";
                     await ReplyAsync("", embed: emb.Build());
                     return;
                 }
@@ -1238,7 +1241,7 @@ namespace ForkBot
                         if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
                         if (lossCount == 0)
                         {
-                            await ReplyAsync($":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost... Nothing??\n:boom::boom::boom::boom:");
+                            await ReplyAsync($":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}] and you lost... Nothing??\n:boom::boom::boom::boom:");
                         }
                         else
                         {
