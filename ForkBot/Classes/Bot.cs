@@ -192,29 +192,7 @@ namespace ForkBot
             {
                 var context = new CommandContext(client, message);
                 var result = await commands.ExecuteAsync(context, argPos);
-
-                //give user a chance at a lootbox
-                bool inLM = false;
-                //go through users last command time
-                foreach(var u in Var.lastMessage)
-                {
-                    //ensure user is in dictionary
-                    if (u.Key == context.User.Id) { inLM = true; break; }
-                }
-                if (inLM == false) Var.lastMessage.Add(context.User.Id, Var.CurrentDate() - new TimeSpan(1, 0, 1));
-                //if chance of lootbox
-                if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
-                {
-                    //10% chance at lootbox
-                    if (rdm.Next(100) + 1 < 10)
-                    {
-                        await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
-                        Functions.GetUser(context.User).GiveItem("package");
-                    }
-                }
-                //set last message time to now
-                Var.lastMessage[context.User.Id] = Var.CurrentDate();
-
+                
                 if (!result.IsSuccess)
                 {
                     if (result.Error != CommandError.UnknownCommand)
@@ -230,6 +208,30 @@ namespace ForkBot
                             await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
                         }
                     }
+                }
+                else
+                {
+                    //give user a chance at a lootbox
+                    bool inLM = false;
+                    //go through users last command time
+                    foreach (var u in Var.lastMessage)
+                    {
+                        //ensure user is in dictionary
+                        if (u.Key == context.User.Id) { inLM = true; break; }
+                    }
+                    if (inLM == false) Var.lastMessage.Add(context.User.Id, Var.CurrentDate() - new TimeSpan(1, 0, 1));
+                    //if chance of lootbox
+                    if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
+                    {
+                        //10% chance at lootbox
+                        if (rdm.Next(100) + 1 < 10)
+                        {
+                            await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
+                            Functions.GetUser(context.User).GiveItem("package");
+                        }
+                    }
+                    //set last message time to now
+                    Var.lastMessage[context.User.Id] = Var.CurrentDate();
                 }
             }
             else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)

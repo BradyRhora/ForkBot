@@ -84,6 +84,7 @@ namespace ForkBot
         public class Values
         {
             public static double SELL_VAL = .50;
+            public static string GNOME_VID = "https://www.youtube.com/watch?v=6n3pFFPSlW4";
         }
     }
 }

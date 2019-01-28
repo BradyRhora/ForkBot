@@ -395,9 +395,8 @@ namespace ForkBot
             var u = Functions.GetUser(Context.User);
             string msg = "";
             var itemList = Functions.GetItemList();
-            foreach (string i in items)
+            foreach (string item in items)
             {
-                var item = i.Replace(":", "");
                 if (u.GetItemList().Contains(item))
                 {
                     u.RemoveItem(item);
@@ -544,7 +543,6 @@ namespace ForkBot
             }
             else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
             {
-                command = command.Replace(":", "");
                 foreach (string item in Var.currentShop.items)
                 {
                     if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
@@ -1237,22 +1235,35 @@ namespace ForkBot
                     {
                         Var.presentRigged = false;
                         User user = Functions.GetUser(Context.User);
-                        int lossCount = rdm.Next(5) + 1;
-                        if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
-                        if (lossCount == 0)
+
+                        if (user.GetData("gnoming") == "1")
                         {
-                            await ReplyAsync($":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}] and you lost... Nothing??\n:boom::boom::boom::boom:");
+                            user.SetData("gnoming", "0");
+                            await ReplyAsync(Functions.GetItemEmote("gnome") + $" Whoa! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}]! Your gnome sacrificed himself to save your items!\n{Constants.Values.GNOME_VID}");
+                            await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
+                            Var.presentWaiting = true;
+                            Var.replacing = false;
+                            Var.replaceable = true;
                         }
                         else
                         {
-                            string msg = $":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
-                            for (int i = 0; i < lossCount; i++)
+                            int lossCount = rdm.Next(5) + 1;
+                            if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
+                            if (lossCount == 0)
                             {
-                                string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
-                                user.RemoveItem(item);
-                                msg += item + "\n";
+                                await ReplyAsync($":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}] and you lost... Nothing??\n:boom::boom::boom::boom:");
                             }
-                            await ReplyAsync(msg + "```\n:boom::boom::boom::boom:");
+                            else
+                            {
+                                string msg = $":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
+                                for (int i = 0; i < lossCount; i++)
+                                {
+                                    string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                                    user.RemoveItem(item);
+                                    msg += item + "\n";
+                                }
+                                await ReplyAsync(msg + "```\n:boom::boom::boom::boom:");
+                            }
                         }
                     }
 

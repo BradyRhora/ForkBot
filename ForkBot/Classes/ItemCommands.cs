@@ -227,30 +227,39 @@ namespace ForkBot
             var u1 = Functions.GetUser(Context.User);
             var u2 = Functions.GetUser(user);
 
-            if (rdm.Next(100) > 80)
+            if (u2.GetData("gnoming") == "1")
             {
-                int amount;
-                do amount = rdm.Next(500);
-                while (amount > u2.GetCoins());
-                u1.GiveCoins(amount);
-                u2.GiveCoins(-amount);
-                await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
+                u2.SetData("gnoming", "0");
+                await ReplyAsync(Functions.GetItemEmote("gnome") + $" Uh oh! {user.Mention} just gnomed you! Your gun had no effect!\n{Constants.Values.GNOME_VID}");
             }
             else
             {
-                var items = u2.GetItemList();
-                if (items.Count() == 0)
+
+                if (rdm.Next(100) > 80)
                 {
-                    await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
-                                                           $" You drop your gun and run before the police arrive. {(user as IGuildUser).Mention} picks up the gun!");
-                    u2.GiveItem("gun");
+                    int amount;
+                    do amount = rdm.Next(500);
+                    while (amount > u2.GetCoins());
+                    u1.GiveCoins(amount);
+                    u2.GiveCoins(-amount);
+                    await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
                 }
                 else
                 {
-                    string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
-                    u1.GiveItem(item);
-                    u2.RemoveItem(item);
-                    await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
+                    var items = u2.GetItemList();
+                    if (items.Count() == 0)
+                    {
+                        await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
+                                                               $" You drop your gun and run before the police arrive. {(user as IGuildUser).Mention} picks up the gun!");
+                        u2.GiveItem("gun");
+                    }
+                    else
+                    {
+                        string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
+                        u1.GiveItem(item);
+                        u2.RemoveItem(item);
+                        await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
+                    }
                 }
             }
         }
@@ -387,8 +396,17 @@ namespace ForkBot
         public async Task Egg(IUser user)
         {
             if (Check(Context, "egg")) return;
-            await Context.Channel.SendMessageAsync($":egg: You throw your egg at {user.Username}!\n**Their Happiness-10**");
-            Functions.GetUser(user).AddData("stat.happiness", -10);
+            var u = Functions.GetUser(user);
+            if (u.GetData("gnoming") == "1")
+            {
+                u.SetData("gnoming", "0");
+                await ReplyAsync(Functions.GetItemEmote("gnome") + $" Uh oh! {user.Mention} just gnomed you! Your egg had no effect!\n{Constants.Values.GNOME_VID}");
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync($":egg: You throw your egg at {user.Username}!\n**Their Happiness-10**");
+                u.AddData("stat.happiness", -10);
+            }
         }
 
         [Command("ramen")]
@@ -485,36 +503,44 @@ namespace ForkBot
             var u1 = Functions.GetUser(Context.User);
             var u2 = Functions.GetUser(user);
 
-            if (rdm.Next(100) < 60)
+            if (u2.GetData("gnoming") == "1")
             {
-                if (rdm.Next(100) > 80)
+                u2.SetData("gnoming", "0");
+                await ReplyAsync(Functions.GetItemEmote("gnome") + $" Uh oh! {user.Mention} just gnomed you! Your knife had no effect!\n{Constants.Values.GNOME_VID}");
+            }
+            else
+            {
+                if (rdm.Next(100) < 60)
                 {
-                    int amount;
-                    do amount = rdm.Next(500);
-                    while (amount > u2.GetCoins());
-                    u1.GiveCoins(amount);
-                    u2.GiveCoins(-amount);
-                    await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
-                }
-                else
-                {
-                    var items = u2.GetItemList();
-                    if (items.Count() == 0)
+                    if (rdm.Next(100) > 80)
                     {
-                        await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
-                                                               $" You drop your knife and run before the police arrive. {(user as IGuildUser).Mention} picks up the knife!");
-                        u2.GiveItem("knife");
+                        int amount;
+                        do amount = rdm.Next(500);
+                        while (amount > u2.GetCoins());
+                        u1.GiveCoins(amount);
+                        u2.GiveCoins(-amount);
+                        await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
                     }
                     else
                     {
-                        string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
-                        u1.GiveItem(item);
-                        u2.RemoveItem(item);
-                        await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
+                        var items = u2.GetItemList();
+                        if (items.Count() == 0)
+                        {
+                            await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
+                                                                   $" You drop your knife and run before the police arrive. {(user as IGuildUser).Mention} picks up the knife!");
+                            u2.GiveItem("knife");
+                        }
+                        else
+                        {
+                            string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
+                            u1.GiveItem(item);
+                            u2.RemoveItem(item);
+                            await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
+                        }
                     }
                 }
+                else await Context.Channel.SendMessageAsync($":knife: Your attempt to rob {user.Username} fails! You get nothing.");
             }
-            else await Context.Channel.SendMessageAsync($":knife: Your attempt to rob {user.Username} fails! You get nothing.");
         }
 
         [Command("beer")]
@@ -640,26 +666,34 @@ namespace ForkBot
             var u1 = Functions.GetUser(Context.User);
             var u2 = Functions.GetUser(user);
 
-            if (rdm.Next(100) > 80)
+            if (u2.GetData("gnoming") == "1")
             {
-                int amount;
-                do amount = rdm.Next(500);
-                while (amount > u2.GetCoins());
-                u2.GiveCoins(-amount);
-                await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burned {amount} of your coins!");
+                u2.SetData("gnoming", "0");
+                await ReplyAsync(Functions.GetItemEmote("gnome") + $" Uh oh! {user.Mention} just gnomed you! Your mag had no effect!\n{Constants.Values.GNOME_VID}");
             }
             else
             {
-                var items = u2.GetItemList();
-                if (items.Count() == 0)
+                if (rdm.Next(100) > 80)
                 {
-                    await Context.Channel.SendMessageAsync($"You try to burn one of {user.Username}'s items... but they have nothing!");
+                    int amount;
+                    do amount = rdm.Next(500);
+                    while (amount > u2.GetCoins());
+                    u2.GiveCoins(-amount);
+                    await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burned {amount} of your coins!");
                 }
                 else
                 {
-                    string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
-                    u2.RemoveItem(item);
-                    await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burnt your {item}!");
+                    var items = u2.GetItemList();
+                    if (items.Count() == 0)
+                    {
+                        await Context.Channel.SendMessageAsync($"You try to burn one of {user.Username}'s items... but they have nothing!");
+                    }
+                    else
+                    {
+                        string item = u2.GetItemList()[rdm.Next(u2.GetItemList().Count())];
+                        u2.RemoveItem(item);
+                        await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burnt your {item}!");
+                    }
                 }
             }
         }
@@ -766,13 +800,12 @@ namespace ForkBot
         [Command("jack_o_lantern"), Alias(new string[] {"jackolantern","pumpkin" })]
         public async Task JackOLantern()
         {
-            if (Check(Context, "jack_o_lantern",false)) return;
+            if (Check(Context, "jack_o_lantern")) return;
             var dt = Var.CurrentDate();
             string msg = "";
+            User u = Functions.GetUser(Context.User);
             if (dt.Month == 10 && dt.Day == 31)
             {
-                User u = Functions.GetUser(Context.User);
-                u.RemoveItem("jack_o_lantern");
                 msg += "Happy halloween!";
                 int candyCount = rdm.Next(11) + 5;
                 for(int i = 0; i < candyCount; i++)
@@ -784,7 +817,9 @@ namespace ForkBot
             }
             else
             {
-                await ReplyAsync("Nothing happens.. Maybe the time isn't right.");
+                u.GiveItem("candy");
+                u.GiveItem("candy");
+                await ReplyAsync("You got 2 piec2 of candy! :candy: Maybe if you used this at a different time it would be better..");
             }
         }
         
@@ -796,6 +831,21 @@ namespace ForkBot
             Functions.GetUser(Context.User).AddData("stat.fullness", 10);
             Functions.GetUser(Context.User).AddData("stat.happiness", 15);
         }
+        
+        [Command("gnome")]
+        public async Task Gnome()
+        {
+            if (Check(Context, "gnome", false)) return;
+            var user = Functions.GetUser(Context.User);
+            if (user.GetData("gnoming") == "1") await ReplyAsync(Functions.GetItemEmote("gnome") + " Hohohohoho! You already have gnome protection!");
+            else
+            {
+                user.RemoveItem("gnome");
+                user.SetData("gnoming", "1");
+                await ReplyAsync(Functions.GetItemEmote("gnome") + " Hohohohohoho! You've gnought to worry! I'll protect you!");
+            }
+        }
+
 
     }
 }
