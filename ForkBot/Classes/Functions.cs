@@ -54,31 +54,6 @@ namespace ForkBot
             return null;
         }
         
-        public static string GetTID(string html)
-        {
-            var c = html.ToCharArray();
-            int start = 0, end = 0;
-            for (int i = 0; i < c.Count(); i++)
-            {
-                if (new String(c, i, 4) == "tid=")
-                {
-                    start = i + 4;
-                    break;
-                }
-            }
-
-            for (int i = start; i < c.Count(); i++)
-            {
-                if (!Char.IsNumber(c[i]))
-                {
-                    end = i;
-                    break;
-                }
-            }
-            int length = end - start;
-            return html.Substring(start, length);
-        }
-
         public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation anim) { await SendAnimation(chan, anim, ""); }
 
         static IUserMessage animation;

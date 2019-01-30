@@ -134,12 +134,11 @@ namespace ForkBot
 
             string link = "http://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ", "%20");
             var page = web.Load(link);
-            var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li[1]");
+            //var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li[1]");
+            var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li/a");
             if (node != null)
             {
-                string tid = Functions.GetTID(node.InnerHtml);
-
-                var newLink = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + tid;
+                var newLink = "http://www.ratemyprofessors.com" + node.Attributes[0].Value;
                 page = web.Load(newLink);
 
                 var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
@@ -148,7 +147,8 @@ namespace ForkBot
                 var imageNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[1]/img");
                 var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
                 string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
-                string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[3]/h2/a").InnerText;
+                //string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[3]/h2/a").InnerText;
+                string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[1]/div[1]/div[3]/h2/a").InnerText;
                 university = university.Replace(" (all campuses)", "");
                 var tagsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
                 List<string> tags = new List<string>();
@@ -159,7 +159,7 @@ namespace ForkBot
                 string imageURL = null;
                 if (imageNode != null) imageURL = imageNode.Attributes[0].Value;
 
-                var commentsNode = page.DocumentNode.SelectSingleNode("/ html[1] / body[1] / div[2] / div[4] / div[3] / div[1] / div[7] / table[1]");
+                /*var commentsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[7]/div[1]/table/tbody");
 
                 List<string> comments = new List<string>();
                 for (int i = 3; i < commentsNode.ChildNodes.Count(); i++)
@@ -203,7 +203,7 @@ namespace ForkBot
                 }
                 string[] commonWords = { "i", "me", "at", "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1], "we" };
                 foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
-
+                */
                 JEmbed emb = new JEmbed();
 
                 emb.Title = profName + " - " + university;
@@ -241,7 +241,7 @@ namespace ForkBot
                     x.Inline = false;
                 }));
 
-                emb.Fields.Add(new JEmbedField(x =>
+                /*emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "Common Comments:";
                     string text = "";
@@ -252,7 +252,7 @@ namespace ForkBot
                     text = text.Substring(0, text.Count() - 2);
                     x.Text = text;
                     x.Inline = false;
-                }));
+                }));*/
 
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
