@@ -750,21 +750,22 @@ namespace ForkBot
             User u = Functions.GetUser(Context.User);
             if (u.GetItemList().Contains("key") && u.GetItemList().Contains("package"))
             {
-                string[] lootboxItems = { "gun", "knife", "poop", "paintbrush", "bomb", "ticket", "slot_machine", "mag", "watch", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "shirt", "dress", "bug", "apple", "dog", "cat", "milk", "egg" };
+                string[] lootboxItems = { "gun", "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome" };
 
                 u.RemoveItem("key");
                 u.RemoveItem("package");
 
-                var num1 = rdm.Next(lootboxItems.Count());
-                var num2 = rdm.Next(lootboxItems.Count());
-                var num3 = rdm.Next(lootboxItems.Count());
+                int[] items = new int[5];
 
-                u.GiveItem(lootboxItems[num1]);
-                u.GiveItem(lootboxItems[num2]);
-                u.GiveItem(lootboxItems[num3]);
+                for (int i = 0; i < items.Count(); i++) items[i] = rdm.Next(lootboxItems.Count());
 
-                await ReplyAsync("Your lootbox bursts open!\n" +
-                                 $":sparkles: {Functions.GetItemEmote(lootboxItems[num1])} {lootboxItems[num1]}! :tada: {Functions.GetItemEmote(lootboxItems[num2])} {lootboxItems[num2]}! :confetti_ball: {Functions.GetItemEmote(lootboxItems[num3])} {lootboxItems[num3]}! :champagne:");
+                string msg = "Your lootbox bursts open!\n:sparkles: ";
+                foreach(int i in items)
+                {
+                    msg += Functions.GetItemEmote(lootboxItems[i]) + " " + lootboxItems[i] + ":sparkles: ";
+                }
+
+                await ReplyAsync(msg);
             }
             else if (u.GetItemList().Contains("key")) await ReplyAsync("You have nothing to open with this key!");
             else if (u.GetItemList().Contains("package")) await ReplyAsync("It's locked! You need a key to open it.");
