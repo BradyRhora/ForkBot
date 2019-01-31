@@ -750,7 +750,7 @@ namespace ForkBot
             User u = Functions.GetUser(Context.User);
             if (u.GetItemList().Contains("key") && u.GetItemList().Contains("package"))
             {
-                string[] lootboxItems = { "gun", "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome" };
+                string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome" };
 
                 u.RemoveItem("key");
                 u.RemoveItem("package");
@@ -763,6 +763,7 @@ namespace ForkBot
                 foreach(int i in items)
                 {
                     msg += Functions.GetItemEmote(lootboxItems[i]) + " " + lootboxItems[i] + ":sparkles: ";
+                    u.GiveItem(lootboxItems[i]);
                 }
 
                 await ReplyAsync(msg);

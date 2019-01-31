@@ -352,7 +352,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.0\n-Some bug fixes\n-item emotes can be used now in some commands\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades hopefully```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.0\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
