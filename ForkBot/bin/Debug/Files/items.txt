@@ -4,7 +4,7 @@ dress|Oh! You'll look so pretty in this!|20
 high_heel|It's what the men like!|20
 athletic_shoe|Now you can go for a run!|16
 dark_sunglasses|Don't look directly into the sun!|10
-eyeglasses|They seem.. special?|100
+eyeglasses|They seem.. special? Try looking at an item with them on..|100
 umbrella2|For those rainy days!|12
 briefcase|Now you can, uh.. hold stuff.|-
 purse|I know you like it.|-
