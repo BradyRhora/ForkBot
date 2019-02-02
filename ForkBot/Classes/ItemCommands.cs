@@ -121,6 +121,7 @@ namespace ForkBot
                         msg += " = ";
                         if (uItems.Contains(ic.Result)) msg += Functions.GetItemEmote(ic.Result);
                         else msg += ":question:";
+                        msg += "\n";
                     }
                     await ReplyAsync(msg);
                     u.RemoveItem("eyeglasses");
@@ -797,6 +798,42 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":candy: Don't forget to check for razors!\n**Fullness+10 Happiness+15**");
             Functions.GetUser(Context.User).AddData("stat.fullness", 10);
             Functions.GetUser(Context.User).AddData("stat.happiness", 15);
+        }
+
+        [Command("makekey")]
+        public async Task MakeKey()
+        {
+            int packageCount = 0;
+            var user = Functions.GetUser(Context.User);
+            var uitems = user.GetItemList();
+            foreach(var item in uitems)
+            {
+                if (item == "package") packageCount++;
+            }
+            if (packageCount >= 5)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    user.RemoveItem("package");
+                }
+                user.GiveItem("key");
+                await ReplyAsync("You have succesfully converted 5 packages into 1 key! :key:");
+            }
+            else await ReplyAsync("You must have 5 packages to make a key!");
+            
+        }
+
+        [Command("dividers")]
+        public async Task Dividers()
+        {
+            if (Check(Context, "dividers")) return;
+            var user = Functions.GetUser(Context.User);
+            var items = user.GetItemList().AsEnumerable();
+            var newItems = items.OrderBy(s => s);
+
+            foreach (string item in items) user.GiveItem(item);
+            foreach (string item in newItems) user.RemoveItem(item);
+
         }
 
     }

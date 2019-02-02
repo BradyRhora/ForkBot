@@ -17,9 +17,10 @@ namespace ForkBot
         {
             Course = course;
             Days = new List<CourseDay>();
-            var pageDoc = web.Load(course.ScheduleLink).DocumentNode;
+            var pageDoc = web.Load(course.GetScheduleLink()).DocumentNode;
 
             var table = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[2]");
+            
             foreach (HtmlNode child in table.ChildNodes)
             {
                 if (child.Name == "tr")
@@ -28,7 +29,7 @@ namespace ForkBot
                     var sessionDir = child.SelectSingleNode($"td/table/tr[2]").InnerText.Replace("Please click here to see availability.", "").Replace("&nbsp;", "").Trim();
                     var schedule = child.SelectSingleNode($"td/table/tr[3]/td/table/tr[2]");
                     var type = schedule.ChildNodes[0].InnerText;
-                    var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ", "|").Replace(" ", "").Split('|');
+                    var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ", "|").Replace(" ", "").Replace("(Glendoncampus)", "").Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries);
 
                     var TermAndSec = termSec.Split(' ');
                     var term = TermAndSec[0] + " " + TermAndSec[1];

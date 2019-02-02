@@ -72,3 +72,4 @@ man|I can do that, hold my beer.|-*
 woman|Get back to the kitchen am I right hahaha.. ha...|*-
 tiger|He just wants a hug!|100
 ribbon|The finishing touch!|50
+dividers|Perfect for sorting!|50

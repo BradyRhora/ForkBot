@@ -279,11 +279,11 @@ namespace ForkBot
                                
 
                 JEmbed emb = new JEmbed();
-                emb.Title = course.Title;
-                emb.Description = course.Description + "\n\n";
+                emb.Title = course.GetTitle();
+                emb.Description = course.GetDescription() + "\n\n";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
-                foreach(CourseDay day in course.Schedule.Days)
+                foreach(CourseDay day in course.GetSchedule().Days)
                 {
                     emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\n";
                     foreach(var dayTime in day.DayTimes) emb.Description += $"\n{dayTime.Key} - {dayTime.Value}";
@@ -501,9 +501,10 @@ namespace ForkBot
             }
         }
 
-        [Command("donate"), Summary("[FUN] Give the specified user some of your coins!")]
-        public async Task Donate(IUser user, int coins)
+        [Command("donate"), Summary("[FUN] Give the specified user some of your coins or items!")]
+        public async Task Donate(IUser user, int donation)
         {
+            int coins = donation;
             User u1 = Functions.GetUser(Context.User);
             if (u1.GetCoins() >= coins)
             {
@@ -512,6 +513,32 @@ namespace ForkBot
                 await ReplyAsync($":moneybag: {user.Mention} has been given {coins} of your coins!");
             }
             else await ReplyAsync("You don't have enough coins.");
+        }
+
+        [Command("donate"), Summary("[FUN] Give the specified user some of your coins!")]
+        public async Task Donate(IUser user, params string[] donation)
+        {
+            User u1 = Functions.GetUser(Context.User);
+            User u2 = Functions.GetUser(user);
+
+            string msg = $"{user.Mention}, {Context.User.Mention} has given you:\n";
+            string donations = "";
+            string fDonations = "";
+            foreach(string item in donation)
+            {
+                if (u1.GetItemList().Contains(item))
+                {
+                    u1.RemoveItem(item);
+                    u2.GiveItem(item);
+                    donations += $"A(n) {item}!\n";
+                }
+                else fDonations += $"~~A(n) {item}~~ {Context.User.Mention}, you do not have a(n) {item}.\n";
+            }
+
+            if (donations == "") msg = $"{Context.User.Mention}, you do not have any of the inputted item(s).";
+            else msg += donations += fDonations;
+
+            await ReplyAsync(msg);
         }
 
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
@@ -836,18 +863,6 @@ namespace ForkBot
             }
         }
         
-        [Command("choose"), Summary("[FUN] Get ForkBot to make your decisions for you! Seperate choices with `|`")]
-        public async Task Choose([Remainder] string input)
-        {
-            var choices = input.Split('|');
-
-            var decision = choices[rdm.Next(choices.Count())];
-
-            await Context.Channel.SendMessageAsync($"{Context.User.Username}, I choose...");
-            await Context.Channel.SendMessageAsync(decision + "!");
-
-        }
-
         [Command("meme"), Summary("[FUN] Memify STUFF.")]
         public async Task Meme() { await Meme(Context.User); }
 
@@ -1442,7 +1457,16 @@ namespace ForkBot
             }
         }
 
-
+        [Command("tip"), Summary("[FUN] Get a random ForkBot tip, or use a number as the parameter to get a specific tip!")]
+        public async Task Tip(int tipNumber = -1)
+        {
+            string[] tips = { "Use `;makekey` to combine 5 packages into a key!",
+                "Get presents occasionally with `;present'! No presents left? Use a ticket to add more to the batch, or a stopwatch to shorten the time until the next batch!",
+                "Get coins for items you don't need or want by selling them with `;sell`! Item can't be sold? Just `;trash` it!",
+                "Give other users coins with the `;donate` command!",
+                };
+            if (tipNumber == -1) tipNumber = rdm.Next(tips.Count());
+        }
 
         #endregion
 
@@ -1513,7 +1537,7 @@ namespace ForkBot
         [Command("block"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Temporarily stops users from being able to use the bot.")]
         public async Task Block(IUser u)
         {
-            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) { await ReplyAsync("This can only be used in the York University server."); return; }
+            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY && Context.User.Id != Constants.Users.BRADY) { await ReplyAsync("This can only be used in the York University server."); return; }
             if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
             else Var.blockedUsers.Add(u);
             
@@ -1699,6 +1723,238 @@ namespace ForkBot
                 catch (Exception) { Console.WriteLine($"Unable to give user ({u}) item."); }
             }
             if (msg != "") await ReplyAsync("", embed: new InfoEmbed("", msg += $"\nEveryone has recieved a(n) {item}!", Constants.Images.ForkBot).Build());
+        }
+
+        [Command("courses")]
+        public async Task Courses() { await Courses("",""); }
+        
+        [Command("courses"), Summary("[BRADY] Return all courses with certain parameters. Leave parameters blank for examples. THIS COMMAND MAY TAKE A LONG TIME.")]
+        public async Task Courses(string subject, [Remainder] string commands)
+        {
+            if (Context.User.Id != Constants.Users.BRADY)
+            {
+                await ReplyAsync("Sorry, only Brady can use this right now. I'm testing it.");
+                return;
+            }
+
+            if (commands == "")
+            {
+                string msg = "This command generates a list of courses that fall under the chosen parameters in order to help find courses with certain criteria easier.\n\n" +
+                             "`;courses EECS day:MTWR term:W` Shows EECS courses with classes from Monday to Thursday (Thursday is an R to reflect York website) during the **W**inter term.\n\n" +
+                             "`;courses ITEC time>16 day:MWF` Shows ITEC courses with classes after 4pm (24 hour clock) and on Monday, Wednesday, or Friday.\n\n" +
+                             "Time can be structed as `time>#`, or 'time<#' for classes after a certain time and classes before a certain time.\n\n" +
+                             "`;courses MATH credit:3 level:3???` Shows MATH courses with 3 credits in the 3000 level. For levels, ?'s are wildcards and can be replaced with any number.\n\n" +
+                             "Parameters dont need to be in any specific order, just seperated by spaces. However, the subject (MATH, EECS, ITEC, etc) must be first.";
+                await ReplyAsync("", embed: new InfoEmbed(";courses EXAMPLES", msg).Build());
+                return;
+            }
+
+            if (commands.Split(' ').Count()  > 4)
+            {
+                await ReplyAsync("Over max parameter count. Are you sure all parameters are correct and you are not using the same one multiple times?");
+                return;
+            }
+
+            await ReplyAsync("Filtering... Please wait...");
+
+            commands = commands.Replace("time>", "time>:").Replace("time<", "time<:");
+
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            foreach (string command in commands.Split(' '))
+            {
+                if (!command.Contains(':') && command.Length > 1) await ReplyAsync($"Parameter '{command}' invalid. Continuing without this parameter.");
+                else if (!command.Contains(':'))
+                {
+                    await ReplyAsync($"Parameter '{command}' invalid. Cancelling.");
+                    return;
+                }
+                else
+                {
+                    string[] cParams = command.Split(':');
+                    var type = cParams[0];
+                    var cond = cParams[1];
+                    parameters.Add(type, cond);
+                }
+            }
+
+
+            string[] courses = File.ReadAllLines("Files/courselist.txt");
+            List<string> courselist = new List<string>();
+            foreach (string course in courses)
+            {
+                var data = course.Split('/');
+                if (data.Count() > 1)
+                    if (data[1].StartsWith(subject.ToUpper())) courselist.Add(course);
+            }
+
+            List<string> filteredCourseList = new List<string>();
+
+            foreach(string course in courselist)
+            {
+                bool qualifies = true;
+                Course c = new Course();
+                try
+                {
+                    c.LoadCourse(course);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"Failed to load course page for {course}");
+                    qualifies = false;
+                    continue;
+                }
+                var courseDays = c.GetSchedule().Days;
+
+                foreach (KeyValuePair<string,string> param in parameters)
+                {
+                    switch(param.Key)
+                    {
+                        //credit level day time 
+                        case "day":
+                            qualifies = false;
+                            Dictionary<char, string> DayConversion = new Dictionary<char, string>() { { 'M', "Monday" }, { 'T', "Tuesday" }, { 'W', "Wednesday" }, { 'R', "Thursday" }, { 'F', "Friday" } };
+                            string days = param.Value.ToUpper();
+                            var filterDays = days.Select(x => DayConversion[x]);
+
+                            foreach(CourseDay day in courseDays)
+                            {
+                                foreach (string d in filterDays)
+                                {
+                                    if (day.DayTimes.ContainsKey(d))
+                                    {
+                                        qualifies = true;
+                                        break;
+                                    }
+                                }
+                                if (qualifies) break;
+                            }                            
+                            break;
+
+                        case "time":
+
+
+                            break;
+
+                        case "credit":
+
+                            if (c.GetCredit() != Convert.ToDouble(param.Value)) qualifies = false;
+                            break;
+
+                        case "level":
+
+                            string fLevel = param.Value.ToUpper(); //filter level
+                            string level = c.GetCode();
+                            for (int x = 0; x < 4; x++) if ((fLevel[x] != '?' && fLevel[x] != level[x])) { qualifies = false; break; }
+                            break;
+
+                        default:
+
+                            await ReplyAsync($"Parameter '{param.Key}' invalid. Continuing without this parameter.");
+                            break;
+
+                    }
+                    if (!qualifies) break;
+                }
+
+                if (qualifies) filteredCourseList.Add(course);
+
+
+            }
+
+            string text = "";
+            foreach (string course in filteredCourseList) text += course + "\n";
+
+            JEmbed emb = new JEmbed();
+            emb.Title = $"Filtered course list: [{subject} {commands}]";
+            emb.Description = text;
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+            emb.Author.IconUrl = Constants.Images.ForkBot;
+            emb.Footer.Text = "Remember, this list may not be accurate as courses may no longer be running or new courses may be added that are not on the list.";
+            await ReplyAsync("", embed: emb.Build());
+
+
+        }
+
+        [Command("debugmode"), Summary("[BRADY] Set bot to debug mode, disables other users and enables some other features.")]
+        public async Task DebugMode(int code)
+        {
+            if (code == Var.DebugCode)
+            {
+                Var.DebugMode = !Var.DebugMode;
+                Console.WriteLine("DebugMode set to " + Var.DebugMode);
+            }
+        }
+
+
+        static HtmlWeb _webClient = new HtmlWeb();
+        [Command("gencourselist"), Summary("[BRADY] The greatest courselist in this or any age.")]
+        public async Task GenCourseList()
+        {
+            if (Context.User.Id != Constants.Users.BRADY) return;
+
+            /*
+            var page = _webClient.Load("https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm");
+            var link = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/p[1]/table[1]/tr[2]/td[1]/table[1]/tr[3]/td[1]").InnerText;
+            //page = _webClient.Load(link);
+            
+
+
+            string[] courseList = new string[1];
+            */
+
+
+
+
+
+
+
+
+            string[] subjects = { /*"ACTG|( SB )", "ADMS|( AP )", "ANTH|( AP, GS )", "ARB|( AP )", "ARTH|( FA, GS )", "ARTM|( SB )", "ASL|( AP )", "AUCO|( ED )", "BBED|( ED )", "BC|( SC )", "BCHM|( SC )", "BIOL|( GL, SC, ED, GS )", "BLIS|( GS )", "BPHS|( SC )", "BSUS|( SB )", "BUEC|( GL )", "CAT|( GL )", "CCY|( AP )", "CDIS|( GS )", "CDNS|( GL )", "CH|( AP )", "CHEM|( ED, GS, SC )", "CIVL|( GS, LE )", "CLST|( AP )", "CLTR|( AP )", "CMCT|( GS )", "COGS|( AP )", "COMN|( AP )", "COMS|( GL )", "COOP|( LE, SC )", "CRIM|( AP )", "CSLA|( GL )", "DANC|( FA, GS, ED )", "DATT|( FA )", "DCAD|( SB )", "DEMS|( AP, GS )", "DESN|( FA )", "DEST|( ED )", "DIGM|( GS )", "DLLL|( AP )", "DRAA|( ED )", "DRST|( GL )", "DVST|( GS )", "ECON|( SB, GL, AP, ED, GS )", "EDFE|( ED )", "EDFR|( ED )", "EDIN|( ED )", "EDIS|( ED )", "EDJI|( ED )", "EDPJ|( ED )", "EDPR|( ED )", "EDST|( ED )", "EDUC|( GS, ED )", "EECS|( GS, LE )", "EIL|( GS )", "EMBA|( SB )", "EN|( AP, ED, GL, GS )", "ENG|( GS, LE )", "ENSL|( GL )", "ENTR|( SB )", "ENVB|( SC )", "ENVS|( ED, GS, ES )", "ESL|( AP )", "ESS|( GS )", "ESSE|( LE )", "EXCH|( SB )", "FACC|( GS )", "FACS|( FA )", "FAST|( ED )", "FILM|( GS, FA )", "FINE|( SB )",*/ "FND|( AP )", "FNEN|( SB )", "FNSV|( SB )", "FR|( AP )", "FRAN|( GL )", "FREN|( ED, GS )", "FSL|( GL )", "GCIN|( AP )", "GEOG|( GS, SC, AP, ED )", "GER|( AP )", "GFWS|( GS )", "GK|( AP )", "GKM|( AP )", "GWST|( GL, AP )", "HEB|( ED, AP )", "HIMP|( SB )", "HIST|( GL, AP, GS, ED )", "HLST|( HH )", "HLTH|( GS )", "HND|( AP )", "HREQ|( AP )", "HRM|( GS, AP )", "HUMA|( GL, GS, AP )", "IBUS|( SB )", "IHST|( HH )", "ILST|( GL )", "IMBA|( SB )", "INDG|( AP )", "INDS|( ED )", "INDV|( FA )", "INST|( GS )", "INTE|( GS )", "INTL|( SB )", "ISCI|( SC )", "IT|( AP )", "ITEC|( GL, AP, GS )", "JC|( AP )", "JP|( AP )", "KAHS|( GS )", "KINE|( HH )", "KOR|( AP )", "LA|( AP )", "LAL|( GS )", "LASO|( AP )", "LAW|( ED, GS )", "LIN|( GL )", "LING|( AP )", "LLDV|( ED )", "LLS|( AP )", "LREL|( GS )", "LYON|( GL )", "MACC|( SB )", "MATH|( GS, ED, SC, GL )", "MBAN|( SB )", "MDES|( GS )", "MECH|( GS, LE )", "MFIN|( SB )", "MGMT|( SB )", "MINE|( SB )", "MIST|( AP )", "MKTG|( SB )", "MODR|( AP, GL )", "MUSI|( ED, FA, GS )", "NATS|( SC, GL )", "NURS|( HH, GS )", "OMIS|( SB )", "ORCO|( ED )", "ORGS|( SB )", "OVGS|( GS, SB )", "PACC|( GS )", "PANF|( FA )", "PERS|( AP )", "PHED|( ED )", "PHIL|( GS, GL, ED, AP )", "PHYS|( GS, SC, ED, GL )", "PIA|( GS )", "PKIN|( HH )", "PLCY|( SB )", "POLS|( GS, AP, GL, ED )", "POR|( AP )", "PPAL|( GS )", "PPAS|( AP )", "PRAC|( ED )", "PROP|( SB )", "PRWR|( AP )", "PSYC|( GS, HH, GL )", "PUBL|( SB )", "RU|( AP )", "SCIE|( ED )", "SENE|( SC )", "SGMT|( SB )", "SLGS|( ED )", "SOCI|( GL, GS, AP )", "SOCM|( SB )", "SOSC|( AP, ED, GL )", "SOWK|( AP, GS )", "SP|( AP, GL )", "SPTH|( GS )", "STS|( SC, GS )", "SWAH|( AP )", "SXST|( GL, AP )", "TECH|( ED )", "TESL|( AP )", "THEA|( GS, FA )", "THST|( GS )", "TLSE|( ED )", "TRAN|( GL, GS )", "TRAS|( GS )", "TXLW|( GS )", "TYP|( AP )", "VISA|( ED, GS, FA )", "WKLS|( AP )", "WKST|( GL )", "WMST|( GS )", "WRIT|( AP )", "YSDN|( FA )"};
+            
+            int year = DateTime.Now.Year;
+            string[] credits = { "0.00", "1.50", "3.00", "6.00", "9.00" };
+            //level from 0-8000
+
+            List<string> courseList = new List<string>();
+
+            foreach(string s in subjects)
+            {
+                Console.WriteLine("Starting subject " + s + $"... [Subject {Array.IndexOf(subjects,s)}/{subjects.Count()}]" );
+                for (int code = 0; code < 5000; code++)
+                {
+                    if (code % 100 == 0) Console.WriteLine($"Code: {code}/5000");
+                    var sp = s.Split('|');
+                    var sub = sp[0];
+                    var posDeps = sp[1].Trim('(', ')', ' ').Split(',');
+
+                    foreach (string dep in posDeps)
+                    {
+                        //Console.WriteLine("For department " + dep + "...");
+                        foreach (string credit in credits)
+                        {
+                            //Console.WriteLine("With " + credit + " credits...");
+                            string courseLine = $"{dep}/{sub} {code} {credit} Possible Course";
+                            Course posCourse = new Course();
+                            try
+                            {
+                                posCourse.LoadCourse(courseLine);
+                                courseList.Add(courseLine);
+                                Console.WriteLine("Adding course: " + courseLine);
+                            }
+                            catch (Exception) { }
+                            
+                        }
+                    }
+                }
+
+                courseList.Add("");
+            }
+
+            await ReplyAsync("Finished generating list. Saving...");
+
+            File.WriteAllLines("Files/GeneratedCourseList2.txt",courseList);
+
+            await ReplyAsync("Saved.");
         }
 
         #endregion

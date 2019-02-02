@@ -10,35 +10,48 @@ namespace ForkBot
 {
     class Course
     {
-        public string Department { get; }
-        public string Subject { get; }
-        public string Coursecode { get; }
-        public double Credit { get; }
-        public string CourseLink { get; } = "";
-        public string ScheduleLink { get; }
-        public string Description { get; }
-        public string Title { get; }
-        public CourseSchedule Schedule { get; }
-        static Exception CourseNotFoundException = new Exception("Unable to find course on course list. Ensure course code is correct.");
-        static Exception CourseNotLoadedException = new Exception("Course not loaded. Ensure course is loaded properly before using this function.");
-        private HtmlWeb web = new HtmlWeb();
+        private string Department;
+        private string Subject;
+        private string Coursecode;
+        private double Credit;
+        private string CourseLink = "";
+        private string ScheduleLink;
+        private string Description;
+        private string Title;
+        private CourseSchedule Schedule;
+        static private HtmlWeb web = new HtmlWeb();
+
+        public Course()
+        {
+
+        }
+
         public Course(string code)
         {
             var courses = File.ReadAllLines("Files/courselist.txt");
+            string courseLine = "";
             foreach (string course in courses)
             {
                 if (course.ToLower().Contains(code.ToLower()))
                 {
-                    var info = course.Split(' ');
-                    Department = info[0].Split('/')[0];
-                    Subject = info[0].Split('/')[1];
-                    Coursecode = info[1];
-                    Credit = Convert.ToDouble(info[2].Split('\t')[0]);
-                    CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay=2018&ss=FW";
+                    courseLine = course;
                     break;
                 }
             }
-            if (CourseLink == "") throw CourseNotFoundException;
+
+            LoadCourse(courseLine);
+        }
+
+        public void LoadCourse(string courseLine)
+        {
+            var info = courseLine.Split(' ');
+            Department = info[0].Split('/')[0];
+            Subject = info[0].Split('/')[1];
+            Coursecode = info[1];
+            Credit = Convert.ToDouble(info[2]);
+            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay=2018&ss=FW";
+
+            if (CourseLink == "") throw new CourseNotFoundException();
 
             var pageDoc = web.Load(CourseLink).DocumentNode;
 
@@ -49,6 +62,29 @@ namespace ForkBot
             ScheduleLink = "https://w2prod.sis.yorku.ca" + scheduleNode.Attributes[0].Value;
             Schedule = new CourseSchedule(this);
         }
+
+        public string GetDepartment() { return Department; }
+
+        public string GetSubject() { return Subject; }
+
+        public string GetCode() { return Coursecode; }
+
+        public double GetCredit() { return Credit; }
+
+        public string GetCourseLink() { return CourseLink; }
+
+        public string GetScheduleLink() { return ScheduleLink; }
+
+        public string GetDescription() { return Description; }
+
+        public string GetTitle() { return Title; }
+
+        public CourseSchedule GetSchedule() { return Schedule; }
         
     }
+    
+
+    class CourseNotFoundException : Exception { static new string Message = "Unable to find course on course list.Ensure course code is correct."; }
+    class CourseNotLoadedException : Exception { static new string Message = "Course not loaded. Ensure course is loaded properly before using this function."; }
+
 }

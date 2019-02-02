@@ -63,5 +63,8 @@ namespace ForkBot
 
         public static List<ChannelStats> channelStats = new List<ChannelStats>();
         public static DateTime startTime;
+
+        public static int DebugCode;
+        public static bool DebugMode;
     }
 }
