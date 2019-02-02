@@ -134,12 +134,11 @@ namespace ForkBot
 
             string link = "http://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ", "%20");
             var page = web.Load(link);
-            var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li[1]");
+            //var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li[1]");
+            var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li/a");
             if (node != null)
             {
-                string tid = Functions.GetTID(node.InnerHtml);
-
-                var newLink = "http://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + tid;
+                var newLink = "http://www.ratemyprofessors.com" + node.Attributes[0].Value;
                 page = web.Load(newLink);
 
                 var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
@@ -148,7 +147,8 @@ namespace ForkBot
                 var imageNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[1]/img");
                 var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
                 string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
-                string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[3]/h2/a").InnerText;
+                //string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[3]/h2/a").InnerText;
+                string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[1]/div[1]/div[3]/h2/a").InnerText;
                 university = university.Replace(" (all campuses)", "");
                 var tagsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
                 List<string> tags = new List<string>();
@@ -159,7 +159,7 @@ namespace ForkBot
                 string imageURL = null;
                 if (imageNode != null) imageURL = imageNode.Attributes[0].Value;
 
-                var commentsNode = page.DocumentNode.SelectSingleNode("/ html[1] / body[1] / div[2] / div[4] / div[3] / div[1] / div[7] / table[1]");
+                /*var commentsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[7]/div[1]/table/tbody");
 
                 List<string> comments = new List<string>();
                 for (int i = 3; i < commentsNode.ChildNodes.Count(); i++)
@@ -203,7 +203,7 @@ namespace ForkBot
                 }
                 string[] commonWords = { "i", "me", "at", "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1], "we" };
                 foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
-
+                */
                 JEmbed emb = new JEmbed();
 
                 emb.Title = profName + " - " + university;
@@ -241,7 +241,7 @@ namespace ForkBot
                     x.Inline = false;
                 }));
 
-                emb.Fields.Add(new JEmbedField(x =>
+                /*emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "Common Comments:";
                     string text = "";
@@ -252,7 +252,7 @@ namespace ForkBot
                     text = text.Substring(0, text.Count() - 2);
                     x.Text = text;
                     x.Inline = false;
-                }));
+                }));*/
 
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
@@ -352,7 +352,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT CHANGELOG 1.9\n-Added some items and item commands\n-added item combos! Use ;combine to combine items together.\n-Eyeglasses now give hints for item combos```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.0\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -407,7 +407,7 @@ namespace ForkBot
                         if (line.Split('|')[0] == item)
                         {
                             if (!line.Split('|')[2].Contains("-"))
-                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * .50);
+                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * Constants.Values.SELL_VAL);
                             else unsold = true;
                             break;
                         }
@@ -565,7 +565,7 @@ namespace ForkBot
             if (command == null)
             {
                 var emb = Var.currentShop.Build();
-                emb.Footer.Text = $"You have: {u.GetCoins()} coins.";
+                emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
             else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
@@ -735,8 +735,9 @@ namespace ForkBot
                     JEmbed emb = new JEmbed();
                     emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]).Replace('_',' ');
                     emb.Description = itemInfo[1];
+                    emb.ColorStripe = Constants.Colours.YORK_RED;
                     if (itemInfo[2].Contains("-")) emb.Description += "\n\nCannot be purchased or sold. (Probably found through presents or combining.)";
-                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])*.75)} coins.";
+                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])* Constants.Values.SELL_VAL)} coins.";
                     await ReplyAsync("", embed: emb.Build());
                     return;
                 }
@@ -1249,22 +1250,35 @@ namespace ForkBot
                     {
                         Var.presentRigged = false;
                         User user = Functions.GetUser(Context.User);
-                        int lossCount = rdm.Next(5) + 1;
-                        if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
-                        if (lossCount == 0)
+
+                        if (user.GetData("gnoming") == "1")
                         {
-                            await ReplyAsync($":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost... Nothing??\n:boom::boom::boom::boom:");
+                            user.SetData("gnoming", "0");
+                            await ReplyAsync(Functions.GetItemEmote("gnome") + $" Whoa! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}]! Your gnome sacrificed himself to save your items!\n{Constants.Values.GNOME_VID}");
+                            await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
+                            Var.presentWaiting = true;
+                            Var.replacing = false;
+                            Var.replaceable = true;
                         }
                         else
                         {
-                            string msg = $":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
-                            for (int i = 0; i < lossCount; i++)
+                            int lossCount = rdm.Next(5) + 1;
+                            if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
+                            if (lossCount == 0)
                             {
-                                string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
-                                user.RemoveItem(item);
-                                msg += item + "\n";
+                                await ReplyAsync($":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}] and you lost... Nothing??\n:boom::boom::boom::boom:");
                             }
-                            await ReplyAsync(msg + "```\n:boom::boom::boom::boom:");
+                            else
+                            {
+                                string msg = $":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
+                                for (int i = 0; i < lossCount; i++)
+                                {
+                                    string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                                    user.RemoveItem(item);
+                                    msg += item + "\n";
+                                }
+                                await ReplyAsync(msg + "```\n:boom::boom::boom::boom:");
+                            }
                         }
                     }
 

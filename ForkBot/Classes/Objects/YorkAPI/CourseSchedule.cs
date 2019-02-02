@@ -37,6 +37,7 @@ namespace ForkBot
                     
                     var professor = sessionDir;
 
+                    if (timedayInfo.Count() == 1 && timedayInfo[0] == "") break;
 
                     CourseDay cDay = new CourseDay(term, section, professor);
 

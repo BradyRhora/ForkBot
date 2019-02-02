@@ -97,7 +97,7 @@ namespace ForkBot
                 x.Header = u1Name + "'s Items";
 
                 string itemlist = "";
-                foreach(string item in items1)  itemlist += ":" + item + ": ";
+                foreach(string item in items1)  itemlist += Functions.GetItemEmote(item);
                 if(coins1 > 0) itemlist += ":moneybag:" + coins1 + " coins";
 
                 x.Text = itemlist;
@@ -108,7 +108,7 @@ namespace ForkBot
                 x.Header = u2Name + "'s Items";
 
                 string itemlist = "";
-                foreach (string item in items2) itemlist += ":" + item + ": ";
+                foreach (string item in items2) itemlist += Functions.GetItemEmote(item);
                 if (coins2 > 0) itemlist += coins2 + " coins";
 
                 x.Text = itemlist;

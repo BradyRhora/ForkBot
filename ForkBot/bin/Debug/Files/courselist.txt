@@ -6356,3 +6356,11 @@ FA/DATT 2300 3.00 Game Development I
 LE/EECS 4401 3.00 ARTIFICIAL INTELLIGENCE
 SC/MATH 1300 3.00 Differential Calculus with Applications
 SC/NATS 1870 6.00 Understanding Colour
+
+AP/ITEC 2600 3.00 Introduction to Analytical Programming
+
+SC/MATH 2320 3.00 Discrete Mathematical Structures
+
+FA/DATT 3300 3.00 Game Mechanics
+
+SC/MATH 1013 3.00 Applied Calculus I

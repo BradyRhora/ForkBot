@@ -1,11 +1,18 @@
 add more games
 add ;sell all
 forkbot stats
-turn off EDT nov 4
 fix paintbrush when user has default profile pic
 fix econ1010
 bomb+ttc?
 add item commands for all new items
-get those emotes!
 overhaul item system!!!!!! Why the fuck not!!!
-make shop better n stuff
+give 🍷 a basic command
+exam schedule command?
+forkbot dms
+fix unicorn happiness message
+add more parameters to courselist to narrow down more
+allow users to still replace after other user gets present
+term param for ;courses
+make Norville emote
+add even more words to hangman
+fix dummy error message for ;course

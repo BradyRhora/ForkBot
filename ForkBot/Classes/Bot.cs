@@ -36,7 +36,7 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken")); //actual token
+                await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken"));
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Var.DebugCode = rdm.Next(999,9999) + 1;
@@ -191,12 +191,30 @@ namespace ForkBot
                     }
                 }
 
-                //detect and execute commands
-                if (message.HasCharPrefix(';', ref argPos) || message.HasStringPrefix("; ", ref argPos))
+            //detect and execute commands
+            if (message.HasCharPrefix(';', ref argPos))
+            {
+                var context = new CommandContext(client, message);
+                var result = await commands.ExecuteAsync(context, argPos);
+                
+                if (!result.IsSuccess)
                 {
-                    var context = new CommandContext(client, message);
-                    var result = await commands.ExecuteAsync(context, argPos);
-
+                    if (result.Error != CommandError.UnknownCommand)
+                    {
+                        Console.WriteLine(result.ErrorReason);
+                        var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
+                        await message.Channel.SendMessageAsync("", embed: emb);
+                    }
+                    else
+                    {
+                        if (user.GetItemList().Contains(message.Content.Replace(";", "")))
+                        {
+                            await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
+                        }
+                    }
+                }
+                else
+                {
                     //give user a chance at a lootbox
                     bool inLM = false;
                     //go through users last command time
@@ -218,35 +236,13 @@ namespace ForkBot
                     }
                     //set last message time to now
                     Var.lastMessage[context.User.Id] = Var.CurrentDate();
-
-                    if (!result.IsSuccess)
-                    {
-                        if (result.Error != CommandError.UnknownCommand)
-                        {
-                            Console.WriteLine(result.ErrorReason);
-                            var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
-                            await message.Channel.SendMessageAsync("", embed: emb);
-                        }
-                        else
-                        {
-                            if (user.GetItemList().Contains(message.Content.Replace(";", "")))
-                            {
-                                await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
-                            }
-                        }
-                    }
                 }
-                else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)
-                    Functions.Respond(message);
-                else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
-                    Functions.Respond(message);
-                else return;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Some dummy error occured. Used this to avoid crash.");
-                Console.WriteLine(e.StackTrace);
-            }
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)
+                Functions.Respond(message);
+            else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
+                Functions.Respond(message);
+            else return;
         }
         public async Task HandleJoin(SocketGuildUser user)
         {
