@@ -514,7 +514,7 @@ namespace ForkBot
             }
             else await ReplyAsync("You don't have enough coins.");
         }
-
+        
         [Command("donate"), Summary("[FUN] Give the specified user some of your coins!")]
         public async Task Donate(IUser user, params string[] donation)
         {
@@ -541,7 +541,7 @@ namespace ForkBot
             await ReplyAsync(msg);
         }
 
-        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day.")]
+        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day."), Alias(new string[] { "buy" })]
         public async Task Shop([Remainder] string command = null)
         {
             var u = Functions.GetUser(Context.User);

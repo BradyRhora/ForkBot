@@ -22,7 +22,7 @@ namespace ForkBot
         public static DiscordSocketClient client;
         public static CommandService commands;
         public static List<User> users = new List<User>();
-        
+
         public async Task Run()
         {
             Start:
@@ -39,7 +39,7 @@ namespace ForkBot
                 await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken"));
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
-                Var.DebugCode = rdm.Next(999,9999) + 1;
+                Var.DebugCode = rdm.Next(999, 9999) + 1;
                 Console.WriteLine($"ForkBot successfully intialized with debug code [{Var.DebugCode}]");
                 Var.startTime = Var.CurrentDate();
                 int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
@@ -191,58 +191,63 @@ namespace ForkBot
                     }
                 }
 
-            //detect and execute commands
-            if (message.HasCharPrefix(';', ref argPos))
-            {
-                var context = new CommandContext(client, message);
-                var result = await commands.ExecuteAsync(context, argPos);
-                
-                if (!result.IsSuccess)
+                //detect and execute commands
+                if (message.HasCharPrefix(';', ref argPos))
                 {
-                    if (result.Error != CommandError.UnknownCommand)
+                    var context = new CommandContext(client, message);
+                    var result = await commands.ExecuteAsync(context, argPos);
+
+                    if (!result.IsSuccess)
                     {
-                        Console.WriteLine(result.ErrorReason);
-                        var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
-                        await message.Channel.SendMessageAsync("", embed: emb);
+                        if (result.Error != CommandError.UnknownCommand)
+                        {
+                            Console.WriteLine(result.ErrorReason);
+                            var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
+                            await message.Channel.SendMessageAsync("", embed: emb);
+                        }
+                        else
+                        {
+                            if (user.GetItemList().Contains(message.Content.Replace(";", "")))
+                            {
+                                await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
+                            }
+                        }
                     }
                     else
                     {
-                        if (user.GetItemList().Contains(message.Content.Replace(";", "")))
+                        //give user a chance at a lootbox
+                        bool inLM = false;
+                        //go through users last command time
+                        foreach (var u in Var.lastMessage)
                         {
-                            await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
+                            //ensure user is in dictionary
+                            if (u.Key == context.User.Id) { inLM = true; break; }
                         }
+                        if (inLM == false) Var.lastMessage.Add(context.User.Id, Var.CurrentDate() - new TimeSpan(1, 0, 1));
+                        //if chance of lootbox
+                        if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
+                        {
+                            //10% chance at lootbox
+                            if (rdm.Next(100) + 1 < 10)
+                            {
+                                await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
+                                Functions.GetUser(context.User).GiveItem("package");
+                            }
+                        }
+                        //set last message time to now
+                        Var.lastMessage[context.User.Id] = Var.CurrentDate();
                     }
                 }
-                else
-                {
-                    //give user a chance at a lootbox
-                    bool inLM = false;
-                    //go through users last command time
-                    foreach (var u in Var.lastMessage)
-                    {
-                        //ensure user is in dictionary
-                        if (u.Key == context.User.Id) { inLM = true; break; }
-                    }
-                    if (inLM == false) Var.lastMessage.Add(context.User.Id, Var.CurrentDate() - new TimeSpan(1, 0, 1));
-                    //if chance of lootbox
-                    if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
-                    {
-                        //10% chance at lootbox
-                        if (rdm.Next(100) + 1 < 10)
-                        {
-                            await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
-                            Functions.GetUser(context.User).GiveItem("package");
-                        }
-                    }
-                    //set last message time to now
-                    Var.lastMessage[context.User.Id] = Var.CurrentDate();
-                }
+                else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)
+                    Functions.Respond(message);
+                else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
+                    Functions.Respond(message);
+                else return;
             }
-            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)
-                Functions.Respond(message);
-            else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
-                Functions.Respond(message);
-            else return;
+            catch (Exception e)
+            {
+                Console.WriteLine("Caught error to avoid bot crash:\n" + e.StackTrace);
+            }
         }
         public async Task HandleJoin(SocketGuildUser user)
         {
@@ -263,9 +268,9 @@ namespace ForkBot
                 emb.Author.Name = "MESSAGE DELETED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
                 emb.Description = msg.Content;
-                
+
                 string attachURL = null;
-                if (msg.Attachments.Count>0) attachURL= msg.Attachments.FirstOrDefault().ProxyUrl;
+                if (msg.Attachments.Count > 0) attachURL = msg.Attachments.FirstOrDefault().ProxyUrl;
                 if (attachURL != null) emb.ImageUrl = attachURL;
 
                 emb.Fields.Add(new JEmbedField(x =>
@@ -304,7 +309,7 @@ namespace ForkBot
                 emb.Title = msg.Author.Username + "#" + msg.Author.Discriminator;
                 emb.Author.Name = "MESSAGE EDITED";
                 emb.ThumbnailUrl = msg.Author.GetAvatarUrl();
-                
+
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "ORIGINAL:";
@@ -390,7 +395,7 @@ namespace ForkBot
                                 foreach (String alias in c.Aliases) if (alias != c.Name) header += " (;" + alias + ") ";
                                 foreach (Discord.Commands.ParameterInfo parameter in c.Parameters) header += " [" + parameter.Name + "]";
                                 x.Header = header;
-                                x.Text = c.Summary.Replace(tag + " ","");
+                                x.Text = c.Summary.Replace(tag + " ", "");
                             }));
                         }
                     }
