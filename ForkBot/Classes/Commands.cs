@@ -515,8 +515,8 @@ namespace ForkBot
             else await ReplyAsync("You don't have enough coins.");
         }
         
-        [Command("donate"), Summary("[FUN] Give the specified user some of your coins!")]
-        public async Task Donate(IUser user, params string[] donation)
+        [Command("give"), Summary("[FUN] Give the specified user some of your items!")]
+        public async Task give(IUser user, params string[] donation)
         {
             User u1 = Functions.GetUser(Context.User);
             User u2 = Functions.GetUser(user);
