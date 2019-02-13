@@ -506,17 +506,21 @@ namespace ForkBot
         {
             int coins = donation;
             User u1 = Functions.GetUser(Context.User);
-            if (u1.GetCoins() >= coins)
+            if (donation <= 0) await ReplyAsync("Donation must be greater than 0 coins.");
+            else
             {
-                u1.GiveCoins(-coins);
-                Functions.GetUser(user).GiveCoins(coins);
-                await ReplyAsync($":moneybag: {user.Mention} has been given {coins} of your coins!");
+                if (u1.GetCoins() >= coins)
+                {
+                    u1.GiveCoins(-coins);
+                    Functions.GetUser(user).GiveCoins(coins);
+                    await ReplyAsync($":moneybag: {user.Mention} has been given {coins} of your coins!");
+                }
+                else await ReplyAsync("You don't have enough coins.");
             }
-            else await ReplyAsync("You don't have enough coins.");
         }
         
-        [Command("donate"), Summary("[FUN] Give the specified user some of your coins!")]
-        public async Task Donate(IUser user, params string[] donation)
+        [Command("give"), Summary("[FUN] Give the specified user some of your items!")]
+        public async Task give(IUser user, params string[] donation)
         {
             User u1 = Functions.GetUser(Context.User);
             User u2 = Functions.GetUser(user);
