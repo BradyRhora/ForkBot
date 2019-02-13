@@ -66,5 +66,7 @@ namespace ForkBot
 
         public static int DebugCode;
         public static bool DebugMode;
+
+        public static List<MineSweeper> MSGames = new List<MineSweeper>();
     }
 }

@@ -1482,6 +1482,34 @@ namespace ForkBot
             if (tipNumber == -1) tipNumber = rdm.Next(tips.Count());
         }
 
+        [Command("minesweeper"), Summary("[FUN] Play a game of MineSweeper and earn coins!"), Alias(new string[] {"ms"})]
+        public async Task MineSweeper([Remainder]string command = "")
+        {
+
+            MineSweeper game = Var.MSGames.Where(x => x.player.ID == Context.User.Id).FirstOrDefault();
+            if (command == "" && game == null)
+            {
+                game = new MineSweeper(Functions.GetUser(Context.User));
+                await ReplyAsync(game.Build());
+                Var.MSGames.Add(game);
+                await ReplyAsync("Use `;ms x,y` (replacing x and y with letter coordinates) to reveal a tile, or `;ms flag x,y` to flag a tile.");
+            }
+            else if (command.ToLower().StartsWith("flag") && game != null)
+            {
+                var coords = command.ToLower().Split(' ')[1].Split(',');
+                var success = game.Flag(coords);
+                if (success) await ReplyAsync(game.Build());
+                else await ReplyAsync("Make sure the tile you choose is unrevealed.");
+            }
+            else
+            {
+                var coords = command.ToLower().Split(',');
+                var success = game.Turn(coords);
+                if (success) await ReplyAsync(game.Build());
+                else await ReplyAsync("Make sure the tile you choose is unrevealed.");
+            }
+        }
+
         #endregion
 
         #region Mod Commands

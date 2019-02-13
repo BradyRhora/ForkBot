@@ -83,171 +83,165 @@ namespace ForkBot
         DateTime lastDay = Var.CurrentDate();
         public async Task HandleCommand(SocketMessage messageParam)
         {
-            try
+            SocketUserMessage message = messageParam as SocketUserMessage;
+            if (message == null) return;
+            if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
+            if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY) return;
+            int argPos = 0;
+
+            if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
             {
-                SocketUserMessage message = messageParam as SocketUserMessage;
-                if (message == null) return;
-                if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
-                if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY) return;
-                int argPos = 0;
+                int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
+                await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
+            }
 
-                if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
+            //checks if message contains any blocked words
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
+            {
+                await message.DeleteAsync();
+                return;
+            }
+
+            if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
+
+            if (message.Author.IsBot) return;
+
+            //collect stats for York server
+
+
+            var user = Functions.GetUser(message.Author); //present stuff
+            if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
+            {
+                Var.presentWaiting = false;
+                await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
+                var presents = Functions.GetItemList();
+                int presRDM;
+                string[] presentData;
+                do
                 {
-                    int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
-                    await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
-                }
-
-                //checks if message contains any blocked words
-                if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
+                    presRDM = rdm.Next(presents.Count());
+                    presentData = presents[presRDM].Split('|');
+                } while (presentData[2].Contains("*"));
+                Var.present = presentData[0];
+                Var.rPresent = Var.present;
+                var presentName = Var.present;
+                var pMessage = presentData[1];
+                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presents[presRDM])} {pMessage}");
+                if (Var.present == "santa")
                 {
-                    await message.DeleteAsync();
-                    return;
-                }
-
-                if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
-
-                if (message.Author.IsBot) return;
-
-                //collect stats for York server
-
-
-                var user = Functions.GetUser(message.Author); //present stuff
-                if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
-                {
-                    Var.presentWaiting = false;
-                    await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
-                    var presents = Functions.GetItemList();
-                    int presRDM;
-                    string[] presentData;
-                    do
+                    await message.Channel.SendMessageAsync("You got...");
+                    string sMessage = "";
+                    for (int i = 0; i < 5; i++)
                     {
-                        presRDM = rdm.Next(presents.Count());
-                        presentData = presents[presRDM].Split('|');
-                    } while (presentData[2].Contains("*"));
-                    Var.present = presentData[0];
-                    Var.rPresent = Var.present;
-                    var presentName = Var.present;
-                    var pMessage = presentData[1];
-                    await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presents[presRDM])} {pMessage}");
-                    if (Var.present == "santa")
+                        var sPresentData = presents[rdm.Next(presents.Count())];
+                        string sPresentName = sPresentData.Split('|')[0];
+                        user.GiveItem(sPresentName);
+                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
+                    }
+                    await message.Channel.SendMessageAsync(sMessage);
+
+                    Var.replaceable = false;
+                }
+                else user.GiveItem(Var.present);
+
+                if (Var.replaceable)
+                {
+                    await message.Channel.SendMessageAsync($"Don't like this gift? Press {Var.presentNum} again to replace it once!");
+                    Var.replacing = true;
+                    Var.presentReplacer = message.Author;
+                }
+            }
+            else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
+            {
+                if (user.GetItemList().Contains(Var.present))
+                {
+                    user.RemoveItem(Var.present);
+                    await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $"{Var.rPresent}");
+                    await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
+                    Var.presentWaiting = true;
+                    Var.replacing = false;
+                    Var.replaceable = false;
+                }
+                else
+                {
+                    await message.Channel.SendMessageAsync("You no longer have the present, so you cannot replace it!");
+                    Var.replacing = false;
+                    Var.replaceable = false;
+                }
+            }
+
+            //detects invites for unwanted servers (in yorku server) and deletes them
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && message.Content.ToLower().Contains("discord.gg") || message.Content.ToLower().Contains("discordapp.com/invite"))
+            {
+                var words = message.Content.Split(' ');
+                foreach (string word in words)
+                {
+                    if (word.Contains("discord"))
                     {
-                        await message.Channel.SendMessageAsync("You got...");
-                        string sMessage = "";
-                        for (int i = 0; i < 5; i++)
+                        string id = word.Split('/')[word.Split('/').Count() - 1];
+                        IInvite inv = await client.GetInviteAsync(id);
+                        if (inv.GuildId == Constants.Guilds.FORKU)
                         {
-                            var sPresentData = presents[rdm.Next(presents.Count())];
-                            string sPresentName = sPresentData.Split('|')[0];
-                            user.GiveItem(sPresentName);
-                            sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
+                            await messageParam.DeleteAsync();
                         }
-                        await message.Channel.SendMessageAsync(sMessage);
-
-                        Var.replaceable = false;
-                    }
-                    else user.GiveItem(Var.present);
-
-                    if (Var.replaceable)
-                    {
-                        await message.Channel.SendMessageAsync($"Don't like this gift? Press {Var.presentNum} again to replace it once!");
-                        Var.replacing = true;
-                        Var.presentReplacer = message.Author;
+                        return;
                     }
                 }
-                else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
+            }
+
+            //detect and execute commands
+            if (message.HasCharPrefix(';', ref argPos))
+            {
+                var context = new CommandContext(client, message);
+                var result = await commands.ExecuteAsync(context, argPos);
+
+                if (!result.IsSuccess)
                 {
-                    if (user.GetItemList().Contains(Var.present))
+                    if (result.Error != CommandError.UnknownCommand)
                     {
-                        user.RemoveItem(Var.present);
-                        await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $"{Var.rPresent}");
-                        await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
-                        Var.presentWaiting = true;
-                        Var.replacing = false;
-                        Var.replaceable = false;
+                        Console.WriteLine(result.ErrorReason);
+                        var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
+                        await message.Channel.SendMessageAsync("", embed: emb);
                     }
                     else
                     {
-                        await message.Channel.SendMessageAsync("You no longer have the present, so you cannot replace it!");
-                        Var.replacing = false;
-                        Var.replaceable = false;
+                        if (user.GetItemList().Contains(message.Content.Replace(";", "")))
+                        {
+                            await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
+                        }
                     }
                 }
-
-                //detects invites for unwanted servers (in yorku server) and deletes them
-                if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && message.Content.ToLower().Contains("discord.gg") || message.Content.ToLower().Contains("discordapp.com/invite"))
+                else
                 {
-                    var words = message.Content.Split(' ');
-                    foreach (string word in words)
+                    //give user a chance at a lootbox
+                    bool inLM = false;
+                    //go through users last command time
+                    foreach (var u in Var.lastMessage)
                     {
-                        if (word.Contains("discord"))
+                        //ensure user is in dictionary
+                        if (u.Key == context.User.Id) { inLM = true; break; }
+                    }
+                    if (inLM == false) Var.lastMessage.Add(context.User.Id, Var.CurrentDate() - new TimeSpan(1, 0, 1));
+                    //if chance of lootbox
+                    if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
+                    {
+                        //10% chance at lootbox
+                        if (rdm.Next(100) + 1 < 10)
                         {
-                            string id = word.Split('/')[word.Split('/').Count() - 1];
-                            IInvite inv = await client.GetInviteAsync(id);
-                            if (inv.GuildId == Constants.Guilds.FORKU)
-                            {
-                                await messageParam.DeleteAsync();
-                            }
-                            return;
+                            await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
+                            Functions.GetUser(context.User).GiveItem("package");
                         }
                     }
+                    //set last message time to now
+                    Var.lastMessage[context.User.Id] = Var.CurrentDate();
                 }
-
-                //detect and execute commands
-                if (message.HasCharPrefix(';', ref argPos))
-                {
-                    var context = new CommandContext(client, message);
-                    var result = await commands.ExecuteAsync(context, argPos);
-
-                    if (!result.IsSuccess)
-                    {
-                        if (result.Error != CommandError.UnknownCommand)
-                        {
-                            Console.WriteLine(result.ErrorReason);
-                            var emb = new InfoEmbed("ERROR:", result.ErrorReason).Build();
-                            await message.Channel.SendMessageAsync("", embed: emb);
-                        }
-                        else
-                        {
-                            if (user.GetItemList().Contains(message.Content.Replace(";", "")))
-                            {
-                                await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //give user a chance at a lootbox
-                        bool inLM = false;
-                        //go through users last command time
-                        foreach (var u in Var.lastMessage)
-                        {
-                            //ensure user is in dictionary
-                            if (u.Key == context.User.Id) { inLM = true; break; }
-                        }
-                        if (inLM == false) Var.lastMessage.Add(context.User.Id, Var.CurrentDate() - new TimeSpan(1, 0, 1));
-                        //if chance of lootbox
-                        if (Var.lastMessage[context.User.Id] <= Var.CurrentDate() - new TimeSpan(1, 0, 0))
-                        {
-                            //10% chance at lootbox
-                            if (rdm.Next(100) + 1 < 10)
-                            {
-                                await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
-                                Functions.GetUser(context.User).GiveItem("package");
-                            }
-                        }
-                        //set last message time to now
-                        Var.lastMessage[context.User.Id] = Var.CurrentDate();
-                    }
-                }
-                else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && (message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY)
-                    Functions.Respond(message);
-                else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
-                    Functions.Respond(message);
-                else return;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Caught error to avoid bot crash:\n" + e.StackTrace);
-            }
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY || message.Channel.Id == Constants.Channels.COMMANDS))
+                Functions.Respond(message);
+            else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
+                Functions.Respond(message);
+            else return;
+
         }
         public async Task HandleJoin(SocketGuildUser user)
         {

@@ -183,6 +183,7 @@
     <Compile Include="Classes\Objects\Item.cs" />
     <Compile Include="Classes\Objects\ItemCombo.cs" />
     <Compile Include="Classes\Objects\ItemTrade.cs" />
+    <Compile Include="Classes\Objects\MineSweeper.cs" />
     <Compile Include="Classes\Objects\Poll.cs" />
     <Compile Include="Classes\Objects\Shop.cs" />
     <Compile Include="Classes\Objects\Slot.cs" />
