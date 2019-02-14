@@ -284,6 +284,13 @@ namespace ForkBot
             return msgs.ToArray();
             
         }
+
+        public static string GetName(IGuildUser user)
+        {
+            if (user.Nickname == null)
+                return user.Username;
+            return user.Nickname;
+        }
     }
 
 

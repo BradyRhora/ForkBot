@@ -1514,6 +1514,112 @@ namespace ForkBot
             }
         }
 
+        [Command("valentine"), Summary("[FUN] Send a Valentine to your love!")]
+        public async Task Valentine(IUser user)
+        {
+            string path = @"Files\VTemplates";
+            var imgs = Directory.GetFiles(path);
+            using (ImageFactory proc = new ImageFactory())
+            {
+
+                var imgID = rdm.Next(imgs.Count());
+                proc.Load($@"{imgs[imgID]}");
+
+                TextLayer sender = new TextLayer();
+                TextLayer reciever = new TextLayer();
+
+                sender.Text = Functions.GetName(Context.User as IGuildUser);
+                reciever.Text = Functions.GetName(user as IGuildUser);
+
+                int fontsize = 20;
+
+                bool overlay = true;
+                switch (imgID)
+                {
+                    case 0:
+                        reciever.Position = new Point(70, 170);
+                        sender.Position = new Point(70, 205);
+                        break;
+                    case 1:
+                        reciever.Position = new Point(130, 210);
+                        sender.Position = new Point(130, 250);
+                        break;
+                    case 2:
+                        fontsize = 50;
+                        reciever.Position = new Point(130, 330);
+                        sender.Position = new Point(130, 465);
+                        break;
+                    case 3:
+                        fontsize = 15;
+                        reciever.Position = new Point(140, 25);
+                        sender.Position = new Point(140, 55);
+                        break;
+                    case 4:
+                        reciever.Position = new Point(300, 190);
+                        sender.Position = new Point(330, 250);
+                        break;
+                    case 5:
+                        fontsize = 15;
+                        reciever.Position = new Point(50,110);
+                        sender.Position = new Point(50, 140);
+                        break;
+                    case 6:
+                        reciever.Position = new Point(120, 140);
+                        sender.Position = new Point(130, 190);
+                        break;
+                    case 7:
+                        reciever.Position = new Point(530, 320);
+                        sender.Position = new Point(560, 360);
+                        break;
+                    case 8:
+                        reciever.Position = new Point(300, 150);
+                        sender.Position = new Point(300, 200);
+                        break;
+                    case 9:
+                        sender.Position = new Point(380, 210);
+                        reciever.Position = new Point(340, 175);
+                        break;
+                    case 10:
+                        reciever.Position = new Point(320, 270);
+                        sender.Position = new Point(350, 310);
+                        break;
+                    case 11:
+                        sender.Position = new Point(210, 305);
+                        reciever.Position = new Point(180, 230);
+                        break;
+                    case 12:
+                        sender.Position = new Point(450,310);
+                        reciever.Position = new Point(400, 250);
+                        break;
+                    case 13:
+                        sender.Position = new Point(360, 250);
+                        reciever.Position = new Point(340, 215);
+                        break;
+                    case 14:
+                        sender.Position = new Point(70, 300);
+                        reciever.Position = new Point(70, 230);
+                        break;
+                    case 15:
+                        sender.Position = new Point(430, 100);
+                        reciever.Position = new Point(400,60);
+                        break;
+                    case 16:
+                        sender.Position = new Point(285, 220);
+                        reciever.Position = new Point(260, 190);
+                        break;
+
+                }
+                sender.FontSize = fontsize;
+                reciever.FontSize = fontsize;
+                proc.Watermark(sender);
+                proc.Watermark(reciever);
+                var sImgID = rdm.Next(1000000);
+                proc.Save(path + $@"\{sImgID}.png");
+                await Context.Channel.SendFileAsync(path + $@"\{sImgID}.png");
+                File.Delete(path + $@"\{sImgID}.png");
+            }
+        }
+
         #endregion
 
         #region Mod Commands
