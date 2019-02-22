@@ -873,17 +873,18 @@ namespace ForkBot
             
         }
 
-        [Command("dividers")]
+        [Command("dividers"), Alias(new string[] { "sort", "divider" })]
         public async Task Dividers()
         {
             if (Check(Context, "dividers")) return;
             var user = Functions.GetUser(Context.User);
             var items = user.GetItemList().AsEnumerable();
-            var newItems = items.OrderBy(s => s);
+            var newItems = items.OrderBy(s => s).ToArray();
 
-            foreach (string item in items) user.GiveItem(item);
-            foreach (string item in newItems) user.RemoveItem(item);
+            foreach (string item in items) user.RemoveItem(item);
+            for (int i = newItems.Count() - 1; i >= 0; i--) user.GiveItem(newItems[i]);
 
+            await ReplyAsync("Your items have been sorted!");
         }
 
     }
