@@ -141,73 +141,23 @@ namespace ForkBot
                 var newLink = "http://www.ratemyprofessors.com" + node.Attributes[0].Value;
                 page = web.Load(newLink);
 
-                var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
-                var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
-                var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
-                var imageNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[1]/img");
+                var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[1]/div/div[1]/div/div/div").InnerText;
+                var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[1]/div/div[2]/div[1]/div").InnerText;
+                var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[1]/div/div[2]/div[2]/div").InnerText;
                 var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
                 string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
-                //string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[2]/div[1]/div[3]/h2/a").InnerText;
                 string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[1]/div[1]/div[3]/h2/a").InnerText;
                 university = university.Replace(" (all campuses)", "");
-                var tagsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
+                var tagBox = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[2]/div[2]");
                 List<string> tags = new List<string>();
-                for (int i = 0; i < tagsNode.ChildNodes.Count(); i++)
+                for (int i = 0; i < tagBox.ChildNodes.Count(); i++)
                 {
-                    if (tagsNode.ChildNodes[i].Name == "span") tags.Add(tagsNode.ChildNodes[i].InnerText);
+                    if (tagBox.ChildNodes[i].Name == "span") tags.Add(tagBox.ChildNodes[i].InnerText);
                 }
-                string imageURL = null;
-                if (imageNode != null) imageURL = imageNode.Attributes[0].Value;
-
-                /*var commentsNode = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[7]/div[1]/table/tbody");
-
-                List<string> comments = new List<string>();
-                for (int i = 3; i < commentsNode.ChildNodes.Count(); i++)
-                {
-                    if (commentsNode.ChildNodes[i].Name == "tr" && commentsNode.ChildNodes[i].Attributes.Count() == 2)
-                    {
-                        comments.Add(commentsNode.ChildNodes[i].ChildNodes[5].ChildNodes[3].InnerText.Replace("\r\n               ", "").Replace("/", " "));
-                    }
-                }
-                List<string> words = new List<string>();
-                List<int> counts = new List<int>();
-
-                foreach (string comment in comments)
-                {
-                    foreach (string dWord in comment.Split(' '))
-                    {
-                        string word = dWord.ToLower().Replace(".", "").Replace(",", "").Replace("'", "").Replace("(", "").Replace(")", "").Replace("!", "").Replace("?", "");
-                        if (word != "")
-                        {
-                            if (words.Contains(word)) counts[words.IndexOf(word)]++;
-                            else
-                            {
-                                words.Add(word);
-                                counts.Add(1);
-                            }
-                        }
-                    }
-                }
-
-                List<string> OrderedWords = new List<string>();
-                for (int i = counts.Max(); i >= 0; i--)
-                {
-                    for (int c = 0; c < counts.Count(); c++)
-                    {
-                        if (counts[c] == i)
-                        {
-                            OrderedWords.Add(words[counts.IndexOf(counts[c])]);
-                            break;
-                        }
-                    }
-                }
-                string[] commonWords = { "i", "me", "at", "youll", "if", "an", "not", "it", "as", "is", "in", "for", "but", "so", "on", "he", "the", "and", "to", "a", "are", "his", "she", "her", "you", "of", "hes", "shes", "prof", profName.ToLower().Split(' ')[0], profName.ToLower().Split(' ')[1], "we" };
-                foreach (string wrd in commonWords) OrderedWords.Remove(wrd);
-                */
+                
                 JEmbed emb = new JEmbed();
 
                 emb.Title = profName + " - " + university;
-                if (imageURL != null) emb.ImageUrl = imageURL;
                 emb.Fields.Add(new JEmbedField(x =>
                 {
                     x.Header = "Rating:";
@@ -240,19 +190,6 @@ namespace ForkBot
                     x.Text = text;
                     x.Inline = false;
                 }));
-
-                /*emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Header = "Common Comments:";
-                    string text = "";
-                    foreach (string s in OrderedWords)
-                    {
-                        text += Func.ToTitleCase(s) + ", ";
-                    }
-                    text = text.Substring(0, text.Count() - 2);
-                    x.Text = text;
-                    x.Inline = false;
-                }));*/
 
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());

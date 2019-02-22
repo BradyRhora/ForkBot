@@ -329,7 +329,7 @@ namespace ForkBot
                         break;
                     case 4:
                         int hAmount = rdm.Next(2000, 5000);
-                        msg += $"**Happiness+{hAmount}";
+                        msg += $"**Happiness+{hAmount}**";
                         user.AddData("stat.happiness", hAmount);
                         break;
                     case 5:
@@ -822,7 +822,7 @@ namespace ForkBot
             {
                 u.GiveItem("candy");
                 u.GiveItem("candy");
-                await ReplyAsync("You got 2 piec2 of candy! :candy: Maybe if you used this at a different time it would be better..");
+                await ReplyAsync("You got 2 pieces of candy! :candy: Maybe if you used this at a different time it would be better..");
             }
         }
         
