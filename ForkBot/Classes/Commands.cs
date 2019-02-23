@@ -1646,8 +1646,8 @@ namespace ForkBot
 
         #region Brady Commands
 
-        [Command("remind"), Summary("[BRADY] View, add, and remove reminders.")]
-        public async Task Remind([Remainder] string reminder = "")
+        [Command("todo"), Summary("[BRADY] View, add, and remove reminders.")]
+        public async Task Todo([Remainder] string reminder = "")
         {
             if (reminder != "")
             {
