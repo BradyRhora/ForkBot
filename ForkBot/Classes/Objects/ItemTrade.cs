@@ -42,7 +42,7 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    if (u1.GetCoins() >= coins)
+                    if (coins > 0 && u1.GetCoins() >= coins)
                     {
                         coins1 += coins;
                         u1.GiveCoins(-coins);
@@ -61,7 +61,7 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    if (u1.GetCoins() >= coins)
+                    if (coins > 0 && u1.GetCoins() >= coins)
                     {
                         coins2 += coins;
                         u2.GiveCoins(-coins);
