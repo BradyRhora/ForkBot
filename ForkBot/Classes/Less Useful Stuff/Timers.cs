@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using System.IO;
 
 namespace ForkBot
 {
@@ -40,6 +41,34 @@ namespace ForkBot
             await Var.purgeMessage.DeleteAsync();
             Var.purging = false;
             unpurge.Dispose();
+        }
+
+        public static Timer RemindTimer;
+        public static async void Remind(object state)
+        {
+            if (!File.Exists("Files/userreminders.txt")) File.Create("Files/userreminders.txt");
+            string[] reminders = File.ReadAllLines("Files/userreminders.txt");
+            bool changed = false;
+            for(int i = reminders.Count() - 1; i >= 0; i--)
+            {
+                //format: user_id//#//reminder//#//datetimeString
+                var reminderData = reminders[i].Split(new string[] { "//#//" }, StringSplitOptions.None);
+                if (DateTime.Now > Functions.StringToDateTime(reminderData[2]))
+                {
+                    changed = true;
+                    reminders[i] = "";
+
+                    var user = Bot.client.GetUser(Convert.ToUInt64(reminderData[0]));
+                    await user.SendMessageAsync(reminderData[1]);
+                }
+            }
+
+            if (changed)
+            {
+                File.Delete("Files/userreminders.txt");
+                File.WriteAllLines("Files/userreminders.txt", reminders.Where(x => x != ""));
+            }
+            
         }
     }
 }

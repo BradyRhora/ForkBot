@@ -44,7 +44,7 @@ namespace ForkBot
                 Var.startTime = Var.CurrentDate();
                 int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
                 await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
-
+                Timers.RemindTimer = new Timer(Timers.Remind, null, 0, 1000 * 60);
                 await Task.Delay(-1);
             }
             catch (Exception e)

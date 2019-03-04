@@ -289,7 +289,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.0\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.1\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -325,8 +325,70 @@ namespace ForkBot
         {
             if (parameters == "")
             {
-
+                await ReplyAsync("This command reminds you of the message you choose, in the amount of time that you specify. You may only have one reminder at a time.\n" +
+                                 "Seperate the message you want to be reminded of and the amount of time with the keyword `in`. If you have multiple `in`'s the last one will be used.\n" +
+                                 "eg: `;remind math1019 midterm in 6 days and 3 hours`\nYou can use any combination of days, hours, minutes. "
+                                 +"Seperate each using either a comma or the word `and`.");
             }
+            else if (parameters.Contains(" in "))
+            {
+                string[] split = parameters.Split(new string[] { " in " }, StringSplitOptions.None);
+                string reminder = "";
+                if (split.Count() == 2) reminder = split[0];
+                else
+                {
+                    for (int i = 0; i < split.Count()-1; i++)
+                    {
+                        reminder += split[i] + " in ";
+                    }
+                    reminder = reminder.Substring(0, reminder.Length - 4);
+                }
+
+                reminder = reminder.Replace("//#//", "");
+
+                string time = split[split.Count()-1];
+                string[] splitTimes = time.Split(new string[] { " and ", " , " },StringSplitOptions.None);
+                TimeSpan remindTime = new TimeSpan(0, 0, 0);
+                bool stop = false;
+                foreach (string t in splitTimes)
+                {
+                    var timeData = t.Split(' ');
+                    if (timeData.Count() > 2) {
+                        stop = true;
+                        break;
+                    }
+                    var format = timeData[1].ToLower().TrimEnd('s');
+                    var amount = timeData[0];
+
+                    switch (format)
+                    {
+                        case "day":
+                            remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0, 0));
+                            break;
+                        case "hour":
+                            remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0));
+                            break;
+                        case "minute":
+                            remindTime = remindTime.Add(new TimeSpan(0,Convert.ToInt32(amount), 0));
+                            break;
+                        default:
+                            stop = true;
+                            break;
+                    }
+                }
+
+                if (stop) await ReplyAsync("Invalid time format, make sure time formats are spelt correctly.");
+                else
+                {
+                    DateTime remindAt = DateTime.Now + remindTime;
+                    string timeString = Functions.DateTimeToString(remindAt);
+                    string writeString = Context.User.Id + "//#//" + reminder + "//#//" + timeString + "\n";
+
+                    File.AppendAllText("Files/userreminders.txt", writeString);
+                    await ReplyAsync("Reminder added.");
+                }
+            }
+            else await ReplyAsync("Invalid format, make sure you have the word `in` with spaces on each side.");
         }
 
 
