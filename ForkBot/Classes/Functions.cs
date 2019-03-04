@@ -30,8 +30,9 @@ namespace ForkBot
             }
             else return Constants.Colours.DEFAULT_COLOUR;
         }
-        
-        public static User GetUser(IUser user) //gets User class for IUser, makes one if there isn't already one.
+
+        //gets User class for IUser, makes one if there isn't already one.
+        public static User GetUser(IUser user)
         {
             
             return GetUser(user.Id);
@@ -53,7 +54,15 @@ namespace ForkBot
 
             return null;
         }
-        
+
+        //returns a users nickname if they have one, otherwise returns their username.
+        public static string GetName(IGuildUser user)
+        {
+            if (user.Nickname == null)
+                return user.Username;
+            return user.Nickname;
+        }
+
         public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation anim) { await SendAnimation(chan, anim, ""); }
 
         static IUserMessage animation;
@@ -285,12 +294,6 @@ namespace ForkBot
             
         }
 
-        public static string GetName(IGuildUser user)
-        {
-            if (user.Nickname == null)
-                return user.Username;
-            return user.Nickname;
-        }
     }
 
 

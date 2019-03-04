@@ -317,6 +317,16 @@ namespace ForkBot
                 x.Header = "Uptime";
                 x.Text = $"{uptime.Days} days, {uptime.Hours} hours, {uptime.Minutes} minutes, {uptime.Seconds} seconds.";
             }));
+            await ReplyAsync("", embed: emb.Build());
+        }
+        
+        [Command("remind"), Summary("Sets a message to remind you of in the specified amount of time."), Alias(new string[] { "reminder", "rem" })]
+        public async Task Remind([Remainder] string parameters = "")
+        {
+            if (parameters == "")
+            {
+
+            }
         }
 
 
@@ -1556,6 +1566,68 @@ namespace ForkBot
                 File.Delete(path + $@"\{sImgID}.png");
             }
         }
+        
+        [Command("forkparty"), Summary("[FUN] Begin a game of ForkParty:tm: with up to 4 players!"), Alias(new string[] { "fp" })]
+        public async Task ForkParty([Remainder] string command = "")
+        {
+            var user = Functions.GetUser(Context.User);
+            var chanGames = Var.FPGames.Where(x => x.Channel.Id == Context.Channel.Id);
+            ForkParty game = null;
+            if (chanGames.Count() != 0) game = chanGames.First();
+            if (command == "")
+            {
+                string msg = "Welcome to ForkParty:tm:! This is a Mario Party styled game in which players move around a board and play minigames to collect the most Forks and win!\n" +
+                                "Use `;fp host` to start a game, or `;fp join` in the hosts channel to join a game.";
+
+                if (game != null)
+                {
+                    msg += $"\n```\nThere is currently a game being hosted by {await game.Players[0].GetName(Context.Guild)}. There is {4 - game.PlayerCount} spot(s) left.\n";
+                    for (int i = 1; i < game.PlayerCount; i++) msg += await game.Players[i].GetName(Context.Guild) + "\n";
+                    for (int i = 0; i < 4 - game.PlayerCount; i++) msg += "----------\n";
+                    msg += "```";
+                }
+
+                await ReplyAsync(msg);
+            }
+            else if (command == "host")
+            {
+                if (game != null)
+                {
+                    string msg = "There is already a ForkParty game being hosted in this channel.";
+                    if (game.Started) msg += " It has not started yet, join with `;fp join`!";
+                    await ReplyAsync(msg);
+                }
+                else
+                {
+                    Var.FPGames.Add(new ForkParty(user, Context.Channel));
+                    await ReplyAsync("You have successfully hosted a game. Get others to join now!");
+                }
+                
+            }
+            else if (command == "join")
+            {
+                if (game != null)
+                {
+                    if (!game.Started)
+                    {
+                        if (game.PlayerCount < 4)
+                        {
+                            if (!game.HasPlayer(user))
+                            {
+                                game.Join(user);
+                                await ReplyAsync($"You have successfully joined {await game.Players[0].GetName(Context.Guild)}'s game.");
+                            }
+                            else
+                                await ReplyAsync("You have already joined this game.");
+                        }
+                        else await ReplyAsync("There are no spaces remaining in the game being hosted in this channel.");
+                    }
+                    else await ReplyAsync("There is already game started in this channel. Wait for it to end or find another!");
+                }
+                else await ReplyAsync("There is currently no game being hosted in this channel. Host a game with `;fp host`!");
+            }
+        }
+
 
         #endregion
 

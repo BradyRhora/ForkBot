@@ -179,6 +179,7 @@
     <Compile Include="Classes\Objects\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Commands.cs" />
+    <Compile Include="Classes\Objects\ForkParty.cs" />
     <Compile Include="Classes\Objects\InfoEmbed.cs" />
     <Compile Include="Classes\Objects\Item.cs" />
     <Compile Include="Classes\Objects\ItemCombo.cs" />

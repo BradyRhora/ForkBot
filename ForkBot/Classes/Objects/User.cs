@@ -25,6 +25,11 @@ namespace ForkBot
             return this;
         }
 
+        public async Task<string> GetName(IGuild guild)
+        {
+            return Functions.GetName(await guild.GetUserAsync(ID));
+        }
+
         public string GetData(string data)
         {
             string userPath = $@"Users\{ID}.user";

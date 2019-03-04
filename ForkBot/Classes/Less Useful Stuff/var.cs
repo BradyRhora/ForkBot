@@ -68,5 +68,6 @@ namespace ForkBot
         public static bool DebugMode;
 
         public static List<MineSweeper> MSGames = new List<MineSweeper>();
+        public static List<ForkParty> FPGames = new List<ForkParty>();
     }
 }
