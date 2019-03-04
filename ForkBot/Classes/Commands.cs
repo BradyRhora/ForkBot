@@ -325,70 +325,129 @@ namespace ForkBot
         {
             if (parameters == "")
             {
-                await ReplyAsync("This command reminds you of the message you choose, in the amount of time that you specify. You may only have one reminder at a time.\n" +
+                await ReplyAsync("This command reminds you of the message you choose, in the amount of time that you specify. You may have max five reminders at a time.\n" +
                                  "Seperate the message you want to be reminded of and the amount of time with the keyword `in`. If you have multiple `in`'s the last one will be used.\n" +
-                                 "eg: `;remind math1019 midterm in 6 days and 3 hours`\nYou can use any combination of days, hours, minutes. "
-                                 +"Seperate each using either a comma or the word `and`.");
+                                 "eg: `;remind math1019 midterm in 6 days and 3 hours`\nYou can use any combination of days, hours, minutes. "+
+                                 "Seperate each using either a comma or the word `and`.\n"+
+                                 "Use `;reminderlist` to view your reminders and `;deletereminder [#]` with the reminder number to delete it.");
             }
             else if (parameters.Contains(" in "))
             {
-                string[] split = parameters.Split(new string[] { " in " }, StringSplitOptions.None);
-                string reminder = "";
-                if (split.Count() == 2) reminder = split[0];
+                var currentReminders = File.ReadAllLines("Files/userreminders.txt").Where(x => x.StartsWith(Convert.ToString(Context.User.Id)));
+                if (currentReminders.Count() >= 5)
+                {
+                    await ReplyAsync("You already have 5 reminders, which is the maximum.");
+                }
                 else
                 {
-                    for (int i = 0; i < split.Count()-1; i++)
+                    string[] split = parameters.Split(new string[] { " in " }, StringSplitOptions.None);
+                    string reminder = "";
+                    if (split.Count() == 2) reminder = split[0];
+                    else
                     {
-                        reminder += split[i] + " in ";
+                        for (int i = 0; i < split.Count() - 1; i++)
+                        {
+                            reminder += split[i] + " in ";
+                        }
+                        reminder = reminder.Substring(0, reminder.Length - 4);
                     }
-                    reminder = reminder.Substring(0, reminder.Length - 4);
-                }
 
-                reminder = reminder.Replace("//#//", "");
+                    reminder = reminder.Replace("//#//", "");
 
-                string time = split[split.Count()-1];
-                string[] splitTimes = time.Split(new string[] { " and ", " , " },StringSplitOptions.None);
-                TimeSpan remindTime = new TimeSpan(0, 0, 0);
-                bool stop = false;
-                foreach (string t in splitTimes)
-                {
-                    var timeData = t.Split(' ');
-                    if (timeData.Count() > 2) {
-                        stop = true;
-                        break;
-                    }
-                    var format = timeData[1].ToLower().TrimEnd('s');
-                    var amount = timeData[0];
-
-                    switch (format)
+                    string time = split[split.Count() - 1];
+                    string[] splitTimes = time.Split(new string[] { " and ", " , " }, StringSplitOptions.None);
+                    TimeSpan remindTime = new TimeSpan(0, 0, 0);
+                    bool stop = false;
+                    foreach (string t in splitTimes)
                     {
-                        case "day":
-                            remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0, 0));
-                            break;
-                        case "hour":
-                            remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0));
-                            break;
-                        case "minute":
-                            remindTime = remindTime.Add(new TimeSpan(0,Convert.ToInt32(amount), 0));
-                            break;
-                        default:
+                        var timeData = t.Split(' ');
+                        if (timeData.Count() > 2)
+                        {
                             stop = true;
                             break;
+                        }
+                        var format = timeData[1].ToLower().TrimEnd('s');
+                        var amount = timeData[0];
+
+                        switch (format)
+                        {
+                            case "day":
+                                remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0, 0));
+                                break;
+                            case "hour":
+                                remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0));
+                                break;
+                            case "minute":
+                                remindTime = remindTime.Add(new TimeSpan(0, Convert.ToInt32(amount), 0));
+                                break;
+                            default:
+                                stop = true;
+                                break;
+                        }
                     }
-                }
 
-                if (stop) await ReplyAsync("Invalid time format, make sure time formats are spelt correctly.");
-                else
-                {
-                    DateTime remindAt = DateTime.Now + remindTime;
-                    string timeString = Functions.DateTimeToString(remindAt);
-                    string writeString = Context.User.Id + "//#//" + reminder + "//#//" + timeString + "\n";
+                    if (stop) await ReplyAsync("Invalid time format, make sure time formats are spelt correctly.");
+                    else
+                    {
+                        DateTime remindAt = DateTime.Now + remindTime;
+                        string timeString = Functions.DateTimeToString(remindAt);
+                        string writeString = Context.User.Id + "//#//" + reminder + "//#//" + timeString + "\n";
 
-                    File.AppendAllText("Files/userreminders.txt", writeString);
-                    await ReplyAsync("Reminder added.");
+                        File.AppendAllText("Files/userreminders.txt", writeString);
+                        await ReplyAsync("Reminder added.");
+                    }
                 }
             }
             else await ReplyAsync("Invalid format, make sure you have the word `in` with spaces on each side.");
+        }
+
+        [Command("reminderlist")]
+        public async Task ReminderList()
+        {
+            var currentReminders = File.ReadAllLines("Files/userreminders.txt").Where(x => x.StartsWith(Convert.ToString(Context.User.Id)));
+            if (currentReminders.Count() > 0)
+            {
+                string msg = "Here are your current reminders:\n```";
+                for (int i = 0; i < currentReminders.Count(); i++)
+                {
+                    msg += $"[{i + 1}]" + currentReminders.ElementAt(i).Replace("//#//", " ").Replace($"{Context.User.Id}", "").Trim() + "\n";
+                }
+                await ReplyAsync(msg + "\n```");
+            }
+            else await ReplyAsync("You currently have no reminders.");
+        }
+
+
+        [Command("deletereminder")]
+        public async Task DeleteReminder(int reminderID)
+        {
+            var reminders = File.ReadAllLines("Files/userreminders.txt");
+            int idCount = 0;
+            bool deleted = false;
+            for(int i = 0; i < reminders.Count(); i++)
+            {
+                if (reminders[i].StartsWith($"{Context.User.Id}"))
+                {
+                    idCount++;
+                    if (idCount == reminderID)
+                    {
+                        reminders[i] = "";
+                        deleted = true;
+                        break;
+                    }
+                }
+            }
+
+            if (deleted)
+            {
+                File.Delete("Files/userreminders.txt");
+                File.WriteAllLines("Files/userreminders.txt", reminders.Where(x => x != ""));
+                await ReplyAsync("Reminder deleted.");
+            }
+            else
+            {
+                await ReplyAsync("Reminder not found, are you sure you have a reminder with an ID of " + reminderID + "? Use `;reminderlist` to check.");
+            }
         }
 
 
