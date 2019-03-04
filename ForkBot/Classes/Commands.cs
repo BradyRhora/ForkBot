@@ -355,7 +355,7 @@ namespace ForkBot
                     reminder = reminder.Replace("//#//", "");
 
                     string time = split[split.Count() - 1];
-                    string[] splitTimes = time.Split(new string[] { " and ", " , " }, StringSplitOptions.None);
+                    string[] splitTimes = time.Split(new string[] { ", and ", " and ", ", "  }, StringSplitOptions.None);
                     TimeSpan remindTime = new TimeSpan(0, 0, 0);
                     bool stop = false;
                     foreach (string t in splitTimes)
