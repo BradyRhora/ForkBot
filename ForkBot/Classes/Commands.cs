@@ -401,7 +401,7 @@ namespace ForkBot
             else await ReplyAsync("Invalid format, make sure you have the word `in` with spaces on each side.");
         }
 
-        [Command("reminderlist")]
+        [Command("reminderlist"), Alias(new string[] { "reminders" })]
         public async Task ReminderList()
         {
             var currentReminders = File.ReadAllLines("Files/userreminders.txt").Where(x => x.StartsWith(Convert.ToString(Context.User.Id)));
@@ -412,13 +412,13 @@ namespace ForkBot
                 {
                     msg += $"[{i + 1}]" + currentReminders.ElementAt(i).Replace("//#//", " ").Replace($"{Context.User.Id}", "").Trim() + "\n";
                 }
-                await ReplyAsync(msg + "\n```");
+                await ReplyAsync(msg + "\n```\nUse `;deletereminder #` to delete a reminder!");
             }
             else await ReplyAsync("You currently have no reminders.");
         }
 
 
-        [Command("deletereminder")]
+        [Command("deletereminder"),Alias(new string[] { "delreminder" })]
         public async Task DeleteReminder(int reminderID)
         {
             var reminders = File.ReadAllLines("Files/userreminders.txt");
