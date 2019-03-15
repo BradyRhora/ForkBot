@@ -728,6 +728,12 @@ namespace ForkBot
                     SlotMachine sm = new SlotMachine(Context.User, bet);
                     var result = sm.Spin();
                     var msg = await Context.Channel.SendMessageAsync(sm.Generate() + "\n" + result);
+
+                    if ((rdm.Next(100) + 1) <= 5)
+                    {
+                        await ReplyAsync("Oh no! Your slot machine broke!");
+                        user.RemoveItem("slot_machine");
+                    }
                 }
             }
             catch (Exception e)
