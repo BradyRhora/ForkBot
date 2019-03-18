@@ -307,6 +307,7 @@ namespace ForkBot
             JEmbed emb = new JEmbed();
             emb.Title = "ForkBot Stats";
             emb.Description = $"ForkBot is developed by Brady#1234 for use in the York University Discord server.\nIt has many uses, such as professor lookup, course lookup, word defining, and many fun commands.";
+            emb.ColorStripe = Constants.Colours.YORK_RED;
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Users";
@@ -389,7 +390,7 @@ namespace ForkBot
                     if (stop) await ReplyAsync("Invalid time format, make sure time formats are spelt correctly.");
                     else
                     {
-                        DateTime remindAt = DateTime.Now + remindTime;
+                        DateTime remindAt = Var.CurrentDate() + remindTime;
                         string timeString = Functions.DateTimeToString(remindAt);
                         string writeString = Context.User.Id + "//#//" + reminder + "//#//" + timeString + "\n";
 
@@ -469,27 +470,20 @@ namespace ForkBot
                 {
                     u.RemoveItem(item);
                     int price = 0;
-                    bool unsold = false;
                     foreach (string line in itemList)
                     {
                         if (line.Split('|')[0] == item)
                         {
                             if (!line.Split('|')[2].Contains("-"))
                                 price = (int)(Convert.ToInt32(line.Split('|')[2]) * Constants.Values.SELL_VAL);
-                            else unsold = true;
+                            else price = 10;
                             break;
                         }
                     }
-                    if (!unsold)
-                    {
-                        u.GiveCoins(price);
-                        msg += $"You successfully sold your {item} for {price} coins!\n";
-                    }
-                    else
-                    {
-                        u.GiveItem(item);
-                        msg += $"{item} cannot be sold. Have you tried using it's command or combining it?\n";
-                    }
+
+                    u.GiveCoins(price);
+                    msg += $"You successfully sold your {item} for {price} coins!\n";
+                    
                 }
                 else msg += $"You do not have an item called {item}!\n";
             }
@@ -522,7 +516,7 @@ namespace ForkBot
                 switch (command)
                 {
                     case "accept":
-                        if (!trade.Accepted) trade.Accept();
+                        if (!trade.Accepted && Context.User.Id != trade.Starter().Id) trade.Accept();
                         showMenu = true;
                         break;
                     case "deny":
@@ -1167,14 +1161,15 @@ namespace ForkBot
 
                     if (!hang[6].Contains("_") || Var.hmWord == guess) //win
                     {
-                        await Context.Channel.SendMessageAsync("You did it!");
                         Var.hangman = false;
                         foreach (char c in Var.hmWord)
                         {
                             Var.guessedChars.Add(c);
                         }
                         var u = Functions.GetUser(Context.User);
-                        u.GiveCoins(10);
+                        int coinReward = rdm.Next(40)+10;
+                        u.GiveCoins(coinReward);
+                        await Context.Channel.SendMessageAsync($"You did it! You got {coinReward} coins.");
                     }
 
                     hang[6] = "     |          ";
@@ -1552,6 +1547,10 @@ namespace ForkBot
                 "Give other users coins with the `;donate` command!",
                 };
             if (tipNumber == -1) tipNumber = rdm.Next(tips.Count());
+            else tipNumber++;
+
+            if (tipNumber <= 0 || tipNumber > tips.Count()) await ReplyAsync($"Invalid tip number! Make sure number is above 0 and less than {tips.Count() + 1}");
+            await ReplyAsync($":robot::speech_balloon: " + tips[tipNumber]);
         }
 
         [Command("minesweeper"), Summary("[FUN] Play a game of MineSweeper and earn coins!"), Alias(new string[] {"ms"})]
@@ -2166,79 +2165,7 @@ namespace ForkBot
                 Console.WriteLine("DebugMode set to " + Var.DebugMode);
             }
         }
-
-
-        static HtmlWeb _webClient = new HtmlWeb();
-        [Command("gencourselist"), Summary("[BRADY] The greatest courselist in this or any age.")]
-        public async Task GenCourseList()
-        {
-            if (Context.User.Id != Constants.Users.BRADY) return;
-
-            /*
-            var page = _webClient.Load("https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm");
-            var link = page.DocumentNode.SelectSingleNode("/html[1]/body[1]/p[1]/table[1]/tr[2]/td[1]/table[1]/tr[3]/td[1]").InnerText;
-            //page = _webClient.Load(link);
-            
-
-
-            string[] courseList = new string[1];
-            */
-
-
-
-
-
-
-
-
-            string[] subjects = { /*"ACTG|( SB )", "ADMS|( AP )", "ANTH|( AP, GS )", "ARB|( AP )", "ARTH|( FA, GS )", "ARTM|( SB )", "ASL|( AP )", "AUCO|( ED )", "BBED|( ED )", "BC|( SC )", "BCHM|( SC )", "BIOL|( GL, SC, ED, GS )", "BLIS|( GS )", "BPHS|( SC )", "BSUS|( SB )", "BUEC|( GL )", "CAT|( GL )", "CCY|( AP )", "CDIS|( GS )", "CDNS|( GL )", "CH|( AP )", "CHEM|( ED, GS, SC )", "CIVL|( GS, LE )", "CLST|( AP )", "CLTR|( AP )", "CMCT|( GS )", "COGS|( AP )", "COMN|( AP )", "COMS|( GL )", "COOP|( LE, SC )", "CRIM|( AP )", "CSLA|( GL )", "DANC|( FA, GS, ED )", "DATT|( FA )", "DCAD|( SB )", "DEMS|( AP, GS )", "DESN|( FA )", "DEST|( ED )", "DIGM|( GS )", "DLLL|( AP )", "DRAA|( ED )", "DRST|( GL )", "DVST|( GS )", "ECON|( SB, GL, AP, ED, GS )", "EDFE|( ED )", "EDFR|( ED )", "EDIN|( ED )", "EDIS|( ED )", "EDJI|( ED )", "EDPJ|( ED )", "EDPR|( ED )", "EDST|( ED )", "EDUC|( GS, ED )", "EECS|( GS, LE )", "EIL|( GS )", "EMBA|( SB )", "EN|( AP, ED, GL, GS )", "ENG|( GS, LE )", "ENSL|( GL )", "ENTR|( SB )", "ENVB|( SC )", "ENVS|( ED, GS, ES )", "ESL|( AP )", "ESS|( GS )", "ESSE|( LE )", "EXCH|( SB )", "FACC|( GS )", "FACS|( FA )", "FAST|( ED )", "FILM|( GS, FA )", "FINE|( SB )",*/ "FND|( AP )", "FNEN|( SB )", "FNSV|( SB )", "FR|( AP )", "FRAN|( GL )", "FREN|( ED, GS )", "FSL|( GL )", "GCIN|( AP )", "GEOG|( GS, SC, AP, ED )", "GER|( AP )", "GFWS|( GS )", "GK|( AP )", "GKM|( AP )", "GWST|( GL, AP )", "HEB|( ED, AP )", "HIMP|( SB )", "HIST|( GL, AP, GS, ED )", "HLST|( HH )", "HLTH|( GS )", "HND|( AP )", "HREQ|( AP )", "HRM|( GS, AP )", "HUMA|( GL, GS, AP )", "IBUS|( SB )", "IHST|( HH )", "ILST|( GL )", "IMBA|( SB )", "INDG|( AP )", "INDS|( ED )", "INDV|( FA )", "INST|( GS )", "INTE|( GS )", "INTL|( SB )", "ISCI|( SC )", "IT|( AP )", "ITEC|( GL, AP, GS )", "JC|( AP )", "JP|( AP )", "KAHS|( GS )", "KINE|( HH )", "KOR|( AP )", "LA|( AP )", "LAL|( GS )", "LASO|( AP )", "LAW|( ED, GS )", "LIN|( GL )", "LING|( AP )", "LLDV|( ED )", "LLS|( AP )", "LREL|( GS )", "LYON|( GL )", "MACC|( SB )", "MATH|( GS, ED, SC, GL )", "MBAN|( SB )", "MDES|( GS )", "MECH|( GS, LE )", "MFIN|( SB )", "MGMT|( SB )", "MINE|( SB )", "MIST|( AP )", "MKTG|( SB )", "MODR|( AP, GL )", "MUSI|( ED, FA, GS )", "NATS|( SC, GL )", "NURS|( HH, GS )", "OMIS|( SB )", "ORCO|( ED )", "ORGS|( SB )", "OVGS|( GS, SB )", "PACC|( GS )", "PANF|( FA )", "PERS|( AP )", "PHED|( ED )", "PHIL|( GS, GL, ED, AP )", "PHYS|( GS, SC, ED, GL )", "PIA|( GS )", "PKIN|( HH )", "PLCY|( SB )", "POLS|( GS, AP, GL, ED )", "POR|( AP )", "PPAL|( GS )", "PPAS|( AP )", "PRAC|( ED )", "PROP|( SB )", "PRWR|( AP )", "PSYC|( GS, HH, GL )", "PUBL|( SB )", "RU|( AP )", "SCIE|( ED )", "SENE|( SC )", "SGMT|( SB )", "SLGS|( ED )", "SOCI|( GL, GS, AP )", "SOCM|( SB )", "SOSC|( AP, ED, GL )", "SOWK|( AP, GS )", "SP|( AP, GL )", "SPTH|( GS )", "STS|( SC, GS )", "SWAH|( AP )", "SXST|( GL, AP )", "TECH|( ED )", "TESL|( AP )", "THEA|( GS, FA )", "THST|( GS )", "TLSE|( ED )", "TRAN|( GL, GS )", "TRAS|( GS )", "TXLW|( GS )", "TYP|( AP )", "VISA|( ED, GS, FA )", "WKLS|( AP )", "WKST|( GL )", "WMST|( GS )", "WRIT|( AP )", "YSDN|( FA )"};
-            
-            int year = DateTime.Now.Year;
-            string[] credits = { "0.00", "1.50", "3.00", "6.00", "9.00" };
-            //level from 0-8000
-
-            List<string> courseList = new List<string>();
-
-            foreach(string s in subjects)
-            {
-                Console.WriteLine("Starting subject " + s + $"... [Subject {Array.IndexOf(subjects,s)}/{subjects.Count()}]" );
-                for (int code = 0; code < 5000; code++)
-                {
-                    if (code % 100 == 0) Console.WriteLine($"Code: {code}/5000");
-                    var sp = s.Split('|');
-                    var sub = sp[0];
-                    var posDeps = sp[1].Trim('(', ')', ' ').Split(',');
-
-                    foreach (string dep in posDeps)
-                    {
-                        //Console.WriteLine("For department " + dep + "...");
-                        foreach (string credit in credits)
-                        {
-                            //Console.WriteLine("With " + credit + " credits...");
-                            string courseLine = $"{dep}/{sub} {code} {credit} Possible Course";
-                            Course posCourse = new Course();
-                            try
-                            {
-                                posCourse.LoadCourse(courseLine);
-                                courseList.Add(courseLine);
-                                Console.WriteLine("Adding course: " + courseLine);
-                            }
-                            catch (Exception) { }
-                            
-                        }
-                    }
-                }
-
-                courseList.Add("");
-            }
-
-            await ReplyAsync("Finished generating list. Saving...");
-
-            File.WriteAllLines("Files/GeneratedCourseList2.txt",courseList);
-
-            await ReplyAsync("Saved.");
-        }
-
+        
         #endregion
 
     }

@@ -42,7 +42,7 @@ namespace ForkBot
                 Var.DebugCode = rdm.Next(999, 9999) + 1;
                 Console.WriteLine($"ForkBot successfully intialized with debug code [{Var.DebugCode}]");
                 Var.startTime = Var.CurrentDate();
-                int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
+                int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
                 await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
                 Timers.RemindTimer = new Timer(Timers.Remind, null, 1000 * 30, 1000 * 60);
                 await Task.Delay(-1);
@@ -91,7 +91,7 @@ namespace ForkBot
 
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
             {
-                int strikeCount = (DateTime.Now - Constants.Dates.STRIKE_END).Days;
+                int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
                 await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
             }
 

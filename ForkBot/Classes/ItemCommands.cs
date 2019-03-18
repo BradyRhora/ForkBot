@@ -556,14 +556,21 @@ namespace ForkBot
         [Command("paintbrush")]
         public async Task Paintbrush()
         {
-            Paintbrush(Context.User);
+            if(Context.Message.Attachments.Count() <= 0) await Paintbrush(Context.User);
+            else if (Context.Message.Attachments.First().Size < 500000)
+                await Paintbrush(Context.Message.Attachments.First().Url);
         }
 
         [Command("paintbrush")]
         public async Task Paintbrush(IUser user)
         {
-            
-             if (Check(Context, "paintbrush", false)) return;
+            await Paintbrush(user.GetAvatarUrl());
+        }
+        
+        [Command("paintbrush")]
+        public async Task Paintbrush(string url)
+        {
+            if (Check(Context, "paintbrush", false)) return;
             using (ImageFactory fact = new ImageFactory())
             {
                 using (WebClient web = new WebClient())
@@ -571,10 +578,9 @@ namespace ForkBot
                     bool downloaded = false;
                     while (!downloaded)
                     {
-                        var url = user.GetAvatarUrl();
                         if (url == null)
                         {
-                            await ReplyAsync("You must have uploaded a profile picture to use this command.");
+                            await ReplyAsync("You must use a valid picture to use this command.");
                             return;
                         }
                         try { web.DownloadFile(url, @"Files\paintbrush.png"); downloaded = true; }
@@ -629,6 +635,8 @@ namespace ForkBot
             }
             await Context.Channel.SendFileAsync(@"Files\paintbrush_edited.png");
         }
+
+
 
         [Command("santa")]
         public async Task Santa()
