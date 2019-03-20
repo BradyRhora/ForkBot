@@ -556,7 +556,7 @@ namespace ForkBot
         [Command("paintbrush")]
         public async Task Paintbrush()
         {
-            Paintbrush(Context.User);
+            await Paintbrush(Context.User);
         }
 
         [Command("paintbrush")]

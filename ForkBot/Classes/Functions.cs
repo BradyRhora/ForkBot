@@ -62,34 +62,7 @@ namespace ForkBot
                 return user.Username;
             return user.Nickname;
         }
-
-        public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation anim) { await SendAnimation(chan, anim, ""); }
-
-        static IUserMessage animation;
-        static EmoteAnimation anim;
-        static string varEmote;
-        static int frameCount;
-        static Timer animTimer;
-        public static async Task SendAnimation(IMessageChannel chan, EmoteAnimation Animation, string emote)
-        {
-            anim = Animation;
-            varEmote = emote;
-            frameCount = 1;
-            animation = await chan.SendMessageAsync(anim.frames[0].Replace("%", GetItemEmote(varEmote)));
-            animTimer = new Timer(new TimerCallback(AnimateTimerCallback), null, 1000, 1000);
-        }
-
-        static async void AnimateTimerCallback(object state)
-        {
-            await animation.ModifyAsync(x => x.Content = anim.frames[frameCount].Replace("%", GetItemEmote(varEmote)));
-            frameCount++;
-            if (frameCount >= anim.frames.Count())
-            {
-                Var.timerComplete = true;
-                animTimer.Dispose();
-            }
-        }
-
+                
         public static string[] GetItemList()
         {
             return File.ReadAllLines("Files/items.txt");
