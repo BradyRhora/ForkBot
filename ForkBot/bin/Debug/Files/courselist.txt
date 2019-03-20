@@ -1753,9 +1753,6 @@ AP/WRIT 4005 3.00 Travel Writing & The Professional Writer: Exploring an Ever-Ch
 AP/WRIT 4722 6.00 Editing Shakespeare 
 AP/WRIT 4900 3.00 Special Topics 
 AP/WRIT 4910 6.00 Special Topics 
-
-
-
 ED/AUCO 3555 6.00 Educational Audiology
 ED/AUCO 3565 3.00 Classroom Amplification for Deaf/Hard of Hearing Learners
 ED/BBED 4000 3.00 Bilingual - Bicultural Education
@@ -1948,9 +1945,6 @@ ED/TLSE 3725 3.00 Teaching Deaf and Hard of Hearing Learners in Inclusive Settin
 ED/VISA 3000 3.00 Teaching Visual Arts in the Intermediate Division
 ED/VISA 4000 3.00 Teaching Visual Arts in the Intermediate-Senior Division - A
 ED/VISA 4001 3.00 Teaching Visual Arts in the Intermediate-Senior Division - B
-
-
-
 ES/ENVS 1000 6.00 Earth in Our Hands:  Introduction to Environmental Studies
 ES/ENVS 1200 6.00 Taking Action: Engaging People and the Environment
 ES/ENVS 1500 6.00 Introduction to Environmental Science: The Web of Life       
@@ -2185,9 +2179,6 @@ ES/ENVS 8599K3.00 Individual PhD Research
 ES/ENVS 8599L3.00 Individual PhD Research
 ES/ENVS 8599M6.00 Individual PhD Research
 ES/ENVS 8599N6.00 Individual PhD Research
-
-
-
 FA/ARTH 1130 6.00 Introduction to Art History
 FA/ARTH 1900 3.00 Art in the City
 FA/ARTH 2340 3.00 The Art of Asia
@@ -3211,9 +3202,6 @@ FA/YSDN 4900 3.00 Independent Studies: Design Practicum
 FA/YSDN 4901 6.00 Independent Studies: Design Studies
 FA/YSDN 4901 3.00 Independent Studies: Design Studies
 FA/YSDN 4901 3.00 Independent Studies: Design Studies
-
-
-
 GL/BIOL 1000 6.00 Introduction to Biological Science
 GL/BIOL 1000 6.00 Introduction aux sciences biologiques
 GL/BIOL 2203 6.00 Utilisation et conservation des ressources biologiques
@@ -4048,9 +4036,6 @@ GL/TRAN 4910 3.00 Methodology of Spanish-English Translation 1: Advanced practic
 GL/TRAN 4915 3.00 Specialized Spanish-English Translation: Literary and Humanistic
 GL/TRAN 4920 3.00 Methodology of Spanish-English/English-Spanish Translation 2: Revision and project management
 GL/WKST 3610 6.00 Women and Work: Production and Reproduction
-
-
-
 GS/ANTH 5000 6.00 Graduate Seminar in Ethnographic Research, Practice, and Professionalization 
 GS/ANTH 5010 3.00 Theory in Social Anthropology
 GS/ANTH 5020 3.00 Methods In Social Anthropology         
@@ -5516,9 +5501,6 @@ GS/WMST 6217 3.00 Feminism, Political Citizenship and Collective Action
 GS/WMST 6403B3.00 Selected Topics In Work & Occupations
 GS/WMST 6406 3.00 Issues in Comparative Women's and Gender History: Part II, The Twentieth Century
 GS/WMST 6805 3.00 Health and Illness
-
-
-
 HH/HLST 1010 3.00 Foundations of Health Studies I
 HH/HLST 1010 3.00 Foundations of Health Studies I
 HH/HLST 1011 3.00 Foundations of Health Studies II: Health on the Front Lines
@@ -5987,9 +5969,6 @@ HH/PSYC 4890 6.00 Independent Study
 HH/PSYC 4890A3.00 Independent Study
 HH/PSYC 4890 3.00 Independent Study
 HH/PSYC 4890 3.00 Independent Study
-
-
-
 LE/CIVL 2000 3.00 Civil Engineering Design Project
 LE/CIVL 2120 3.00 Civil Engineering Materials
 LE/CIVL 2150 3.00 Civil Engineering Graphics
@@ -6233,12 +6212,6 @@ LE/MECH 4402 4.00 Simulation Tools for Design & Analysis
 LE/MECH 4502 3.00 Vibrations & Actuators
 LE/MECH 4504 3.00 Life-cycle Analysis and Sustainability
 LE/MECH 4510 3.00 Advanced Mechanical Technologies
-
-
-
-
-
-
 SB/ACTG 2010 3.00 Introduction To Financial Accounting I 
 SB/ACTG 2011 3.00 Introduction To Financial Actg II
 SB/ACTG 2020 3.00 Management Accounting Concepts
@@ -6922,9 +6895,6 @@ SB/SOCM 6900 1.50 Individual Study - Social Sector Management
 SB/SOCM 6900 1.50 Individual Study - Social Sector Management
 SB/SOCM 6900 3.00 Individual Study - Social Sector Management
 SB/SOCM 6900 3.00 Individual Study - Social Sector Management
-
-
-
 SC/BC   1800 3.00 First Year Success Seminars in Science
 SC/BC   3000 0.00 Introduction to Peer Leadership
 SC/BC   3000 0.00 Introduction to Peer Leadership

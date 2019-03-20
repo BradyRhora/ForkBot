@@ -53,7 +53,7 @@ namespace ForkBot
             {
                 //format: user_id//#//reminder//#//datetimeString
                 var reminderData = reminders[i].Split(new string[] { "//#//" }, StringSplitOptions.None);
-                if (DateTime.Now > Functions.StringToDateTime(reminderData[2]))
+                if (Var.CurrentDate() > Functions.StringToDateTime(reminderData[2]))
                 {
                     changed = true;
                     reminders[i] = "";
