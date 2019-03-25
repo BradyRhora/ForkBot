@@ -1746,7 +1746,18 @@ namespace ForkBot
                 else await ReplyAsync("There is currently no game being hosted in this channel. Host a game with `;fp host`!");
             }
         }
+        
+        [Command("forkyfeud"), Summary("[FUN] Play a game of ForkyFeud and win coins!"), Alias(new string[] { "ff" })]
+        public async Task ForkyFeud([Remainder] string command = "")
+        {
+            //do this
+        }
 
+        [Command("dnd"), Summary("[FUN] Display information from D&D 5e!")]
+        public async Task DND([Remainder] string command = "")
+        {
+            
+        }
 
         #endregion
 
