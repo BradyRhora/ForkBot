@@ -289,7 +289,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.1\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.2\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -1599,8 +1599,7 @@ namespace ForkBot
                 reciever.Text = Functions.GetName(user as IGuildUser);
 
                 int fontsize = 20;
-
-                bool overlay = true;
+                
                 switch (imgID)
                 {
                     case 0:

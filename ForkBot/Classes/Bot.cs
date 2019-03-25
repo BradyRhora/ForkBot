@@ -156,8 +156,7 @@ namespace ForkBot
                 if (user.GetItemList().Contains(Var.present))
                 {
                     user.RemoveItem(Var.present);
-                    await Functions.SendAnimation(message.Channel, Constants.EmoteAnimations.presentReturn, $"{Var.rPresent}");
-                    await message.Channel.SendMessageAsync($"A **new** present appears! :gift: Press {Var.presentNum} to open it!");
+                    await message.Channel.SendMessageAsync($":convenience_store: {Functions.GetItemEmote(Var.present)} :runner: \nA **new** present appears! :gift: Press {Var.presentNum} to open it!");
                     Var.presentWaiting = true;
                     Var.replacing = false;
                     Var.replaceable = false;
