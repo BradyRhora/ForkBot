@@ -102,7 +102,7 @@ namespace ForkBot
                 return;
             }
 
-            if (Var.blockedUsers.Contains(message.Author)) return; //prevents "blocked" users from using the bot
+            if (Var.blockedUsers.Where(x=>x.Id == message.Author.Id).Count() > 0) return; //prevents "blocked" users from using the bot
 
             if (message.Author.IsBot) return;
 
