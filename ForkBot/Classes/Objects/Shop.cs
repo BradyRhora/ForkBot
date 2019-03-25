@@ -12,13 +12,7 @@ namespace ForkBot
         public List<int> stock;
         DateTime date;
         Random rdm = new Random();
-
-        /*public Shop(List<string> items)
-        {
-            this.items = items;
-            date = DateTime.UtcNow - new TimeSpan(5, 0, 0);
-        }*/
-
+        
         public Shop()
         {
             var nItems = Functions.GetItemList();
@@ -49,6 +43,8 @@ namespace ForkBot
             emb.Title = "Shop";
             emb.ThumbnailUrl = Constants.Images.ForkBot;
             emb.ColorStripe = Constants.Colours.YORK_RED;
+            var restock = new TimeSpan(4, 0, 0).Add(date - Var.CurrentDate());
+            emb.Description = $"The shop will restock in {restock.Hours} hours and {restock.Minutes} minutes.";
             for(int i = 0; i < 5; i++)
             {
                 var data = items[i].Split('|');

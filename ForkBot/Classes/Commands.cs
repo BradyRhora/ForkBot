@@ -618,7 +618,7 @@ namespace ForkBot
                 day = Var.currentShop.Date();
                 currentDay = Var.CurrentDate();
             }
-            if (Var.currentShop == null || day.DayOfYear < currentDay.DayOfYear && day.Year == currentDay.Year)
+            if (Var.currentShop == null || Math.Abs(day.Hour-currentDay.Hour) >= 4)
             {
                 Var.currentShop = new Shop();
             }
@@ -1764,7 +1764,7 @@ namespace ForkBot
         {
             if (command == "")
             {
-                await ReplyAsync(":bank: Welcome to the bank!")
+                await ReplyAsync(":bank: Welcome to the bank!");
             }
         }
 
