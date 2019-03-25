@@ -735,7 +735,11 @@ namespace ForkBot
                     user.GiveCoins(-bet);
                     SlotMachine sm = new SlotMachine(Context.User, bet);
                     var result = sm.Spin();
-                    var msg = await Context.Channel.SendMessageAsync(sm.Generate() + "\n" + result);
+                    JEmbed emb = new JEmbed();
+                    emb.Description = sm.Generate() + "\n" + result;
+                    emb.Footer.Text = $"You have: {user.GetCoins()} coins.";
+                    emb.ColorStripe = Functions.GetColor(Context.User);
+                    var msg = await Context.Channel.SendMessageAsync("",embed:emb.Build());
 
                     if ((rdm.Next(100) + 1) <= 5)
                     {

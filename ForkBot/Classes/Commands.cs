@@ -1747,7 +1747,15 @@ namespace ForkBot
                 else await ReplyAsync("There is currently no game being hosted in this channel. Host a game with `;fp host`!");
             }
         }
-
+        
+        [Command("bank"), Summary("[FUN] Deposit coins in the bank and get interest!")]
+        public async Task Bank([Remainder] string command = "")
+        {
+            if (command == "")
+            {
+                await ReplyAsync(":bank: Welcome to the bank!")
+            }
+        }
 
         #endregion
 
@@ -1815,10 +1823,10 @@ namespace ForkBot
             Timers.unpurge = new Timer(new TimerCallback(Timers.UnPurge), null, 5000, Timeout.Infinite);
         }
 
-        [Command("block"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Temporarily stops users from being able to use the bot.")]
+        [Command("block"), Summary("[MOD] Temporarily stops users from being able to use the bot.")]
         public async Task Block(IUser u)
         {
-            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY && Context.User.Id != Constants.Users.BRADY) { await ReplyAsync("This can only be used in the York University server."); return; }
+            if (Context.User.Id != Constants.Users.BRADY) { await ReplyAsync("This can only be used by the bot owner."); return; }
             if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
             else Var.blockedUsers.Add(u);
             
