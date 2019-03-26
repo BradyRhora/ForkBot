@@ -1545,9 +1545,10 @@ namespace ForkBot
                 "Get presents occasionally with `;present'! No presents left? Use a ticket to add more to the batch, or a stopwatch to shorten the time until the next batch!",
                 "Get coins for items you don't need or want by selling them with `;sell`! Item can't be sold? Just `;trash` it!",
                 "Give other users coins with the `;donate` command!",
+                "Legend says of a secret shop that only the most elite may enter! I think the **man** knows..."
                 };
             if (tipNumber == -1) tipNumber = rdm.Next(tips.Count());
-            else tipNumber++;
+            else tipNumber--;
 
             if (tipNumber <= 0 || tipNumber > tips.Count()) await ReplyAsync($"Invalid tip number! Make sure number is above 0 and less than {tips.Count() + 1}");
             await ReplyAsync($":robot::speech_balloon: " + tips[tipNumber]);
