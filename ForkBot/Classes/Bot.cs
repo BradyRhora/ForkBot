@@ -84,6 +84,7 @@ namespace ForkBot
         public async Task HandleCommand(SocketMessage messageParam)
         {
             SocketUserMessage message = messageParam as SocketUserMessage;
+            bool isDM = message.Channel.Name == (await message.Author.GetOrCreateDMChannelAsync()).Name;
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY) return;
@@ -96,7 +97,7 @@ namespace ForkBot
             }
 
             //checks if message contains any blocked words
-            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
+            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
             {
                 await message.DeleteAsync();
                 return;
@@ -170,7 +171,7 @@ namespace ForkBot
             }
 
             //detects invites for unwanted servers (in yorku server) and deletes them
-            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && message.Content.ToLower().Contains("discord.gg") || message.Content.ToLower().Contains("discordapp.com/invite"))
+            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && message.Content.ToLower().Contains("discord.gg") || message.Content.ToLower().Contains("discordapp.com/invite"))
             {
                 var words = message.Content.Split(' ');
                 foreach (string word in words)
