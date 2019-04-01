@@ -2185,7 +2185,37 @@ namespace ForkBot
                 Console.WriteLine("DebugMode set to " + Var.DebugMode);
             }
         }
-        
+
+        [Command("snap")]
+        public async Task Snap()
+        {
+            if (Context.User.Id != Constants.Users.BRADY) return;
+            await Context.Channel.SendMessageAsync("When I’m done, half of humanity will still exist. Perfectly balanced, as all things should be.\n\nI know what it’s like to lose. To feel so desperately that you’re right, yet to fail nonetheless. Dread it. Run from it. Destiny still arrives. Or should I say, I have.");
+            
+            var users = await Context.Guild.GetUsersAsync();
+            List<int> dustIndex = new List<int>();
+            int userCount = users.Count();
+            int halfUsers = userCount / 2;
+            for (int i = 0; i < halfUsers; i++)
+            {
+                try
+                {
+                    int index = -1;
+                    while (index < 0 || dustIndex.Contains(index))
+                        index = rdm.Next(userCount);
+
+                    dustIndex.Add(index);
+                    await users.ElementAt(index).AddRoleAsync(Context.Guild.GetRole(Constants.Roles.DUST));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{e.StackTrace}\n\n on user index {i} ({users.ElementAt(i).Username})");
+                }
+            }
+        }
+
+
+
         #endregion
 
     }
