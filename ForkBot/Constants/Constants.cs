@@ -26,6 +26,7 @@ namespace ForkBot
             public static ulong MOD = 266000331442356225;
             public static ulong NON_YORK = 000000000000000;
             public static ulong TTS = 369001773202931734;
+            public static ulong DUST = 562334977606418433;
         }
 
         public class Colours

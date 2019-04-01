@@ -1545,9 +1545,10 @@ namespace ForkBot
                 "Get presents occasionally with `;present'! No presents left? Use a ticket to add more to the batch, or a stopwatch to shorten the time until the next batch!",
                 "Get coins for items you don't need or want by selling them with `;sell`! Item can't be sold? Just `;trash` it!",
                 "Give other users coins with the `;donate` command!",
+                "Legend says of a secret shop that only the most elite may enter! I think the **man** knows..."
                 };
             if (tipNumber == -1) tipNumber = rdm.Next(tips.Count());
-            else tipNumber++;
+            else tipNumber--;
 
             if (tipNumber <= 0 || tipNumber > tips.Count()) await ReplyAsync($"Invalid tip number! Make sure number is above 0 and less than {tips.Count() + 1}");
             await ReplyAsync($":robot::speech_balloon: " + tips[tipNumber]);
@@ -2184,7 +2185,37 @@ namespace ForkBot
                 Console.WriteLine("DebugMode set to " + Var.DebugMode);
             }
         }
-        
+
+        [Command("snap")]
+        public async Task Snap()
+        {
+            if (Context.User.Id != Constants.Users.BRADY) return;
+            await Context.Channel.SendMessageAsync("When I’m done, half of humanity will still exist. Perfectly balanced, as all things should be.\n\nI know what it’s like to lose. To feel so desperately that you’re right, yet to fail nonetheless. Dread it. Run from it. Destiny still arrives. Or should I say, I have.");
+            
+            var users = await Context.Guild.GetUsersAsync();
+            List<int> dustIndex = new List<int>();
+            int userCount = users.Count();
+            int halfUsers = userCount / 2;
+            for (int i = 0; i < halfUsers; i++)
+            {
+                try
+                {
+                    int index = -1;
+                    while (index < 0 || dustIndex.Contains(index))
+                        index = rdm.Next(userCount);
+
+                    dustIndex.Add(index);
+                    await users.ElementAt(index).AddRoleAsync(Context.Guild.GetRole(Constants.Roles.DUST));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{e.StackTrace}\n\n on user index {i} ({users.ElementAt(i).Username})");
+                }
+            }
+        }
+
+
+
         #endregion
 
     }
