@@ -112,8 +112,8 @@ namespace ForkBot
             //trusted management
             if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY) {
                 string trustedMsgs = user.GetData("trustedMsgs");
-                if (trustedMsgs == "0") trustedMsgs = "false";
-                if (user.GetData("trustedMsgs") == "false")
+                if (trustedMsgs == "0") user.SetData("trustedMsgs", "false");
+                if (trustedMsgs == "false")
                 {
                     int msgCount = Convert.ToInt32(user.GetData("messages")) + 1;
 
