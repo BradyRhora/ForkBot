@@ -2191,7 +2191,7 @@ namespace ForkBot
                 Console.WriteLine("DebugMode set to " + Var.DebugMode);
             }
         }
-
+        /*
         [Command("snap")]
         public async Task Snap()
         {
@@ -2219,7 +2219,7 @@ namespace ForkBot
                 }
             }
         }
-
+        */
 
 
         #endregion
