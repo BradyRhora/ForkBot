@@ -108,7 +108,7 @@ namespace ForkBot
 
             var user = Functions.GetUser(message.Author);
             //collect stats for York server
-
+            //
             //trusted management
             if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY) {
                 if (user.GetData("trustedMsgs") == "false")
