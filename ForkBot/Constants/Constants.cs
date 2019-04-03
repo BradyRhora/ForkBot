@@ -18,6 +18,7 @@ namespace ForkBot
         public class Users
         {
             public static ulong BRADY = 108312797162541056;
+            public static ulong DYNO = 155149108183695360;
         }
 
         public class Roles
@@ -27,6 +28,7 @@ namespace ForkBot
             public static ulong NON_YORK = 000000000000000;
             public static ulong TTS = 369001773202931734;
             public static ulong DUST = 562334977606418433;
+            public static ulong TRUSTED = 561299358637752345;
         }
 
         public class Colours
@@ -46,6 +48,7 @@ namespace ForkBot
             public static ulong COMMANDS = 271843457121779712;
             public static ulong DELETED_MESSAGES = 306236074655612930;
             public static ulong ASS_DELETED_MESSAGES = 493873769627254786;
+            public static ulong REPORTED = 479383993360449544;
         }
 
         public class EmoteAnimations

@@ -289,7 +289,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.2\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.2\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation\n-fixed forkbot DMs```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -1223,18 +1223,24 @@ namespace ForkBot
                 x.Inline = true;
             }));
 
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Roles:";
-                string text = "";
-                foreach (ulong id in (user as IGuildUser).RoleIds)
-                {
-                    text += Context.Guild.GetRole(id).Name + "\n";
-                }
 
-                x.Text = Convert.ToString(text);
-                x.Inline = true;
-            }));
+            var gUser = (user as IGuildUser);
+            if (gUser != null)
+            {
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Roles:";
+                    string text = "";
+
+                    foreach (ulong id in gUser.RoleIds)
+                    {
+                        text += Context.Guild.GetRole(id).Name + "\n";
+                    }
+
+                    x.Text = Convert.ToString(text);
+                    x.Inline = true;
+                }));
+            }
 
             bool moreItems = true;
             string[] items = u.GetItemList();
@@ -2185,7 +2191,7 @@ namespace ForkBot
                 Console.WriteLine("DebugMode set to " + Var.DebugMode);
             }
         }
-
+        /*
         [Command("snap")]
         public async Task Snap()
         {
@@ -2213,7 +2219,7 @@ namespace ForkBot
                 }
             }
         }
-
+        */
 
 
         #endregion

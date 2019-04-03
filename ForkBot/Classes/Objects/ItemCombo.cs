@@ -18,7 +18,10 @@ namespace ForkBot
                                                           new ItemCombo("older_man","man","beer"),
                                                           new ItemCombo("gift","box","ribbon"),
                                                           new ItemCombo("stopwatch","iphone","watch"),
-                                                          new ItemCombo("tiger","cat","milk","meat_on_bone")};
+                                                          new ItemCombo("tiger","cat","milk","meat_on_bone"),
+                                                          new ItemCombo("unlock","key2","lock"),
+                                                          new ItemCombo("spy","gun","man"),
+                                                          new ItemCombo("hole","unlock","spy")};
         public string[] Items;
         public string Result;
 
