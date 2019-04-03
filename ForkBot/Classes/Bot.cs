@@ -87,7 +87,7 @@ namespace ForkBot
             bool isDM = message.Channel.Name == (await message.Author.GetOrCreateDMChannelAsync()).Name;
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
-            if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY) return;
+            if (Var.DebugMode && (message.Author.Id != Constants.Users.BRADY && message.Author.Id != Constants.Users.DYNO)) return;
             int argPos = 0;
 
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
@@ -105,12 +105,50 @@ namespace ForkBot
 
             if (Var.blockedUsers.Where(x=>x.Id == message.Author.Id).Count() > 0) return; //prevents "blocked" users from using the bot
 
-            if (message.Author.IsBot) return;
 
+            var user = Functions.GetUser(message.Author);
             //collect stats for York server
 
+            //trusted management
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY) {
+                if (user.GetData("trustedMsgs") == "false")
+                {
+                    int msgCount = Convert.ToInt32(user.GetData("messages")) + 1;
 
-            var user = Functions.GetUser(message.Author); //present stuff
+                    if (msgCount >= 1000)
+                    {
+                        user.SetData("trustedMsgs", "true");
+                        user.SetData("messages", "0");
+                    }
+                    else user.SetData("messages", Convert.ToString(msgCount));
+                }
+                if (message.Channel.Id == Constants.Channels.REPORTED && message.Author.Id == Constants.Users.DYNO)
+                {
+                    var emb = message.Embeds.FirstOrDefault();
+                    if (emb != null)
+                    {
+                        ulong id = Convert.ToUInt64(emb.Footer.Value.Text.Replace("ID: ", ""));
+                        var guild = message.Channel as IGuild;
+                        var u = await guild.GetUserAsync(id);
+                        User us = Functions.GetUser(u as IUser);
+                        us.SetData("lastInfraction", Functions.DateTimeToString(Var.CurrentDate()));
+                        if (us.GetData("trusted") == "true")
+                        {
+                            us.SetData("trusted", "false");
+                            await u.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
+                        }
+                    }
+                }
+                var guildUser = message.Author as IGuildUser;
+                if (user.GetData("trusted") == "false" && guildUser.JoinedAt - Var.CurrentDate() > new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && Functions.StringToDateTime(user.GetData("lastInfraction")) - Var.CurrentDate() > new TimeSpan(7, 0, 0, 0))
+                {
+                    user.SetData("trusted", "true");
+                    await guildUser.AddRoleAsync(guildUser.Guild.GetRole(Constants.Roles.TRUSTED));
+                }
+            }
+            if (message.Author.IsBot) return;
+
+            //present stuff
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {
                 Var.presentWaiting = false;
