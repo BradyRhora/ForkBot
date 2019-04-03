@@ -1,18 +1,39 @@
 add more games
 add ;sell all
-forkbot stats
-fix paintbrush when user has default profile pic
 fix econ1010
-bomb+ttc?
 add item commands for all new items
 overhaul item system!!!!!! Why the fuck not!!!
 give 🍷 a basic command
 exam schedule command?
 forkbot dms
-fix unicorn happiness message
 add more parameters to courselist to narrow down more
 allow users to still replace after other user gets present
 term param for ;courses
-make Norville emote
-add even more words to hangman
-fix dummy error message for ;course
+minesweeper
+chess bot when
+Puppeteer
+finish minesweeper!!!
+fix selfbot time
+fork party
+add more memes
+disable games and stuff then
+variant items
+only let person join fp once
+put wallet in slots
+make coins emote appear for second person too
+fix ;tip
+fix course lookup for certain courses (jp 3600, math 6004)
+jeapardy
+seperate hangman games
+make hm only send one message on start and add the thing
+replay yoshis island
+fix prof AGAIN
+add even more hangman words
+base hangman coins off of word difficulty
+🗝 🔒 🔓 👨 🔫 🕵 🕳
+pen says 2 but 1
+dont trade urself
+battleship (done through dm?)
+trusted tag stuff
+remove cannot be sold message
+;ban (days)
