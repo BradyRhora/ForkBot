@@ -134,15 +134,23 @@ namespace ForkBot
                         var u = await guild.GetUserAsync(id);
                         User us = Functions.GetUser(u as IUser);
                         us.SetData("lastInfraction", Functions.DateTimeToString(Var.CurrentDate()));
-                        if (us.GetData("trusted") == "true")
+                        if (us.GetData("isTrusted") == "true")
                         {
-                            us.SetData("trusted", "false");
+                            us.SetData("isTrusted", "false");
                             await u.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                         }
                     }
                 }
                 var guildUser = message.Author as IGuildUser;
-                if (user.GetData("trusted") == "false" && guildUser.JoinedAt - Var.CurrentDate() > new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && Functions.StringToDateTime(user.GetData("lastInfraction")) - Var.CurrentDate() > new TimeSpan(7, 0, 0, 0))
+                var lastInfraction = user.GetData("lastInfraction");
+                bool oneWeekSinceLast = false;
+                if (lastInfraction == "0" || Functions.StringToDateTime(user.GetData("lastInfraction")) - Var.CurrentDate() > new TimeSpan(7, 0, 0, 0)) oneWeekSinceLast = true;
+
+                var trustedStat = user.GetData("isTrusted");
+                bool trusted = true;
+                if (trustedStat == "false" || trustedStat == "0") trusted = false;
+
+                if (!trusted && Var.CurrentDate() - guildUser.JoinedAt > new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && oneWeekSinceLast)
                 {
                     user.SetData("trusted", "true");
                     await guildUser.AddRoleAsync(guildUser.Guild.GetRole(Constants.Roles.TRUSTED));
