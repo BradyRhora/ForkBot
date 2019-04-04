@@ -87,7 +87,7 @@ namespace ForkBot
             bool isDM = message.Channel.Name == (await message.Author.GetOrCreateDMChannelAsync()).Name;
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
-            if (Var.DebugMode && (message.Author.Id != Constants.Users.BRADY && message.Author.Id != Constants.Users.DYNO)) return;
+            if (Var.DebugMode && (message.Author.Id != Constants.Users.BRADY && message.Author.Id != Constants.Users.JACE)) return;
             int argPos = 0;
 
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
@@ -130,18 +130,13 @@ namespace ForkBot
                     if (emb != null)
                     {
                         ulong id = Convert.ToUInt64(emb.Footer.Value.Text.Replace("ID: ", ""));
-                        var guild = message.Channel as IGuild;
-                        var u = await guild.GetUserAsync(id);
-                        User us = Functions.GetUser(u as IUser);
-                        us.SetData("lastInfraction", Functions.DateTimeToString(Var.CurrentDate()));
-                        if (us.GetData("isTrusted") == "true")
-                        {
-                            us.SetData("isTrusted", "false");
-                            await u.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
-                        }
+                        var u = Functions.GetUser(id);
+                        u.SetData("lastInfraction", Functions.DateTimeToString(Var.CurrentDate()));
+                        if (u.GetData("isTrusted") == "true") u.SetData("isTrusted", "false");
                     }
                 }
                 var guildUser = message.Author as IGuildUser;
+
                 var lastInfraction = user.GetData("lastInfraction");
                 bool oneWeekSinceLast = false;
                 if (lastInfraction == "0" || Functions.StringToDateTime(user.GetData("lastInfraction")) - Var.CurrentDate() > new TimeSpan(7, 0, 0, 0)) oneWeekSinceLast = true;
@@ -149,6 +144,15 @@ namespace ForkBot
                 var trustedStat = user.GetData("isTrusted");
                 bool trusted = true;
                 if (trustedStat == "false" || trustedStat == "0") trusted = false;
+                
+                if (oneWeekSinceLast == false && trusted)
+                {
+                    await guildUser.RemoveRoleAsync((message.Channel as IGuildChannel).Guild.GetRole(Constants.Roles.TRUSTED));
+                    user.SetData("isTrusted", "false");
+                    trusted = false;
+                }
+
+                if (!trusted && guildUser.RoleIds.Contains(Constants.Roles.TRUSTED)) await guildUser.RemoveRoleAsync((message.Channel as IGuildChannel).Guild.GetRole(Constants.Roles.TRUSTED));
 
                 if (!trusted && Var.CurrentDate() - guildUser.JoinedAt > new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && oneWeekSinceLast)
                 {

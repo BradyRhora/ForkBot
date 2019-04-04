@@ -19,6 +19,7 @@ namespace ForkBot
         {
             public static ulong BRADY = 108312797162541056;
             public static ulong DYNO = 155149108183695360;
+            public static ulong JACE = 308761161258500097;
         }
 
         public class Roles
