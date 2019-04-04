@@ -161,7 +161,7 @@ namespace ForkBot
                 }
             }
             if (message.Author.IsBot) return;
-
+            
             //present stuff
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {

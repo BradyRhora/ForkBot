@@ -1860,6 +1860,16 @@ namespace ForkBot
             await Context.Message.DeleteAsync();
         }
 
+        [Command("trust"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Makes a user trusted.")]
+        public async Task Trust(IGuildUser user)
+        {
+            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) { await ReplyAsync("This command is only for the York University server."); return; }
+            var u = Functions.GetUser(user);
+            u.SetData("isTrusted", "true");
+            u.SetData("lastInfraction", "0");
+            await user.AddRoleAsync(user.Guild.GetRole(Constants.Roles.TRUSTED));
+        }
+
         #endregion
 
         #region Brady Commands
