@@ -1871,6 +1871,60 @@ namespace ForkBot
             await ReplyAsync($"Trusted {Functions.GetName(user)}.");
         }
 
+        [Command("record"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Shows a users progress to being auto trusted.")]
+        public async Task Record(IGuildUser user)
+        {
+            var u = Functions.GetUser(user);
+            var joinDate = user.JoinedAt.value;
+            var lastInfraction = u.GetData("lastInfraction");
+            var messageCount = u.GetData("messages");
+            var isTrusted = u.GetData("isTrusted");
+            var tMsgs = u.GetData("trustedMsgs");
+
+            JEmbed emb = new JEmbed();
+            emb.Author.Name = user.Username;
+            emb.Author.IconUrl = user.GetAvatarUrl();
+
+            if (isTrusted == "true")
+            {
+                emb.ColorStripe = Discord.Color.Green;
+                emb.Title = $"{user.Username} is Trusted!";
+            }
+            else
+            {
+                emb.ColorStripe = Discord.Color.Red;
+                emb.Title = $"{user.Username}'s Progress to Being Trusted";
+            }
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Message Count";
+                if (isTrusted == "true" || tMsgs == "true") messageCount = "1000";
+                x.Text = $"{messageCount}/1000";
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Last Infraction";
+
+                if (lastInfraction != "0")
+                {
+                    var iDate = Functions.StringToDateTime(lastInfraction);
+                    var time = Var.CurrentDate() - iDate;
+                    x.Text = $"{time.Days} Days, {time.Hours} Hours, and {time.Minutes} minutes.";
+                }
+                else x.Text = "Clean slate!";                
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Join Date";
+                x.Text = $"{joinDate.Day}/{joinDate.Month}/{joinDate.Year}";
+            }));
+
+            await ReplyAsync("", embed: emb.Build());
+
+        }
         #endregion
 
         #region Brady Commands

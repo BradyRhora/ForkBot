@@ -37,3 +37,6 @@ battleship (done through dm?)
 trusted tag stuff
 remove cannot be sold message
 ;ban (days)
+make gift opening one message
+show trusted / not trusted
+log trusted removal

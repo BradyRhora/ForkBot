@@ -108,7 +108,7 @@ namespace ForkBot
 
             var user = Functions.GetUser(message.Author);
             //collect stats for York server
-            //
+            
             //trusted management
             if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY) {
                 string trustedMsgs = user.GetData("trustedMsgs");
@@ -124,6 +124,12 @@ namespace ForkBot
                     }
                     else user.SetData("messages", Convert.ToString(msgCount));
                 }
+
+
+
+                var guildUser = message.Author as IGuildUser;
+                var guild = (message.Channel as IGuildChannel).Guild;
+                var reports = await guild.GetChannelAsync(Constants.Channels.REPORTED) as IMessageChannel;
                 if (message.Channel.Id == Constants.Channels.REPORTED && message.Author.Id == Constants.Users.DYNO)
                 {
                     var emb = message.Embeds.FirstOrDefault();
@@ -135,7 +141,6 @@ namespace ForkBot
                         if (u.GetData("isTrusted") == "true") u.SetData("isTrusted", "false");
                     }
                 }
-                var guildUser = message.Author as IGuildUser;
 
                 var lastInfraction = user.GetData("lastInfraction");
                 bool oneWeekSinceLast = false;
@@ -147,19 +152,37 @@ namespace ForkBot
                 
                 if (oneWeekSinceLast == false && trusted)
                 {
-                    await guildUser.RemoveRoleAsync((message.Channel as IGuildChannel).Guild.GetRole(Constants.Roles.TRUSTED));
+                    await guildUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                     user.SetData("isTrusted", "false");
                     trusted = false;
+                    await reports.SendMessageAsync($"Removed Trusted role from {guildUser.Mention} for reason:\n```\nLess than one week since last infraction.\n```");
                 }
 
-                if (!trusted && guildUser.RoleIds.Contains(Constants.Roles.TRUSTED)) await guildUser.RemoveRoleAsync((message.Channel as IGuildChannel).Guild.GetRole(Constants.Roles.TRUSTED));
+                if (!trusted && guildUser.RoleIds.Contains(Constants.Roles.TRUSTED))
+                {
+                    await guildUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
+                    await reports.SendMessageAsync($"Removed Trusted role from {guildUser.Mention} for reason:\n```\nHad role but was not trusted.\n```");
+                }
+
+                if (trusted && !guildUser.RoleIds.Contains(Constants.Roles.TRUSTED))
+                {
+                    await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
+                    await reports.SendMessageAsync($"Added Trusted role to {guildUser.Mention} for reason:\n```\nWas trusted but did not have role.\n```");
+                }
+
 
                 if (!trusted && Var.CurrentDate() - guildUser.JoinedAt > new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && oneWeekSinceLast)
                 {
                     user.SetData("trusted", "true");
-                    await guildUser.AddRoleAsync(guildUser.Guild.GetRole(Constants.Roles.TRUSTED));
+                    await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
+                    await reports.SendMessageAsync($"Added Trusted role to {guildUser.Mention} for reason:\n```\nFulfilled all requirements.\n```");
                 }
             }
+
+
+
+
+
             if (message.Author.IsBot) return;
             
             //present stuff
