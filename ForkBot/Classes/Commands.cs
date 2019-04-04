@@ -1868,6 +1868,7 @@ namespace ForkBot
             u.SetData("isTrusted", "true");
             u.SetData("lastInfraction", "0");
             await user.AddRoleAsync(user.Guild.GetRole(Constants.Roles.TRUSTED));
+            await ReplyAsync($"Trusted {Functions.GetName(user)}.");
         }
 
         #endregion
