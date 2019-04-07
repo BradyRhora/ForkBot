@@ -88,6 +88,7 @@ namespace ForkBot
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             if (Var.DebugMode && (message.Author.Id != Constants.Users.BRADY && message.Author.Id != Constants.Users.JACE)) return;
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (message.Channel.Id == Constants.Channels.GENERAL_SLOW || message.Channel.Id == Constants.Channels.GENERAL_TRUSTED) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
             int argPos = 0;
 
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
@@ -320,11 +321,11 @@ namespace ForkBot
         }
         public async Task HandleJoin(SocketGuildUser user)
         {
-            await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role.");
+            await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Username}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role.");
         }
         public async Task HandleLeave(SocketGuildUser user)
         {
-            await (user.Guild.GetChannel(Constants.Channels.GENERAL) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
+            await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
         {

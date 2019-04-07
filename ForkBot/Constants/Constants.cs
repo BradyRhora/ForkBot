@@ -41,8 +41,8 @@ namespace ForkBot
 
         public class Channels
         {
-            public static ulong GENERAL = 265998661606047744;
-            public static ulong GENERAL_2 = 379809861317165058;
+            public static ulong GENERAL_TRUSTED = 561299616746700860;
+            public static ulong GENERAL_SLOW = 265998661606047744;
             public static ulong MEMES = 266001105350164480;
             public static ulong ENTERTAINMENT = 266001204499316736;
             public static ulong ANNOUNCEMENTS = 265999135503679488;

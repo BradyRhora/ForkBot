@@ -1754,27 +1754,6 @@ namespace ForkBot
             }
         }
         
-        [Command("forkyfeud"), Summary("[FUN] Play a game of ForkyFeud and win coins!"), Alias(new string[] { "ff" })]
-        public async Task ForkyFeud([Remainder] string command = "")
-        {
-            //do this
-        }
-
-        [Command("dnd"), Summary("[FUN] Display information from D&D 5e!")]
-        public async Task DND([Remainder] string command = "")
-        {
-            
-        }
-        
-        [Command("bank"), Summary("[FUN] Deposit coins in the bank and get interest!")]
-        public async Task Bank([Remainder] string command = "")
-        {
-            if (command == "")
-            {
-                await ReplyAsync(":bank: Welcome to the bank!");
-            }
-        }
-
         #endregion
 
         #region Mod Commands
@@ -1875,7 +1854,7 @@ namespace ForkBot
         public async Task Record(IGuildUser user)
         {
             var u = Functions.GetUser(user);
-            var joinDate = user.JoinedAt.value;
+            var joinDate = user.JoinedAt.GetValueOrDefault();
             var lastInfraction = u.GetData("lastInfraction");
             var messageCount = u.GetData("messages");
             var isTrusted = u.GetData("isTrusted");
@@ -1901,6 +1880,7 @@ namespace ForkBot
                 x.Header = "Message Count";
                 if (isTrusted == "true" || tMsgs == "true") messageCount = "1000";
                 x.Text = $"{messageCount}/1000";
+                x.Inline = true;
             }));
 
             emb.Fields.Add(new JEmbedField(x =>
@@ -1913,13 +1893,15 @@ namespace ForkBot
                     var time = Var.CurrentDate() - iDate;
                     x.Text = $"{time.Days} Days, {time.Hours} Hours, and {time.Minutes} minutes.";
                 }
-                else x.Text = "Clean slate!";                
+                else x.Text = "Clean slate!";
+                x.Inline = true;
             }));
 
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Join Date";
                 x.Text = $"{joinDate.Day}/{joinDate.Month}/{joinDate.Year}";
+                x.Inline = true;
             }));
 
             await ReplyAsync("", embed: emb.Build());
@@ -2037,41 +2019,7 @@ namespace ForkBot
             }
             else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
         }
-
-        [Command("genitems")]
-        public async Task GenItems()
-        {
-            if (Context.User.Id != Constants.Users.BRADY) throw NotBradyException;
-            foreach (string item in File.ReadLines("Files/items.txt"))
-            {
-                var itemData = item.Split('|');
-                var name = itemData[0];
-                var desc = itemData[1];
-                var costData = itemData[2];
-                bool custom = false;
-                string cEmote = "0";
-                if (itemData.Count() == 4) custom = true;
-                if (custom) cEmote = itemData[3];
-                bool shop = true, present = true;
-                if (costData.Contains("*")) present = false;
-                if (costData.Contains("-")) shop = false;
-                int cost = 0;
-                if (shop && present) cost = Convert.ToInt32(costData);
-
-                Item i = new Item();
-                i.Name = name;
-                i.Description = desc;
-                i.Custom = custom;
-                if (custom) i.ID = Convert.ToUInt64(cEmote);
-                i.Shoppable = shop;
-                i.Present = present;
-                i.Cost = cost;
-
-                i.Serialize();
-
-            }
-        }
-
+        
         [Command("fban"), Summary("[BRADY] Pretend to ban someone hahahahaha..")]
         public async Task FBan(string user)
         {
