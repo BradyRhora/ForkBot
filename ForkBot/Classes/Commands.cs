@@ -306,7 +306,7 @@ namespace ForkBot
 
             JEmbed emb = new JEmbed();
             emb.Title = "ForkBot Stats";
-            emb.Description = $"ForkBot is developed by Brady#1234 for use in the York University Discord server.\nIt has many uses, such as professor lookup, course lookup, word defining, and many fun commands.";
+            emb.Description = $"ForkBot is developed by Brady#0010 for use in the York University Discord server.\nIt has many uses, such as professor lookup, course lookup, word defining, and many fun commands.";
             emb.ColorStripe = Constants.Colours.YORK_RED;
             emb.Fields.Add(new JEmbedField(x =>
             {

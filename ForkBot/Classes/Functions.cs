@@ -67,6 +67,12 @@ namespace ForkBot
         {
             return File.ReadAllLines("Files/items.txt");
         }
+
+        public static string[] GetBlackMarketItemList()
+        {
+
+        }
+
         public static string GetItemEmote(string item)
         {
             string itemData;

@@ -47,6 +47,7 @@ namespace ForkBot
         public static List<IMessage> awaitingHelp = new List<IMessage>();
 
         public static Shop currentShop = null;
+        public static Shop blackmarketShop = null;
 
         public static bool responding = true;
         public static string Conversation = "0";

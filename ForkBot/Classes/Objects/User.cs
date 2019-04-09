@@ -47,21 +47,21 @@ namespace ForkBot
             Save(uDataS);
             return "0";
         }
-        public bool SetData(string data, string value)
+        public void SetData(string data, string value)
         {
             string userPath = $@"Users\{ID}.user";
             var uData = File.ReadAllLines(userPath);
+            GetData(data); // ensure that the data exists
             for (int i = 0; i < uData.Count(); i++)
             {
                 if (uData[i].StartsWith(data))
                 {
                     uData[i] = uData[i].Substring(0, uData[i].IndexOf(':') + 1) + value;
                     Save(uData);
-                    return true;
                 }
             }
-            return false;
         }
+
         public void AddData(string data, int addition)
         {
             int newData = Convert.ToInt32(GetData(data)) + addition;

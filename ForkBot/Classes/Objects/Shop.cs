@@ -10,13 +10,15 @@ namespace ForkBot
     {
         public List<string> items;
         public List<int> stock;
-        DateTime date;
+        DateTime openDate;
         Random rdm = new Random();
-        
-        public Shop()
+        bool isBM;
+        public Shop(bool bm = false)
         {
-            var nItems = Functions.GetItemList();
-
+            string[] nItems;
+            isBM = bm;
+            if (!isBM) nItems = Functions.GetItemList();
+            else nItems = Functions.GetBlackMarketItemList();
             List<string> items = new List<string>();
             List<int> stock = new List<int>();
             for (int i = 0; i < 5; i++)
@@ -33,17 +35,17 @@ namespace ForkBot
             this.items = items;
             this.stock = stock;
 
-            date = Var.CurrentDate();
+            openDate = Var.CurrentDate();
         }
 
-        public DateTime Date() { return date; }
+        public DateTime Date() { return openDate; }
         public JEmbed Build()
         {
             JEmbed emb = new JEmbed();
             emb.Title = "Shop";
             emb.ThumbnailUrl = Constants.Images.ForkBot;
             emb.ColorStripe = Constants.Colours.YORK_RED;
-            var restock = new TimeSpan(4, 0, 0).Add(date - Var.CurrentDate());
+            var restock = new TimeSpan(4, 0, 0).Add(openDate - Var.CurrentDate());
             emb.Description = $"The shop will restock in {restock.Hours} hours and {restock.Minutes} minutes.";
             for(int i = 0; i < 5; i++)
             {

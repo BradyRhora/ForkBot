@@ -319,6 +319,9 @@ namespace ForkBot
                     case 3:
                         await Context.Channel.SendMessageAsync("You got...");
                         var presents = Functions.GetItemList();
+                        var list = presents.ToList();
+                        list.Add("key2");
+                        presents = list.ToArray();
                         for (int i = 0; i < 10; i++)
                         {
                             var sPresentData = presents[rdm.Next(presents.Count())];
@@ -904,6 +907,80 @@ namespace ForkBot
 
             await ReplyAsync("Your items have been sorted!");
         }
+        
+        [Command("meat_on_bone")]
+        public async Task MeatOnBone()
+        {
+            if (Check(Context, "meat_on_bone")) return;
+            int stat = rdm.Next(35, 51);
+            await Context.Channel.SendMessageAsync($":meat_on_bone: So well cooked!\n**Stat+{stat}**");
+            Functions.GetUser(Context.User).AddData("stat.fullness", stat);
+        }
 
+        [Command("hole")]
+        public async Task Hole()
+        {
+            if (Check(Context, "hole")) return;
+            await Context.Message.DeleteAsync();
+            Functions.GetUser(Context.User).SetData("bm", "true");
+            await Context.User.SendMessageAsync(":spy: Psst... hey.... you've been granted access to the black market. **Don't** tell anyone about this... Or you'll regret it.\nUse `;bm` to access and buy from it just like the shop.\nKeep it in private messages..");
+        }
+        
+        [Command("bm")]
+        public async Task BlackMarket([Remainder] string command)
+        {
+            var u = Functions.GetUser(Context.User);
+            if (u.GetData("bm") != "true") return;
+            else
+            {
+                DateTime day = new DateTime();
+                DateTime currentDay = new DateTime();
+                if (Var.blackmarketShop != null)
+                {
+                    day = Var.blackmarketShop.Date();
+                    currentDay = Var.CurrentDate();
+                }
+                if (Var.blackmarketShop == null || Math.Abs(day.Hour - currentDay.Hour) >= 4)
+                {
+                    Var.blackmarketShop = new Shop(true);
+                }
+
+                List<string> itemNames = new List<string>();
+                foreach (string item in Var.blackmarketShop.items) itemNames.Add(item.Split('|')[0]);
+                
+                if (command == null)
+                {
+                    var emb = Var.blackmarketShop.Build();
+                    emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
+                    await Context.Channel.SendMessageAsync("", embed: emb.Build());
+                }
+                else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
+                {
+                    foreach (string item in Var.blackmarketShop.items)
+                    {
+                        if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
+                        {
+                            var data = item.Split('|');
+                            string name = data[0];
+                            string desc = data[1];
+                            int price = Convert.ToInt32(data[2]);
+                            if (price < 0) price *= -1;
+                            int stock = Var.blackmarketShop.stock[Var.blackmarketShop.items.IndexOf(item)];
+                            if (Convert.ToInt32(u.GetCoins()) >= price && stock > 0)
+                            {
+                                stock--;
+                                Var.blackmarketShop.stock[Var.blackmarketShop.items.IndexOf(item)] = stock;
+                                u.GiveCoins(-price);
+                                u.GiveItem(name);
+                                await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {Functions.GetItemEmote(Functions.GetItemData(name))} for {price} coins!");
+                            }
+                            else await Context.Channel.SendMessageAsync("Either you cannot afford this item or it is not in stock.");
+                        }
+                    }
+                }
+                else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
+            }
+        }
+           
     }
 }
