@@ -118,7 +118,7 @@ namespace ForkBot
                 {
                     int msgCount = Convert.ToInt32(user.GetData("messages")) + 1;
 
-                    if (msgCount >= 1000)
+                    if (msgCount >= 500)
                     {
                         user.SetData("trustedMsgs", "true");
                     }
@@ -152,14 +152,14 @@ namespace ForkBot
                 }
 
                 var lastInfraction = user.GetData("lastInfraction");
-                bool oneWeekSinceLast = false;
-                if (lastInfraction == "0" || Functions.StringToDateTime(user.GetData("lastInfraction")) - Var.CurrentDate() > new TimeSpan(7, 0, 0, 0)) oneWeekSinceLast = true;
+                bool threeDaysSinceLast = false;
+                if (lastInfraction == "0" || Functions.StringToDateTime(user.GetData("lastInfraction")) - Var.CurrentDate() > new TimeSpan(3, 0, 0, 0)) threeDaysSinceLast = true;
 
                 var trustedStat = user.GetData("isTrusted");
                 bool trusted = true;
                 if (trustedStat == "false" || trustedStat == "0") trusted = false;
                 
-                if (oneWeekSinceLast == false && trusted)
+                if (threeDaysSinceLast == false && trusted)
                 {
                     await guildUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                     user.SetData("isTrusted", "false");
@@ -180,7 +180,7 @@ namespace ForkBot
                 }
 
 
-                if (!trusted && Var.CurrentDate() - guildUser.JoinedAt >= new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && oneWeekSinceLast)
+                if (!trusted && Var.CurrentDate() - guildUser.JoinedAt >= new TimeSpan(3, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && threeDaysSinceLast)
                 {
                     user.SetData("trusted", "true");
                     await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));

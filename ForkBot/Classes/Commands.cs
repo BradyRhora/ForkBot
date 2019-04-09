@@ -1850,7 +1850,10 @@ namespace ForkBot
             await ReplyAsync($"Trusted {Functions.GetName(user)}.");
         }
 
-        [Command("record"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Shows a users progress to being auto trusted.")]
+        [Command("record")]
+        public async Task Record() => await Record(Context.User as IGuildUser);
+
+        [Command("record"), Summary("Shows a users progress to being auto trusted.")]
         public async Task Record(IGuildUser user)
         {
             var u = Functions.GetUser(user);
@@ -1878,8 +1881,8 @@ namespace ForkBot
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Message Count";
-                if (isTrusted == "true" || tMsgs == "true") messageCount = "1000";
-                x.Text = $"{messageCount}/1000";
+                if (isTrusted == "true" || tMsgs == "true") messageCount = "500";
+                x.Text = $"{messageCount}/500";
                 x.Inline = true;
             }));
 
