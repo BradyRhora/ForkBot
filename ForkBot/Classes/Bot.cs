@@ -163,7 +163,7 @@ namespace ForkBot
 
                 if (!trusted && Var.CurrentDate() - (guildUser.JoinedAt - new TimeSpan(4,0,0)) >= new TimeSpan(3, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && threeDaysSinceLast)
                 {
-                    user.SetData("trusted", "true");
+                    user.SetData("isTrusted", "true");
                     await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                     await reports.SendMessageAsync($"Added Trusted role to {guildUser.Mention} for reason:\n```\nFulfilled all requirements.\n```");
                 }
