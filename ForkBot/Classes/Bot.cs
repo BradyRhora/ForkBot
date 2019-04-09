@@ -121,7 +121,6 @@ namespace ForkBot
                     if (msgCount >= 1000)
                     {
                         user.SetData("trustedMsgs", "true");
-                        user.SetData("messages", "0");
                     }
                     else user.SetData("messages", Convert.ToString(msgCount));
                 }
@@ -158,21 +157,21 @@ namespace ForkBot
                     trusted = false;
                     await reports.SendMessageAsync($"Removed Trusted role from {guildUser.Mention} for reason:\n```\nLess than one week since last infraction.\n```");
                 }
-
-                if (!trusted && guildUser.RoleIds.Contains(Constants.Roles.TRUSTED))
+                
+                if (!trusted && guildUser.RoleIds.ToArray().Contains(Constants.Roles.TRUSTED))
                 {
                     await guildUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                     await reports.SendMessageAsync($"Removed Trusted role from {guildUser.Mention} for reason:\n```\nHad role but was not trusted.\n```");
                 }
 
-                if (trusted && !guildUser.RoleIds.Contains(Constants.Roles.TRUSTED))
+                if (trusted && !guildUser.RoleIds.ToArray().Contains(Constants.Roles.TRUSTED))
                 {
                     await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                     await reports.SendMessageAsync($"Added Trusted role to {guildUser.Mention} for reason:\n```\nWas trusted but did not have role.\n```");
                 }
 
 
-                if (!trusted && Var.CurrentDate() - guildUser.JoinedAt > new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && oneWeekSinceLast)
+                if (!trusted && Var.CurrentDate() - guildUser.JoinedAt >= new TimeSpan(7, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && oneWeekSinceLast)
                 {
                     user.SetData("trusted", "true");
                     await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
