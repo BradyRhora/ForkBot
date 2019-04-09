@@ -88,33 +88,15 @@ namespace ForkBot
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             if (Var.DebugMode && (message.Author.Id != Constants.Users.BRADY && message.Author.Id != Constants.Users.JACE)) return;
-            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (message.Channel.Id == Constants.Channels.GENERAL_SLOW || message.Channel.Id == Constants.Channels.GENERAL_TRUSTED) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
-            int argPos = 0;
-
-            if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
-            {
-                int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
-                await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
-            }
-
-            //checks if message contains any blocked words
-            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
-            {
-                await message.DeleteAsync();
-                return;
-            }
-
-            if (Var.blockedUsers.Where(x=>x.Id == message.Author.Id).Count() > 0) return; //prevents "blocked" users from using the bot
 
 
             var user = Functions.GetUser(message.Author);
-            //collect stats for York server
-            
             //trusted management
-            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY) {
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
+            {
                 string trustedMsgs = user.GetData("trustedMsgs");
                 if (trustedMsgs == "0") user.SetData("trustedMsgs", "false");
-                if (trustedMsgs == "false")
+                if (trustedMsgs != "true")
                 {
                     int msgCount = Convert.ToInt32(user.GetData("messages")) + 1;
 
@@ -158,7 +140,7 @@ namespace ForkBot
                 var trustedStat = user.GetData("isTrusted");
                 bool trusted = true;
                 if (trustedStat == "false" || trustedStat == "0") trusted = false;
-                
+
                 if (threeDaysSinceLast == false && trusted)
                 {
                     await guildUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
@@ -166,7 +148,7 @@ namespace ForkBot
                     trusted = false;
                     await reports.SendMessageAsync($"Removed Trusted role from {guildUser.Mention} for reason:\n```\nLess than one week since last infraction.\n```");
                 }
-                
+
                 if (!trusted && guildUser.RoleIds.ToArray().Contains(Constants.Roles.TRUSTED))
                 {
                     await guildUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
@@ -190,8 +172,27 @@ namespace ForkBot
 
 
 
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (message.Channel.Id == Constants.Channels.GENERAL_SLOW || message.Channel.Id == Constants.Channels.GENERAL_TRUSTED) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
+            int argPos = 0;
+
+            if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
+            {
+                int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
+                await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
+            }
+
+            //checks if message contains any blocked words
+            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
+            {
+                await message.DeleteAsync();
+                return;
+            }
+
+            if (Var.blockedUsers.Where(x=>x.Id == message.Author.Id).Count() > 0) return; //prevents "blocked" users from using the bot
 
 
+            //collect stats for York server
+            
             if (message.Author.IsBot) return;
             
             //present stuff
