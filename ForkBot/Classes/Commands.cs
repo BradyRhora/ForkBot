@@ -1903,7 +1903,7 @@ namespace ForkBot
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Join Date";
-                x.Text = $"{joinDate.Day}/{joinDate.Month}/{joinDate.Year}";
+                x.Text = $"{joinDate.Day}/{joinDate.Month}/{joinDate.Year} {joinDate.Hour-4}:{joinDate.Minute}";
                 x.Inline = true;
             }));
 

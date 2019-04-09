@@ -89,7 +89,6 @@ namespace ForkBot
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             if (Var.DebugMode && (message.Author.Id != Constants.Users.BRADY && message.Author.Id != Constants.Users.JACE)) return;
 
-
             var user = Functions.GetUser(message.Author);
             //trusted management
             if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
@@ -162,7 +161,7 @@ namespace ForkBot
                 }
 
 
-                if (!trusted && Var.CurrentDate() - guildUser.JoinedAt >= new TimeSpan(3, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && threeDaysSinceLast)
+                if (!trusted && Var.CurrentDate() - (guildUser.JoinedAt - new TimeSpan(4,0,0)) >= new TimeSpan(3, 0, 0, 0) && user.GetData("trustedMsgs") == "true" && threeDaysSinceLast)
                 {
                     user.SetData("trusted", "true");
                     await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
