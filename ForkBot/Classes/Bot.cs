@@ -138,7 +138,16 @@ namespace ForkBot
                         ulong id = Convert.ToUInt64(emb.Footer.Value.Text.Replace("ID: ", ""));
                         var u = Functions.GetUser(id);
                         u.SetData("lastInfraction", Functions.DateTimeToString(Var.CurrentDate()));
-                        if (u.GetData("isTrusted") == "true") u.SetData("isTrusted", "false");
+                        if (u.GetData("isTrusted") == "true")
+                        {
+                            u.SetData("isTrusted", "false");
+                            var gUser = await guild.GetUserAsync(u.ID);
+                            await gUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
+                            string reason = emb.Fields[0].Value;
+                            await reports.SendMessageAsync($"Removed Trusted role from {guildUser.Mention} for reason:\n```\nAutomod infraction:\n'{reason}'```");
+
+                        }
+
                     }
                 }
 
