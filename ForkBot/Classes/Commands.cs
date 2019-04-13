@@ -802,7 +802,7 @@ namespace ForkBot
                     emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]).Replace('_',' ');
                     emb.Description = itemInfo[1];
                     emb.ColorStripe = Constants.Colours.YORK_RED;
-                    if (itemInfo[2].Contains("-")) emb.Description += "\n\nCannot be purchased or sold. (Probably found through presents or combining.)";
+                    if (itemInfo[2].Contains("-")) emb.Description += $"\n\n:moneybag: Cannot be purchased. Find through presents or combining! Sell: 10 coins.";
                     else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])* Constants.Values.SELL_VAL)} coins.";
                     await ReplyAsync("", embed: emb.Build());
                     return;
@@ -1361,12 +1361,14 @@ namespace ForkBot
                 {
                     var timeLeft = Var.presentTime - (Var.CurrentDate() - Var.presentWait);
                     var msg = $"The next presents are not available yet! Please be patient! They should be ready in *about* {timeLeft.Hours + 1} hour(s)!\nThere are {Var.presentCount} presents left!";
+                    if (Var.presentClaims.Count() > Properties.Settings.Default.recordClaims) { Properties.Settings.Default.recordClaims = Var.presentClaims.Count(); Properties.Settings.Default.Save(); }
                     if (Var.presentClaims.Count() > 0)
                     {
                         msg += "\nLast claimed by:\n```\n";
                         foreach (IGuildUser user in Var.presentClaims) msg += $"\n{user.Username} in {user.Guild}";
                         msg += "\n```";
                     }
+                    msg += $"\nThere have been {Var.presentClaims.Count()} claims! The record is {Properties.Settings.Default.recordClaims}.";
                     await Context.Channel.SendMessageAsync(msg);
                 }
             }

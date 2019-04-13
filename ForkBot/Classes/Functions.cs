@@ -70,7 +70,7 @@ namespace ForkBot
 
         public static string[] GetBlackMarketItemList()
         {
-
+            return File.ReadAllLines("Files/bmitems.txt");
         }
 
         public static string GetItemEmote(string item)
@@ -185,6 +185,14 @@ namespace ForkBot
             if (stat == "coins")
             {
                 foreach (User u in users) totalStats.Add(u.ID, u.GetCoins());
+            }
+            else if (GetItemList().Contains(stat.ToLower()))
+            {
+                foreach (User u in users)
+                {
+                    int itemCount = u.GetItemList().Where(x => x == stat.ToLower()).Count();
+                    totalStats.Add(u.ID, itemCount);
+                }
             }
             else
             {

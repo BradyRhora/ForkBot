@@ -638,9 +638,7 @@ namespace ForkBot
             }
             await Context.Channel.SendFileAsync(@"Files\paintbrush_edited.png");
         }
-
-
-
+        
         [Command("santa")]
         public async Task Santa()
         {
@@ -869,8 +867,7 @@ namespace ForkBot
                 await ReplyAsync(Functions.GetItemEmote("gnome") + " Hohohohohoho! You've gnought to worry! I'll protect you!");
             }
         }
-
-
+        
         [Command("makekey")]
         public async Task MakeKey()
         {
@@ -927,7 +924,7 @@ namespace ForkBot
         }
         
         [Command("bm")]
-        public async Task BlackMarket([Remainder] string command)
+        public async Task BlackMarket([Remainder] string command = null)
         {
             var u = Functions.GetUser(Context.User);
             if (u.GetData("bm") != "true") return;

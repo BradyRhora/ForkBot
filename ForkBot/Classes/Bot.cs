@@ -125,7 +125,7 @@ namespace ForkBot
                             var gUser = await guild.GetUserAsync(u.ID);
                             await gUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                             string reason = emb.Fields[0].Value;
-                            await reports.SendMessageAsync($"Removed Trusted role from {guildUser.Mention} for reason:\n```\nAutomod infraction:\n'{reason}'```");
+                            await reports.SendMessageAsync($"Removed Trusted role from {gUser.Mention} for reason:\n```\nAutomod infraction:\n'{reason}'```");
 
                         }
 
@@ -170,8 +170,8 @@ namespace ForkBot
             }
 
 
-
-            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (message.Channel.Id == Constants.Channels.GENERAL_SLOW || message.Channel.Id == Constants.Channels.GENERAL_TRUSTED) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
+            ulong[] blockedChannels = { Constants.Channels.GENERAL_SLOW, Constants.Channels.GENERAL_TRUSTED, Constants.Channels.NEWS_DEBATE, Constants.Channels.LIFESTYLE};
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
             int argPos = 0;
 
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)

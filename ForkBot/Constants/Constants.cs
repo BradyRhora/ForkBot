@@ -43,13 +43,14 @@ namespace ForkBot
         {
             public static ulong GENERAL_TRUSTED = 561299616746700860;
             public static ulong GENERAL_SLOW = 265998661606047744;
-            public static ulong MEMES = 266001105350164480;
             public static ulong ENTERTAINMENT = 266001204499316736;
             public static ulong ANNOUNCEMENTS = 265999135503679488;
             public static ulong COMMANDS = 271843457121779712;
             public static ulong DELETED_MESSAGES = 306236074655612930;
             public static ulong ASS_DELETED_MESSAGES = 493873769627254786;
             public static ulong REPORTED = 479383993360449544;
+            public static ulong NEWS_DEBATE = 364867272126365696;
+            public static ulong LIFESTYLE = 404142837685551107;
         }
 
         public class EmoteAnimations

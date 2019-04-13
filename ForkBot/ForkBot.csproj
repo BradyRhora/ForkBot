@@ -241,6 +241,7 @@
     <Content Include="bin\Debug\Discord.Net.WebSocket.dll" />
     <Content Include="bin\Debug\Discord.Net.WebSocket.xml" />
     <Content Include="bin\Debug\DuckDuckGo.dll" />
+    <Content Include="bin\Debug\Files\bmitems.txt" />
     <Content Include="bin\Debug\Files\courselist.txt" />
     <Content Include="bin\Debug\Files\drawing.png" />
     <Content Include="bin\Debug\Files\Images\ForkBot.png" />
