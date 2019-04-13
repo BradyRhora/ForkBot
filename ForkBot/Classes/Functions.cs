@@ -186,11 +186,11 @@ namespace ForkBot
             {
                 foreach (User u in users) totalStats.Add(u.ID, u.GetCoins());
             }
-            else if (GetItemList().Contains(stat.ToLower()))
+            else if (GetItemList().Where(x=>x.Split('|')[0] == stat.ToLower()).Count() > 0)
             {
                 foreach (User u in users)
                 {
-                    int itemCount = u.GetItemList().Where(x => x.StartsWith(stat.ToLower())).Count();
+                    int itemCount = u.GetItemList().Where(x => x == stat.ToLower()).Count();
                     totalStats.Add(u.ID, itemCount);
                 }
             }

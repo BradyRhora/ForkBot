@@ -1,7 +1,3 @@
-add more games
-add ;sell all
-fix econ1010
-add item commands for all new items
 overhaul item system!!!!!! Why the fuck not!!!
 give 🍷 a basic command
 exam schedule command?
@@ -13,30 +9,29 @@ minesweeper
 chess bot when
 Puppeteer
 finish minesweeper!!!
-fix selfbot time
 fork party
 add more memes
-disable games and stuff then
-variant items
 only let person join fp once
-put wallet in slots
 make coins emote appear for second person too
-fix ;tip
 fix course lookup for certain courses (jp 3600, math 6004)
-jeapardy
 seperate hangman games
 make hm only send one message on start and add the thing
 replay yoshis island
 fix prof AGAIN
 add even more hangman words
 base hangman coins off of word difficulty
-🗝 🔒 🔓 👨 🔫 🕵 🕳
 pen says 2 but 1
 dont trade urself
 battleship (done through dm?)
-trusted tag stuff
-remove cannot be sold message
 ;ban (days)
 make gift opening one message
 show trusted / not trusted
 log trusted removal
+fix dms again
+add min/mins to remind
+;top [item]
+fix coins in trade
+seperate hangman games
+remove names from wordlist.txt
+change message when ;combine parameters are left empty
+unblock people
