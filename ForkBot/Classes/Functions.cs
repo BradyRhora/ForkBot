@@ -190,7 +190,7 @@ namespace ForkBot
             {
                 foreach (User u in users)
                 {
-                    int itemCount = u.GetItemList().Where(x => x == stat.ToLower()).Count();
+                    int itemCount = u.GetItemList().Where(x => x.StartsWith(stat.ToLower())).Count();
                     totalStats.Add(u.ID, itemCount);
                 }
             }
