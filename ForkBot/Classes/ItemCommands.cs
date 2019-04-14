@@ -939,7 +939,7 @@ namespace ForkBot
         {
             if (Check(Context, "meat_on_bone")) return;
             int stat = rdm.Next(35, 51);
-            await Context.Channel.SendMessageAsync($":meat_on_bone: So well cooked!\n**Stat+{stat}**");
+            await Context.Channel.SendMessageAsync($":meat_on_bone: So well cooked!\n**Fullness+{stat}**");
             Functions.GetUser(Context.User).AddData("stat.fullness", stat);
         }
 
@@ -1022,5 +1022,68 @@ namespace ForkBot
             }
             else await ReplyAsync(":spy: Nope, no bombs here.");
         }
+
+        [Command("unlock")]
+        public async Task Unlock()
+        {
+            if (Check(Context, "unlock",false)) return;
+            var u = Functions.GetUser(Context.User);
+            if (u.GetItemList().Contains("iphone"))
+            {
+                u.RemoveItem("iphone");
+                u.RemoveItem("unlock");
+                u.GiveItem("calling");
+                await ReplyAsync("You unlocked your IPhone! :iphone: :calling: There's a number you can dial, try it!");
+            }
+            else await ReplyAsync("You need an IPhone to use this.");
+        }
+        
+        [Command("calling")]
+        public async Task Calling()
+        {
+            if (Check(Context, "calling")) return;
+            int index = rdm.Next(5);
+            string msg = "";
+            var u = Functions.GetUser(Context.User);
+            switch (index)
+            {
+                case 0:
+                    msg = ":mrs_claus: Mrs. Claus answer the phone! \"Christmas is early this year!!\"\nYou got:";
+                    var items = Functions.GetItemList();
+                    for (int i = 0; i < 4; i++)
+                    {
+                        var itemI = rdm.Next(items.Count());
+                        var itemName = items[itemI];
+                        msg += "\nA(n) " + Functions.GetItemEmote(itemName) + " " + itemName;
+                        u.GiveItem(itemName);
+                    }
+                    break;
+                case 1:
+                    msg = ":unicorn: A Unicorn answered the phone! \"NEIGHHH, NIEGHHHHHH!!!\"\nYou got a Unicorn! :unicorn:";
+                    u.GiveItem("unicorn");
+                    break;
+                case 2:
+                    msg = "<:rhonda:504902977069383681> Rhonda Lenton answered the phone! \"It's me, Rhonda. Here's a scholarship!\"";
+                    int coins = rdm.Next(500, 1500);
+                    msg += $"\nYou got {coins} coins!";
+                    u.GiveCoins(coins);
+                    break;
+                case 3:
+                    msg = ":smiling_imp: Oh no, Satan answered the phone! \"Ur going to hell bitch.\" You hear a dab over the phone.";
+                    int coins2 = rdm.Next(500);
+                    if (coins2 > u.GetCoins()) coins2 = u.GetCoins();
+                    msg += $"\nOh no! You lost {coins2} coins!";
+                    u.GiveCoins(-coins2);
+                    break;
+                case 4:
+                    msg = "<:youness:373579959899258880> Oh my, Youness picks up the phone! You're on speaker in his class and hear an entire math lecture.";
+                    msg = "\nYou got a Youness!";
+                    u.GiveItem("youness");
+                    break;
+            }
+            await ReplyAsync(msg);
+        }
+
+
     }
 }
