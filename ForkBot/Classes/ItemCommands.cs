@@ -770,7 +770,7 @@ namespace ForkBot
             User u = Functions.GetUser(Context.User);
             if (u.GetItemList().Contains("key") && u.GetItemList().Contains("package"))
             {
-                string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome" };
+                string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome", "dividers" };
 
                 u.RemoveItem("key");
                 u.RemoveItem("package");
@@ -790,6 +790,34 @@ namespace ForkBot
             }
             else if (u.GetItemList().Contains("key")) await ReplyAsync("You have nothing to open with this key!");
             else if (u.GetItemList().Contains("package")) await ReplyAsync("It's locked! You need a key to open it.");
+        }
+
+        [Command("key2")]
+        public async Task Key2()
+        {
+            User u = Functions.GetUser(Context.User);
+            if (u.GetItemList().Contains("key2") && u.GetItemList().Contains("package"))
+            {
+                string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome", "dividers", "unicorn" };
+
+                u.RemoveItem("key");
+                u.RemoveItem("package");
+
+                int[] items = new int[5];
+
+                for (int i = 0; i < items.Count(); i++) items[i] = rdm.Next(lootboxItems.Count());
+
+                string msg = "Your lootbox bursts open!\n:sparkles: ";
+                foreach (int i in items)
+                {
+                    msg += Functions.GetItemEmote(lootboxItems[i]) + " " + lootboxItems[i] + ":sparkles: ";
+                    u.GiveItem(lootboxItems[i]);
+                }
+                msg += "\nYour key2 turns into a key! :key2: :arrow_right: :key:";
+
+                await ReplyAsync(msg);
+            }
+            else if (u.GetItemList().Contains("key2")) await ReplyAsync("You have nothing to open with this key!");
         }
 
         [Command("stopwatch")]
@@ -978,6 +1006,11 @@ namespace ForkBot
                 else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
             }
         }
-           
+        
+        [Command("spy")]
+        public async Task Spy()
+        {
+
+        }
     }
 }

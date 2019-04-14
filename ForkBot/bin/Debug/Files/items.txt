@@ -74,7 +74,7 @@ tiger|He just wants a hug!|100
 ribbon|The finishing touch!|50
 dividers|Perfect for sorting!|65
 lock|Seems ordinary keys wont work on this...|-
-key2|It's a key too! Wait.. what's this for?|-*
+key2|It's a key too! Wait.. what's this for?|-
 unlock|You've opened it, but now what? Maybe you can show someone...|*-
 spy|He's able to obtain secret information... and maybe more?|-
 hole|What's inside? Only one way to find out!|-*

@@ -289,7 +289,9 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.2\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation\n-fixed forkbot DMs```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.3\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades"+
+                "\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation"+
+                "\n-fixed forkbot DMs(nvm)\n-present shows record claims\n-parameter for ;top can now be an item\n-trusted system```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -803,7 +805,7 @@ namespace ForkBot
                     emb.Description = itemInfo[1];
                     emb.ColorStripe = Constants.Colours.YORK_RED;
                     if (itemInfo[2].Contains("-")) emb.Description += $"\n\n:moneybag: Cannot be purchased. Find through presents or combining! Sell: 10 coins.";
-                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins. Sell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])* Constants.Values.SELL_VAL)} coins.";
+                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins.\nSell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])* Constants.Values.SELL_VAL)} coins.";
                     await ReplyAsync("", embed: emb.Build());
                     return;
                 }
