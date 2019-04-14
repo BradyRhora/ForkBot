@@ -35,3 +35,5 @@ seperate hangman games
 remove names from wordlist.txt
 change message when ;combine parameters are left empty
 unblock people
+fix meat on bone message
+have good ideas
