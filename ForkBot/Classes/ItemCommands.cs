@@ -798,9 +798,9 @@ namespace ForkBot
             User u = Functions.GetUser(Context.User);
             if (u.GetItemList().Contains("key2") && u.GetItemList().Contains("package"))
             {
-                string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome", "dividers", "unicorn" };
+                string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome", "dividers" };
 
-                u.RemoveItem("key");
+                u.RemoveItem("key2");
                 u.RemoveItem("package");
 
                 int[] items = new int[5];
@@ -814,6 +814,7 @@ namespace ForkBot
                     u.GiveItem(lootboxItems[i]);
                 }
                 msg += "\nYour key2 turns into a key! :key2: :arrow_right: :key:";
+                u.GiveItem("key");
 
                 await ReplyAsync(msg);
             }

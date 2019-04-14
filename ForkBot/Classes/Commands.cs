@@ -1362,15 +1362,16 @@ namespace ForkBot
                 else
                 {
                     var timeLeft = Var.presentTime - (Var.CurrentDate() - Var.presentWait);
-                    var msg = $"The next presents are not available yet! Please be patient! They should be ready in *about* {timeLeft.Hours + 1} hour(s)!\nThere are {Var.presentCount} presents left!";
+                    var msg = $"The next presents are not available yet! Please be patient! They should be ready in *about* {timeLeft.Hours + 1} hour(s)!";
                     if (Var.presentClaims.Count() > Properties.Settings.Default.recordClaims) { Properties.Settings.Default.recordClaims = Var.presentClaims.Count(); Properties.Settings.Default.Save(); }
+                    msg += $"\nThere have been {Var.presentClaims.Count()} claims! The record is {Properties.Settings.Default.recordClaims}.";
                     if (Var.presentClaims.Count() > 0)
                     {
                         msg += "\nLast claimed by:\n```\n";
                         foreach (IGuildUser user in Var.presentClaims) msg += $"\n{user.Username} in {user.Guild}";
                         msg += "\n```";
                     }
-                    msg += $"\nThere have been {Var.presentClaims.Count()} claims! The record is {Properties.Settings.Default.recordClaims}.";
+                    msg += $"There are {Var.presentCount} presents left!";
                     await Context.Channel.SendMessageAsync(msg);
                 }
             }
