@@ -61,7 +61,7 @@ namespace ForkBot
             {
                 if (int.TryParse(item, out coins))
                 {
-                    if (coins > 0 && u1.GetCoins() >= coins)
+                    if (coins > 0 && u2.GetCoins() >= coins)
                     {
                         coins2 += coins;
                         u2.GiveCoins(-coins);
@@ -109,7 +109,7 @@ namespace ForkBot
 
                 string itemlist = "";
                 foreach (string item in items2) itemlist += Functions.GetItemEmote(item);
-                if (coins2 > 0) itemlist += coins2 + " coins";
+                if (coins2 > 0) itemlist += ":moneybag:" + coins2 + " coins";
 
                 x.Text = itemlist;
                 x.Inline = true;
