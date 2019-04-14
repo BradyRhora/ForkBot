@@ -78,3 +78,4 @@ key2|It's a key too! Wait.. what's this for?|-
 unlock|You've opened it, but now what? Maybe you can show someone...|*-
 spy|He's able to obtain secret information... and maybe more?|-
 hole|What's inside? Only one way to find out!|-*
+calling|There's a number inputted, try calling it!|-*
