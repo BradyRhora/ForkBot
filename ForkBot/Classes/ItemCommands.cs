@@ -1010,7 +1010,16 @@ namespace ForkBot
         [Command("spy")]
         public async Task Spy()
         {
-
+            if (Check(Context, "spy", false)) return;
+            if (Var.presentRigged)
+            {
+                if (rdm.Next(100)+1 < 10)
+                {
+                    await ReplyAsync(":spy: Oh fu-! :boom::boom::boom:\nYour spy accidentally activated the bomb and died!");
+                }
+                else await ReplyAsync($":spy: Watch out.. There's a bomb hidden here.. Looks like {Functions.GetName(Var.presentRigger as IGuildUser)} planted it.");
+            }
+            else await ReplyAsync(":spy: Nope, no bombs here.");
         }
     }
 }
