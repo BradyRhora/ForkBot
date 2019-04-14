@@ -176,7 +176,11 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync($"{Context.User.Username}! You got...");
 
             var presents = Functions.GetItemList();
-            int presRDM = rdm.Next(presents.Count());
+            int presRDM;
+            do {
+                presRDM = rdm.Next(presents.Count());
+            }
+            while (presents[presRDM].Contains("*"));
             var presentData = presents[presRDM].Split('|');
             Var.present = presentData[0];
             Var.rPresent = Var.present;
@@ -190,6 +194,11 @@ namespace ForkBot
                 for (int i = 0; i < 5; i++)
                 {
                     var sPresentData = presents[rdm.Next(presents.Count())];
+                    if (sPresentData.Contains("*"))
+                    {
+                        i--;
+                        continue;
+                    }
                     string sPresentName = sPresentData.Split('|')[0];
                     user.GiveItem(sPresentName);
                     sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentName)} {sPresentData.Split('|')[1]}\n";
@@ -320,11 +329,15 @@ namespace ForkBot
                         await Context.Channel.SendMessageAsync("You got...");
                         var presents = Functions.GetItemList();
                         var list = presents.ToList();
-                        list.Add("key2");
                         presents = list.ToArray();
                         for (int i = 0; i < 10; i++)
                         {
                             var sPresentData = presents[rdm.Next(presents.Count())];
+                            if (sPresentData.Contains("*"))
+                            {
+                                i--;
+                                continue;
+                            }
                             string sPresentName = sPresentData.Split('|')[0];
                             user.GiveItem(sPresentName);
                             msg += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentName)} {sPresentData.Split('|')[1]}\n";
@@ -650,6 +663,11 @@ namespace ForkBot
             for (int i = 0; i < 5; i++)
             {
                 var sPresentData = presents[rdm.Next(presents.Count())];
+                if (sPresentData.Contains("*"))
+                {
+                    i--;
+                    continue;
+                }
                 string sPresentName = sPresentData.Split('|')[0];
                 user.GiveItem(sPresentName);
                 sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentName)} {sPresentData.Split('|')[1]}\n";
@@ -1054,6 +1072,11 @@ namespace ForkBot
                     {
                         var itemI = rdm.Next(items.Count());
                         var itemName = items[itemI];
+                        if (itemName.Contains("*"))
+                        {
+                            i--;
+                            continue;
+                        }
                         msg += "\nA(n) " + Functions.GetItemEmote(itemName) + " " + itemName;
                         u.GiveItem(itemName);
                     }
@@ -1077,7 +1100,7 @@ namespace ForkBot
                     break;
                 case 4:
                     msg = "<:youness:373579959899258880> Oh my, Youness picks up the phone! You're on speaker in his class and hear an entire math lecture.";
-                    msg = "\nYou got a Youness!";
+                    msg += "\nYou got a Youness!";
                     u.GiveItem("youness");
                     break;
             }
