@@ -607,8 +607,15 @@ namespace ForkBot
                     using (WebClient web = new WebClient())
                     {
                         bool downloaded = false;
+                        int timeOutCounter = 0;
                         while (!downloaded)
                         {
+                            timeOutCounter++;
+                            if (timeOutCounter >= 20)
+                            {
+                                await ReplyAsync("Timed out, make sure username or url is correct!");
+                                return;
+                            }
                             if (url == null)
                             {
                                 await ReplyAsync("You must use a valid picture to use this command.");
