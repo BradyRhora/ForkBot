@@ -572,84 +572,104 @@ namespace ForkBot
         [Command("paintbrush")]
         public async Task Paintbrush()
         {
-            if(Context.Message.Attachments.Count() <= 0) await Paintbrush(Context.User);
-            else if (Context.Message.Attachments.First().Size < 500000)
-                await Paintbrush(Context.Message.Attachments.First().Url);
+            try
+            {
+                if (Context.Message.Attachments.Count() <= 0) await Paintbrush(Context.User);
+                else if (Context.Message.Attachments.First().Size < 500000)
+                    await Paintbrush(Context.Message.Attachments.First().Url);
+            } catch (Exception e)
+            {
+                Console.WriteLine("Paintbrush Error:\n" + e.StackTrace);
+            }
         }
 
         [Command("paintbrush")]
         public async Task Paintbrush(IUser user)
         {
-            await Paintbrush(user.GetAvatarUrl());
-        }
+            try
+            {
+                await Paintbrush(user.GetAvatarUrl());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Paintbrush Error:\n" + e.StackTrace);
+            }
+}
         
         [Command("paintbrush")]
         public async Task Paintbrush(string url)
         {
-            if (Check(Context, "paintbrush", false)) return;
-            using (ImageFactory fact = new ImageFactory())
+            try
             {
-                using (WebClient web = new WebClient())
+                if (Check(Context, "paintbrush", false)) return;
+                using (ImageFactory fact = new ImageFactory())
                 {
-                    bool downloaded = false;
-                    while (!downloaded)
+                    using (WebClient web = new WebClient())
                     {
-                        if (url == null)
+                        bool downloaded = false;
+                        while (!downloaded)
                         {
-                            await ReplyAsync("You must use a valid picture to use this command.");
-                            return;
+                            if (url == null)
+                            {
+                                await ReplyAsync("You must use a valid picture to use this command.");
+                                return;
+                            }
+                            try { web.DownloadFile(url, @"Files\paintbrush.png"); downloaded = true; }
+                            catch (Exception) { }
                         }
-                        try { web.DownloadFile(url, @"Files\paintbrush.png"); downloaded = true; }
-                        catch (Exception) { }
+                        fact.Load(@"Files\paintbrush.png");
                     }
-                    fact.Load(@"Files\paintbrush.png");
-                }
-                int[] effects = new int[5];
-                for (int i = 0; i < effects.Count(); i++)
-                {
-                    effects[i] = rdm.Next(10);
-                }
-                System.Drawing.Color colour = System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1);
-                foreach (int effect in effects)
-                {
-                    switch (effect)
+                    int[] effects = new int[5];
+                    for (int i = 0; i < effects.Count(); i++)
                     {
-                        case 0:
-                            fact.Hue(rdm.Next(359) + 1);
-                            break;
-                        case 1:
-                            fact.Brightness(rdm.Next(100) + 1);
-                            break;
-                        case 2:
-                            fact.Contrast(rdm.Next(100) + 1);
-                            break;
-                        case 3:
-                            fact.Gamma(rdm.Next(5) + (rdm.Next(10) / 2));
-                            break;
-                        case 4:
-                            fact.Halftone(true);
-                            break;
-                        case 5:
-                            fact.Pixelate(rdm.Next(fact.Image.Size.Height / 10));
-                            break;
-                        case 6:
-                            fact.Saturation(rdm.Next(100) + 1);
-                            break;
-                        case 7:
-                            fact.Vignette(colour);
-                            break;
-                        case 8:
-                            fact.Tint(colour);
-                            break;
-                        case 9:
-                            fact.ReplaceColor(colour, System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1), 50);
-                            break;
-
+                        effects[i] = rdm.Next(10);
                     }
+                    System.Drawing.Color colour = System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1);
+                    foreach (int effect in effects)
+                    {
+                        switch (effect)
+                        {
+                            case 0:
+                                fact.Hue(rdm.Next(359) + 1);
+                                break;
+                            case 1:
+                                fact.Brightness(rdm.Next(100) + 1);
+                                break;
+                            case 2:
+                                fact.Contrast(rdm.Next(100) + 1);
+                                break;
+                            case 3:
+                                fact.Gamma(rdm.Next(5) + (rdm.Next(10) / 2));
+                                break;
+                            case 4:
+                                fact.Halftone(true);
+                                break;
+                            case 5:
+                                fact.Pixelate(rdm.Next(fact.Image.Size.Height / 10));
+                                break;
+                            case 6:
+                                fact.Saturation(rdm.Next(100) + 1);
+                                break;
+                            case 7:
+                                fact.Vignette(colour);
+                                break;
+                            case 8:
+                                fact.Tint(colour);
+                                break;
+                            case 9:
+                                fact.ReplaceColor(colour, System.Drawing.Color.FromArgb(rdm.Next(255) + 1, rdm.Next(255) + 1, rdm.Next(255) + 1), 50);
+                                break;
+
+                        }
+                    }
+                    fact.Save(@"Files\paintbrush_edited.png");
                 }
-                fact.Save(@"Files\paintbrush_edited.png");
+                await Context.Channel.SendFileAsync(@"Files\paintbrush_edited.png");
             }
-            await Context.Channel.SendFileAsync(@"Files\paintbrush_edited.png");
+            catch (Exception e)
+            {
+                Console.WriteLine("Paintbrush Error:\n" + e.StackTrace);
+            }
         }
         
         [Command("santa")]

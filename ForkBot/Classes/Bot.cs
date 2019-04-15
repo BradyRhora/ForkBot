@@ -134,7 +134,7 @@ namespace ForkBot
 
                 var lastInfraction = user.GetData("lastInfraction");
                 bool threeDaysSinceLast = false;
-                if (lastInfraction == "0" || Functions.StringToDateTime(user.GetData("lastInfraction")) - Var.CurrentDate() > new TimeSpan(3, 0, 0, 0)) threeDaysSinceLast = true;
+                if (lastInfraction == "0" || Var.CurrentDate() - Functions.StringToDateTime(user.GetData("lastInfraction")) > new TimeSpan(3, 0, 0, 0)) threeDaysSinceLast = true;
 
                 var trustedStat = user.GetData("isTrusted");
                 bool trusted = true;
