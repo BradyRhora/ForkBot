@@ -467,7 +467,7 @@ namespace ForkBot
             string msg = "";
             var itemList = Functions.GetItemList();
             if (items.Count() == 1 && items[0] == "all") await ReplyAsync("Are you sure you want to sell **all** of your items? Use `;sell allforreal` if so.");
-            else if (items.Count() == 1 && items[0] == "allforrealll")
+            else if (items.Count() == 1 && items[0] == "allforreal")
             {
                 int coinGain = 0;
                 foreach (string item in u.GetItemList())
