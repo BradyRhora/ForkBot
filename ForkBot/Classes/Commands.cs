@@ -467,7 +467,7 @@ namespace ForkBot
             string msg = "";
             var itemList = Functions.GetItemList();
             if (items.Count() == 1 && items[0] == "all") await ReplyAsync("Are you sure you want to sell **all** of your items? Use `;sell allforreal` if so.");
-            else if (items.Count() == 1 && items[0] == "allforreal")
+            else if (items.Count() == 1 && items[0] == "allforrealll")
             {
                 int coinGain = 0;
                 foreach (string item in u.GetItemList())
@@ -481,13 +481,13 @@ namespace ForkBot
                             if (!line.Split('|')[2].Contains("-"))
                                 price = (int)(Convert.ToInt32(line.Split('|')[2]) * Constants.Values.SELL_VAL);
                             else price = 10;
+                            coinGain += price;
                             break;
                         }
-                        coinGain += price;
                     }
                 }
                 u.GiveCoins(coinGain);
-                msg = $"You have sold ***ALL*** of your items for {coinGain}";
+                msg = $"You have sold ***ALL*** of your items for {coinGain} coins.";
             }
             else
             {

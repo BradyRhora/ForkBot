@@ -170,7 +170,10 @@ namespace ForkBot
                 stat = "";
             }
             var userFiles = Directory.GetFiles(@"Users");
-            var userIDs = userFiles.Select(x => Convert.ToUInt64(Path.GetFileName(x).Replace(".user", ""))).ToArray();
+            ulong[] userIDs = new ulong[1];
+            
+            userIDs = userFiles.Select(x => Convert.ToUInt64(Path.GetFileName(x).Replace(".user", ""))).ToArray();
+            
             List<User> users = new List<User>();
             foreach (ulong id in userIDs) try {
                     var u = GetUser(id);
