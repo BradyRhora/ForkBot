@@ -169,9 +169,7 @@ namespace ForkBot
                 }
             }
 
-
-            ulong[] blockedChannels = { Constants.Channels.GENERAL_SLOW, Constants.Channels.GENERAL_TRUSTED, Constants.Channels.NEWS_DEBATE, Constants.Channels.LIFESTYLE};
-            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
+            
             int argPos = 0;
 
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
@@ -189,8 +187,8 @@ namespace ForkBot
 
             if (Var.blockedUsers.Where(x=>x.Id == message.Author.Id).Count() > 0) return; //prevents "blocked" users from using the bot
 
-
-            //collect stats for York server
+            ulong[] blockedChannels = { Constants.Channels.GENERAL_SLOW, Constants.Channels.GENERAL_TRUSTED, Constants.Channels.NEWS_DEBATE, Constants.Channels.LIFESTYLE };
+            if ((message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
             
             if (message.Author.IsBot) return;
             

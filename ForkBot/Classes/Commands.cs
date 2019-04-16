@@ -466,9 +466,11 @@ namespace ForkBot
             var u = Functions.GetUser(Context.User);
             string msg = "";
             var itemList = Functions.GetItemList();
-            foreach (string item in items)
+            if (items.Count() == 1 && items[0] == "all") await ReplyAsync("Are you sure you want to sell **all** of your items? Use `;sell allforreal` if so.");
+            else if (items.Count() == 1 && items[0] == "allforreal")
             {
-                if (u.GetItemList().Contains(item))
+                int coinGain = 0;
+                foreach (string item in u.GetItemList())
                 {
                     u.RemoveItem(item);
                     int price = 0;
@@ -481,13 +483,37 @@ namespace ForkBot
                             else price = 10;
                             break;
                         }
+                        coinGain += price;
                     }
-
-                    u.GiveCoins(price);
-                    msg += $"You successfully sold your {item} for {price} coins!\n";
-                    
                 }
-                else msg += $"You do not have an item called {item}!\n";
+                u.GiveCoins(coinGain);
+                msg = $"You have sold ***ALL*** of your items for {coinGain}";
+            }
+            else
+            {
+                foreach (string item in items)
+                {
+                    if (u.GetItemList().Contains(item))
+                    {
+                        u.RemoveItem(item);
+                        int price = 0;
+                        foreach (string line in itemList)
+                        {
+                            if (line.Split('|')[0] == item)
+                            {
+                                if (!line.Split('|')[2].Contains("-"))
+                                    price = (int)(Convert.ToInt32(line.Split('|')[2]) * Constants.Values.SELL_VAL);
+                                else price = 10;
+                                break;
+                            }
+                        }
+
+                        u.GiveCoins(price);
+                        msg += $"You successfully sold your {item} for {price} coins!\n";
+
+                    }
+                    else msg += $"You do not have an item called {item}!\n";
+                }
             }
 
             var msgs = Functions.SplitMessage(msg);
@@ -666,125 +692,173 @@ namespace ForkBot
         [Command("freemarket"), Alias("fm", "market"), Summary("[FUN] Sell items to other users! Choose your own price!")]
         public async Task FreeMarket(params string[] command)
         {
-            if (Context.User.Id!=Constants.Users.BRADY) throw new NotImplementedException("Not ready for public.");
-
-
-            if (command.Count() == 0) await ReplyAsync("Use one of the following commands!\n```\n;fm view\n;fm sell [item] [price]\n;fm buy [item_id]\n```");
-            else if (command[0] == "view")
+            var user = Functions.GetUser(Context.User);
+            if (command.Count() == 0 || command[0] == "view")
             {
-                FileStream fs = new FileStream("Files/MarketItems.xml", FileMode.Open);
-                List<string> itemList = new List<string>();
-                using (XmlReader reader = XmlReader.Create(fs))
+                int page = 1;
+                if (command.Count() > 0 && command[0] == "view") page = Convert.ToInt32(command[1]);
+                if (page < 1)
                 {
-                    while (reader.Read())
-                    {
-                        if (reader.Name == "market") reader.Read();
-                        if (reader.NodeType != XmlNodeType.Whitespace && reader.NodeType != XmlNodeType.None)
-                        {
-                            string id = reader.GetAttribute("id");
-                            string cost = reader.GetAttribute("cost");
-                            var user = Bot.client.GetUser(Convert.ToUInt64(reader.GetAttribute("seller")));
-                            string itemName = reader.GetAttribute("name");
-                            string emote = Functions.GetItemEmote(Functions.GetItemData(itemName));
-                            itemList.Add($"{emote} {itemName} - {cost} coins ~ {user.Username}|[{id}] ");
-                        }
-                    }
-                }
-
-                JEmbed emb = new JEmbed();
-                emb.Author.Name = "Free Market";
-
-                foreach (string item in itemList)
-                {
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        x.Header = item.Split('|')[0];
-                        x.Text = item.Split('|')[1];
-                    }));
-                }
-
-                emb.Footer.Text = "Use \';fm sell [item] [price]\' or \';fm buy [item_id]\'";
-
-                await ReplyAsync("", embed: emb.Build());
-
-            }
-            else if (command[0] == "sell")
-            {
-                string item = command[1];
-                string price = command[2];
-                User user = Functions.GetUser(Context.User);
-                if (Functions.CheckUserHasItem(user, item))
-                {
-                    await ReplyAsync("You do not have an item called: " + item + ".");
+                    await ReplyAsync("Page number must be greater than 0.");
                     return;
                 }
 
-                XmlDocument doc = new XmlDocument();
-                using (FileStream fs = new FileStream("Files/MarketItems.xml", FileMode.Open))
+
+                if (!File.Exists("Files/FreeMarket.txt"))
                 {
-                    doc.Load(fs);
-                    bool idSet = false;
-                    string id = "";
-                    char asciiA = 'A';
-                    char asciiZ = 'Z';
-                    do
-                    {
-                        for (int i = 0; i < 3; i++)
-                        {
-                            id += rdm.Next(10);
-                            id += (char)rdm.Next(asciiA, asciiZ + 1);
-                        }
-
-                        foreach (XmlElement element in doc.GetElementsByTagName("item"))
-                        {
-                            if (element.GetAttribute("id") != id) idSet = true;
-                        }
-                    } while (!idSet);
-
-                    var lastChild = doc.LastChild;
-                    XmlElement elem = doc.CreateElement("item");
-                    elem.SetAttribute("name", item);
-                    elem.SetAttribute("id", id);
-                    elem.SetAttribute("cost", price);
-                    elem.SetAttribute("seller", Convert.ToString(Context.User.Id));
-                    doc.FirstChild.AppendChild(elem);
-                    doc.Save("Files/MarketItems.xml");
-
-                    await ReplyAsync($"{item} successfully added to Free Market at {price} coin(s) with ID: {id}");
+                    File.AppendAllText("Files/FreeMarket.txt","");
                 }
+
+                var items = File.ReadAllLines("Files/FreeMarket.txt");
+
+                JEmbed emb = new JEmbed();
+                emb.Title = "Free Market";
+                emb.Description = "To buy an item, use ;fm buy [ID]! For more help and examples, use ;fm help.";
+                double pageCount = Math.Ceiling((double)items.Count() / 25);
+                emb.Footer.Text = $"Page {page}/{pageCount}";
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+
+                page -= 1;
+
+                int itemStart = 25 * page;
+                int itemEnd = 25 * page + 25;
+
+                if (itemStart > items.Count())
+                {
+                    await ReplyAsync("Invalid page number.");
+                    return;
+                }
+
+                if (itemEnd > items.Count()) itemEnd = items.Count();
+                
+                for (int i = itemStart; i < itemEnd; i++)
+                {
+                    string[] sData = items[i].Split('|');
+                    string id = sData[0];
+                    string sellerID = sData[1];
+                    string itemName = sData[2];
+                    int amount = Convert.ToInt32(sData[3]);
+                    int price = Convert.ToInt32(sData[4]);
+
+                    emb.Fields.Add(new JEmbedField(x => {
+                        x.Header = $"{Functions.GetItemEmote(itemName)} ({amount}) {itemName}(s) - id: {id}";
+                        x.Text = $":moneybag: {price} Coins\n<:blank:528431788616318977>";
+                        x.Inline = false;
+                    }));
+                }
+
+                await ReplyAsync("", embed: emb.Build());
+            }
+            else if (command[0] == "help")
+            {
+                await ReplyAsync("Free Market Help!\n\n" +
+                                 "To view the Free Market, use either `;fm` or `;fm view`. You can do `;fm view [page #]` to view other pages.\n" +
+                                 "To buy an item in the free market, use `;fm buy [ID]`. The ID is the characters that appear in the title of the sale in `;fm`\n" +
+                                 "To post an item for sale, do ;fm post [item] [price]. You can also include the amount of items you want to sell in the format `[item]*[amount]`\n" +
+                                 "To cancel a posting, use `;fm cancel [ID]`\nThere is a 200 coin fee for cancelling posts in order to avoid abuse. This will be automatically charged upon cancellation, if you cannot afford the fee, you cannot cancel.\n\n" +
+                                 "Examples:\n\n" +
+                                 "`;fm view 3` Views the third Free Market page.\n"+
+                                 "`;fm post apple 100` Posts 1 apple for sale for 100 coins.\n"+
+                                 "`;fm post gun*10 7500` Posts 10 guns for sale for 7500 coins.\n"+
+                                 "`;fm buy A1B2C3` buys an item with the ID `A1B2C3`.\n\n"+
+                                 "If something still doesn't make sense, just ask Brady.");
+            }
+            else if (command[0] == "post")
+            {
+                string[] itemData = command[1].Split('*');
+
+                int amount;
+                if (itemData.Count() == 1) amount = 1;
+                else int.TryParse(itemData[1], out amount);
+
+                string item = itemData[0];
+                string price = command[2];
+                string id = "";
+
+                if (user.GetItemList().Where(x=>x == item).Count() < amount)
+                {
+                    await ReplyAsync(":x: You either do not have the item, or enough of the item in your inventory. :x:");
+                    return;
+                }
+                for (int i = 0; i < amount; i++) user.RemoveItem(item);
+
+
+                string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                for (int i = 0; i < 5; i++)
+                {
+                    id += key[rdm.Next(key.Count())];
+                }
+
+
+                File.AppendAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}\n");
+                await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin(s). The sale ID is {id}.");
             }
             else if (command[0] == "buy")
             {
-                string id = command[1];
-                XmlDocument document = new XmlDocument();
-
-                using (FileStream fs = new FileStream("Files/MarketItems.xml", FileMode.Open))
+                string id = command[1].ToUpper();
+                var items = File.ReadAllLines("Files/FreeMarket.txt");
+                for (int i = 0; i < items.Count(); i++)
                 {
-                    document.Load(fs);
-                    foreach (XmlElement element in document.FirstChild)
+                    if (items[i].Split('|')[0] == id)
                     {
-                        if (element.HasAttributes)
+                        string[] sData = items[i].Split('|');
+                        ulong sellerID = Convert.ToUInt64(sData[1]);
+                        if (sellerID == Context.User.Id)
                         {
-                            if (element.GetAttribute("id") == id)
+                            await ReplyAsync(":x: You cannot purchase your own posting. :x:");
+                            break;
+                        }
+                        string itemName = sData[2];
+                        int amount = Convert.ToInt32(sData[3]);
+                        int price = Convert.ToInt32(sData[4]);
+
+                        if (user.GetCoins() >= price)
+                        {
+                            for (int o = 0; o < amount; o++) user.GiveItem(itemName);
+                            user.GiveCoins(-price);
+                            items[i] = "";
+                            File.WriteAllLines("Files/FreeMarket.txt", items.Where(x => x != ""));
+
+
+                            await ReplyAsync($"You have successfully purchased {amount} {itemName}(s) for {price} coins!");
+                            Functions.GetUser(sellerID).GiveCoins(price);
+                            await Bot.client.GetUser(Convert.ToUInt64(sellerID)).SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}(s) for {price} coin(s).");
+                            break;
+                        }
+                        else await ReplyAsync(":x: You cannot afford this posting. :x:");
+                    }
+                }
+            }
+            else if (command[0] == "cancel")
+            {
+                var items = File.ReadAllLines("Files/FreeMarket.txt");
+                var id = command[1].ToUpper();
+                for (int i = 0; i < items.Count(); i++)
+                {
+                    string[] sData = items[i].Split('|');
+                    string sellerID = sData[1];
+                    if (items[i].Split('|')[0] == id)
+                    {
+                        string itemName = sData[2];
+                        int amount = Convert.ToInt32(sData[3]);
+                
+                        if (sellerID == $"{Context.User.Id}")
+                        {
+                            if (user.GetCoins() >= 200)
                             {
-                                var user = Functions.GetUser(Context.User);
-                                int userCoins = user.GetCoins();
-                                int price = Convert.ToInt32(element.GetAttribute("cost"));
-                                if (userCoins >= price)
-                                {
-                                    user.GiveCoins(-price);
-                                    user.GiveItem(element.GetAttribute("name"));
-                                    var sellerUser = Bot.client.GetUser(Convert.ToUInt64(element.GetAttribute("seller")));
-                                    var seller = Functions.GetUser(sellerUser);
-                                    await sellerUser.SendMessageAsync($"{Context.User.Username} has purchased your {element.GetAttribute("name")} for {price} coins!");
-                                    seller.GiveCoins(price);
-                                    await ReplyAsync("Successfully purchased item.");
-                                    document.FirstChild.RemoveChild(element);
-                                    document.Save(fs);
-                                    fs.Close();
-                                    return;
-                                }
+                                user.GiveCoins(-200);
+                                items[i] = "";
+                                for (int o = 0; o < amount; o++) user.GiveItem(itemName);
+                                File.WriteAllLines("Files/FreeMarket.txt", items.Where(x => x != ""));
+                                await ReplyAsync($"You have successfully canceled your posting of {amount} {itemName}(s). They have returned to your inventory and you have been charged the cancellation fee of 200 coins.");
                             }
+                            else await ReplyAsync("You cannot afford the cancellation fee of 200 coins and have not cancelled this posting.");
+                            
+                            break;
+                        }
+                        else
+                        {
+                            await ReplyAsync(":x: You cannot cancel someone elses posting! :x:");
                         }
                     }
                 }
