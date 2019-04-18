@@ -185,7 +185,7 @@ namespace ForkBot
             
 
             //put users and stats into dictionary
-            if (stat == "coins")
+            if (stat == "coins" || stat == "coin")
             {
                 foreach (User u in users) totalStats.Add(u.ID, u.GetCoins());
             }

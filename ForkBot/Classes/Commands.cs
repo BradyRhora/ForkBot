@@ -289,9 +289,9 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.3\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades"+
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.41\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades"+
                 "\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation"+
-                "\n-fixed forkbot DMs(nvm)\n-present shows record claims\n-parameter for ;top can now be an item\n-trusted system```");
+                "\n-fixed forkbot DMs(nvm)\n-present shows record claims\n-parameter for ;top can now be an item\n-trusted system\n-added ;freemarket and fixed bugs```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -525,6 +525,11 @@ namespace ForkBot
         {
             if (Functions.GetTrade(Context.User) == null && Functions.GetTrade(user) == null)
             {
+                if (user.Id == Context.User.Id)
+                {
+                    await ReplyAsync("You cannot trade yourself.");
+                    return;
+                }
                 Var.trades.Add(new ItemTrade(Context.User, user));
                 await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE INVITE",
                     user.Mention + "! " + Context.User.Username + " has invited you to trade."
@@ -771,8 +776,20 @@ namespace ForkBot
                 if (itemData.Count() == 1) amount = 1;
                 else int.TryParse(itemData[1], out amount);
 
+                if (amount < 1)
+                {
+                    await ReplyAsync("You must be posting at least one item.");
+                    return;
+                }
+
                 string item = itemData[0];
-                string price = command[2];
+                int price = int.Parse(command[2]);
+                if (price < 1)
+                {
+                    await ReplyAsync("You must be charging at least 1 coin.");
+                    return;
+                }
+
                 string id = "";
 
                 if (user.GetItemList().Where(x=>x == item).Count() < amount)
@@ -1282,7 +1299,7 @@ namespace ForkBot
         }
 
         [Command("profile"), Summary("View your or another users profile.")]
-        public async Task Profile(IUser user)
+        public async Task Profile([Remainder] IUser user)
         {
             var u = Functions.GetUser(user);
 
@@ -1833,6 +1850,18 @@ namespace ForkBot
             }
         }
         
+        [Command("raid"), Summary("[FUN] Choose a class then take on enemies to level up and gain glorious loot!")]
+        public async Task Raid([Remainder] string command = "")
+        {
+            throw new NotImplementedException("Not finished coding.");
+            /*
+            var user = Functions.GetUser(Context.User);
+            if (user.GetData("raid.class") == "0")
+            {
+                await ReplyAsync("🧙 Welcome... To The Dungeon of Efrüg!\nIn this dungeon you will choose your weapon, then ");
+            }
+            */
+        }
         #endregion
 
         #region Mod Commands

@@ -316,12 +316,12 @@ namespace ForkBot
                 switch (choice)
                 {
                     case 1:
-                        int coinAmount = rdm.Next(1000, 3000);
+                        int coinAmount = rdm.Next(1000,3000)+1;
                         user.GiveCoins(coinAmount);
                         msg += $"**+{coinAmount} coins!**";
                         break;
                     case 2:
-                        int amount = rdm.Next(2000, 5000);
+                        int amount = rdm.Next(2000, 5000)+1;
                         msg += $"**Fashion+{amount}**";
                         user.AddData("stat.fashion", amount);
                         break;
@@ -344,7 +344,7 @@ namespace ForkBot
                         }
                         break;
                     case 4:
-                        int hAmount = rdm.Next(2000, 5000);
+                        int hAmount = rdm.Next(2000, 5000)+1;
                         msg += $"**Happiness+{hAmount}**";
                         user.AddData("stat.happiness", hAmount);
                         break;
@@ -1098,12 +1098,13 @@ namespace ForkBot
                     for (int i = 0; i < 4; i++)
                     {
                         var itemI = rdm.Next(items.Count());
-                        var itemName = items[itemI];
-                        if (itemName.Contains("*"))
+                        var itemData = items[itemI];
+                        if (itemData.Contains("*"))
                         {
                             i--;
                             continue;
                         }
+                        string itemName = itemData.Split('|')[0];
                         msg += "\nA(n) " + Functions.GetItemEmote(itemName) + " " + itemName;
                         u.GiveItem(itemName);
                     }
