@@ -1145,7 +1145,7 @@ namespace ForkBot
             string msg;
             if (r < 50)
             {
-                msg = "You had a good time. You spent the evening watching Family Guy Funny Moments 2019 on youtube and then had some Popeyes.\n**Sobriety-20Happiness+80**";
+                msg = "You had a good time. You spent the evening watching \"Family Guy Funny Moments 2019\" on youtube and then had some Popeyes.\n**Sobriety-20Happiness+80**";
                 user.AddData("stat.happiness", 80);
                 user.AddData("stat.sobriety", -20);
             }
