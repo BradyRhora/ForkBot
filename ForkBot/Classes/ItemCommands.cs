@@ -1135,6 +1135,35 @@ namespace ForkBot
             await ReplyAsync(msg);
         }
 
+        [Command("weed")]
+
+        public async Task Weed()
+        {
+            if (Check(Context, "weed")) return;
+            int r = rdm.Next(100) + 1;
+            var user = Functions.GetUser(Context.User);
+            string msg;
+            if (r < 50)
+            {
+                msg = "You had a good time. You spent the evening watching Family Guy Funny Moments 2019 on youtube and then had some Popeyes.\n**Sobriety-20Happiness+80**";
+                user.AddData("stat.happiness", 80);
+                user.AddData("stat.sobriety", -20);
+            }
+            else if (r < 75)
+            {
+                msg = "This was a terrible high. You were so paranoid you called 911 while hiding in the fridge.\n**Sobriety-50Happiness-90**";
+                user.AddData("stat.sobriety", -50);
+                user.AddData("stat.Happiness", -90);
+            }
+            else
+            {
+                msg = "This was the best high of your life! You finally figured out the meaning of life. Sadly you forgot it.\n**Sobriety-30Happiness+110**";
+                user.AddData("stat.sobriety", -30);
+                user.AddData("stat.happiness", 110);
+            }
+            await Context.Channel.SendMessageAsync($"<:weed:506117312823427082> {msg}");
+        }
+
 
     }
 }
