@@ -1851,16 +1851,16 @@ namespace ForkBot
         }
         
         [Command("raid"), Summary("[FUN] Choose a class then take on enemies to level up and gain glorious loot!")]
-        public async Task Raid([Remainder] string command = "")
+        public async Task RaidCommand([Remainder] string command = "")
         {
-            throw new NotImplementedException("Not finished coding.");
-            /*
+            //throw new NotImplementedException("Not finished coding.");
+            
             var user = Functions.GetUser(Context.User);
             if (user.GetData("raid.class") == "0")
             {
-                await ReplyAsync("🧙 Welcome... To The Dungeon of Efrüg!\nIn this dungeon you will choose your weapon, then ");
+                await ReplyAsync(Raid.startMessage);
             }
-            */
+            
         }
         #endregion
 
