@@ -26,6 +26,7 @@ namespace ForkBot
             {
                 this.Name = Name;
                 this.Description = Description;
+                this.Emote = Emote;
             }
         }
 
