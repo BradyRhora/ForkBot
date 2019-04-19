@@ -36,7 +36,18 @@ namespace ForkBot
                 Console.WriteLine("Command Service Initialized.");
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
+                if (!Directory.Exists("Constants"))
+                {
+                    Directory.CreateDirectory("Constants");
+                    Console.WriteLine("Created Constants folder in bin/Debug/");
+                }
+                if (!File.Exists("Constants/bottoken"))
+                {
+                    File.WriteAllText("Constants/bottoken", "");
+                    Console.WriteLine("Created bottoken file in Constants folder, you will need to put the token in this file.");
+                }
                 await client.LoginAsync(TokenType.Bot, File.ReadAllText("Constants/bottoken"));
+                
                 Console.WriteLine("Successfully logged in!");
                 await client.StartAsync();
                 Var.DebugCode = rdm.Next(999, 9999) + 1;

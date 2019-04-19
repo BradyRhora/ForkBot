@@ -219,6 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="bin\Debug\Files\ForkParty\ForkPartyMap.psd" />
     <None Include="bin\Debug\ForkBot.exe.config" />
     <None Include="Classes\OxfordDictionariesAPI\Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="packages.config" />
@@ -253,6 +254,23 @@
     <Content Include="bin\Debug\Files\MarketItems.xml" />
     <Content Include="bin\Debug\Files\reminders.txt" />
     <Content Include="bin\Debug\Files\tags.txt" />
+    <Content Include="bin\Debug\Files\VTemplates\0.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\1.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\10.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\11.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\12.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\13.png" />
+    <Content Include="bin\Debug\Files\VTemplates\14.png" />
+    <Content Include="bin\Debug\Files\VTemplates\15.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\16.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\2.png" />
+    <Content Include="bin\Debug\Files\VTemplates\3.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\4.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\5.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\6.png" />
+    <Content Include="bin\Debug\Files\VTemplates\7.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\8.jpg" />
+    <Content Include="bin\Debug\Files\VTemplates\9.png" />
     <Content Include="bin\Debug\Files\wordlist.txt" />
     <Content Include="bin\Debug\ForkBot.exe" />
     <Content Include="bin\Debug\ForkBot.pdb" />

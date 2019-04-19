@@ -46,7 +46,7 @@ namespace ForkBot
         public static Timer RemindTimer;
         public static async void Remind(object state)
         {
-            if (!File.Exists("Files/userreminders.txt")) File.Create("Files/userreminders.txt");
+            if (!File.Exists("Files/userreminders.txt")) File.WriteAllText("Files/userreminders.txt", "");
             string[] reminders = File.ReadAllLines("Files/userreminders.txt");
             bool changed = false;
             for(int i = reminders.Count() - 1; i >= 0; i--)

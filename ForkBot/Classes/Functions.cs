@@ -48,6 +48,11 @@ namespace ForkBot
             }
             else
             {
+                if (!Directory.Exists("Users"))
+                {
+                    Directory.CreateDirectory("Users");
+                    Console.WriteLine("Created Users folder in bin/Debug/");
+                }
                 string newUser = "coins:0\nitems{\n}";
                 File.WriteAllText(@"Users\" + userID + ".user", newUser);
             }
