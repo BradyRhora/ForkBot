@@ -1136,7 +1136,6 @@ namespace ForkBot
         }
 
         [Command("weed")]
-
         public async Task Weed()
         {
             if (Check(Context, "weed")) return;
