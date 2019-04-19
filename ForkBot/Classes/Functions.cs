@@ -214,6 +214,7 @@ namespace ForkBot
                 }
             }
 
+            if (stat == "sobriety") bottom = true;
             var list = totalStats.ToList();
             var ordered = list.OrderBy(x => x.Value);
             if (bottom) ordered = list.OrderByDescending(x => x.Value);
