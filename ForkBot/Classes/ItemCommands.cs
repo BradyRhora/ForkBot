@@ -871,7 +871,7 @@ namespace ForkBot
         {
             if (Check(Context, "stopwatch")) return;
             await Context.Channel.SendMessageAsync(":stopwatch: The present time has decreased by 75%!");
-            Var.presentWait -= new TimeSpan(Convert.ToInt32(Var.presentWait.TotalHours * .75), 0, 0);
+            Var.presentWait -= new TimeSpan(0,0,Convert.ToInt32(Var.presentWait.TotalSeconds * .75));
         }
 
         [Command("baby_symbol")]

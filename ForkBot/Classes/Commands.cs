@@ -291,7 +291,8 @@ namespace ForkBot
         {
             await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.41\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades"+
                 "\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation"+
-                "\n-fixed forkbot DMs(nvm)\n-present shows record claims\n-parameter for ;top can now be an item\n-trusted system\n-added ;freemarket and fixed bugs```");
+                "\n-fixed forkbot DMs(nvm)\n-present shows record claims\n-parameter for ;top can now be an item\n-trusted system\n-added ;freemarket and fixed bugs\n" +
+                "-lots of bug fixes regarding ;fm, ;tips, ;weed, and ;stopwatch.```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -419,8 +420,7 @@ namespace ForkBot
             }
             else await ReplyAsync("You currently have no reminders.");
         }
-
-
+        
         [Command("deletereminder"),Alias(new string[] { "delreminder" })]
         public async Task DeleteReminder(int reminderID)
         {
@@ -1708,7 +1708,7 @@ namespace ForkBot
             if (tipNumber == -1) tipNumber = rdm.Next(tips.Count());
             else tipNumber--;
 
-            if (tipNumber <= 0 || tipNumber > tips.Count()) await ReplyAsync($"Invalid tip number! Make sure number is above 0 and less than {tips.Count() + 1}");
+            if (tipNumber < 0 || tipNumber > tips.Count()) await ReplyAsync($"Invalid tip number! Make sure number is above 0 and less than {tips.Count() + 1}");
             await ReplyAsync($":robot::speech_balloon: " + tips[tipNumber]);
         }
 
