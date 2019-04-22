@@ -710,14 +710,17 @@ namespace ForkBot
                         {
                             sort = true;
                             lowest = true;
-                        } else if (command[1].ToLower() == "highest")
+                        }
+                        else if (command[1].ToLower() == "highest")
                         {
                             sort = true;
                             lowest = false;
-                        } else itemParam = true;
+                        }
+                        else itemParam = true;
                     }
 
-                    if (command.Count() >= 2) int.TryParse(command[2], out page);
+                    if (command.Count() >= 3) int.TryParse(command[2], out page);
+                    else page = 1;
                 }
 
 
