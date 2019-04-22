@@ -698,10 +698,30 @@ namespace ForkBot
         public async Task FreeMarket(params string[] command)
         {
             var user = Functions.GetUser(Context.User);
+            bool sort = false, lowest = false, itemParam = false;
             if (command.Count() == 0 || command[0] == "view")
             {
                 int page = 1;
-                if (command.Count() > 0 && command[0] == "view") page = Convert.ToInt32(command[1]);
+                if (command.Count() > 0 && command[0] == "view")
+                {
+                    if (!int.TryParse(command[1], out page))
+                    {
+                        if (command[1].ToLower() == "lowest")
+                        {
+                            sort = true;
+                            lowest = true;
+                        } else if (command[1].ToLower() == "highest")
+                        {
+                            sort = true;
+                            lowest = false;
+                        } else itemParam = true;
+                    }
+
+                    if (command.Count() >= 2) int.TryParse(command[2], out page);
+                }
+
+
+
                 if (page < 1)
                 {
                     await ReplyAsync("Page number must be greater than 0.");
@@ -714,19 +734,36 @@ namespace ForkBot
                     File.AppendAllText("Files/FreeMarket.txt","");
                 }
 
-                var items = File.ReadAllLines("Files/FreeMarket.txt");
+                var itemList = File.ReadAllLines("Files/FreeMarket.txt").ToList();
+                IOrderedEnumerable<string> sortedList;
+                string[] items = null;
+
+                if (sort)
+                {
+                    if (lowest) sortedList = itemList.OrderBy(x => Convert.ToInt32(x.Split('|')[4]));
+                    else sortedList = itemList.OrderByDescending(x => Convert.ToInt32(x.Split('|')[4]));
+                    items = sortedList.ToArray();
+                } 
+
+                if (itemParam)
+                {
+                    items = items.Where(x => x.Split('|')[2] == command[1]).ToArray();
+                }
+                
+
+                const int ITEMS_PER_PAGE = 10;
 
                 JEmbed emb = new JEmbed();
                 emb.Title = "Free Market";
                 emb.Description = "To buy an item, use ;fm buy [ID]! For more help and examples, use ;fm help.";
-                double pageCount = Math.Ceiling((double)items.Count() / 25);
+                double pageCount = Math.Ceiling((double)items.Count() / ITEMS_PER_PAGE);
                 emb.Footer.Text = $"Page {page}/{pageCount}";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
                 page -= 1;
 
-                int itemStart = 25 * page;
-                int itemEnd = 25 * page + 25;
+                int itemStart = ITEMS_PER_PAGE * page;
+                int itemEnd = itemStart + ITEMS_PER_PAGE;
 
                 if (itemStart > items.Count())
                 {
