@@ -1,4 +1,4 @@
-overhaul item system!!!!!! Why the fuck not!!!
+﻿overhaul item system!!!!!! Why the fuck not!!!
 give 🍷 a basic command
 exam schedule command?
 forkbot dms
@@ -30,11 +30,22 @@ log trusted removal
 fix dms again
 add min/mins to remind
 ;top [item]
-fix coins in trade
 seperate hangman games
 remove names from wordlist.txt
 change message when ;combine parameters are left empty
 unblock people
-fix meat on bone message
 have good ideas
+raid battles?
+top with custom items?
+make profile [Remainder]
+add game_die alias to ;roll
+move fm emotes so that whats being sold is more clear
+fix bug where you "replace" OLD present when the last present was claimed by you, unreplaced, and had the same number to press
+fix shit dummy
+(Mrs Claus)
+fm above int max (and below 1?)
+remove proper nouns from wordlist
+penalty for losing hangman
+change mic description
+meme https://i.redd.it/4u5p6w9jj5v11.jpg
 remove bugs from fm
