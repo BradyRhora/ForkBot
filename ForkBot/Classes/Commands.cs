@@ -785,8 +785,12 @@ namespace ForkBot
                     int amount = Convert.ToInt32(sData[3]);
                     int price = Convert.ToInt32(sData[4]);
 
+                    string plural = "";
+                    if (amount > 1) plural = "s";
+
+
                     emb.Fields.Add(new JEmbedField(x => {
-                        x.Header = $"{Functions.GetItemEmote(itemName)} ({amount}) {itemName}(s) - id: {id}";
+                        x.Header = $"{Functions.GetItemEmote(itemName)} ({amount}) {itemName}{plural} - id: {id}";
                         x.Text = $":moneybag: {price} Coins\n<:blank:528431788616318977>";
                         x.Inline = false;
                     }));
@@ -805,7 +809,7 @@ namespace ForkBot
                                  "Examples:\n\n" +
                                  "`;fm view 3` Views the third Free Market page.\n"+
                                  "`;fm view lowest` Views all items sorted by the lowest price.\n"+
-                                 ";fm view key 5` Views the fifth page of just keys.\n"+
+                                 "`;fm view key 5` Views the fifth page of just keys.\n"+
                                  "`;fm post apple 100` Posts 1 apple for sale for 100 coins.\n"+
                                  "`;fm post gun*10 7500` Posts 10 guns for sale for 7500 coins.\n"+
                                  "`;fm buy A1B2C3` buys an item with the ID `A1B2C3`.\n\n"+
@@ -849,9 +853,10 @@ namespace ForkBot
                     id += key[rdm.Next(key.Count())];
                 }
 
-
+                string plural = "";
+                if (price > 1) plural = "s";
                 File.AppendAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}\n");
-                await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin(s). The sale ID is {id}.");
+                await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {id}.");
             }
             else if (command[0] == "buy")
             {
@@ -879,10 +884,14 @@ namespace ForkBot
                             items[i] = "";
                             File.WriteAllLines("Files/FreeMarket.txt", items.Where(x => x != ""));
 
+                            string plural = "";
+                            if (amount > 1) plural = "s";
 
-                            await ReplyAsync($"You have successfully purchased {amount} {itemName}(s) for {price} coins!");
+                            string pluralC = "";
+                            if (price > 1) pluralC = "s";
+                            await ReplyAsync($"You have successfully purchased {amount} {itemName}{plural} for {price} coin{pluralC}!");
                             Functions.GetUser(sellerID).GiveCoins(price);
-                            await Bot.client.GetUser(Convert.ToUInt64(sellerID)).SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}(s) for {price} coin(s).");
+                            await Bot.client.GetUser(Convert.ToUInt64(sellerID)).SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}{plural} for {price} coin{pluralC}.");
                             break;
                         }
                         else await ReplyAsync(":x: You cannot afford this posting. :x:");

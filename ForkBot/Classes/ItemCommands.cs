@@ -1152,7 +1152,7 @@ namespace ForkBot
             {
                 msg = "This was a terrible high. You were so paranoid you called 911 while hiding in the fridge.\n**Sobriety-50Happiness-90**";
                 user.AddData("stat.sobriety", -50);
-                user.AddData("stat.Happiness", -90);
+                user.AddData("stat.happiness", -90);
             }
             else
             {
