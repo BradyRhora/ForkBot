@@ -719,19 +719,13 @@ namespace ForkBot
                         else itemParam = true;
                     }
 
-                    if (command.Count() >= 3) int.TryParse(command[2], out page);
-                    else page = 1;
+                    if (command.Count() >= 3) int.TryParse(command[command.Count()-1], out page);
                 }
 
 
 
-                if (page < 1)
-                {
-                    await ReplyAsync("Page number must be greater than 0.");
-                    return;
-                }
-
-
+                if (page < 1) page = 1;
+                
                 if (!File.Exists("Files/FreeMarket.txt"))
                 {
                     File.AppendAllText("Files/FreeMarket.txt","");
@@ -776,6 +770,16 @@ namespace ForkBot
 
                 if (itemEnd > items.Count()) itemEnd = items.Count();
                 
+                if (items.Count() == 0)
+                {
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = "Either the Free Market is empty, or no items match your parameters!";
+                        x.Text = "Sorry!";
+                    }));
+                    emb.Footer.Text = "Page 0/0";
+                }
+
                 for (int i = itemStart; i < itemEnd; i++)
                 {
                     string[] sData = items[i].Split('|');
@@ -791,7 +795,7 @@ namespace ForkBot
 
                     emb.Fields.Add(new JEmbedField(x => {
                         x.Header = $"{Functions.GetItemEmote(itemName)} ({amount}) {itemName}{plural} - id: {id}";
-                        x.Text = $":moneybag: {price} Coins\n<:blank:528431788616318977>";
+                        x.Text = $"<:blank:528431788616318977>:moneybag: {price} Coins\n<:blank:528431788616318977>";
                         x.Inline = false;
                     }));
                 }
