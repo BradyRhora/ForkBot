@@ -795,11 +795,14 @@ namespace ForkBot
             {
                 await ReplyAsync("Free Market Help!\n\n" +
                                  "To view the Free Market, use either `;fm` or `;fm view`. You can do `;fm view [page #]` to view other pages.\n" +
+                                 "You can also use certain parameters, `lowest`, `highest`, and `[itemname]` to narrow down or sort the Free Market.\n"+
                                  "To buy an item in the free market, use `;fm buy [ID]`. The ID is the characters that appear in the title of the sale in `;fm`\n" +
                                  "To post an item for sale, do ;fm post [item] [price]. You can also include the amount of items you want to sell in the format `[item]*[amount]`\n" +
                                  "To cancel a posting, use `;fm cancel [ID]`\nThere is a 200 coin fee for cancelling posts in order to avoid abuse. This will be automatically charged upon cancellation, if you cannot afford the fee, you cannot cancel.\n\n" +
                                  "Examples:\n\n" +
                                  "`;fm view 3` Views the third Free Market page.\n"+
+                                 "`;fm view lowest` Views all items sorted by the lowest price.\n"+
+                                 ";fm view key 5` Views the fifth page of just keys.\n"+
                                  "`;fm post apple 100` Posts 1 apple for sale for 100 coins.\n"+
                                  "`;fm post gun*10 7500` Posts 10 guns for sale for 7500 coins.\n"+
                                  "`;fm buy A1B2C3` buys an item with the ID `A1B2C3`.\n\n"+
