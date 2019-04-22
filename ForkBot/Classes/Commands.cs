@@ -736,14 +736,14 @@ namespace ForkBot
 
                 var itemList = File.ReadAllLines("Files/FreeMarket.txt").ToList();
                 IOrderedEnumerable<string> sortedList;
-                string[] items = null;
+                string[] items = itemList.ToArray();
 
                 if (sort)
                 {
                     if (lowest) sortedList = itemList.OrderBy(x => Convert.ToInt32(x.Split('|')[4]));
                     else sortedList = itemList.OrderByDescending(x => Convert.ToInt32(x.Split('|')[4]));
                     items = sortedList.ToArray();
-                } 
+                }
 
                 if (itemParam)
                 {
