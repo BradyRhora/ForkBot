@@ -54,7 +54,7 @@ namespace ForkBot
             GetData(data); // ensure that the data exists
             for (int i = 0; i < uData.Count(); i++)
             {
-                if (uData[i].StartsWith(data))
+                if (uData[i] == data)
                 {
                     uData[i] = uData[i].Substring(0, uData[i].IndexOf(':') + 1) + value;
                     Save(uData);
