@@ -141,14 +141,14 @@ namespace ForkBot
                 var newLink = "http://www.ratemyprofessors.com" + node.Attributes[0].Value;
                 page = web.Load(newLink);
 
-                var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[1]/div/div[1]/div/div/div").InnerText;
-                var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[1]/div/div[2]/div[1]/div").InnerText;
-                var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[1]/div/div[2]/div[2]/div").InnerText;
+                var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
+                var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
+                var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
                 var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
                 string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
                 string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[1]/div[1]/div[3]/h2/a").InnerText;
                 university = university.Replace(" (all campuses)", "");
-                var tagBox = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[4]/div[2]/div[2]");
+                var tagBox = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
                 List<string> tags = new List<string>();
                 for (int i = 0; i < tagBox.ChildNodes.Count(); i++)
                 {
