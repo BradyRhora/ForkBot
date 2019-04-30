@@ -89,7 +89,7 @@ namespace ForkBot
 
         public class Values
         {
-            public static double SELL_VAL = .20;
+            public static double SELL_VAL = .45;
             public static string GNOME_VID = "https://tenor.com/view/gnome-your-chums-gnomed-gnome-gnoblin-gnelf-gif-12675740";
         }
     }
