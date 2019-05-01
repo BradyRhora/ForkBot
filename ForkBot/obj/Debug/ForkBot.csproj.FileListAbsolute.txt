@@ -168,6 +168,7 @@ C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.Generat
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
+<<<<<<< HEAD
 C:\Users\aw\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.exe
 C:\Users\aw\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
 C:\Users\aw\source\repos\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
@@ -228,3 +229,5 @@ C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.IO.Compression.
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Net.Http.dll
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Net.Sockets.dll
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Xml.ReaderWriter.dll
+=======
+>>>>>>> parent of 6a8e55e... Added command for wine_glass, buffed weed and beer.
