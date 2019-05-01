@@ -221,3 +221,10 @@ C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.IO.Compression.ZipF
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.Net.Http.dll
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.Net.Sockets.dll
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.Xml.ReaderWriter.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Win32.Primitives.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Globalization.Calendars.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.IO.Compression.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.IO.Compression.ZipFile.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Net.Http.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Net.Sockets.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Xml.ReaderWriter.dll
