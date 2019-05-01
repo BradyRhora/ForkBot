@@ -1,157 +1,20 @@
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.csprojResolveAssemblyReference.cache
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.exe
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.exe
-c:\users\owner\documents\visual studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
-C:\Users\Owner\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\libvideo.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\libtensorflow.dll
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.exe
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Xml.ReaderWriter.dll
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.pdb
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.exe
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\ForkBot.exe
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.exe
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.exe
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.csprojResolveAssemblyReference.cache
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.exe
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.pdb
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.pdb
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.pdb
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.pdb
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\System.Reflection.Metadata.xml
-C:\Users\brady\OneDrive\Documents\Visual Studio 2017\Projects\ForkBot\ForkBot\bin\Debug\ImageProcessor.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.exe
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ImageProcessor.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.pdb
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.pdb
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.pdb
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.pdb
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Reflection.Metadata.xml
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.exe
-C:\Users\blyth\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\ImageProcessor.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.pdb
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\bin\Debug\System.Reflection.Metadata.xml
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.Properties.Resources.resources
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.GenerateResource.cache
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
-C:\Users\brady\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\libtensorflow.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.ValueTuple.xml
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.xml
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.pdb
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.xml
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\libtensorflow.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.pdb
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\ImageProcessor.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.pdb
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.xml
@@ -161,73 +24,16 @@ C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.pdb
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Reflection.Metadata.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.xml
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.Properties.Resources.resources
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.GenerateResource.Cache
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.GenerateResource.cache
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
-<<<<<<< HEAD
-C:\Users\aw\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.exe
-C:\Users\aw\Source\Repos\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
-C:\Users\aw\source\repos\ForkBot\ForkBot\obj\Debug\ForkBot.Properties.Resources.resources
-C:\Users\aw\source\repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.GenerateResource.cache
-C:\Users\aw\source\repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\ForkBot.exe.config
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\ForkBot.exe
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\ForkBot.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\AWSSDK.Core.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Commands.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Core.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Rest.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Rpc.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Discord.Net.Webhook.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Discord.Net.WebSocket.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\HtmlAgilityPack.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\ImageProcessor.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.CSharp.Scripting.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.pdb
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.CodeAnalysis.Scripting.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Newtonsoft.Json.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.Collections.Immutable.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.Interactive.Async.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.Reflection.Metadata.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\TensorFlowSharp.xml
-C:\Users\aw\source\repos\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\libtensorflow.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.Win32.Primitives.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.Globalization.Calendars.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.IO.Compression.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.IO.Compression.ZipFile.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.Net.Http.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.Net.Sockets.dll
-C:\Users\aw\source\repos\ForkBot\ForkBot\bin\Debug\System.Xml.ReaderWriter.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\Microsoft.Win32.Primitives.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.Globalization.Calendars.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.IO.Compression.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.IO.Compression.ZipFile.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.Net.Http.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.Net.Sockets.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\System.Xml.ReaderWriter.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\Microsoft.Win32.Primitives.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Globalization.Calendars.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.IO.Compression.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.IO.Compression.ZipFile.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Net.Http.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Net.Sockets.dll
-C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\bin\Debug\System.Xml.ReaderWriter.dll
-=======
->>>>>>> parent of 6a8e55e... Added command for wine_glass, buffed weed and beer.
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.exe
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
