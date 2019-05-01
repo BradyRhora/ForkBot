@@ -31,9 +31,9 @@ namespace ForkBot
                     var type = schedule.ChildNodes[0].InnerText;
                     var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ", "|").Replace(" ", "").Replace("(Glendoncampus)", "").Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries);
 
-                    var TermAndSec = termSec.Split(' ');
+                    var TermAndSec = termSec.Split(new char[]{' '},StringSplitOptions.RemoveEmptyEntries);
                     var term = TermAndSec[0] + " " + TermAndSec[1];
-                    var section = TermAndSec[3] + " " + TermAndSec[4];
+                    var section = TermAndSec[2] + " " + TermAndSec[3];
                     
                     var professor = sessionDir;
 

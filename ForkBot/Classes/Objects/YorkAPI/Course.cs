@@ -18,6 +18,8 @@ namespace ForkBot
         private string ScheduleLink;
         private string Description;
         private string Title;
+        private string Term;
+
         private CourseSchedule Schedule;
         static private HtmlWeb web = new HtmlWeb();
 
@@ -26,7 +28,7 @@ namespace ForkBot
 
         }
 
-        public Course(string code)
+        public Course(string code, string term = "")
         {
             var courses = File.ReadAllLines("Files/courselist.txt");
             string courseLine = "";
@@ -39,17 +41,19 @@ namespace ForkBot
                 }
             }
 
-            LoadCourse(courseLine);
+            LoadCourse(courseLine, term);
         }
 
-        public void LoadCourse(string courseLine)
+        public void LoadCourse(string courseLine, string term = "")
         {
+            if (term == "") Term = Var.term;
+            else Term = term;
             var info = courseLine.Split(' ');
             Department = info[0].Split('/')[0];
             Subject = info[0].Split('/')[1];
             Coursecode = info[1];
             Credit = Convert.ToDouble(info[2]);
-            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay=2018&ss=FW";
+            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay=2018&ss={Term.ToUpper()}";
 
             if (CourseLink == "") throw new CourseNotFoundException();
 
@@ -78,6 +82,8 @@ namespace ForkBot
         public string GetDescription() { return Description; }
 
         public string GetTitle() { return Title; }
+
+        public string GetTerm() { return Term.ToUpper(); }
 
         public CourseSchedule GetSchedule() { return Schedule; }
         

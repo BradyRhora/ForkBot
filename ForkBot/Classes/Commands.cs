@@ -200,11 +200,24 @@ namespace ForkBot
             }
         }
 
-        [Command("course"), Summary("Shows details for course from inputted course code.")]
-        public async Task Course([Remainder] string code)
+        [Command("course"), Summary("Shows details for a course using inputted course code.")]
+        public async Task Course([Remainder] string code = "")
         {
             try
             {
+                if (code == "")
+                {
+                    await ReplyAsync($"To use this command, use the format:\n`;course [subject][level]`\nFor example, if you want the course information for MATH1190, simply type: `;course math1190`.\nYou can also specify the term of the course you want, either FW or SU (for fall/winter and summer respectively). For example,\n `;course eecs4404 fw`\nwill give you the fall/winter course for EECS4404. If you don't specify, it will use the current term. *(Current term is:* **{Var.term}** *)*");
+                    return;
+                }
+
+
+                string term = "";
+                if (code.Split(' ').Contains("fw")) term = "fw";
+                else if (code.Split(' ').Contains("su")) term = "su";
+
+                code = code.Replace(" fw", "").Replace(" su", "");
+
                 //formats course code correctly
                 if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
                 {
@@ -212,7 +225,8 @@ namespace ForkBot
                     code = splits[0].Trim() + " " + splits[1].Trim();
                 }
 
-                Course course = new Course(code);
+
+                Course course = new Course(code,term);
                                
 
                 JEmbed emb = new JEmbed();
@@ -227,6 +241,7 @@ namespace ForkBot
                     emb.Description += "\n";
                 }
 
+                emb.Footer.Text = "Term: " + course.GetTerm();
                 
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
@@ -1703,7 +1718,9 @@ namespace ForkBot
                 "Get presents occasionally with `;present'! No presents left? Use a ticket to add more to the batch, or a stopwatch to shorten the time until the next batch!",
                 "Get coins for items you don't need or want by selling them with `;sell`! Item can't be sold? Just `;trash` it!",
                 "Give other users coins with the `;donate` command!",
-                "Legend says of a secret shop that only the most elite may enter! I think the **man** knows..."
+                "Legend says of a secret shop that only the most elite may enter! I think the **man** knows...",
+                "Did you know that you can sell ALL of your items using ;sell all? Be careful! You will lose EVERYTHING!",
+                "Check professor ratings using the ;prof command!"
                 };
             if (tipNumber == -1) tipNumber = rdm.Next(tips.Count());
             else tipNumber--;
