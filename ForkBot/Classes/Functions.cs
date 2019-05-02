@@ -160,12 +160,12 @@ namespace ForkBot
                     if (message.Author.Id == Constants.Users.FORKPY) responseMsg = message.Author.Mention + " " + responseMsg;
                     else responseMsg = ":robot::speech_balloon: " + responseMsg;
 
-                    if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
+                    if (Var.responding) await message.Channel.SendMessageAsync(responseMsg);
                 }
             }
             catch (Exception e)
             {
-                if (Var.responding) await message.Channel.SendMessageAsync("Watch your profanity!");
+                if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: Watch your profanity!");
                 Console.WriteLine(e.Message);
             }
         }
