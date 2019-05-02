@@ -1,101 +1,58 @@
 AP/ADMS 1000 3.00 Introduction to Business
-AP/ADMS 1000 3.00 Introduction to Business
-AP/ADMS 1010 3.00 Exploring the Functions of Business 
-AP/ADMS 1010 3.00 Exploring the Functions of Business 
+AP/ADMS 1010 3.00 Exploring the Functions of Business
 AP/ADMS 1500 3.00 An Introduction to Accounting for Human Resource Professionals
-AP/ADMS 1500 3.00 An Introduction to Accounting for Human Resource Professionals
-AP/ADMS 1550 3.00 Accounting for Non-Financial Managers
 AP/ADMS 1550 3.00 Accounting for Non-Financial Managers
 AP/ADMS 1701 3.00 Disasters: Case Studies of Causes and Impacts
 AP/ADMS 1777 6.00 Disasters and History: How Humans and Nature make Disasters
 AP/ADMS 2200 3.00 Introductory Marketing
-AP/ADMS 2200 3.00 Introductory Marketing
 AP/ADMS 2310 3.00 Business Statistics Through Applications
 AP/ADMS 2320 3.00 Quantitative Methods I
-AP/ADMS 2320 3.00 Quantitative Methods I
-AP/ADMS 2400 3.00 Introduction to Organizational Behaviour
 AP/ADMS 2400 3.00 Introduction to Organizational Behaviour
 AP/ADMS 2500 3.00 Introduction to Financial Accounting
-AP/ADMS 2500 3.00 Introduction to Financial Accounting
-AP/ADMS 2510 3.00 Introduction to Management Accounting
 AP/ADMS 2510 3.00 Introduction to Management Accounting
 AP/ADMS 2511 3.00 Management Information Systems
-AP/ADMS 2511 3.00 Management Information Systems
-AP/ADMS 2541 3.00 Introduction to Personal Finance
 AP/ADMS 2541 3.00 Introduction to Personal Finance
 AP/ADMS 2600 3.00 Human Resources Management
-AP/ADMS 2600 3.00 Human Resources Management
 AP/ADMS 2610 3.00 Elements of Law: Part One
-AP/ADMS 2610 3.00 Elements of Law: Part One
-AP/ADMS 2700 3.00 Fundamentals of Emergency Management
 AP/ADMS 2700 3.00 Fundamentals of Emergency Management
 AP/ADMS 3000 6.00 Directed Reading
 AP/ADMS 3000 3.00 Directed Reading
-AP/ADMS 3000 3.00 Directed Reading
 AP/ADMS 3010 0.00 Internship Work Term
-AP/ADMS 3010 0.00 Internship Work Term
-AP/ADMS 3015 3.00 Professional Communication in the Canadian Context
 AP/ADMS 3015 3.00 Professional Communication in the Canadian Context
 AP/ADMS 3020 3.00 Canadian Business Culture and Management Skills
 AP/ADMS 3060 3.00 Fundamentals of Canadian Business Law and Ethics
-AP/ADMS 3060 3.00 Fundamentals of Canadian Business Law and Ethics
 AP/ADMS 3120 3.00 Gender Issues in Management
 AP/ADMS 3210 3.00 Consumer Behaviour
-AP/ADMS 3210 3.00 Consumer Behaviour
-AP/ADMS 3220 3.00 Applied Marketing Management
 AP/ADMS 3220 3.00 Applied Marketing Management
 AP/ADMS 3300 3.00 Decision Analysis
-AP/ADMS 3300 3.00 Decision Analysis
-AP/ADMS 3330 3.00 Quantitative Methods II
 AP/ADMS 3330 3.00 Quantitative Methods II
 AP/ADMS 3331 3.00 Introduction to Operations Research
 AP/ADMS 3351 3.00 Operations Management
-AP/ADMS 3351 3.00 Operations Management
 AP/ADMS 3352 3.00 Sampling Techniques and Survey Design
-AP/ADMS 3353 3.00 Project Management
 AP/ADMS 3353 3.00 Project Management
 AP/ADMS 3360 3.00 Physical Distribution and Transportation
 AP/ADMS 3400 3.00 Occupational Health and Safety
-AP/ADMS 3400 3.00 Occupational Health and Safety
-AP/ADMS 3410 3.00 Training and Development
 AP/ADMS 3410 3.00 Training and Development
 AP/ADMS 3420 3.00 Employment Law
-AP/ADMS 3420 3.00 Employment Law
-AP/ADMS 3422 3.00 Industrial Relations
 AP/ADMS 3422 3.00 Industrial Relations
 AP/ADMS 3430 3.00 Human Resources Planning
-AP/ADMS 3430 3.00 Human Resources Planning
-AP/ADMS 3440 3.00 Leadership and Management Skills
 AP/ADMS 3440 3.00 Leadership and Management Skills
 AP/ADMS 3450 3.00 Equity, Diversity and Inclusion in the Workplace
-AP/ADMS 3450 3.00 Equity, Diversity and Inclusion in the Workplace
 AP/ADMS 3470 3.00 Recruitment, Selection and  Performance Appraisal of Personnel
-AP/ADMS 3470 3.00 Recruitment, Selection and  Performance Appraisal of Personnel
-AP/ADMS 3490 3.00 Compensation
 AP/ADMS 3490 3.00 Compensation
 AP/ADMS 3502 3.00 Introduction to Enterprise Resource Planning Systems Applications
 AP/ADMS 3510 3.00 Managerial Cost Accounting and Analysis
-AP/ADMS 3510 3.00 Managerial Cost Accounting and Analysis
-AP/ADMS 3520 3.00 An Overview of Canadian Income Taxation
 AP/ADMS 3520 3.00 An Overview of Canadian Income Taxation
 AP/ADMS 3521 3.00 Management of Electronic Commerce Systems
 AP/ADMS 3524 3.00 Public Sector Budget Process
 AP/ADMS 3530 3.00 Finance
-AP/ADMS 3530 3.00 Finance
-AP/ADMS 3531 3.00 Personal Investment Management
 AP/ADMS 3531 3.00 Personal Investment Management
 AP/ADMS 3541 3.00 Personal Financial Planning
-AP/ADMS 3541 3.00 Personal Financial Planning
-AP/ADMS 3585 3.00 Intermediate Financial Accounting I
 AP/ADMS 3585 3.00 Intermediate Financial Accounting I
 AP/ADMS 3595 3.00 Intermediate Financial Accounting II
-AP/ADMS 3595 3.00 Intermediate Financial Accounting II
 AP/ADMS 3660 3.00 Business Ethics and Corporate Social Responsibility
-AP/ADMS 3660 3.00 Business Ethics and Corporate Social Responsibility
-AP/ADMS 3701 3.00 Disaster Risk Management
 AP/ADMS 3701 3.00 Disaster Risk Management
 AP/ADMS 3702 3.00 Comprehensive Emergency Management: Integrating Critical Knowledge with Practice
-AP/ADMS 3703 3.00 Business Continuity Planning
 AP/ADMS 3703 3.00 Business Continuity Planning
 AP/ADMS 3704 3.00 Emergency Management Communications
 AP/ADMS 3705 3.00 Emergency Management: Field Experience
@@ -105,37 +62,24 @@ AP/ADMS 3708 3.00 Social Issues in Disaster Management
 AP/ADMS 3810 3.00 Program Evaluation in Health Care Part I
 AP/ADMS 3810 3.00 Introduction to Real Estate
 AP/ADMS 3900 3.00 The Practice of General Management
-AP/ADMS 3900 3.00 The Practice of General Management
-AP/ADMS 3920 3.00 New Venture and Small Business Management
 AP/ADMS 3920 3.00 New Venture and Small Business Management
 AP/ADMS 3930 3.00 Management
-AP/ADMS 3930 3.00 Management
-AP/ADMS 3960 3.00 International Business
 AP/ADMS 3960 3.00 International Business
 AP/ADMS 4000 6.00 Directed Reading
 AP/ADMS 4000 3.00 Directed Reading
-AP/ADMS 4000 3.00 Directed Reading
-AP/ADMS 4010 3.00 Organization and Administrative Theory
 AP/ADMS 4010 3.00 Organization and Administrative Theory
 AP/ADMS 4200 3.00 Personal Selling and Sales Force Management
-AP/ADMS 4210 3.00 International Marketing
 AP/ADMS 4210 3.00 International Marketing
 AP/ADMS 4211 3.00 Live-Client Learning Marketing
 AP/ADMS 4215 3.00 Business to Business Marketing
 AP/ADMS 4225 3.00 Retailing Management
 AP/ADMS 4230 3.00 Marketing Channels
 AP/ADMS 4235 3.00 New Product Management
-AP/ADMS 4235 3.00 New Product Management
-AP/ADMS 4240 3.00 Advertising and Communications
 AP/ADMS 4240 3.00 Advertising and Communications
 AP/ADMS 4245 3.00 Digital Marketing
-AP/ADMS 4245 3.00 Digital Marketing
-AP/ADMS 4250 3.00 Marketing Strategy Development and Implementation
 AP/ADMS 4250 3.00 Marketing Strategy Development and Implementation
 AP/ADMS 4255 3.00 Customer Relationship Management
-AP/ADMS 4255 3.00 Customer Relationship Management
-AP/ADMS 4260 3.00 Marketing Research 
-AP/ADMS 4260 3.00 Marketing Research 
+AP/ADMS 4260 3.00 Marketing Research
 AP/ADMS 4275 3.00 Marketing Analytics
 AP/ADMS 4280 3.00 Social Marketing: Non-Profit Marketing and Corporate Social Responsibility
 AP/ADMS 4285 3.00 Brand Management
@@ -147,30 +91,18 @@ AP/ADMS 4370 3.00 Data Analysis Systems
 AP/ADMS 4410 3.00 Applied Time Series Analysis for Management
 AP/ADMS 4410 3.00 Strategic Human Resources Management
 AP/ADMS 4420 3.00 Human Resources Research Methods
-AP/ADMS 4420 3.00 Human Resources Research Methods
 AP/ADMS 4421 3.00 Qualitative Methods
 AP/ADMS 4430 3.00 Career Management
-AP/ADMS 4430 3.00 Career Management
 AP/ADMS 4440 3.00 Issues in Human Resource Management
-AP/ADMS 4444 3.00 Issues in Human Resource Management
 AP/ADMS 4460 3.00 Organizational Development
-AP/ADMS 4460 3.00 Organizational Development
-AP/ADMS 4470 3.00 International Human Resources Management
 AP/ADMS 4470 3.00 International Human Resources Management
 AP/ADMS 4480 3.00 Cross Cultural Management
-AP/ADMS 4481 3.00 Cross Cultural Management
 AP/ADMS 4485 3.00 Executive Coaching
 AP/ADMS 4490 3.00 Negotiations for Human Resource Management
-AP/ADMS 4490 3.00 Negotiations for Human Resource Management
-AP/ADMS 4495 3.00 Managing Effective Groups and Teams
 AP/ADMS 4495 3.00 Managing Effective Groups and Teams
 AP/ADMS 4501 3.00 Advanced Portfolio Management
-AP/ADMS 4501 3.00 Advanced Portfolio Management
-AP/ADMS 4502 3.00 Ethics for Investment Managers
 AP/ADMS 4502 3.00 Ethics for Investment Managers
 AP/ADMS 4503 3.00 Derivative Securities
-AP/ADMS 4503 3.00 Derivative Securities
-AP/ADMS 4504 3.00 Fixed Income Securities and Risk Management
 AP/ADMS 4504 3.00 Fixed Income Securities and Risk Management
 AP/ADMS 4505 3.00 Retirement and Estate Planning
 AP/ADMS 4506 3.00 Professional Financial Planning

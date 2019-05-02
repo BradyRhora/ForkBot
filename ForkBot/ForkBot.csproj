@@ -198,7 +198,7 @@
     <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
     <Compile Include="Classes\Less Useful Stuff\Timers.cs" />
     <Compile Include="Classes\Objects\User.cs" />
-    <Compile Include="Classes\Less Useful Stuff\Var.cs" />
+    <Compile Include="Classes\Var.cs" />
     <Compile Include="Classes\Less Useful Stuff\XMLToolbox.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />

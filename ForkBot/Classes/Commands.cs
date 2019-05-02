@@ -203,6 +203,7 @@ namespace ForkBot
         [Command("course"), Summary("Shows details for a course using inputted course code.")]
         public async Task Course([Remainder] string code = "")
         {
+            Course course = null;
             try
             {
                 if (code == "")
@@ -221,32 +222,40 @@ namespace ForkBot
                 //formats course code correctly
                 if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
                 {
-                    var splits = Regex.Split(code, "(\\d+|\\D+)").Where(x=>x!="").ToArray();
+                    var splits = Regex.Split(code, "(\\d+|\\D+)").Where(x => x != "").ToArray();
                     code = splits[0].Trim() + " " + splits[1].Trim();
                 }
 
 
-                Course course = new Course(code,term);
-                               
+                course = new Course(code, term);
+
 
                 JEmbed emb = new JEmbed();
                 emb.Title = course.GetTitle();
                 emb.Description = course.GetDescription() + "\n\n";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
-                foreach(CourseDay day in course.GetSchedule().Days)
+                foreach (CourseDay day in course.GetSchedule().Days)
                 {
                     emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\n";
-                    foreach(var dayTime in day.DayTimes) emb.Description += $"\n{dayTime.Key} - {dayTime.Value}";
+                    foreach (var dayTime in day.DayTimes)
+                    {
+                        if (dayTime.Key == "") emb.Description += "\nOnline";
+                        else emb.Description += $"\n{dayTime.Key} - {dayTime.Value}";
+                    }
                     emb.Description += "\n";
                 }
 
                 emb.Footer.Text = "Term: " + course.GetTerm();
-                
+
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            catch (Exception) { await Context.Channel.SendMessageAsync("There was an error loading the course page. (Possibly not available this term)"); }
+            catch (Exception)
+            {
+                if (course != null && course.CourseNotFound) await ReplyAsync("The specified course was not found.");
+                else await ReplyAsync("There was an error loading the course page. (Possibly not available this term)");
+            }
 
         }
 

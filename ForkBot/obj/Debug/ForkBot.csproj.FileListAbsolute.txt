@@ -37,3 +37,4 @@ C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCom
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.exe
 C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.pdb
+C:\Users\Owner\Documents\GitHub\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
