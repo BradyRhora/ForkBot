@@ -189,8 +189,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presentName)} {pMessage}");
             if (Var.present == "santa")
             {
-                await Context.Channel.SendMessageAsync("You got...");
-                string sMessage = "";
+                string sMessage = "You got...\n";
                 for (int i = 0; i < 5; i++)
                 {
                     var sPresentData = presents[rdm.Next(presents.Count())];

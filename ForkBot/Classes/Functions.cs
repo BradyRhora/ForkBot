@@ -156,6 +156,9 @@ namespace ForkBot
                     string responseMsg = n[0].InnerText;
                     if (Var.Conversation == "0") Var.Conversation = response.ChildNodes[1].Attributes[0].Value;
                     responseMsg = Regex.Replace(responseMsg, "(<.*@.*\\w+.*>)", "").Trim();
+
+                    if (message.Author.Id == Constants.Users.FORKPY) responseMsg += " " + message.Author.Mention;
+
                     if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: " + responseMsg);
                 }
             }
