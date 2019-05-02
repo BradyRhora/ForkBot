@@ -165,7 +165,7 @@ namespace ForkBot
             }
             catch (Exception e)
             {
-                if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: Watch your profanity!");
+                if (Var.responding) await message.Channel.SendMessageAsync("Watch your profanity!");
                 Console.WriteLine(e.Message);
             }
         }
