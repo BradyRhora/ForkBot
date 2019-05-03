@@ -189,8 +189,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presentName)} {pMessage}");
             if (Var.present == "santa")
             {
-                await Context.Channel.SendMessageAsync("You got...");
-                string sMessage = "";
+                string sMessage = "You got...\n";
                 for (int i = 0; i < 5; i++)
                 {
                     var sPresentData = presents[rdm.Next(presents.Count())];
@@ -564,9 +563,9 @@ namespace ForkBot
         public async Task Beer()
         {
             if (Check(Context, "beer")) return;
-            await Context.Channel.SendMessageAsync(":beer: You drink the beer and feel a little tipsy.\n**Sobriety-5 Happiness+15**");
+            await Context.Channel.SendMessageAsync(":beer: You drink the beer and feel a little tipsy.\n**Sobriety-5 Happiness+10**");
             Functions.GetUser(Context.User).AddData("stat.sobriety", -5);
-            Functions.GetUser(Context.User).AddData("stat.happiness", 15);
+            Functions.GetUser(Context.User).AddData("stat.happiness", 10);
         }
 
         [Command("paintbrush")]
@@ -1142,50 +1141,27 @@ namespace ForkBot
             int r = rdm.Next(100) + 1;
             var user = Functions.GetUser(Context.User);
             string msg;
-            if (r < 70)
+            if (r < 50)
             {
                 msg = "You had a good time. You spent the evening watching \"Family Guy Funny Moments 2019\" on youtube and then had some Popeyes.\n**Sobriety-20Happiness+80**";
-                user.AddData("stat.sobriety", -20);
                 user.AddData("stat.happiness", 80);
+                user.AddData("stat.sobriety", -20);
             }
-            else if (r < 90)
+            else if (r < 75)
             {
-
+                msg = "This was a terrible high. You were so paranoid you called 911 while hiding in the fridge.\n**Sobriety-50Happiness-90**";
+                user.AddData("stat.sobriety", -50);
+                user.AddData("stat.happiness", -90);
+            }
+            else
+            {
                 msg = "This was the best high of your life! You finally figured out the meaning of life. Sadly you forgot it.\n**Sobriety-30Happiness+110**";
                 user.AddData("stat.sobriety", -30);
                 user.AddData("stat.happiness", 110);
             }
-            else
-            {
-                msg = "This was a terrible high. You were so paranoid you called 911 while hiding in the fridge.\n**Sobriety-50Happiness-90**";
-                user.AddData("stat.sobriety", -50);
-                user.AddData("stat.happiness", -80);
-            }
             await Context.Channel.SendMessageAsync($"<:weed:506117312823427082> {msg}");
-        }
-
-        [Command("wine_glass"), Alias("wine", "wine_glass")]
-        public async Task Wine_glass()
-        {
-            if (Check(Context, "wine_glass")) return;
-            int r = rdm.Next(5) + 1;
-
-            if (r < 5)
-            {
-                await Context.Channel.SendMessageAsync(":wine_glass: Cheers! You had some cheap wine.\n**Sobriety-3 Happiness+10**");
-                Functions.GetUser(Context.User).AddData("stat.sobriety", -3);
-                Functions.GetUser(Context.User).AddData("stat.happiness", 10);
-            }
-
-            else
-            {
-                await Context.Channel.SendMessageAsync(":wine_glass: A votre santé! You had some imported wine!\n**Sobriety-4 Happiness+15**");
-                Functions.GetUser(Context.User).AddData("stat.sobriety", -4);
-                Functions.GetUser(Context.User).AddData("stat.happiness", 15);
-            }
         }
 
 
     }
 }
-

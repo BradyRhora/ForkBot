@@ -45,13 +45,18 @@ namespace ForkBot
                     {
                         string day = Convert.ToString(timedayInfo[i][0]);
                         string time = "";
-                        for (int o = 2; o < timedayInfo[i].Length; o++)
+                        if (!timedayInfo[i].StartsWith("0") && !type.StartsWith("ONLN"))
                         {
-                            if (timedayInfo[i][o - 2] == ':') time = timedayInfo[i].Substring(1, o);
+                            for (int o = 2; o < timedayInfo[i].Length; o++)
+                            {
+                                if (timedayInfo[i][o - 2] == ':') time = timedayInfo[i].Substring(1, o);
+                            }
+
+
+                            Dictionary<string, string> DayConversion = new Dictionary<string, string>() { { "M", "Monday" }, { "T", "Tuesday" }, { "W", "Wednesday" }, { "R", "Thursday" }, { "F", "Friday" } };
+                            cDay.AddDayTime(DayConversion[day], time);
                         }
-                        
-                        Dictionary<string, string> DayConversion = new Dictionary<string, string>() { { "M", "Monday" }, { "T", "Tuesday" }, { "W", "Wednesday" }, { "R", "Thursday" }, { "F", "Friday" } };
-                        cDay.AddDayTime(DayConversion[day], time);
+                        else cDay.AddDayTime("", "");
                     }
 
                     Days.Add(cDay);

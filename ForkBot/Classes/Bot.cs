@@ -201,7 +201,7 @@ namespace ForkBot
             ulong[] blockedChannels = { Constants.Channels.GENERAL_SLOW, Constants.Channels.GENERAL_TRUSTED, Constants.Channels.NEWS_DEBATE, Constants.Channels.LIFESTYLE };
             if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
             
-            if (message.Author.IsBot) return;
+            if (message.Author.IsBot && message.Author.Id != Constants.Users.FORKPY) return;
             
             //present stuff
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))

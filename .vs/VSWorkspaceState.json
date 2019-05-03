@@ -2,8 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\ForkBot",
-    "\\ForkBot\\Scripts"
+    "\\ForkBot\\Classes"
   ],
-  "SelectedNode": "\\ForkBot\\Classes",
+  "SelectedNode": "\\ForkBot.sln",
   "PreviewInSolutionExplorer": false
 }

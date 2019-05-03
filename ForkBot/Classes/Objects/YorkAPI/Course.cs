@@ -19,6 +19,7 @@ namespace ForkBot
         private string Description;
         private string Title;
         private string Term;
+        public bool CourseNotFound = false;
 
         private CourseSchedule Schedule;
         static private HtmlWeb web = new HtmlWeb();
@@ -40,8 +41,8 @@ namespace ForkBot
                     break;
                 }
             }
-
-            LoadCourse(courseLine, term);
+            CourseNotFound = courseLine == ""; 
+            if (!CourseNotFound) LoadCourse(courseLine, term);
         }
 
         public void LoadCourse(string courseLine, string term = "")
