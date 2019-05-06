@@ -1398,7 +1398,7 @@ namespace ForkBot
 
 
             var gUser = (user as IGuildUser);
-            if (gUser != null)
+            if (gUser != null && gUser.RoleIds.Count() > 1)
             {
                 emb.Fields.Add(new JEmbedField(x =>
                 {
@@ -1407,16 +1407,18 @@ namespace ForkBot
 
                     foreach (ulong id in gUser.RoleIds)
                     {
-                        text += Context.Guild.GetRole(id).Name + "\n";
+                        if (Context.Guild.GetRole(id).Name != "@everyone") 
+                            text += Context.Guild.GetRole(id).Name + ", ";
                     }
 
-                    x.Text = Convert.ToString(text);
+                    x.Text = Convert.ToString(text).Trim(' ',',');
                     x.Inline = true;
                 }));
             }
 
             string[] items = u.GetItemList();
-            /*
+
+            /* old inventory code
             bool moreItems = true;
             string invTitle = "Inventory";
             while (moreItems)
@@ -1458,13 +1460,16 @@ namespace ForkBot
             string txt = "";
             foreach(KeyValuePair<string,int> item in inv)
             {
-                txt += $"{Functions.GetItemEmote(item.Key)} {item.Key} x{item.Value}<:blank:528431788616318977>";
-                if (txt.Count() > 1000)
+                string itemListing = $"{Functions.GetItemEmote(item.Key)} {item.Key} x{item.Value} ";
+
+                if (txt.Count() + itemListing.Count() > 1024)
                 {
                     fields.Add(txt);
-                    txt = "";
+                    txt = itemListing;
                 }
+                else txt += itemListing;
             }
+            fields.Add(txt);
 
             string title = "Inventory";
             foreach (string f in fields)
