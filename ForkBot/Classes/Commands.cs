@@ -1454,14 +1454,28 @@ namespace ForkBot
                 else inv.Add(items[i], 1);
             }
 
-            emb.Fields.Add(new JEmbedField(x =>
+            List<string> fields = new List<string>();
+            string txt = "";
+            foreach(KeyValuePair<string,int> item in inv)
             {
-                x.Header = "Inventory";
-                foreach(KeyValuePair<string,int> item in inv)
+                txt += $"{Functions.GetItemEmote(item.Key)} {item.Key} x{item.Value}<:blank:528431788616318977>";
+                if (txt.Count() > 1000)
                 {
-                    x.Text += $"{Functions.GetItemEmote(item.Key)} {item.Key} x{item.Value}\t";
+                    fields.Add(txt);
+                    txt = "";
                 }
-            }));
+            }
+
+            string title = "Inventory";
+            foreach (string f in fields)
+            {
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = title + ":";
+                    x.Text = f;
+                }));
+                title += " (cont.)";
+            }
             
 
             emb.Fields.Add(new JEmbedField(x =>
