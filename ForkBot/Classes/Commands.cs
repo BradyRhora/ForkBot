@@ -1415,8 +1415,9 @@ namespace ForkBot
                 }));
             }
 
-            bool moreItems = true;
             string[] items = u.GetItemList();
+            /*
+            bool moreItems = true;
             string invTitle = "Inventory";
             while (moreItems)
             {
@@ -1444,6 +1445,24 @@ namespace ForkBot
                     if (moreItems) items = extraItems.ToArray();
                 }));
             }
+            */
+
+            Dictionary<string, int> inv = new Dictionary<string, int>();
+            for (int i = 0; i < items.Count(); i++)
+            {
+                if (inv.ContainsKey(items[i])) inv[items[i]]++;
+                else inv.Add(items[i], 1);
+            }
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Inventory";
+                foreach(KeyValuePair<string,int> item in inv)
+                {
+                    x.Text += $"{Functions.GetItemEmote(item.Key)} {item.Key} x{item.Value}\t";
+                }
+            }));
+            
 
             emb.Fields.Add(new JEmbedField(x =>
             {
