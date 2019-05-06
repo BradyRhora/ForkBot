@@ -563,9 +563,9 @@ namespace ForkBot
         public async Task Beer()
         {
             if (Check(Context, "beer")) return;
-            await Context.Channel.SendMessageAsync(":beer: You drink the beer and feel a little tipsy.\n**Sobriety-5 Happiness+10**");
+            await Context.Channel.SendMessageAsync(":beer: You drink the beer and feel a little tipsy.\n**Sobriety-5 Happiness+20**");
             Functions.GetUser(Context.User).AddData("stat.sobriety", -5);
-            Functions.GetUser(Context.User).AddData("stat.happiness", 10);
+            Functions.GetUser(Context.User).AddData("stat.happiness", 20);
         }
 
         [Command("paintbrush")]
@@ -1141,17 +1141,17 @@ namespace ForkBot
             int r = rdm.Next(100) + 1;
             var user = Functions.GetUser(Context.User);
             string msg;
-            if (r < 50)
+            if (r < 70)
             {
                 msg = "You had a good time. You spent the evening watching \"Family Guy Funny Moments 2019\" on youtube and then had some Popeyes.\n**Sobriety-20Happiness+80**";
                 user.AddData("stat.happiness", 80);
                 user.AddData("stat.sobriety", -20);
             }
-            else if (r < 75)
+            else if (r < 90)
             {
                 msg = "This was a terrible high. You were so paranoid you called 911 while hiding in the fridge.\n**Sobriety-50Happiness-90**";
                 user.AddData("stat.sobriety", -50);
-                user.AddData("stat.happiness", -90);
+                user.AddData("stat.happiness", -70);
             }
             else
             {
@@ -1162,6 +1162,29 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync($"<:weed:506117312823427082> {msg}");
         }
 
+        [Command("wine_glass"), Alias("wine", "wine_glass")]
+        public async Task Wine_glass()
+        {
+            if (Check(Context, "wine_glass")) return;
+            int r = rdm.Next(5) + 1;
+
+            if (r < 5)
+            {
+                await Context.Channel.SendMessageAsync(":wine_glass: Cheers! You had some cheap wine.\n**Sobriety-3 Happiness+13**");
+                Functions.GetUser(Context.User).AddData("stat.sobriety", -3);
+                Functions.GetUser(Context.User).AddData("stat.happiness", 13);
+            }
+
+            else
+            {
+                await Context.Channel.SendMessageAsync(":wine_glass: A votre santé! You had some imported wine!\n**Sobriety-3 Happiness+18**");
+                Functions.GetUser(Context.User).AddData("stat.sobriety", -3);
+                Functions.GetUser(Context.User).AddData("stat.happiness", 18);
+            }
+        }
+
 
     }
+
+
 }

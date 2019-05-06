@@ -66,7 +66,7 @@ namespace ForkBot
         public static DateTime startTime;
 
         public static int DebugCode;
-        public static bool DebugMode = true;
+        public static bool DebugMode = false;
 
         public static List<MineSweeper> MSGames = new List<MineSweeper>();
         public static List<ForkParty> FPGames = new List<ForkParty>();

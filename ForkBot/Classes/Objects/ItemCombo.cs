@@ -37,9 +37,14 @@ namespace ForkBot
             int iCount = 0;
             foreach(ItemCombo c in ItemCombos)
             {
+                var ingredients = c.Items.ToList();
                 foreach (string item in items)
                 {
-                    if (c.Items.Contains(item)) iCount++;
+                    if (ingredients.Contains(item))
+                    {
+                        ingredients.Remove(item);
+                        iCount++;
+                    }
                 }
                 if (iCount == c.Items.Count() && iCount == items.Count()) return c.Result;
                 else iCount = 0;
