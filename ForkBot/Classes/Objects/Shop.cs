@@ -27,7 +27,8 @@ namespace ForkBot
                 if (!items.Contains(nItems[itemID]) && !nItems[itemID].Split('|')[2].Contains("-"))
                 {
                     items.Add(nItems[itemID]);
-                    stock.Add(rdm.Next(5, 16));
+                    if (!isBM) stock.Add(rdm.Next(5, 16));
+                    else stock.Add(rdm.Next(1, 5));
                 }
                 else i--;
             }
@@ -42,11 +43,13 @@ namespace ForkBot
         public JEmbed Build()
         {
             JEmbed emb = new JEmbed();
-            emb.Title = "Shop";
+            if (!isBM) emb.Title = "Shop";
+            else emb.Title = ":spy: Black Market :spy:";
             emb.ThumbnailUrl = Constants.Images.ForkBot;
             emb.ColorStripe = Constants.Colours.YORK_RED;
             var restock = new TimeSpan(4, 0, 0).Add(openDate - Var.CurrentDate());
-            emb.Description = $"The shop will restock in {restock.Hours} hours and {restock.Minutes} minutes.";
+            if (!isBM) emb.Description = $"The shop will restock in {restock.Hours} hours and {restock.Minutes} minutes.";
+            else emb.Description = $"Welcome to the Black Market... Buy somethin and get out. We'll restock in {restock.Hours} hours and {restock.Minutes} minutes.";
             for(int i = 0; i < 5; i++)
             {
                 var data = items[i].Split('|');

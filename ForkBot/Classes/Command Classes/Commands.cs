@@ -718,6 +718,62 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
         }
 
+        [Command("bm")]
+        public async Task BlackMarket([Remainder] string command = null)
+        {
+            var u = Functions.GetUser(Context.User);
+            if (u.GetData("bm") != "true") return;
+            else
+            {
+                DateTime day = new DateTime();
+                DateTime currentDay = new DateTime();
+                if (Var.blackmarketShop != null)
+                {
+                    day = Var.blackmarketShop.Date();
+                    currentDay = Var.CurrentDate();
+                }
+                if (Var.blackmarketShop == null || Math.Abs(day.Hour - currentDay.Hour) >= 4)
+                {
+                    Var.blackmarketShop = new Shop(true);
+                }
+
+                List<string> itemNames = new List<string>();
+                foreach (string item in Var.blackmarketShop.items) itemNames.Add(item.Split('|')[0]);
+
+                if (command == null)
+                {
+                    var emb = Var.blackmarketShop.Build();
+                    emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
+                    await Context.Channel.SendMessageAsync("", embed: emb.Build());
+                }
+                else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
+                {
+                    foreach (string item in Var.blackmarketShop.items)
+                    {
+                        if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
+                        {
+                            var data = item.Split('|');
+                            string name = data[0];
+                            string desc = data[1];
+                            int price = Convert.ToInt32(data[2]);
+                            if (price < 0) price *= -1;
+                            int stock = Var.blackmarketShop.stock[Var.blackmarketShop.items.IndexOf(item)];
+                            if (Convert.ToInt32(u.GetCoins()) >= price && stock > 0)
+                            {
+                                stock--;
+                                Var.blackmarketShop.stock[Var.blackmarketShop.items.IndexOf(item)] = stock;
+                                u.GiveCoins(-price);
+                                u.GiveItem(name);
+                                await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {Functions.GetItemEmote(Functions.GetItemData(name))} for {price} coins!");
+                            }
+                            else await Context.Channel.SendMessageAsync("Either you cannot afford this item or it is not in stock.");
+                        }
+                    }
+                }
+                else await Context.Channel.SendMessageAsync("Either something went wrong, or this item isn't in stock!");
+            }
+        }
+
         [Command("freemarket"), Alias("fm", "market"), Summary("[FUN] Sell items to other users! Choose your own price!")]
         public async Task FreeMarket(params string[] command)
         {
@@ -1231,8 +1287,9 @@ namespace ForkBot
             var ONE_DAY = new TimeSpan(24, 0, 0);
             if ((lastAllowance + ONE_DAY) < DateTime.Now)
             {
-                int allowance = rdm.Next(10, 51);
-                u.GiveCoins(allowance);
+                double allowance = rdm.Next(100, 500);
+                if (u.GetItemList().Contains("credit_card")) allowance *= 2.5;
+                u.GiveCoins(Convert.ToInt32(allowance));
                 u.SetData("allowance", Functions.DateTimeToString(DateTime.Now));
                 await Context.Channel.SendMessageAsync($":moneybag: | Here's your daily allowance! ***+{allowance} coins.*** The next one will be available in 24 hours.");
             }
@@ -1460,8 +1517,8 @@ namespace ForkBot
             string txt = "";
             foreach(KeyValuePair<string,int> item in inv)
             {
-                string itemListing = $"{Functions.GetItemEmote(item.Key)} {item.Key} x{item.Value} ";
-
+                string itemListing = $"{Functions.GetItemEmote(item.Key)} {item.Key} ";
+                if (item.Value > 1) itemListing += $"x{item.Value} ";
                 if (txt.Count() + itemListing.Count() > 1024)
                 {
                     fields.Add(txt);
@@ -1667,18 +1724,36 @@ namespace ForkBot
                 emb.ColorStripe = Functions.GetColor(Context.User);
 
                 string uNum = u.GetData("lotto");
+                string uNum2 = u.GetData("bmlotto");
+
                 if (uNum == "0") emb.Footer.Text = "Get your number today with ';lottery buy'!";
                 else
                 {
                     var lottoDay = Functions.StringToDateTime(u.GetData("lottoDay"));
-                    if (lottoDay.DayOfYear >= Var.CurrentDate().DayOfYear && lottoDay.Year == Var.CurrentDate().Year) await ReplyAsync("You've already checked the lottery today! Come back tomorrow!");
+                    if (lottoDay.DayOfYear >= Var.CurrentDate().DayOfYear && lottoDay.Year == Var.CurrentDate().Year) emb.Description+="\n\nYou've already checked the lottery today! Come back tomorrow!";
                     else
                     {
+
                         u.SetData("lottoDay", Functions.DateTimeToString(Var.CurrentDate()));
                         int matchCount = 0;
                         for (int i = 0; i < 4; i++)
                         {
                             if (uNum[i] == Var.todaysLotto[i]) matchCount++;
+                        }
+
+                        int matchCount2 = 0;
+                        if (uNum2 != "0")
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (uNum2[i] == Var.todaysLotto[i]) matchCount2++;
+                            }
+                        }
+
+                        if (matchCount2 > matchCount)
+                        {
+                            matchCount = matchCount2;
+                            uNum = uNum2;
                         }
 
                         emb.Fields.Add(new JEmbedField(x =>
@@ -1712,7 +1787,7 @@ namespace ForkBot
                                         u.GiveItem(item02);
                                         break;
                                     case 4:
-                                        string[] level4Items = { "key", "key", "slot_machine", "gun", "unicorn", "moneybag", "moneybag", "ticket" };
+                                        string[] level4Items = { "ley2", "key", "key", "slot_machine", "gun", "unicorn", "moneybag", "moneybag", "ticket" };
                                         var item1 = level4Items[rdm.Next(level4Items.Count())];
                                         var item2 = level4Items[rdm.Next(level4Items.Count())];
                                         var item3 = level4Items[rdm.Next(level4Items.Count())];

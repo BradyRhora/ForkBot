@@ -52,6 +52,7 @@ namespace ForkBot
             string userPath = $@"Users\{ID}.user";
             var uData = File.ReadAllLines(userPath);
             GetData(data); // ensure that the data exists
+            
             for (int i = 0; i < uData.Count(); i++)
             {
                 if (uData[i].Split(':')[0] == data)
@@ -64,6 +65,11 @@ namespace ForkBot
 
         public void AddData(string data, int addition)
         {
+            if (GetData("gemtime") != "0")
+            {
+                var gemTime = Functions.StringToDateTime(GetData("gemtime"));
+                if (DateTime.Now < gemTime) addition *= 3;
+            }
             int newData = Convert.ToInt32(GetData(data)) + addition;
             SetData(data, Convert.ToString(newData));
         }

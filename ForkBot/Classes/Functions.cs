@@ -97,7 +97,7 @@ namespace ForkBot
         }
         public static string GetItemData(string item)
         {
-            foreach(string data in GetItemList())
+            foreach(string data in GetItemList().Concat(GetBlackMarketItemList()))
             {
                 if (data.StartsWith(item))
                     return data;

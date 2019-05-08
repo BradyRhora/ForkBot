@@ -171,15 +171,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Command Classes\BMCommands.cs" />
     <Compile Include="Classes\Less Useful Stuff\Evaluate.cs" />
     <Compile Include="Classes\Less Useful Stuff\Globals.cs" />
     <Compile Include="Classes\Less Useful Stuff\Interfaces.cs" />
-    <Compile Include="Classes\ItemCommands.cs" />
+    <Compile Include="Classes\Command Classes\ItemCommands.cs" />
     <Compile Include="Classes\Objects\ChannelStats.cs" />
     <Compile Include="Classes\Objects\DND.cs" />
     <Compile Include="Classes\Objects\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
-    <Compile Include="Classes\Commands.cs" />
+    <Compile Include="Classes\Command Classes\Commands.cs" />
     <Compile Include="Classes\Objects\ForkParty.cs" />
     <Compile Include="Classes\Objects\InfoEmbed.cs" />
     <Compile Include="Classes\Objects\Item.cs" />
@@ -200,7 +201,7 @@
     <Compile Include="Classes\Objects\User.cs" />
     <Compile Include="Classes\Var.cs" />
     <Compile Include="Classes\Less Useful Stuff\XMLToolbox.cs" />
-    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Classes\Constants.cs" />
     <Compile Include="Classes\Functions.cs" />
     <Compile Include="Classes\Objects\JEmbed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
