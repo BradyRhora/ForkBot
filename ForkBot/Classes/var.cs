@@ -35,7 +35,7 @@ namespace ForkBot
         public static DateTime presentTime = new DateTime(1, 1, 1);
         public static TimeSpan presentWait = new TimeSpan(0,0,0);
         public static int presentCount;
-        public static List<IGuildUser> presentClaims = new List<IGuildUser>();
+        public static List<IUser> presentClaims = new List<IUser>();
         public static bool presentRigged = false;
         public static IUser presentRigger;
         #endregion
