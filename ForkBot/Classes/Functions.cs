@@ -84,7 +84,8 @@ namespace ForkBot
             string[] data;
             try
             {
-                itemData = GetItemData(item);
+                if (item.Split('|').Count() > 1) itemData = item;
+                else itemData = GetItemData(item);
                 data = itemData.Split('|');
                 if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
                 return ":" + data[0] + ":";
@@ -99,7 +100,7 @@ namespace ForkBot
         {
             foreach(string data in GetItemList().Concat(GetBlackMarketItemList()))
             {
-                if (data.StartsWith(item))
+                if (data.StartsWith(item + "|"))
                     return data;
             }
             return null;

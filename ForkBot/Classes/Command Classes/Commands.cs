@@ -1578,7 +1578,11 @@ namespace ForkBot
                         Var.presentTime = Var.CurrentDate();
                     }
                     Var.presentCount--;
-                    Var.presentClaims.Add(Context.User as IGuildUser);
+                    var gUser = Context.User as IGuildUser;
+                    if (gUser != null)
+                        Var.presentClaims.Add(gUser);
+                    else
+                        Var.presentClaims.Add(Context.User);
                     Var.presentNum = rdm.Next(10);
                     if (!Var.presentRigged)
                     {
@@ -1634,7 +1638,14 @@ namespace ForkBot
                     if (Var.presentClaims.Count() > 0)
                     {
                         msg += "\nLast claimed by:\n```\n";
-                        foreach (IGuildUser user in Var.presentClaims) msg += $"\n{user.Username} in {user.Guild}";
+                        foreach (IUser user in Var.presentClaims)
+                        {
+                            var gUser = user as IGuildUser;
+                            if (gUser != null)
+                                msg += $"\n{gUser.Username} in {gUser.Guild}";
+                            else
+                                msg += $"\n{user.Username} in Private Messages";
+                        }
                         msg += "\n```";
                     }
                     msg += $"There are {Var.presentCount} presents left!";

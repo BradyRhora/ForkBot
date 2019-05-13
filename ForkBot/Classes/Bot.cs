@@ -137,7 +137,7 @@ namespace ForkBot
                             await gUser.RemoveRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                             string reason = emb.Fields[0].Value;
                             await reports.SendMessageAsync($"Removed Trusted role from {gUser.Mention} for reason:\n```\nAutomod infraction:\n'{reason}'```");
-
+                            await gUser.SendMessageAsync($"Removed Trusted role due to:\n```\nAutomod infraction:\n`{reason}'```");
                         }
 
                     }
@@ -177,6 +177,7 @@ namespace ForkBot
                     user.SetData("isTrusted", "true");
                     await guildUser.AddRoleAsync(guild.GetRole(Constants.Roles.TRUSTED));
                     await reports.SendMessageAsync($"Added Trusted role to {guildUser.Mention} for reason:\n```\nFulfilled all requirements.\n```");
+                    await guildUser.SendMessageAsync("You have successfully fulfilled all requirements and have gained the trusted role. You now have access to all `trusted` channels.");
                 }
             }
 
