@@ -19,7 +19,7 @@ namespace ForkBot
         
         public static async void MoveTimer(object state)
         {
-            OverwritePermissions op2 = new OverwritePermissions(readMessages: PermValue.Inherit);
+            OverwritePermissions op2 = new OverwritePermissions(viewChannel: PermValue.Inherit);
             foreach (IGuildChannel c in mvChannels)
             {
                 foreach (IUser u in mvUsers)

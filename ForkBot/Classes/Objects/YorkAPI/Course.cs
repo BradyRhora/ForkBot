@@ -19,6 +19,7 @@ namespace ForkBot
         private string Description;
         private string Title;
         private string Term;
+        int year = 2019;
         public bool CourseNotFound = false;
 
         private CourseSchedule Schedule;
@@ -42,7 +43,48 @@ namespace ForkBot
                 }
             }
             CourseNotFound = courseLine == ""; 
+
+            if (CourseNotFound)
+            {
+                var course = TryFindCourse(code);
+                if (course != null)
+                {
+                    CourseNotFound = false;
+                    courseLine = course;
+                }
+            }
+
+
+
             if (!CourseNotFound) LoadCourse(courseLine, term);
+        }
+
+        public string TryFindCourse(string code)
+        {
+            string[] faculties = { "AP", "ED", "ES", "FA", "GL", "GS", "HH", "LE", "LW", "SB", "SC" };
+            string[] terms = { "FW","SU" };
+            int[] creditCount = { 3, 6, 9 };
+
+            foreach (var fac in faculties)
+            {
+                foreach (var credit in creditCount)
+                {
+
+                    foreach (var term in terms)
+                    {
+                        Course course = new Course();
+                        try
+                        {
+                            course.LoadCourse($"{fac}/{code.ToUpper()} {credit}.00 Temp Name", term);
+                            File.AppendAllText("Files/courselist.txt", $"{fac}/{code.ToUpper()} {credit}.00 {course.Title}");
+                            Console.WriteLine($"Added {code} to courselist");
+                            return $"{fac}/{code.ToUpper()} {credit}.00 {course.Title}";
+                        }
+                        catch { }
+                    }
+                }
+            }
+            return null;
         }
 
         public void LoadCourse(string courseLine, string term = "")
@@ -54,7 +96,7 @@ namespace ForkBot
             Subject = info[0].Split('/')[1];
             Coursecode = info[1];
             Credit = Convert.ToDouble(info[2]);
-            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay=2018&ss={Term.ToUpper()}";
+            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay={year}&ss={Term.ToUpper()}";
 
             if (CourseLink == "") throw new CourseNotFoundException();
 
