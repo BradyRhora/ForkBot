@@ -1,19 +1,13 @@
-overhaul item system!!!!!! Why the fuck not!!!
-give 🍷 a basic command
 exam schedule command?
-forkbot dms
 add more parameters to courselist to narrow down more
 allow users to still replace after other user gets present
 term param for ;courses
 minesweeper
-chess bot when
 Puppeteer
 finish minesweeper!!!
 fork party
 add more memes
 only let person join fp once
-make coins emote appear for second person too
-fix course lookup for certain courses (jp 3600, math 6004)
 seperate hangman games
 make hm only send one message on start and add the thing
 replay yoshis island
@@ -27,26 +21,18 @@ make gift opening one message
 show trusted / not trusted
 log trusted removal
 add min/mins to remind
-;top [item]
 seperate hangman games
 remove names from wordlist.txt
 change message when ;combine parameters are left empty
 unblock people
-raid battles?
 top with custom items?
 make profile [Remainder]
-add game_die alias to ;roll
-move fm emotes so that whats being sold is more clear
 fix bug where you "replace" OLD present when the last present was claimed by you, unreplaced, and had the same number to press
 remove proper nouns from wordlist
 penalty for losing hangman
 change mic description
-meme https://i.redd.it/4u5p6w9jj5v11.jpg
 telescope sees hidden player stuff(?)
-message when item list is empty for ;fm
-buff allowance
-fix chocos lottery day
-also sneedo's
-think about ;present in regards to new selling system
 fix dummy join dates
-discord.py bot
+more ;dividers features
+fix rounding bug, poo poo head!
+meme https://i.redd [dot] it/4u5p6w9jj5v11.jpg

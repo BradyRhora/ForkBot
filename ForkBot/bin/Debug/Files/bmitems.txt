@@ -1,6 +1,6 @@
-﻿tickets|Got this counterfeit lottery ticket under the counter. It's yours for a fair price.|1500
-credit_card|Use this fake credit card to get more money.|2500
+﻿tickets|Got this counterfeit lottery ticket under the counter. It's yours for a fair price.|2000
+credit_card|Use this fake credit card to get more money.|5000
 warning|You can use this to set warnings for some of those special functions.|1000
-gem|Got this weird crystal from some guy in a pointy blue hat. He said it temporarily boosts your abilities, whatever that means.|2000
+gem|Got this weird crystal from some guy in a pointy blue hat. He said it temporarily boosts your abilities, whatever that means.|6000
 key2|This key aint no ordinary key. Unlocks more things than your everyday keys.|3500
-postbox|This thing has some heavy duty lock on it, but I'm sure there's some keys that'll work.|2000
+postbox|This thing has some heavy duty lock on it, but I'm sure there's some keys that'll work.|2500
