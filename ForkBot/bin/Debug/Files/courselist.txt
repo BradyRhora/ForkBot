@@ -1,4 +1,4 @@
-AP/ADMS 1000 3.00 Introduction to Business
+﻿AP/ADMS 1000 3.00 Introduction to Business
 AP/ADMS 1010 3.00 Exploring the Functions of Business
 AP/ADMS 1500 3.00 An Introduction to Accounting for Human Resource Professionals
 AP/ADMS 1550 3.00 Accounting for Non-Financial Managers
@@ -7304,5 +7304,5 @@ SC/STS  4710 6.00 Honours Thesis in Science and Technology Studies
 SC/STS  4785 3.00 Science, Health and Food
 
 # Automatically added courses
-
+AP/ITEC 2220 3.00 Scripting Languages
 AP/SOSC 1731 9.00 CyberCities: The Community and Communication in Changing Urban Areas
