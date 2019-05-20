@@ -212,12 +212,15 @@ namespace ForkBot
                     return;
                 }
 
-
+                code = code.ToLower();
                 string term = "";
+                bool force = false;
                 if (code.Split(' ').Contains("fw")) term = "fw";
                 else if (code.Split(' ').Contains("su")) term = "su";
+                else if (code.Split(' ').Contains("force")) force = true;
 
-                code = code.Replace(" fw", "").Replace(" su", "");
+                code = code.Replace(" fw", "").Replace(" su", "").Replace(" force", "");
+                
 
                 //formats course code correctly
                 if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
@@ -227,7 +230,7 @@ namespace ForkBot
                 }
 
 
-                course = new Course(code, term);
+                course = new Course(code, term, force);
 
 
                 JEmbed emb = new JEmbed();
@@ -253,8 +256,8 @@ namespace ForkBot
             }
             catch (Exception)
             {
-                if (course != null && course.CourseNotFound) await ReplyAsync("The specified course was not found.");
-                else await ReplyAsync("There was an error loading the course page. (Possibly not available this term)");
+                if (course != null && course.CourseNotFound) await ReplyAsync($"The specified course was not found. If you know this course exists, try `;course {code} force`. This may be very slow, so only do it once. It will then be added to the courselist and should work normally.");
+                else await ReplyAsync($"There was an error loading the course page. (Probably not available this term: **{Var.term}**)\nTry appending a different term to the end of the command (e.g. `;course {code} fw`)");
             }
 
         }
@@ -313,10 +316,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.41\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades"+
-                "\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation"+
-                "\n-fixed forkbot DMs(nvm)\n-present shows record claims\n-parameter for ;top can now be an item\n-trusted system\n-added ;freemarket and fixed bugs\n" +
-                "-lots of bug fixes regarding ;fm, ;tips, ;weed, and ;stopwatch.```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.5\n-more recent free market posts now appear at the top of the list```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -939,7 +939,8 @@ namespace ForkBot
 
                 string plural = "";
                 if (price > 1) plural = "s";
-                File.AppendAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}\n");
+                string market = File.ReadAllText("Files/FreeMarket.txt");
+                File.WriteAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}\n" + market);
                 await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {id}.");
             }
             else if (command[0] == "buy")
@@ -1289,9 +1290,10 @@ namespace ForkBot
             {
                 double allowance = rdm.Next(100, 500);
                 if (u.GetItemList().Contains("credit_card")) allowance *= 2.5;
-                u.GiveCoins(Convert.ToInt32(allowance));
+                int iallowance = (int)allowance;
+                u.GiveCoins(iallowance);
                 u.SetData("allowance", Functions.DateTimeToString(DateTime.Now));
-                await Context.Channel.SendMessageAsync($":moneybag: | Here's your daily allowance! ***+{allowance} coins.*** The next one will be available in 24 hours.");
+                await Context.Channel.SendMessageAsync($":moneybag: | Here's your daily allowance! ***+{iallowance} coins.*** The next one will be available in 24 hours.");
             }
             else
             {
@@ -2056,17 +2058,135 @@ namespace ForkBot
             }
         }
         
-        [Command("raid"), Summary("[FUN] Choose a class then take on enemies to level up and gain glorious loot!")]
-        public async Task RaidCommand([Remainder] string command = "")
+        [Command("raid"), Summary("[FUN] Choose a class then take on enemies to level up and gain glorious loot!"), Alias(new string[] { "r" })]
+        public async Task RaidCommand(params string[] command)
         {
-            //throw new NotImplementedException("Not finished coding.");
-            
             var user = Functions.GetUser(Context.User);
-            if (user.GetData("raid.class") == "0")
+            var rUser = new Raid.Profile(Context.User);
+            if (rUser.GetData("class") == "0" && command.Count() == 0)
             {
-                await ReplyAsync(Raid.startMessage);
+                await ReplyAsync(Raid.Class.startMessage());
+                return;
             }
-            
+            else if (command.Count() == 0)
+            {
+                if (Raid.ChannelHasRaid(Context.Channel))
+                {
+                    var raid = Raid.GetChannelRaid(Context.Channel);
+                    if (!raid.Started)
+                    {
+                        string msg = $"There is currently a party being hosted in this channel by {Functions.GetName(await Context.Guild.GetUserAsync(raid.Host.ID))}.\n```\n";
+                        foreach (var u in raid.GetPlayers())
+                        {
+                            msg += $"{Functions.GetName(await Context.Guild.GetUserAsync(u.ID))}\n";
+                        }
+                        msg += $"```\n{raid.GetPlayers().Count()}/4 Players";
+                        if (raid.GetPlayers().Count() < 4) msg += " Use `;r join` to join! If you're the host, you can use `;r start` to start, or `;r close` to close the party.";
+                        await ReplyAsync(msg);
+                    }
+                }
+                else await ReplyAsync("There is currently no party being hosted in this channel. To host a party, use `;r host`.");
+            }
+            else if (command[0] == "choose")
+            {
+                if (Raid.Class.Classes().Where(x => x.Name.ToLower() == command[1].ToLower()).Count() > 0) //checks if the specified class exists
+                {
+                    rUser.SetData("class", command[1].ToLower());
+                    rUser.SetData("level", "1");
+                    rUser.SetData("exp", "0");
+                    await ReplyAsync($"You are now a {command[1]}, form your party with `;r host` or join another with `;r join` and go fourth!");
+                }
+            }
+            else if (command[0] == "host")
+            {
+                foreach (Raid.Game g in Raid.Games)
+                {
+                    if (g.GetChannel().Id == Context.Channel.Id)
+                    {
+                        await ReplyAsync("There is already a party being hosted on this channel! Join with `;r join` if there is space!");
+                    }
+                }
+
+                Raid.Game game = new Raid.Game(rUser, Context.Channel);
+                game.Join(rUser);
+                Raid.Games.Add(game);
+                await ReplyAsync("You have successfully hosted a party, now, invite others! They can join with `;r join`.");
+            }
+            else if (command[0] == "join")
+            {
+                if (Raid.ChannelHasRaid(Context.Channel))
+                {
+                    var g = Raid.GetChannelRaid(Context.Channel);
+                    if (g.GetPlayers().Count() < 4)
+                    {
+                        if (g.GetPlayers().Where(x => x.ID == Context.User.Id).Count() > 0)
+                        {
+                            await ReplyAsync("You are already in this party! If you're the host, use `;r start` to start the raid.");
+                            return;
+                        }
+                        else
+                        {
+                            g.Join(rUser);
+                            await ReplyAsync("You have successfully joined the party!");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        await ReplyAsync("The party being hosted in this channel is full. Host your own in another with `;r host` or find another to join!");
+                        return;
+                    }
+                }
+                await ReplyAsync("No party is being hosted in this channel. Host your own with `;r host`.");
+            }
+            else if (command[0] == "kick")
+            {
+                if (Raid.ChannelHasRaid(Context.Channel))
+                {
+                    var r = Raid.GetChannelRaid(Context.Channel);
+                    if (Context.User.Id == r.Host.ID)
+                    {
+                        if (command.Count() < 2) await ReplyAsync("You must specify a user to kick.");
+                        else
+                        {
+                            for (int i = 0; i < r.GetPlayers().Count(); i++)
+                            {
+                                var u = await Context.Guild.GetUserAsync(r.GetPlayers()[i].ID);
+                                if (u.Id.ToString() == command[1] || u.Username == command[1] || (u.Nickname != null && u.Nickname == command[1]))
+                                {
+                                    r.Kick(r.GetPlayers()[i]);
+                                }
+                            }
+                        }
+                    }
+                    else await ReplyAsync("Only the host may kick people.");
+                }
+            }
+            else if (command[0] == "close")
+            {
+                if (Raid.ChannelHasRaid(Context.Channel))
+                {
+                    var r = Raid.GetChannelRaid(Context.Channel);
+                    if (Context.User.Id == r.Host.ID)
+                    {
+                        Raid.Games.Remove(r);
+                        await ReplyAsync("Successfully closed the party.");
+                    }
+                }
+            }
+            else if (command[0] == "start")
+            {
+                if (Raid.ChannelHasRaid(Context.Channel))
+                {
+                    var raid = Raid.GetChannelRaid(Context.Channel);
+                    if (raid.Host.ID == Context.User.Id)
+                    {
+                        raid.Start();
+                    }
+                    else await ReplyAsync("Only the host of this party can start the raid.");
+                }
+                else await ReplyAsync("There is no raid to start. Host your own with `;r host`.");
+            }
         }
         #endregion
 
@@ -2096,8 +2216,8 @@ namespace ForkBot
         public async Task Purge(int amount)
         {
             Var.purging = true;
-            var messages = await Context.Channel.GetMessagesAsync(amount + 1).Flatten();
-            await Context.Channel.DeleteMessagesAsync(messages);
+            var messages = await Context.Channel.GetMessagesAsync(amount + 1).FlattenAsync();
+            await (Context.Channel as ITextChannel).DeleteMessagesAsync(messages);
 
             InfoEmbed ie = new InfoEmbed("PURGE", $"{amount} messages deleted by {Context.User.Username}.");
             Var.purgeMessage = await Context.Channel.SendMessageAsync("", embed: ie.Build());
@@ -2269,7 +2389,7 @@ namespace ForkBot
                 string result = await EvalService.EvaluateAsync(Context as CommandContext, expression);
                 var user = Context.User as IGuildUser;
                 var emb = new EmbedBuilder().WithColor(Functions.GetColor(Context.User)).WithDescription(result).WithTitle("Evaluated").WithCurrentTimestamp();
-                await Context.Channel.SendMessageAsync("", embed: emb);
+                await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
 
         }
@@ -2490,6 +2610,16 @@ namespace ForkBot
                 Var.DebugMode = !Var.DebugMode;
                 Console.WriteLine("DebugMode set to " + Var.DebugMode);
             }
+        }
+
+        [Command("givedebug"), Summary("[BRADY] Allows or blocks the specified user from being able to use commands while in debug mode.")]
+        public async Task GiveDebug(IUser user)
+        {
+            if (Var.DebugUsers.Where(x => x.Id == user.Id).Count() > 0)
+            {
+                Var.DebugUsers = Var.DebugUsers.Where(x => x.Id != user.Id).ToList();
+            }
+            else Var.DebugUsers.Add(user);
         }
         /*
         [Command("snap")]

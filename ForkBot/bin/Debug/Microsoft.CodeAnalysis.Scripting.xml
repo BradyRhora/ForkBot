@@ -1086,6 +1086,11 @@
             <exception cref="T:System.InvalidOperationException">Variable is read-only or a constant.</exception>
             <exception cref="T:System.ArgumentException">The type of the specified <paramref name="value"/> isn't assignable to the type of the variable.</exception>
         </member>
+        <member name="T:Microsoft.CodeAnalysis.CoreClrShim">
+            <summary>
+            Shim for APIs available only on CoreCLR.
+            </summary>
+        </member>
         <member name="M:Microsoft.CodeAnalysis.RelativePathResolver.#ctor(System.Collections.Immutable.ImmutableArray{System.String},System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:Microsoft.CodeAnalysis.RelativePathResolver"/> class.
@@ -1093,11 +1098,6 @@
             <param name="searchPaths">An ordered set of fully qualified 
             paths which are searched when resolving assembly names.</param>
             <param name="baseDirectory">Directory used when resolving relative paths.</param>
-        </member>
-        <member name="T:Microsoft.CodeAnalysis.CoreClrShim">
-            <summary>
-            Shim for APIs available only on CoreCLR.
-            </summary>
         </member>
         <member name="T:Microsoft.CodeAnalysis.ClrGlobalAssemblyCache">
             <summary>
@@ -1210,6 +1210,13 @@
         <member name="T:Microsoft.CodeAnalysis.MonoGlobalAssemblyCache">
             <summary>
             Provides APIs to enumerate and look up assemblies stored in the Global Assembly Cache.
+            </summary>
+        </member>
+        <member name="T:Roslyn.Utilities.CoreLightup">
+            <summary>
+            This type contains the light up scenarios for various platform and runtimes.  Any function
+            in this type can, and is expected to, fail on various platforms.  These are light up scenarios
+            only.
             </summary>
         </member>
     </members>

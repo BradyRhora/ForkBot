@@ -210,7 +210,7 @@ namespace ForkBot
 
         }
 
-        [Command("roll")]
+        [Command("roll"), Alias(new string[] {"game_die"})]
         public async Task Roll(int max = 6)
         {
             if (Check(Context, "game_die", false)) return;

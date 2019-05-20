@@ -54,7 +54,7 @@ namespace ForkBot
                 Console.WriteLine($"ForkBot successfully intialized with debug code [{Var.DebugCode}]");
                 Var.startTime = Var.CurrentDate();
                 int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
-                await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
+                await client.SetGameAsync(strikeCount + " days since last strike", type: ActivityType.Watching);
                 Timers.RemindTimer = new Timer(Timers.Remind, null, 1000 * 30, 1000 * 60);
                 await Task.Delay(-1);
             }
@@ -88,7 +88,7 @@ namespace ForkBot
             client.ReactionAdded += HandleReact;
             client.MessageUpdated += HandleEdit;
             client.UserVoiceStateUpdated += HandleVoiceUpdate;
-            await commands.AddModulesAsync(Assembly.GetEntryAssembly());
+            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), services: null);
         }
 
         DateTime lastDay = Var.CurrentDate();
@@ -98,7 +98,7 @@ namespace ForkBot
             bool isDM = message.Channel.Name == (await message.Author.GetOrCreateDMChannelAsync()).Name;
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
-            if (Var.DebugMode && (message.Author.Id != Constants.Users.BRADY && message.Author.Id != Constants.Users.JACE)) return;
+            if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x=>x.Id==message.Author.Id).Count() <= 0) return;
 
             var user = Functions.GetUser(message.Author);
             //trusted management
@@ -187,7 +187,7 @@ namespace ForkBot
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
             {
                 int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
-                await client.SetGameAsync(strikeCount + " days since last strike", streamType: StreamType.Twitch);
+                await client.SetGameAsync(strikeCount + " days since last strike", type: ActivityType.Watching);
             }
 
             //checks if message contains any blocked words
@@ -229,6 +229,11 @@ namespace ForkBot
                     for (int i = 0; i < 5; i++)
                     {
                         var sPresentData = presents[rdm.Next(presents.Count())];
+                        if (sPresentData.Contains("*"))
+                        {
+                            i--;
+                            continue;
+                        }
                         string sPresentName = sPresentData.Split('|')[0];
                         user.GiveItem(sPresentName);
                         sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
@@ -287,7 +292,7 @@ namespace ForkBot
             if (message.HasCharPrefix(';', ref argPos))
             {
                 var context = new CommandContext(client, message);
-                var result = await commands.ExecuteAsync(context, argPos);
+                var result = await commands.ExecuteAsync(context, argPos, services: null);
 
                 if (!result.IsSuccess)
                 {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace ForkBot
 {
@@ -19,6 +20,7 @@ namespace ForkBot
         private string Description;
         private string Title;
         private string Term;
+        int year = 2019;
         public bool CourseNotFound = false;
 
         private CourseSchedule Schedule;
@@ -29,24 +31,67 @@ namespace ForkBot
 
         }
 
-        public Course(string code, string term = "")
+        public Course(string code, string term = "", bool force = false)
         {
             var courses = File.ReadAllLines("Files/courselist.txt");
             string courseLine = "";
             foreach (string course in courses)
             {
-                if (course.ToLower().Contains(code.ToLower()))
+                var line = Regex.Replace(course, "( {2,})", " ").ToLower();
+                if (line.Contains(code.ToLower()))
                 {
                     courseLine = course;
                     break;
                 }
             }
             CourseNotFound = courseLine == ""; 
+
+            if (CourseNotFound && force)
+            {
+                var course = TryFindCourse(code);
+                if (course != null)
+                {
+                    CourseNotFound = false;
+                    courseLine = course;
+                }
+            }
+
+
+
             if (!CourseNotFound) LoadCourse(courseLine, term);
+        }
+
+        public string TryFindCourse(string code)
+        {
+            string[] faculties = { "AP", "ED", "ES", "FA", "GL", "GS", "HH", "LE", "LW", "SB", "SC" };
+            string[] terms = { "FW","SU" };
+            int[] creditCount = { 3, 6, 9 };
+
+            foreach (var fac in faculties)
+            {
+                foreach (var credit in creditCount)
+                {
+
+                    foreach (var term in terms)
+                    {
+                        Course course = new Course();
+                        try
+                        {
+                            course.LoadCourse($"{fac}/{code.ToUpper()} {credit}.00 Temp Name", term);
+                            File.AppendAllText("Files/courselist.txt", $"\n{course.Title}");
+                            Console.WriteLine($"Added {code} to courselist");
+                            return course.Title;
+                        }
+                        catch { }
+                    }
+                }
+            }
+            return null;
         }
 
         public void LoadCourse(string courseLine, string term = "")
         {
+            courseLine = Regex.Replace(courseLine, "( {2,})", " ");
             if (term == "") Term = Var.term;
             else Term = term;
             var info = courseLine.Split(' ');
@@ -54,13 +99,21 @@ namespace ForkBot
             Subject = info[0].Split('/')[1];
             Coursecode = info[1];
             Credit = Convert.ToDouble(info[2]);
-            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay=2018&ss={Term.ToUpper()}";
-
+            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay={year}&ss={Term.ToUpper()}";
+            var clback = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay={year-1}&ss={Term.ToUpper()}";
             if (CourseLink == "") throw new CourseNotFoundException();
 
             var pageDoc = web.Load(CourseLink).DocumentNode;
-
-            var desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+            string desc;
+            try
+            {
+                desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+            }
+            catch
+            {
+                pageDoc = web.Load(clback).DocumentNode;
+                desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+            }
             Title = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
             Description = desc.Replace("&quot;", "\"");
             var scheduleNode = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/p[7]/a[1]");

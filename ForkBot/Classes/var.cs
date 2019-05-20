@@ -72,5 +72,7 @@ namespace ForkBot
         public static List<ForkParty> FPGames = new List<ForkParty>();
 
         public static string term = "SU";
+
+        public static List<IUser> DebugUsers = new List<IUser>();
     }
 }
