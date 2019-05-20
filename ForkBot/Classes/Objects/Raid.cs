@@ -31,8 +31,9 @@ namespace ForkBot
             public static Class[] Classes() { return classes; }
             public static string startMessage()
             {
-                string msg = "🧙 Welcome... To The Dungeon of Efrüg!\nFirst you must choose your class, then you may enter the dungeon and duel various beasts, before taking on... ***The Boss!***\n" +
-                                         "To start, use the command `;r choose [class]`! Choose between the following classes:\n\n";
+                string msg = "🧙 Welcome... To The Dungeon of Efrüg! A mysterious dungeon that shifts its rooms with each entry, full of deadly monsters and fearsome foes!\n"+
+                             "First you must choose your class, then you may enter the dungeon and duel various beasts, before taking on... ***The Boss!***\n" +
+                             "To start, use the command `;r choose [class]`! You may choose between the following classes:\n\n";
 
                 foreach (Class c in classes)
                 {
@@ -149,6 +150,10 @@ namespace ForkBot
                 Players.Remove(user);
             }
             
+            public async Task Start()
+            {
+                await Channel.SendMessageAsync("");
+            }
         }
     }
 }

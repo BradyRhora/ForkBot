@@ -212,12 +212,15 @@ namespace ForkBot
                     return;
                 }
 
-
+                code = code.ToLower();
                 string term = "";
+                bool force = false;
                 if (code.Split(' ').Contains("fw")) term = "fw";
                 else if (code.Split(' ').Contains("su")) term = "su";
+                else if (code.Split(' ').Contains("force")) force = true;
 
-                code = code.Replace(" fw", "").Replace(" su", "");
+                code = code.Replace(" fw", "").Replace(" su", "").Replace(" force", "");
+                
 
                 //formats course code correctly
                 if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
@@ -227,7 +230,7 @@ namespace ForkBot
                 }
 
 
-                course = new Course(code, term);
+                course = new Course(code, term, force);
 
 
                 JEmbed emb = new JEmbed();
@@ -253,8 +256,8 @@ namespace ForkBot
             }
             catch (Exception)
             {
-                if (course != null && course.CourseNotFound) await ReplyAsync("The specified course was not found.");
-                else await ReplyAsync("There was an error loading the course page. (Possibly not available this term)");
+                if (course != null && course.CourseNotFound) await ReplyAsync($"The specified course was not found. If you know this course exists, try `;course {code} force`. This may be very slow, so only do it once. It will then be added to the courselist and should work normally.");
+                else await ReplyAsync($"There was an error loading the course page. (Probably not available this term: **{Var.term}**)\nTry appending a different term to the end of the command (e.g. `;course {code} fw`)");
             }
 
         }
@@ -313,10 +316,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.41\n-Some bug fixes\n-added shop help text\n-buffed moneybag\n-fixed iteminfo sell price\n-fixed custom emotes in trades"+
-                "\n-buffed lootboxes\n-fixed bug with ;course that wouldnt load courses with cancelled classes\n-added ;remind command for users\n-started forkparty\n-removed present replacement animation"+
-                "\n-fixed forkbot DMs(nvm)\n-present shows record claims\n-parameter for ;top can now be an item\n-trusted system\n-added ;freemarket and fixed bugs\n" +
-                "-lots of bug fixes regarding ;fm, ;tips, ;weed, and ;stopwatch.```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.5\n-more recent free market posts now appear at the top of the list```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -939,7 +939,8 @@ namespace ForkBot
 
                 string plural = "";
                 if (price > 1) plural = "s";
-                File.AppendAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}\n");
+                string market = File.ReadAllText("Files/FreeMarket.txt");
+                File.WriteAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}\n" + market);
                 await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {id}.");
             }
             else if (command[0] == "buy")
@@ -2060,8 +2061,6 @@ namespace ForkBot
         [Command("raid"), Summary("[FUN] Choose a class then take on enemies to level up and gain glorious loot!"), Alias(new string[] { "r" })]
         public async Task RaidCommand(params string[] command)
         {
-            //throw new NotImplementedException("Not finished coding.");
-            
             var user = Functions.GetUser(Context.User);
             var rUser = new Raid.Profile(Context.User);
             if (rUser.GetData("class") == "0" && command.Count() == 0)
@@ -2093,6 +2092,8 @@ namespace ForkBot
                 if (Raid.Class.Classes().Where(x => x.Name.ToLower() == command[1].ToLower()).Count() > 0) //checks if the specified class exists
                 {
                     rUser.SetData("class", command[1].ToLower());
+                    rUser.SetData("level", "1");
+                    rUser.SetData("exp", "0");
                     await ReplyAsync($"You are now a {command[1]}, form your party with `;r host` or join another with `;r join` and go fourth!");
                 }
             }
@@ -2173,7 +2174,19 @@ namespace ForkBot
                     }
                 }
             }
-            
+            else if (command[0] == "start")
+            {
+                if (Raid.ChannelHasRaid(Context.Channel))
+                {
+                    var raid = Raid.GetChannelRaid(Context.Channel);
+                    if (raid.Host.ID == Context.User.Id)
+                    {
+                        raid.Start();
+                    }
+                    else await ReplyAsync("Only the host of this party can start the raid.");
+                }
+                else await ReplyAsync("There is no raid to start. Host your own with `;r host`.");
+            }
         }
         #endregion
 

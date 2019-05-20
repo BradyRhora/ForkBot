@@ -7302,3 +7302,7 @@ SC/STS  4700 3.00 Independent Research in Science and Technology Studies
 SC/STS  4700 6.00 Independent Research in Science and Technology Studies
 SC/STS  4710 6.00 Honours Thesis in Science and Technology Studies
 SC/STS  4785 3.00 Science, Health and Food
+
+# Automatically added courses
+
+AP/SOSC 1731 9.00 CyberCities: The Community and Communication in Changing Urban Areas
