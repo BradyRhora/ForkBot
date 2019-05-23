@@ -2181,13 +2181,48 @@ namespace ForkBot
                     var raid = Raid.GetChannelRaid(Context.Channel);
                     if (raid.Host.ID == Context.User.Id)
                     {
-                        raid.Start();
+                        await raid.Start();
                     }
                     else await ReplyAsync("Only the host of this party can start the raid.");
                 }
                 else await ReplyAsync("There is no raid to start. Host your own with `;r host`.");
             }
+            else if (command[0] == "profile")
+            {
+                JEmbed emb = new JEmbed();
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                Raid.Class rClass = rUser.GetClass();
+                emb.Author.Name = $"{Functions.GetName(Context.User as IGuildUser)} the {rClass.Name}";
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Class";
+                    x.Text = rClass.Emote + " " + rClass.Name;
+                    x.Inline = false;
+                }));
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Level";
+                    x.Text = rUser.GetLevel().ToString();
+                    x.Inline = true;
+                }));
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "EXP";
+                    x.Text = rUser.GetEXP().ToString() + "/" + Math.Pow(5, rUser.GetLevel());
+                    x.Inline = true;
+                }));
+                await ReplyAsync("", embed: emb.Build());
+            }
         }
+
+        static string spellList = "";
+        [Command("addspell")]
+        public async Task AddSpell(string name, string emote, [Remainder] string desc)
+        {
+            if (name == "done") await ReplyAsync(spellList);
+            else spellList += $"new Spell(\"{name}\", \"{emote}\", \"{desc}\"),\n";
+        }
+
         #endregion
 
         #region Mod Commands

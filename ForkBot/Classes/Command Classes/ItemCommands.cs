@@ -991,7 +991,7 @@ namespace ForkBot
         public async Task Hole()
         {
             if (Check(Context, "hole")) return;
-            await Context.Message.DeleteAsync();
+            try { await Context.Message.DeleteAsync(); } catch { } 
             Functions.GetUser(Context.User).SetData("bm", "true");
             await Context.User.SendMessageAsync(":spy: Psst... hey.... you've been granted access to the black market. **Don't** tell anyone about this... Or you'll regret it.\nUse `;bm` to access and buy from it just like the shop.\nKeep it in private messages..");
         }
