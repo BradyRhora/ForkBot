@@ -36,7 +36,7 @@ namespace ForkBot
             var uData = File.ReadAllLines(userPath);
             foreach(string d in uData)
             {
-                if (d.StartsWith(data))
+                if (d.StartsWith(data+":"))
                 {
                     return d.Replace(data + ":", "");
                 }
@@ -50,15 +50,16 @@ namespace ForkBot
         public void SetData(string data, string value)
         {
             string userPath = $@"Users\{ID}.user";
-            var uData = File.ReadAllLines(userPath);
             GetData(data); // ensure that the data exists
-            
+
+            var uData = File.ReadAllLines(userPath);
             for (int i = 0; i < uData.Count(); i++)
             {
                 if (uData[i].Split(':')[0] == data)
                 {
                     uData[i] = uData[i].Substring(0, uData[i].IndexOf(':') + 1) + value;
                     Save(uData);
+                    break;
                 }
             }
         }
