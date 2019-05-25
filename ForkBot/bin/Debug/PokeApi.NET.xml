@@ -1,0 +1,364 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PokeApi.NET</name>
+    </assembly>
+    <members>
+        <member name="P:PokeAPI.ApiObject.ID">
+            <summary>
+            The identifier for this <see cref="T:PokeAPI.ApiObject" />.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.NamedApiObject.Name">
+            <summary>
+            The name for this <see cref="T:PokeAPI.NamedApiObject" />.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.NamedApiObject.Names">
+            <summary>
+            The localized names for this <see cref="T:PokeAPI.NamedApiObject" />.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.StructResource`1.Path">
+            <summary>
+            The path to the referenced data.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.ApiResource`1.Url">
+            <summary>
+            The URL of the referenced resource.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.NamedApiResource`1.Name">
+            <summary>
+            The name of the referenced resource.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.CacheGetter`2.IsActive">
+            <summary>
+            Gets or sets whether the cache is active or not.
+            </summary>
+        </member>
+        <member name="M:PokeAPI.CacheGetter`2.Clear">
+            <summary>
+            Clears the cache.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Description.Text">
+            <summary>
+            The localized description for an <see cref="T:PokeAPI.ApiResource`1" /> in a specific langauge.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Description.Language">
+            <summary>
+            The language this description is in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Effect.Text">
+            <summary>
+            The localized text for an <see cref="T:PokeAPI.ApiResource`1" /> in a specific language.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Effect.Language">
+            <summary>
+            The language this effect is in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Encounter.MinLevel">
+            <summary>
+            The lowest level the pokémon could be encountered at.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Encounter.MaxLevel">
+            <summary>
+            The highest level the pokémon could be encountered at.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Encounter.ConditionValues">
+            <summary>
+            A list os condition values that muse be in effect for this encounter to occur.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Encounter.Chance">
+            <summary>
+            The chance, ranging from 0 to 1, that this encounter will occur.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Encounter.Method">
+            <summary>
+            The method by which this encounter happens.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.FlavorText.Text">
+            <summary>
+            The localized name for an <see cref="T:PokeAPI.ApiResource`1" /> in a specific langauge.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.FlavorText.Language">
+            <summary>
+            The language this flavor text is in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.GenerationGameIndex.GameIndex">
+            <summary>
+            The internal ID of an <see cref="T:PokeAPI.ApiResource`1" /> within game data.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.GenerationGameIndex.Generation">
+            <summary>
+            The generation relevant to this game index.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.ResourceName.Name">
+            <summary>
+            The localized name for an <see cref="T:PokeAPI.ApiResource`1" /> in a specific langauge.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.ResourceName.Language">
+            <summary>
+            The language this name is in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.ResourceNameColor.Name">
+            <summary>
+            The localized name for an <see cref="T:PokeAPI.ApiResource`1" /> in a specific langauge.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.ResourceNameColor.Language">
+            <summary>
+            The language this name is in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VerboseEffect.Effect">
+            <summary>
+            The localized effect text for an <see cref="T:PokeAPI.ApiResource`1" /> in a specific language.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VerboseEffect.ShortEffect">
+            <summary>
+            The localized effect text in brief.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VerboseEffect.Language">
+            <summary>
+            The language this effect is in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionEncounterDetail.Version">
+            <summary>
+            the game version this encounter happens in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionEncounterDetail.MaxChance">
+            <summary>
+            the total chance, ranging from 0 to 1, of all encounter potential.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionEncounterDetail.EncounterDetails">
+            <summary>
+            A list of special encounters and their specifics.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionGameIndex.GameIndex">
+            <summary>
+            The internal ID of an <see cref="T:PokeAPI.ApiResource`1" /> within game data.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionGameIndex.Version">
+            <summary>
+            The version relevant to this game index.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionGroupFlavorText.Text">
+            <summary>
+            The localized name for an <see cref="T:PokeAPI.ApiResource`1" /> in a specific language.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionGroupFlavorText.Language">
+            <summary>
+            The language this name is in.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.VersionGroupFlavorText.VersionGroup">
+            <summary>
+            The version group which uses this flavor text.
+            </summary>
+        </member>
+        <member name="T:PokeAPI.DataFetcher">
+            <summary>
+            Retrieves JSON data from the backend.
+            </summary>
+        </member>
+        <member name="M:PokeAPI.DataFetcher.SetHttpClient(PokeAPI.IDataBackend)">
+            <summary>
+            Sets the <see cref="!:IHttpClientAdapter" /> the data fetcher uses.
+            </summary>
+            <param name="client">The <see cref="!:IHttpClientAdapter" /> to use.</param>
+        </member>
+        <member name="P:PokeAPI.DataFetcher.ShouldCacheData">
+            <summary>
+            Gets or sets whether fetched data should be cached or not. Default is true.
+            </summary>
+            <remarks>Controls the <see cref="P:PokeAPI.CacheGetter`2.IsActive" /> value of all caches in the <see cref="T:PokeAPI.DataFetcher" /> class. The value returned by the getter is the value passed to the last set call.</remarks>
+        </member>
+        <member name="T:PokeAPI.PokeExtensions">
+            <summary>
+            Extension methods used in the PokeAPI library.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Language.IsOfficial">
+            <summary>
+            Whether or not hte games are published in this language.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Language.Iso639">
+            <summary>
+            The two-letter code of the country where this language is spoken. Note that it is not unique.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Language.Iso3166">
+            <summary>
+            the two-letter code of the language. Note that this is not unique.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.BerryFlavorMap.Potency">
+            <summary>
+            The power of the referenced flavor for this berry.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.BerryFlavorMap.Flavor">
+            <summary>
+            The referenced berry flavor.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.FlavorBerryMap.Potency">
+            <summary>
+            The power of the flavor for the referenced flavor.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.FlavorBerryMap.Berry">
+            <summary>
+            The referenced berry.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.GrowthTime">
+            <summary>
+            Time it takes the tree to grow one stage. Berry trees go through four of these growth stages before they can be picked.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.MaxHarvest">
+            <summary>
+            The maximum number of these berries that can grow on one tree in Generation IV.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.NaturalGiftPower">
+            <summary>
+            The power of the move "Natural Gift" when used with this Berry.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.Size">
+            <summary>
+            The size of this Berry, in millimeters.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.Smoothness">
+            <summary>
+            The smoothness of this Berry, used in making Pokéblocks or Poffins.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.SoilDryness">
+            <summary>
+            The speed at which this Berry dries out the soil as it grows. A higher rate means the soil dries more quickly.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.Firmness">
+            <summary>
+            The firmness of this berry, used in making Pokéblocks or Poffins.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.Flavors">
+            <summary>
+            A list of references to each flavor a berry can have and the potency of each of those flavors in regard to this berry.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.Item">
+            <summary>
+             	Berries are actually items. This is a reference to the item specific data for this berry.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Berry.NaturalGiftType">
+            <summary>
+            The Type the move "Natural Gift" has when used with this Berry.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.BerryFirmness.Berries">
+            <summary>
+            A list of the berries with this firmness.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.BerryFlavor.Berries">
+            <summary>
+            A list of the berries with this flavor.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.BerryFlavor.ContestType">
+            <summary>
+            The contest type that correlates with this berry flavor.
+            </summary>
+        </member>
+        <member name="P:PokeAPI.GrowthRate.Formula">
+            <summary>
+            LaTeX-style (maths mode)
+            </summary>
+        </member>
+        <member name="P:PokeAPI.Pokemon.Sprites">
+            <summary>
+            NOTE: some props can be null, fall back on male, non-shiny (if all shinies are null) values!
+            </summary>
+        </member>
+        <member name="P:PokeAPI.PokemonForm.Sprites">
+            <summary>
+            NOTE: some props can be null, fall back on male, non-shiny (if all shinies are null) values!
+            </summary>
+        </member>
+        <member name="T:PokeAPI.PokemonSprites">
+            <summary>
+            NOTE: some props can be null, fall back on male, non-shiny (if all shinies are null) values!
+            </summary>
+        </member>
+        <member name="P:PokeAPI.PokemonSpeciesGender.FamaleToMaleRate">
+            <summary>
+            The chance of this <see cref="T:PokeAPI.Pokemon" /> being female; or null for genderless.
+            </summary>
+        </member>
+        <member name="T:PokeAPI.PokemonParseException">
+            <summary>
+            An exception thrown when parsing a PokeApi JSON object.
+            </summary>
+        </member>
+        <member name="M:PokeAPI.PokemonParseException.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:PokeAPI.PokemonParseException" /> class.
+            </summary>
+        </member>
+        <member name="M:PokeAPI.PokemonParseException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the <see cref="T:PokeAPI.PokemonParseException" /> class.
+            </summary>
+            <param name="message">The message of the <see cref="T:System.Exception" />.</param>
+        </member>
+        <member name="M:PokeAPI.PokemonParseException.#ctor(System.Exception)">
+            <summary>
+            Creates a new instance of the <see cref="T:PokeAPI.PokemonParseException" /> class.
+            </summary>
+            <param name="innerException">The <see cref="T:System.Exception" /> that was the cause of this <see cref="T:System.Exception" />.</param>
+        </member>
+        <member name="M:PokeAPI.PokemonParseException.#ctor(System.String,System.Exception)">
+            <summary>
+            Creates a new instance of the <see cref="T:PokeAPI.PokemonParseException" /> class.
+            </summary>
+            <param name="message">The message of the <see cref="T:System.Exception" />.</param>
+            <param name="innerException">The <see cref="T:System.Exception" /> that was the cause of this <see cref="T:System.Exception" />.</param>
+        </member>
+    </members>
+</doc>
