@@ -80,3 +80,4 @@ spy|He's able to obtain secret information... and maybe more?|-*
 hole|What's inside? Only one way to find out!|-*
 calling|There's a number inputted, try calling it!|-*
 pokeball|A mysterious device used to capture Pokemon:tm:!|-|581691138495348737
+pokedex|A device created to track and research Pokemon:tm:!|*-|581704291719577610

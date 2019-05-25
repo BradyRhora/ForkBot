@@ -294,7 +294,11 @@ namespace ForkBot
             return msgs.ToArray();
             
         }
-
+        
+        public static string[] GetPokemonList()
+        {
+            return File.ReadAllLines("Files/pokemon.txt");
+        }
     }
 
 

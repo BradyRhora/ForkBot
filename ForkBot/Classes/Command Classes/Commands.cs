@@ -316,7 +316,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.5\n-more recent free market posts now appear at the top of the list\n-hecka buffed lottery rewards```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.5\n-more recent free market posts now appear at the top of the list\n-hecka buffed lottery rewards\n-added pokeball and pokedex```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
