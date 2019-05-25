@@ -316,7 +316,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.5\n-more recent free market posts now appear at the top of the list```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.5\n-more recent free market posts now appear at the top of the list\n-hecka buffed lottery rewards```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -1780,35 +1780,37 @@ namespace ForkBot
                                 switch (matchCount)
                                 {
                                     case 1:
-                                        x.Text += "You got 100 coins!";
-                                        u.GiveCoins(100);
+                                        x.Text += "You got 2000 coins!";
+                                        u.GiveCoins(2000);
                                         break;
                                     case 2:
-                                        string[] level2Items = { "baby", "8ball", "paintbrush", "game_die", "watch", "gift" };
+                                        string[] level2Items = { "gift", "key", "moneybag", "ticket", "gift" };
                                         string item = level2Items[rdm.Next(level2Items.Count())];
-                                        x.Text += $"You got 500 coins and a(n) {item} {Functions.GetItemEmote(item)}!";
-                                        u.GiveCoins(500);
+                                        x.Text += $"You got 5000 coins and a(n) {item} {Functions.GetItemEmote(item)}!";
+                                        u.GiveCoins(5000);
                                         u.GiveItem(item);
                                         break;
                                     case 3:
-                                        string[] level3Items = { "key", "key", "slot_machine", "gun", "unicorn", "moneybag", "moneybag", "ticket" };
+                                        string[] level3Items = { "key", "key", "calling", "gun", "unicorn", "moneybag", "moneybag" };
                                         var item01 = level3Items[rdm.Next(level3Items.Count())];
                                         var item02 = level3Items[rdm.Next(level3Items.Count())];
-                                        x.Text += $"You got 1000 coins and: {item01} {Functions.GetItemEmote(item01)}, {item02} {Functions.GetItemEmote(item02)}";
-                                        u.GiveCoins(1000);
+                                        x.Text += $"You got 10000 coins and: {item01} {Functions.GetItemEmote(item01)}, {item02} {Functions.GetItemEmote(item02)}";
+                                        u.GiveCoins(10000);
                                         u.GiveItem(item01);
                                         u.GiveItem(item02);
                                         break;
                                     case 4:
-                                        string[] level4Items = { "ley2", "key", "key", "slot_machine", "gun", "unicorn", "moneybag", "moneybag", "ticket" };
+                                        string[] level4Items = { "key2", "key", "key", "gun", "unicorn", "moneybag", "moneybag", "gem","unicorn" };
                                         var item1 = level4Items[rdm.Next(level4Items.Count())];
                                         var item2 = level4Items[rdm.Next(level4Items.Count())];
                                         var item3 = level4Items[rdm.Next(level4Items.Count())];
-                                        x.Text += $"You got 5000 coins and: {item1} {Functions.GetItemEmote(item1)}, {item2} {Functions.GetItemEmote(item2)}, {item3} {Functions.GetItemEmote(item3)}";
-                                        u.GiveCoins(5000);
+                                        var item4 = level4Items[rdm.Next(level4Items.Count())];
+                                        x.Text += $"You got 50000 coins and: {item1} {Functions.GetItemEmote(item1)}, {item2} {Functions.GetItemEmote(item2)}, {item3} {Functions.GetItemEmote(item3)}, {item4} {Functions.GetItemEmote(item4)}";
+                                        u.GiveCoins(50000);
                                         u.GiveItem(item1);
                                         u.GiveItem(item2);
                                         u.GiveItem(item3);
+                                        u.GiveItem(item4);
                                         break;
                                 }
                             }
