@@ -21,7 +21,6 @@ namespace ForkBot
         User Load()
         {
             var userData = File.ReadAllLines($@"Users\{ID}.user");
-            var items = GetDataA("items");
             return this;
         }
 
@@ -92,45 +91,63 @@ namespace ForkBot
             foreach (string d in uData)
             {
                 if (d.StartsWith(data)) adding = true;
-                else if (adding) results.Add(d);
+                else if (adding && d.Contains("}")) break;
+                else if (adding) results.Add(d.Replace("\t",""));
             }
+
+            if (!adding)
+            {
+                var list = uData.ToList();
+                list.Add($"{data}{{");
+                list.Add("}");
+                uData = list.ToArray();
+                Save(uData);
+            }
+
             return results.ToArray();
+        }
+        public void AddDataA(string dataA, string data)
+        {
+            GetDataA(dataA); //ensure data array exists
+            var uData = File.ReadAllText($@"Users\{ID}.user");
+            uData = uData.Replace($"{dataA}{{", $"{dataA}{{\r\n\t" + data);
+            Save(uData);
+        }
+        public void RemoveDataA(string dataA, string data)
+        {
+            var items = GetDataA(dataA);
+            var list = items.ToList();
+            list.Remove(data);
+            var uData = File.ReadAllText($@"Users\{ID}.user");
+            int index = uData.IndexOf($"{dataA}{{");
+            int endIndex = -1;
+
+            for (int i = index; i < uData.Length; i++)
+            {
+                if (uData[i] == '}') { endIndex = i; break; }
+            }
+
+            var uData2 = uData.Substring(endIndex+1);
+            uData = uData.Substring(0, index + dataA.Count() + 1);
+            foreach (string i in list)
+            {
+                uData += "\r\n\t" + i;
+            }
+            uData += "\r\n}" + uData2;
+            Save(uData);
         }
 
         public void GiveItem(string item)
         {
-            var uData = File.ReadAllText($@"Users\{ID}.user");
-            uData = uData.Replace("items{", "items{\r\n\t" + item);
-            Save(uData);
+            AddDataA("items", item);
         }
         public void RemoveItem(string item)
         {
-            var items = GetItemList();
-            var list = items.ToList();
-            list.Remove(item);
-            var uData = File.ReadAllText($@"Users\{ID}.user");
-            int index = uData.IndexOf("{");
-            uData = uData.Substring(0, index+1);
-            foreach(string i in list)
-            {
-                uData += "\r\n\t" + i;
-            }
-            uData += "\r\n}";
-            Save(uData);
-
+            RemoveDataA("items", item);
         }
         public string[] GetItemList()
         {
-            var uData = File.ReadAllLines($@"Users\{ID}.user");
-            bool items = false;
-            List<string> itemList = new List<string>();
-            for (int i = 0; i < uData.Count(); i++)
-            {
-                if (uData[i].Contains("}")) break;
-                else if (items) itemList.Add(uData[i].Replace("\t",""));
-                else if (uData[i].Contains("items{")) items = true;
-            }
-            return itemList.ToArray();
+            return GetDataA("items");
         }
 
         public void GiveCoins(int amount)

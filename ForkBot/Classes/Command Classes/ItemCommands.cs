@@ -9,6 +9,7 @@ using Discord;
 using Discord.Commands;
 using ImageProcessor;
 using System.Net;
+using PokeAPI;
 
 namespace ForkBot
 {
@@ -1125,6 +1126,48 @@ namespace ForkBot
                 Functions.GetUser(Context.User).AddData("stat.sobriety", -3);
                 Functions.GetUser(Context.User).AddData("stat.happiness", 18);
             }
+        }
+        
+        [Command("pokeball")]
+        public async Task Pokeball()
+        {
+            if (Check(Context, "pokeball")) return;
+            var user = Functions.GetUser(Context.User);
+            if (!user.GetItemList().Contains("pokedex"))
+            {
+                await ReplyAsync("You got your first Pokemon! Here's a Pokedex to keep track of all the Pokemon you've collected.\n" +
+                    $"**{Functions.GetItemEmote("pokedex")} Pokedex obtained!**");
+                user.GiveItem("pokedex");
+            }
+
+            var pokemonList = Functions.GetPokemonList();
+            int poke = rdm.Next(pokemonList.Count());
+            var pokemonS = pokemonList[poke];
+            var pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
+            user.AddDataA("pokemon", pokemon.Name);
+
+            JEmbed emb = new JEmbed();
+            emb.Title = "Pokemon Obtained!";
+            emb.Description = $"{Functions.GetItemEmote("pokeball")} You got a {pokemon.Name.ToTitleCase()}! {Functions.GetItemEmote("pokeball")}";
+            emb.ImageUrl = pokemon.Sprites.FrontMale;
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+            await ReplyAsync("", embed: emb.Build());
+        }
+
+        [Command("pokedex")]
+        public async Task Pokedex()
+        {
+            if (Check(Context, "pokedex", false)) return;
+            var user = Functions.GetUser(Context.User);
+            var pokemon = user.GetDataA("pokemon");
+            var emb = new JEmbed();
+            emb.Title = $"{Functions.GetItemEmote("pokedex")} {await user.GetName(Context.Guild)}'s Pokemon {Functions.GetItemEmote("pokeball")}";
+            foreach(var p in pokemon)
+            {
+                emb.Description += p.ToTitleCase() + "\n";
+            }
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+            await ReplyAsync("", embed: emb.Build());
         }
 
 
