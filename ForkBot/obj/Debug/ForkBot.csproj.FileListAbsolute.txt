@@ -174,5 +174,4 @@ C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\ru\Microsoft.CodeAnalysis.
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\tr\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\zh-Hans\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
-C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\PokeApi.NET.dll
 C:\Users\brady\source\repos\ForkBot\ForkBot\bin\Debug\PokeApi.NET.xml

@@ -1155,16 +1155,58 @@ namespace ForkBot
         }
 
         [Command("pokedex")]
-        public async Task Pokedex()
+        public async Task Pokedex(string pokemon = "")
         {
             if (Check(Context, "pokedex", false)) return;
             var user = Functions.GetUser(Context.User);
-            var pokemon = user.GetDataA("pokemon");
+            var poke = user.GetDataA("pokemon");
             var emb = new JEmbed();
-            emb.Title = $"{Functions.GetItemEmote("pokedex")} {await user.GetName(Context.Guild)}'s Pokemon {Functions.GetItemEmote("pokeball")}";
-            foreach(var p in pokemon)
+
+            if (pokemon == "")
             {
-                emb.Description += p.ToTitleCase() + "\n";
+                emb.Title = $"{Functions.GetItemEmote("pokedex")} {await user.GetName(Context.Guild)}'s Pokemon {Functions.GetItemEmote("pokeball")}";
+                foreach (var p in poke)
+                {
+                    emb.Description += p.ToTitleCase() + "\n";
+                }
+            }
+            else
+            {
+                if (poke.Contains(pokemon.ToLower()))
+                {
+                    var Pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemon.ToLower());
+                    emb.Title = Functions.GetItemEmote("pokedex") + Pokemon.Name.ToTitleCase() + Functions.GetItemEmote("pokeball");
+                    emb.ImageUrl = Pokemon.Sprites.FrontMale;
+                    emb.Fields.Add(new JEmbedField(x => {
+                        x.Header = "Type";
+                        string types = "";
+                        foreach(var type in Pokemon.Types)
+                        {
+                            types += type.Type.Name.ToTitleCase()+" ";
+                        }
+                        x.Text = types;
+                        x.Inline = false;
+                    }));
+
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = "Height";
+                        x.Text = Pokemon.Height/10.0 + "m";
+                        x.Inline = true;
+                    }));
+
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = "Mass";
+                        x.Text = Pokemon.Mass + "kg";
+                        x.Inline = true;
+                    }));
+                }
+                else
+                {
+                    await ReplyAsync("You do not have the specified Pokemon.");
+                    return;
+                }
             }
             emb.ColorStripe = Constants.Colours.YORK_RED;
             await ReplyAsync("", embed: emb.Build());
