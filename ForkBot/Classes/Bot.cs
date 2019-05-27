@@ -99,7 +99,7 @@ namespace ForkBot
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x=>x.Id==message.Author.Id).Count() <= 0) return;
-
+            if (!Var.DebugMode && message.Channel.Id == Constants.Channels.DEBUG) return;
             var user = Functions.GetUser(message.Author);
             //trusted management
             if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
