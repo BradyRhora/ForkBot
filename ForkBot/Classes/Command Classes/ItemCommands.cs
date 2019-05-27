@@ -837,18 +837,18 @@ namespace ForkBot
             else if (u.GetItemList().Contains("package")) await ReplyAsync("It's locked! You need a key to open it.");
         }
 
-        [Command("key2")]
-        public async Task Key2()
+        [Command("postbox")]
+        public async Task Postbox()
         {
             User u = Functions.GetUser(Context.User);
-            if (u.GetItemList().Contains("key2") && u.GetItemList().Contains("package"))
+            if (u.GetItemList().Contains("key2") && u.GetItemList().Contains("postbox"))
             {
-                string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome", "dividers" };
+                string[] lootboxItems = { "pokeball", "lock", "key", "moneybag","briefcase", "gun", "knife", "mag", "ticket", "stopwatch", "gift","unicorn","watch", "stopwatch","santa","shopping_cart","poop" };
 
                 u.RemoveItem("key2");
-                u.RemoveItem("package");
+                u.RemoveItem("postbox");
 
-                int[] items = new int[5];
+                int[] items = new int[10];
 
                 for (int i = 0; i < items.Count(); i++) items[i] = rdm.Next(lootboxItems.Count());
 
@@ -858,10 +858,28 @@ namespace ForkBot
                     msg += Functions.GetItemEmote(lootboxItems[i]) + " " + lootboxItems[i] + ":sparkles: ";
                     u.GiveItem(lootboxItems[i]);
                 }
-                msg += "\nYour key2 turns into a key! :key2: :arrow_right: :key:";
-                u.GiveItem("key");
 
                 await ReplyAsync(msg);
+            }
+            else if (u.GetItemList().Contains("key2")) await ReplyAsync("You have nothing to open with this key2!");
+            else if (u.GetItemList().Contains("postbox")) await ReplyAsync("It's locked! You need a key2 to open it.");
+        }
+
+        [Command("key2")]
+        public async Task Key2()
+        {
+            User u = Functions.GetUser(Context.User);
+            if (u.GetItemList().Contains("key2") && u.GetItemList().Contains("postbox"))
+            {
+                await Postbox();
+            }
+            else if (u.GetItemList().Contains("key2") && u.GetItemList().Contains("package"))
+            {
+                u.GiveItem("key");
+                u.GiveItem("key");
+                u.RemoveItem("key2");
+                await ReplyAsync("Your key2 turns into a key! :key2: :arrow_right: :key:");
+                await Key();
             }
             else if (u.GetItemList().Contains("key2")) await ReplyAsync("You have nothing to open with this key!");
         }
