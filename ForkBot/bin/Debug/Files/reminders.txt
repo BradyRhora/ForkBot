@@ -36,4 +36,6 @@ fix dummy join dates
 more ;dividers features
 fix rounding bug, poo poo head!
 meme https://i.redd [dot] it/4u5p6w9jj5v11.jpg
+don't let choose class after already chosen
+fix ' instead of ` on tip 2
 fix multiple hosts ;raid
