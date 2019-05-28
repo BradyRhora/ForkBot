@@ -2059,21 +2059,21 @@ namespace ForkBot
                 else await ReplyAsync("There is currently no game being hosted in this channel. Host a game with `;fp host`!");
             }
         }
-        
+
         [Command("raid"), Summary("[FUN] Choose a class then take on enemies to level up and gain glorious loot!"), Alias(new string[] { "r" })]
         public async Task RaidCommand(params string[] command)
         {
-            //var user = Functions.GetUser(Context.User);
+            if (command.Count() == 0) command = new string[] { "" };
             var rUser = new Raid.Profile(Context.User);
             var rGame = Raid.GetChannelRaid(Context.Channel);
             if (rGame == null || !rGame.Started)
             { 
-                if (rUser.GetData("class") == "0" && command.Count() == 0)
+                if (rUser.GetData("class") == "0")
                 {
                     await ReplyAsync(Raid.Class.startMessage());
                     return;
                 }
-                else if (command.Count() == 0)
+                else if (command[0] == "")
                 {
                     if (Raid.ChannelHasRaid(Context.Channel))
                     {
@@ -2242,19 +2242,26 @@ namespace ForkBot
             }
             else if (rGame != null)
             {
+                string msg = "";
                 switch (command[0])
                 {
                     case "":
-                        await rGame.StateCurrentAction();
+                        msg =  rGame.StateCurrentAction();
                         break;
-                    default:
-                        if (rGame.GetCurrentTurn() == rUser)
+                    case "act":
+                        if ((rGame.GetCurrentTurn() as Raid.Profile).ID == rUser.ID)
                         {
-                            (rUser as Raid.Player).Act(command);
-                            await rGame.StateCurrentAction();
+                            var player = rGame.GetPlayer(rUser);
+                            var success = await player.Act(command);
+                            if (!success)
+                            {
+                                await ReplyAsync("Invalid action, make sure everything is typed correctly.");
+                            }
+                            msg = rGame.StateCurrentAction();
                         }
                         break;
                 }
+            await ReplyAsync(msg);
             }
         }
 

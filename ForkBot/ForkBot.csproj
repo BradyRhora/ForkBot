@@ -222,7 +222,9 @@
     <Compile Include="Classes\Objects\ItemTrade.cs" />
     <Compile Include="Classes\Objects\MineSweeper.cs" />
     <Compile Include="Classes\Objects\Poll.cs" />
-    <Compile Include="Classes\Objects\Raid.cs" />
+    <Compile Include="Classes\Objects\Raid\GameThings.cs" />
+    <Compile Include="Classes\Objects\Raid\Placeable.cs" />
+    <Compile Include="Classes\Objects\Raid\Raid.cs" />
     <Compile Include="Classes\Objects\Shop.cs" />
     <Compile Include="Classes\Objects\Slot.cs" />
     <Compile Include="Classes\Objects\SlotMachine.cs" />
