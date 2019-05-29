@@ -21,6 +21,8 @@ namespace ForkBot
             public static ulong DYNO = 155149108183695360;
             public static ulong JACE = 308761161258500097;
             public static ulong FORKPY = 573047938306146304;
+            public static ulong SLEEP = 534564220704915456;
+            public static ulong EZRA = 481633326831108096;
         }
 
         public class Roles
