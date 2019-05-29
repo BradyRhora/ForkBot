@@ -74,7 +74,7 @@ namespace ForkBot
             {
                 Started = true;
                 await Channel.SendMessageAsync("You journey into the mysterious dungeon of Efrüg, knowing not what awaits you and your party...");
-                for (int i = 0; i < DUNGEON_SIZE; i++) Dungeon[i] = new Room(i+1, this);
+                Dungeon[0] = new Room(1, this);
                 string action = StateCurrentAction();
                 await Channel.SendMessageAsync(action);
             }
@@ -105,17 +105,29 @@ namespace ForkBot
                 var turn = GetCurrentTurn();
 
                 string msg = "";
-                if (turn.GetType() == typeof(Player))
+
+
+                if (turn.Dead)
+                {
+                    msg = $"{turn.GetEmote()} {turn.GetName()} lies there, dead.";
+                    room.NextInitiative();
+                }
+                else if (turn.GetType() == typeof(Player))
                 {
                     var player = (Player)turn;
-                    if (!turn.Moved) msg += room.BuildBoard() + '\n';
-                    msg += $"It's {player.GetName()}'s turn.\nChoose one of the folling actions with `;r act [action]`. Don't forget to specify a direction if necessary.\nYou can move {player.StepsLeft} more spaces.\n```\n";
-                    var actions = player.GetActions();
-                    for (int i = 0; i < actions.Count(); i++)
+                    if (!turn.Moved)
                     {
-                        msg += $"{actions[i].Name}: {actions[i].Description}\n";
+                        msg += room.BuildBoard() + "\n";
+                        msg += $"It's {player.GetEmote()} <@{player.ID}>'s turn.\nChoose one of the following actions with `;r [action]`. Don't forget to specify a direction if necessary.\n" +
+                               $"You can move `{player.StepsLeft}` more spaces. `Health: {player.Health}/{player.MaxHealth}` \n```\n";
+                        var actions = player.GetActions();
+                        for (int i = 0; i < actions.Count(); i++)
+                        {
+                            msg += $"{actions[i].Name}: {actions[i].Description}\n";
+                        }
+                        msg += "```";
                     }
-                    msg += "```";
+                    else msg += $"You can move `{player.StepsLeft}` more spaces.";
                 }
                 else if (turn.GetType() == typeof(Monster))
                 {
@@ -125,7 +137,22 @@ namespace ForkBot
                 }
 
                 
-                if (turn.GetType() == typeof(Monster)) msg += '\n' + StateCurrentAction();
+                if (Players.Where(x=>x.Dead).Count() == Players.Count())
+                {
+                    msg = "All players have died. Game over.";
+                    Games.Remove(this);
+                    return msg;
+                }
+                else if (room.Initiative.Where(x=>x.Key.GetType() == typeof(Monster) && x.Key.Dead).Count() == room.Initiative.Where(x=>x.Key.GetType() == typeof(Monster)).Count())
+                {
+                    msg = "All enemies have died. Moving on the next room.";
+                    currentRoom++;
+                    Dungeon[currentRoom] = new Room(currentRoom++, this);
+                    return msg;
+                }
+
+
+                if (turn.GetType() == typeof(Monster) || turn.Dead) msg += '\n' + StateCurrentAction(); //not so sure about this line, why does it use `turn` again?
                 return msg;
             }
         }
@@ -155,7 +182,7 @@ namespace ForkBot
 
             void GenerateRoom()
             {
-                Size = rdm.Next(5, 10 + Number / 2);
+                Size = 6;// rdm.Next(5, 10 + Number / 2);
                 if (Size > 16) Size = 16;
                 Board = new string[Size, Size];
                 for (int x = 0; x < Size; x++)
@@ -178,7 +205,7 @@ namespace ForkBot
                 Enemies = new Monster[enemyCount];
                 for (int i = 0; i < enemyCount; i++)
                 {
-                    Enemies[i] = possibleEnemies[rdm.Next(possibleEnemies.Count())].Clone();
+                    Enemies[i] = possibleEnemies[rdm.Next(possibleEnemies.Count())].Clone(Game);
 
                     int posX = -1, posY = -1;
                     do
@@ -225,8 +252,11 @@ namespace ForkBot
             public void NextInitiative()
             {
                 Counter++;
+                
                 if (Counter >= Initiative.Count()) Counter = 0;
                 var turn = Game.GetCurrentTurn();
+                turn.Acted = false;
+                turn.Moved = false;
                 turn.StepsLeft = turn.GetMoveDistance();
             }
 
@@ -246,12 +276,14 @@ namespace ForkBot
                         else if (b2[x, y].StartsWith("enemy|"))
                         {
                             int index = Convert.ToInt32(b2[x, y].Split('|')[1]);
-                            board += Enemies[index].GetEmote();
+                            if (Enemies[index].Dead) board += "☠"; // (skull and crossbones)
+                            else board += Enemies[index].GetEmote();
                         }
                         else if (b2[x, y].StartsWith("player|"))
                         {
                             int index = Convert.ToInt32(b2[x, y].Split('|')[1]);
-                            board += Game.GetPlayers()[index].GetEmote();
+                            if (Game.GetPlayers()[index].Dead) board += "☠";
+                            else board += Game.GetPlayers()[index].GetEmote();
                         }
                         else board += "❓";
                     }
@@ -298,6 +330,22 @@ namespace ForkBot
 
                 return msg;
             }
+
+            internal Placeable GetPlaceableAt(int x, int y, bool alive = true)
+            {
+                foreach (var p in Initiative)
+                {
+                    if (p.Key.X == x && p.Key.Y == y)
+                        if (alive && !p.Key.Dead)
+                            return p.Key;
+                }
+                return null;
+            }
+            public bool IsSpaceEmpty(int x, int y, bool alive = true)
+            {
+                return x >= 0 && y >= 0 && x < Size && y < Size && Initiative.Where(o => o.Key.X == x && o.Key.Y == y && (alive && !o.Key.Dead || !alive)).Count() <= 0;
+            }
+            public int GetSize() { return Size; }
         }
 
                 

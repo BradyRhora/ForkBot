@@ -40,3 +40,5 @@ don't let choose class after already chosen
 fix ' instead of ` on tip 2
 fix multiple hosts ;raid
 pokedex dm
+resend map when players turn
+fix ;r emote message

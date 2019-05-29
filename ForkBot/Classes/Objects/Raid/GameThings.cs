@@ -116,11 +116,11 @@ namespace ForkBot
         }
         public class Action
         {
-            public static Action Weapon = new Action("weapon", "Use your fists or currently eqipped weapon to attack an enemy in range.", Type.Attack);
+            public static Action Attack = new Action("attack", "Use your fists or currently equipped weapon to attack an enemy in range.", Type.Attack);
             public static Action Move = new Action("move", "Move somewhere else on the board.", Type.Movement);
             public static Action Spell = new Action("spell", "Cast a spell.", Type.Spell);
             public static Action Pass = new Action("pass", "End your turn without taking an action.", Type.Pass);
-            public static Action[] Actions = new Action[] { Weapon, Move, Spell, Pass };
+            public static Action[] Actions = new Action[] { Attack, Move, Spell, Pass };
             public string Name;
             public string Description;
             Type type;

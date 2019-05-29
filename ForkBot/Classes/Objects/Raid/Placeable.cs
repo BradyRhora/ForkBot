@@ -20,9 +20,11 @@ namespace ForkBot
             public Action[] Actions;
             public int StepsLeft { get; set; }
             public bool Moved { get; set; } = false;
+            public bool Acted { get; set; } = false;
+            public bool Dead { get; set; } = false;
             public Placeable()
             {
-                Actions = new Action[] { Action.Pass, Action.Move, Action.Weapon };
+                Actions = new Action[] { Action.Pass, Action.Move, Action.Attack };
             }
 
             public int GetDistance(Placeable p)
@@ -40,6 +42,19 @@ namespace ForkBot
             public abstract string GetName();
             public abstract string GetEmote();
             public abstract int GetMoveDistance();
+            public abstract int RollAttackDamage();
+            public string TakeDamage(int attackDamage)
+            {
+                Health -= attackDamage;
+                if (Health <= 0)
+                {
+                    Health = 0;
+                    Dead = true;
+                    return $"{GetEmote()} {GetName()} falls to the ground, dead.";
+                    
+                }
+                return null;
+            }
         }
         public class Monster : Placeable
         {
@@ -66,6 +81,7 @@ namespace ForkBot
                 Name = name;
                 Emote = emote;
                 Level = level;
+                Health = (Level * 10) + rdm.Next(Level);
                 Game = game;
             }
 
@@ -78,20 +94,21 @@ namespace ForkBot
                 return Name;
             }
 
-            public Monster Clone()
+            public Monster Clone(Game game = null)
             {
-                Monster monster = new Monster(Name, Emote, Level);
+                Monster monster = new Monster(Name, Emote, Level, game);
                 return monster;
             }
 
-            Placeable FindClosestEnemy(Room room)
+            Placeable FindClosestEnemy()
             {
+                var room = Game.GetCurrentRoom();
                 int closestIndex = 0;
                 int closestDist = GetDistance(room.Players[0]);
                 for (int i = 1; i < room.Players.Count(); i++)
                 {
                     int dist = GetDistance(room.Players[i]);
-                    if (dist < closestDist)
+                    if (dist < closestDist && !room.Players[i].Dead)
                     {
                         closestDist = dist;
                         closestIndex = i;
@@ -108,17 +125,25 @@ namespace ForkBot
             {
                 int closest = GetDistance(x, y);
                 int[] closestCoord = { x, y };
-                for (int x2 = x - 1; x2 <= x + 1; x++)
+                for (int x2 = x - 1; x2 <= x + 1; x2++)
                 {
-                    for (int y2 = y - 1; y2 <= y + 1; y++)
+                    for (int y2 = y - 1; y2 <= y + 1; y2++)
                     {
                         if (x == x2 ^ y == y2)
                         {
-                            closest = GetDistance(x2, y2);
-                            closestCoord = new int[] { x2, y2 };
+                            if ((Game.GetCurrentRoom().IsSpaceEmpty(x2, y2) || x2 == X && y2==Y) && x2 >= 0 && y2 >= 0 && x2 < Game.GetCurrentRoom().GetSize() && y2 < Game.GetCurrentRoom().GetSize())
+                            {
+                                int distance = (GetDistance(x2, y2));
+                                if (distance < closest) //make sure its checking right spots and not moving onto player
+                                {
+                                    closest = distance;
+                                    closestCoord = new int[] { x2, y2 };
+                                }
+                            }
                         }
                     }
                 }
+                if (closestCoord[0] == x && closestCoord[1] == y) closestCoord = new int[] { -1,-1};
                 return closestCoord;
             }
 
@@ -126,17 +151,118 @@ namespace ForkBot
             {
                 return (Level / 2) + 1;
             }
+            public override int RollAttackDamage()
+            {
+                return rdm.Next(Level*10) + (Level/2);
+            }
+
 
             public string ChooseAction(Room room)
             {
-                var player = FindClosestEnemy(room);
-                if (GetDistance(player.X, player.Y) - 1 <= GetMoveDistance())
+                var target = FindClosestEnemy();
+                string msg = "";
+                var coords = GetClosestSide(target.X, target.Y);
+                if (GetDistance(target.X, target.Y) - 1 <= GetMoveDistance() && coords[0] != -1)
                 {
-                    var coords = GetClosestSide(player.X, player.Y);
-                    SetLocation(coords[0], coords[1]);
-                    return $"{GetName()} moves towards {player.GetName()}.";
+                    if (!(coords[0] == X && coords[1] == Y))
+                    {
+                        SetLocation(coords[0], coords[1]);
+                        msg += $"{GetEmote()} {GetName()} moves towards {target.GetName()}.";
+                    }
+
+                    int attackDMG = RollAttackDamage();
+                    msg += $"\n{GetEmote()} {GetName()} attacks {target.GetEmote()} {target.GetName()} for {attackDMG} damage!";
+                    var dead = target.TakeDamage(attackDMG);
+                    if (dead != null) msg += "\n" + dead;
                 }
-                return $"{GetName()} waits patiently.";
+                else
+                {
+                    for (int i = 0; i < GetMoveDistance(); i++)
+                    {
+                        int xDist = Math.Abs(target.X - X);
+                        int yDist = Math.Abs(target.Y - Y);
+                        bool equDist = xDist == yDist;
+                        bool didMove = true;
+                        if (equDist)
+                        {
+                            if (target.X < X && room.IsSpaceEmpty(X - 1, Y)) X--;
+                            else if (target.Y < Y && room.IsSpaceEmpty(X, Y - 1)) Y--;
+                            else if (target.X > X && room.IsSpaceEmpty(X + 1, Y)) X++;
+                            else if (target.Y > Y && room.IsSpaceEmpty(X, Y + 1)) Y++;
+                            else didMove = false;
+                        }
+                        else
+                        {
+                            if (yDist > xDist)
+                            {
+                                if (target.Y < Y && room.IsSpaceEmpty(X, Y - 1)) Y--;
+                                else if (target.Y > Y && room.IsSpaceEmpty(X, Y + 1)) Y++;
+                                else didMove = false;
+                            }
+                            else
+                            {
+                                if (target.X < X && room.IsSpaceEmpty(X - 1, Y)) X--;
+                                else if (target.X > X && room.IsSpaceEmpty(X + 1, Y)) X++;
+                                else didMove = false;
+                            }
+                        }
+
+                        if (!didMove)
+                        {
+                            int[] directions = new int[4];
+                            for (int j = 0; j < 4; j++) directions[j] = -1;
+                            for (int j = 0; j < 4; j++)
+                            {
+                                int num = rdm.Next(4);
+                                if (directions.Contains(num))
+                                {
+                                    j--;
+                                    continue;
+                                }
+                                else directions[j] = num;
+                            }
+
+                            bool moved = false;
+                            foreach (int dir in directions)
+                            {
+                                switch (dir)
+                                {
+                                    case 0:
+                                        if (room.IsSpaceEmpty(X, Y - 1))
+                                        {
+                                            Y--;
+                                            moved = true;
+                                        }
+                                        break;
+                                    case 1:
+                                        if (room.IsSpaceEmpty(X + 1, Y))
+                                        {
+                                            X++;
+                                            moved = true;
+                                        }
+                                        break;
+                                    case 2:
+                                        if (room.IsSpaceEmpty(X, Y + 1))
+                                        {
+                                            Y++;
+                                            moved = true;
+                                        }
+                                        break;
+                                    case 3:
+                                        if (room.IsSpaceEmpty(X - 1, Y))
+                                        {
+                                            X--;
+                                            moved = true;
+                                        }
+                                        break;
+                                }
+                                if (moved) break;
+                            }
+                        }
+                    }
+                    msg += $"{GetEmote()} {GetName()} moves towards {target.GetName()}.";
+                }
+                return msg;
             }
 
         }
@@ -291,7 +417,20 @@ namespace ForkBot
             {
                 int current = GetEXP();
                 int newAmt = current + amount;
+
+                while (newAmt > EXPToNextLevel())
+                {
+                    newAmt = newAmt - EXPToNextLevel();
+                    LevelUp();
+                }
+
+
                 SetData("exp", newAmt.ToString());
+            }
+
+            void LevelUp()
+            {
+                throw new NotImplementedException();
             }
 
             public override string GetName()
@@ -306,11 +445,19 @@ namespace ForkBot
             {
                 return (GetClass().Speed / 2) + 1;
             }
+            public override int RollAttackDamage()
+            {
+                return rdm.Next(GetClass().Power) + (GetClass().Power / 2); //add weapon damage
+            }
+
+            public int EXPToNextLevel()
+            {
+                return (int)Math.Pow(5, GetLevel());
+            }
         }
         public class Player : Profile
         {
             Class Class;
-            bool Acted = false;
             public Player(IUser user, Game game) : base(user) => Initialize(game);
             public Player(Profile user, Game game) : base(user) => Initialize(game);
 
@@ -324,35 +471,85 @@ namespace ForkBot
 
             public async Task<bool> Act(string[] commands)
             {
-                string actionS = commands[1];
+                string actionS = commands[0];
                 Action action = Actions.Where(x => x.Name.ToLower() == actionS.ToLower()).FirstOrDefault();
                 if (action == null) return false;
                 if (action.Equals(Action.Move))
                 {
                     if (StepsLeft <= 0) return false;
-                    StepsLeft--;
-                    string direction = commands[2].ToLower();
+                     string direction = commands[1].ToLower();
                     switch (direction)
                     {
                         case "left":
-                            X--;
+                            if (Game.GetCurrentRoom().IsSpaceEmpty(X-1,Y))
+                                X--;
+                            else
+                                return false;
+                            
                             break;
                         case "right":
-                            X++;
+                             if (Game.GetCurrentRoom().IsSpaceEmpty(X + 1, Y))
+                                X++;
+                            else
+                                return false;
                             break;
                         case "down":
-                            Y++;
+                            if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y+1))
+                                Y++;
+                            else
+                                return false;
                             break;
                         case "up":
-                            Y--;
+                            if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y-1))
+                                Y--;
+                            else
+                                return false;
                             break;
                         default:
                             return false;
                     }
+                    StepsLeft--;
                     Moved = true;
                     await Game.GetChannel().SendMessageAsync(Game.ShowCurrentRoom(false));
                 }
-                else Acted = true;
+                else if (action == Action.Attack)
+                {
+                    string direction = commands[1].ToLower();
+                    int[] attackCoords = new int[] { X, Y };
+                    switch (direction)
+                    {
+                        case "left":
+                            attackCoords[0]--;
+                            break;
+                        case "right":
+                            attackCoords[0]++;
+                            break;
+                        case "down":
+                            attackCoords[1]++;
+                            break;
+                        case "up":
+                            attackCoords[1]--;
+                            break;
+                        default:
+                            return false;
+                    }
+                    Placeable target = Game.GetCurrentRoom().GetPlaceableAt(attackCoords[0], attackCoords[1]);
+                    if (target == null) await Game.GetChannel().SendMessageAsync($"{GetEmote()} {GetName()} attacks the air to their {direction}.");
+                    else
+                    {
+                        var damage = RollAttackDamage();
+                        var dead = target.TakeDamage(damage);
+                        string xtraMSG = "";
+                        if (dead != null) xtraMSG = "\n" + dead;
+                        else if (target.Health <= target.MaxHealth/2) xtraMSG = " It looks pretty hurt!";
+                        await Game.GetChannel().SendMessageAsync($"{GetName()} attacks {target.GetName()} for {damage} damage using their {"[weapon]"}" + xtraMSG);
+                    }
+                    Acted = true;
+                }
+                else if (action == Action.Pass)
+                {
+                    Acted = true;
+                }
 
                 //await Game.GetChannel().SendMessageAsync($"{GetName()} acts.");
                 if (Acted) Game.GetCurrentRoom().NextInitiative();
