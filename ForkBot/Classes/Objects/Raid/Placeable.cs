@@ -22,6 +22,7 @@ namespace ForkBot
             public bool Moved { get; set; } = false;
             public bool Acted { get; set; } = false;
             public bool Dead { get; set; } = false;
+            public bool Attackable { get; set; } = true;
             public Placeable()
             {
                 Actions = new Action[] { Action.Pass, Action.Move, Action.Attack };
@@ -265,6 +266,11 @@ namespace ForkBot
                 return msg;
             }
 
+            public int GetDeathEXP()
+            {
+                return Level * 5;
+            }
+
         }
         public class Profile : Placeable
         {
@@ -412,8 +418,7 @@ namespace ForkBot
             {
                 return Convert.ToInt32(GetData("exp"));
             }
-
-            public void AddEXP(int amount)
+            public void GiveEXP(int amount)
             {
                 int current = GetEXP();
                 int newAmt = current + amount;
@@ -423,8 +428,7 @@ namespace ForkBot
                     newAmt = newAmt - EXPToNextLevel();
                     LevelUp();
                 }
-
-
+                
                 SetData("exp", newAmt.ToString());
             }
 
@@ -540,8 +544,14 @@ namespace ForkBot
                         var damage = RollAttackDamage();
                         var dead = target.TakeDamage(damage);
                         string xtraMSG = "";
-                        if (dead != null) xtraMSG = "\n" + dead;
-                        else if (target.Health <= target.MaxHealth/2) xtraMSG = " It looks pretty hurt!";
+                        if (dead != null)
+                        {
+                            xtraMSG = "\n" + dead;
+                            int exp = ((Monster)target).GetDeathEXP();
+                            GiveEXP(exp);
+                            xtraMSG = " You gained " + exp + " experience.";
+                        }
+                        else if (target.Health <= target.MaxHealth / 2) xtraMSG = " It looks pretty hurt!";
                         await Game.GetChannel().SendMessageAsync($"{GetName()} attacks {target.GetName()} for {damage} damage using their {"[weapon]"}" + xtraMSG);
                     }
                     Acted = true;
@@ -556,6 +566,66 @@ namespace ForkBot
                 return true;
             }
         }
+        public class Item : Placeable
+        {
+            readonly static Item[] Items =
+            {
+                new Item("dagger", "🗡", 50, "A short, deadly blade that can be coated in poison."),
+                new Item("key", "🔑", -1, "An item found in dungeons used to open doors and chests."),
+                new Item("ring", "💍", 150, "A valuable item that can sold in shops or enchanted."),
+                new Item("bow and arrow", "🏹", 50, "A well crafted piece of wood with a string attached, used to launch arrows at enemies to damage them from a distance."),
+                new Item("pill", "💊", 25, "A drug with various effects."),
+                new Item("syringe", "💉", 65, "A needle filled with healing liquids to regain health."),
+                new Item("shield", "🛡", 45, "A sturdy piece of metal that can be used to block incoming attacks."),
+                new Item("gem", "💎", 200, "A large valuable gem that can be sold or used as an arcane focus to increase a spells power."),
+                new Item("apple", "🍎", 10, "A red fruit that provides minor healing."),
+                new Item("banana", "🍌", 12, "A long yellow fruit that provides minor healing."),
+                new Item("potato", "🥔", 15, "A vegetable that can be cooked in various ways and provides minor healing."),
+                new Item("meat", "🍖", 20, "Meat from some sort of animal that can be cooked and provides more than minor healing."),
+                new Item("cake", "🍰", 25, "A baked good, that's usually eaten during celebrations. Provides minor healing for all party members."),
+                new Item("ale", "🍺", 10, "A cheap drink that provides minor healing, but may have unwanted side effects."),
+                new Item("guitar", "🎸", 50, "A musical instrument, usually with six strings that play different notes."),
+                new Item("saxophone", "🎷", 50, "A brass musical instrument."),
+                new Item("drum", "🥁", 50, "A musical instrument that usually requires sticks to play beats."),
+                new Item("candle", "🕯", 50, "A chunk of wax with a wick in the middle that slowly burns to create minor light.")
+            };
 
+            string Name { get; }
+            string Description { get; }
+            int Value { get; }
+            string Emote { get; }
+            string[] Tags;
+
+            public override string GetEmote()
+            {
+                return Emote;
+            }
+            public override int GetMoveDistance()
+            {
+                throw new NotImplementedException("Item does not implement the method RollAttackDamage()");
+            }
+            public override int RollAttackDamage()
+            {
+                throw new NotImplementedException("Item does not implement the method RollAttackDamage()");
+            }
+            public override string GetName()
+            {
+                return Name;
+            }
+
+            public Item(string name, string emote, int value, string description, params string[] tags)
+            {
+                Name = name;
+                Emote = emote;
+                Value = value;
+                Description = description;
+                Tags = tags;
+            }
+
+            public Item Clone(Item item)
+            {
+                return new Item(Name, Emote, Value, Description, Tags);
+            }
+        }
     }
 }

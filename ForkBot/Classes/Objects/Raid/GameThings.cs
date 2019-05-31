@@ -54,46 +54,6 @@ namespace ForkBot
                 return classes.Where(x => x.Name.ToLower() == className.ToLower()).FirstOrDefault();
             }
         }
-        public class Item
-        {
-            readonly static Item[] Items =
-            {
-                new Item("dagger", "🗡", 50, "A short, deadly blade that can be coated in poison."),
-                new Item("key", "🔑", -1, "An item found in dungeons used to open doors and chests."),
-                new Item("ring", "💍", 150, "A valuable item that can sold in shops or enchanted."),
-                new Item("bow and arrow", "🏹", 50, "A well crafted piece of wood with a string attached, used to launch arrows at enemies to damage them from a distance."),
-                new Item("pill", "💊", 25, "A drug with various effects."),
-                new Item("syringe", "💉", 65, "A needle filled with healing liquids to regain health."),
-                new Item("shield", "🛡", 45, "A sturdy piece of metal that can be used to block incoming attacks."),
-                new Item("gem", "💎", 200, "A large valuable gem that can be sold or used as an arcane focus to increase a spells power."),
-                new Item("apple", "🍎", 10, "A red fruit that provides minor healing."),
-                new Item("banana", "🍌", 12, "A long yellow fruit that provides minor healing."),
-                new Item("potato", "🥔", 15, "A vegetable that can be cooked in various ways and provides minor healing."),
-                new Item("meat", "🍖", 20, "Meat from some sort of animal that can be cooked and provides more than minor healing."),
-                new Item("cake", "🍰", 25, "A baked good, that's usually eaten during celebrations. Provides minor healing for all party members."),
-                new Item("ale", "🍺", 10, "A cheap drink that provides minor healing, but may have unwanted side effects."),
-                new Item("guitar", "🎸", 50, "A musical instrument, usually with six strings that play different notes."),
-                new Item("saxophone", "🎷", 50, "A brass musical instrument."),
-                new Item("drum", "🥁", 50, "A musical instrument that usually requires sticks to play beats."),
-                new Item("candle", "🕯", 50, "A chunk of wax with a wick in the middle that slowly burns to create minor light.")
-            };
-
-            string Name { get; }
-            string Description { get; }
-            int Value { get; }
-            string Emote { get; }
-            string[] Tags;
-
-            public Item(string name, string emote, int value, string description, params string[] tags)
-            {
-                Name = name;
-                Emote = emote;
-                Value = value;
-                Description = description;
-                Tags = tags;
-            }
-
-        }
         public class Spell
         {
             static Spell Lightning_Bolt = new Spell("lightning bolt", "⚡", "Fires a jolt of lightning that can zap through multiple enemies.");

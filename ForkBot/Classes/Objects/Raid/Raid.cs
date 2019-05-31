@@ -276,7 +276,7 @@ namespace ForkBot
                         else if (b2[x, y].StartsWith("enemy|"))
                         {
                             int index = Convert.ToInt32(b2[x, y].Split('|')[1]);
-                            if (Enemies[index].Dead) board += "☠"; // (skull and crossbones)
+                            if (Enemies[index].Dead && b2[x,y] == "empty") board += "☠"; // (skull and crossbones)
                             else board += Enemies[index].GetEmote();
                         }
                         else if (b2[x, y].StartsWith("player|"))
