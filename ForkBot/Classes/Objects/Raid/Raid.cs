@@ -117,7 +117,12 @@ namespace ForkBot
                     var player = (Player)turn;
                     if (!turn.Moved)
                     {
-                        msg += room.BuildBoard() + "\n";
+                        msg += room.BuildBoard();
+                        if (room.FirstAction)
+                        {
+                            msg += room.DescribeRoom() + "\n";
+                            room.FirstAction = false;
+                        }
                         msg += $"It's {player.GetEmote()} <@{player.ID}>'s turn.\nChoose one of the following actions with `;r [action]`. Don't forget to specify a direction if necessary.\n" +
                                $"You can move `{player.StepsLeft}` more spaces. `Health: {player.Health}/{player.MaxHealth}` \n```\n";
                         var actions = player.GetActions();
@@ -145,9 +150,10 @@ namespace ForkBot
                 }
                 else if (room.Initiative.Where(x=>x.Key.GetType() == typeof(Monster) && x.Key.Dead).Count() == room.Initiative.Where(x=>x.Key.GetType() == typeof(Monster)).Count())
                 {
-                    msg = "All enemies have died. Moving on the next room.";
+                    msg = "All enemies have died. Moving on the next room.\n";
                     currentRoom++;
-                    Dungeon[currentRoom] = new Room(currentRoom++, this);
+                    Dungeon[currentRoom] = new Room(currentRoom+1, this);
+                    msg += StateCurrentAction();
                     return msg;
                 }
 
@@ -168,6 +174,7 @@ namespace ForkBot
             public Player[] Players { get; private set; }
             public IOrderedEnumerable<KeyValuePair<Placeable, int>> Initiative;
             public int Counter { get; private set; } = 0;
+            public bool FirstAction = true;
 
             public Room(int num, Game game)
             {
@@ -177,6 +184,7 @@ namespace ForkBot
                 GenerateRoom();
                 GenerateEnemies();
                 PlacePlayers();
+                GenerateLoot();
                 RollInitiative();
             }
 
@@ -231,6 +239,16 @@ namespace ForkBot
                 }
             }
 
+            void GenerateLoot()
+            {
+                Loot = new Item[Size / 3];
+                for (int i = 0; i < Size/3; i++)
+                {
+                    int index = rdm.Next(Item.Items.Count());
+                    Loot[i] = Item.Items[index].Clone();
+                }
+            }
+
             void RollInitiative()
             {
                 var rolls = new Dictionary<Placeable, int>();
@@ -263,11 +281,12 @@ namespace ForkBot
             public string BuildBoard()
             {
                 var b2 = (string[,])Board.Clone();
-                for (int i = 0; i < Enemies.Count(); i++) b2[Enemies[i].Y, Enemies[i].X] = "enemy|" + i;
+
+                for (int i = 0; i < Enemies.Count(); i++) if (Enemies[i].Dead && IsSpaceEmpty(Enemies[i].X,Enemies[i].Y,false) || !Enemies[i].Dead) b2[Enemies[i].Y, Enemies[i].X] = "enemy|" + i;
                 for (int i = 0; i < Players.Count(); i++) b2[Players[i].Y, Players[i].X] = "player|" + i;
+                for (int i = 0; i < Loot.Count(); i++) b2[Loot[i].X, Loot[i].Y] = "loot|" + i;
 
-
-                string board = "";
+                    string board = "";
                 for (int x = 0; x < Size; x++)
                 {
                     for (int y = 0; y < Size; y++)
@@ -276,14 +295,19 @@ namespace ForkBot
                         else if (b2[x, y].StartsWith("enemy|"))
                         {
                             int index = Convert.ToInt32(b2[x, y].Split('|')[1]);
-                            if (Enemies[index].Dead && b2[x,y] == "empty") board += "☠"; // (skull and crossbones)
+                            if (Enemies[index].Dead) board += "☠"; // (skull and crossbones)
                             else board += Enemies[index].GetEmote();
                         }
                         else if (b2[x, y].StartsWith("player|"))
                         {
                             int index = Convert.ToInt32(b2[x, y].Split('|')[1]);
-                            if (Game.GetPlayers()[index].Dead) board += "☠";
+                            if (Game.GetPlayers()[index].Dead) board += "☠"; // '' ''
                             else board += Game.GetPlayers()[index].GetEmote();
+                        }
+                        else if (b2[x, y].StartsWith("loot|"))
+                        {
+                            int index = Convert.ToInt32(b2[x, y].Split('|')[1]);
+                            board += Loot[index].GetEmote();
                         }
                         else board += "❓";
                     }
@@ -331,19 +355,29 @@ namespace ForkBot
                 return msg;
             }
 
-            internal Placeable GetPlaceableAt(int x, int y, bool alive = true)
+            public Placeable GetPlaceableAt(int x, int y, bool alive = true, Type type = null)
             {
-                foreach (var p in Initiative)
+                Placeable[] placeables = ((Dictionary<Placeable, int>)Initiative).Keys.ToArray(); //set this fr
+                for (int i = 0; i < Initiative.Count(); i++) placeables[i] = Initiative.ElementAt(i).Key; // add loot
+                foreach (var p in placeables)
                 {
-                    if (p.Key.X == x && p.Key.Y == y)
-                        if (alive && !p.Key.Dead)
-                            return p.Key;
+                    if (p.X == x && p.Y == y)
+                        if (alive && !p.Dead || !alive)
+                            if (type == null) return p;
+                            else if (type == p.GetType()) return p;
                 }
                 return null;
             }
-            public bool IsSpaceEmpty(int x, int y, bool alive = true)
+            public bool IsSpaceEmpty(int x, int y, bool includedead = true)
             {
-                return x >= 0 && y >= 0 && x < Size && y < Size && Initiative.Where(o => o.Key.X == x && o.Key.Y == y && (alive && !o.Key.Dead || !alive)).Count() <= 0;
+                var onboard = x >= 0 && y >= 0 && x < Size && y < Size;
+                bool people = false;
+                if (includedead)
+                    people = Initiative.Where(o => o.Key.X == x && o.Key.Y == y).Count() <= 0;
+                else
+                    people = Initiative.Where(o => o.Key.X == x && o.Key.Y == y && !o.Key.Dead).Count() <= 0;
+                var empty = onboard && people;
+                return empty;
             }
             public int GetSize() { return Size; }
         }

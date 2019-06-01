@@ -132,7 +132,7 @@ namespace ForkBot
                     {
                         if (x == x2 ^ y == y2)
                         {
-                            if ((Game.GetCurrentRoom().IsSpaceEmpty(x2, y2) || x2 == X && y2==Y) && x2 >= 0 && y2 >= 0 && x2 < Game.GetCurrentRoom().GetSize() && y2 < Game.GetCurrentRoom().GetSize())
+                            if ((Game.GetCurrentRoom().IsSpaceEmpty(x2, y2,false) || x2 == X && y2==Y) && x2 >= 0 && y2 >= 0 && x2 < Game.GetCurrentRoom().GetSize() && y2 < Game.GetCurrentRoom().GetSize())
                             {
                                 int distance = (GetDistance(x2, y2));
                                 if (distance < closest) //make sure its checking right spots and not moving onto player
@@ -423,7 +423,7 @@ namespace ForkBot
                 int current = GetEXP();
                 int newAmt = current + amount;
 
-                while (newAmt > EXPToNextLevel())
+                while (newAmt >= EXPToNextLevel())
                 {
                     newAmt = newAmt - EXPToNextLevel();
                     LevelUp();
@@ -434,7 +434,8 @@ namespace ForkBot
 
             void LevelUp()
             {
-                throw new NotImplementedException();
+                SetData("level", (Convert.ToInt32(GetLevel()) + 1).ToString());
+                //give skill points and stuff
             }
 
             public override string GetName()
@@ -472,6 +473,13 @@ namespace ForkBot
                 Health = MaxHealth;
                 Game = game;
             }
+            public void GiveItem(Item item)
+            {
+                string tags = "";
+                for (int i = 0; i < item.Tags.Count(); i++) tags += item.Tags[i] + ",";
+                tags = tags.Trim(',') + "|";
+                AddDataA("inventory", tags + item.Name);
+            }
 
             public async Task<bool> Act(string[] commands)
             {
@@ -485,6 +493,7 @@ namespace ForkBot
                     switch (direction)
                     {
                         case "left":
+                        case "l":
                             if (Game.GetCurrentRoom().IsSpaceEmpty(X-1,Y))
                                 X--;
                             else
@@ -492,18 +501,21 @@ namespace ForkBot
                             
                             break;
                         case "right":
+                        case "r":
                              if (Game.GetCurrentRoom().IsSpaceEmpty(X + 1, Y))
                                 X++;
                             else
                                 return false;
                             break;
                         case "down":
+                        case "d":
                             if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y+1))
                                 Y++;
                             else
                                 return false;
                             break;
                         case "up":
+                        case "u":
                             if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y-1))
                                 Y--;
                             else
@@ -511,6 +523,11 @@ namespace ForkBot
                             break;
                         default:
                             return false;
+                    }
+                    var item = Game.GetCurrentRoom().GetPlaceableAt(X, Y, type:typeof(Item));
+                    if (item != null)
+                    {
+                        GiveItem((Item)item);
                     }
                     StepsLeft--;
                     Moved = true;
@@ -523,15 +540,19 @@ namespace ForkBot
                     switch (direction)
                     {
                         case "left":
+                        case "l":
                             attackCoords[0]--;
                             break;
                         case "right":
+                        case "r":
                             attackCoords[0]++;
                             break;
                         case "down":
+                        case "d":
                             attackCoords[1]++;
                             break;
                         case "up":
+                        case "u":
                             attackCoords[1]--;
                             break;
                         default:
@@ -549,10 +570,10 @@ namespace ForkBot
                             xtraMSG = "\n" + dead;
                             int exp = ((Monster)target).GetDeathEXP();
                             GiveEXP(exp);
-                            xtraMSG = " You gained " + exp + " experience.";
+                            xtraMSG += " You gained " + exp + " experience.";
                         }
                         else if (target.Health <= target.MaxHealth / 2) xtraMSG = " It looks pretty hurt!";
-                        await Game.GetChannel().SendMessageAsync($"{GetName()} attacks {target.GetName()} for {damage} damage using their {"[weapon]"}" + xtraMSG);
+                        await Game.GetChannel().SendMessageAsync($"{GetName()} attacks {target.GetName()} for (*roll: {damage- (GetClass().Power / 2)}* + {GetClass().Power / 2}) = **{damage}** damage using their {"[weapon]"}." + xtraMSG);
                     }
                     Acted = true;
                 }
@@ -568,10 +589,10 @@ namespace ForkBot
         }
         public class Item : Placeable
         {
-            readonly static Item[] Items =
+            public static Item[] Items =
             {
                 new Item("dagger", "🗡", 50, "A short, deadly blade that can be coated in poison."),
-                new Item("key", "🔑", -1, "An item found in dungeons used to open doors and chests."),
+                new Item("key", "🔑", -1, "An item found in dungeons. Used to open doors and chests."),
                 new Item("ring", "💍", 150, "A valuable item that can sold in shops or enchanted."),
                 new Item("bow and arrow", "🏹", 50, "A well crafted piece of wood with a string attached, used to launch arrows at enemies to damage them from a distance."),
                 new Item("pill", "💊", 25, "A drug with various effects."),
@@ -590,11 +611,16 @@ namespace ForkBot
                 new Item("candle", "🕯", 50, "A chunk of wax with a wick in the middle that slowly burns to create minor light.")
             };
 
-            string Name { get; }
-            string Description { get; }
-            int Value { get; }
-            string Emote { get; }
-            string[] Tags;
+            public string Name { get; }
+            public string Description { get; }
+            public int Value { get; }
+            public string Emote { get; }
+            public string[] Tags;
+
+            static string[] ItemTags = new string[]
+            {
+                "golden","sharp","powerful"
+            };
 
             public override string GetEmote()
             {
@@ -622,7 +648,7 @@ namespace ForkBot
                 Tags = tags;
             }
 
-            public Item Clone(Item item)
+            public Item Clone()
             {
                 return new Item(Name, Emote, Value, Description, Tags);
             }

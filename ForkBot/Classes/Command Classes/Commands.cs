@@ -2068,6 +2068,14 @@ namespace ForkBot
                 if (command.Count() == 0) command = new string[] { "" };
                 var rUser = new Raid.Profile(Context.User);
                 var rGame = Raid.GetChannelRaid(Context.Channel);
+
+                //commands to be checked whether in game or not
+                switch (command[0])
+                {
+                    case "help":
+                        break;
+                }
+                //out of game commands
                 if (rGame == null || !rGame.Started)
                 {
                     if (command[0] == "choose")
@@ -2217,6 +2225,12 @@ namespace ForkBot
                             x.Text = rUser.GetEXP().ToString() + "/" + rUser.EXPToNextLevel();
                             x.Inline = true;
                         }));
+                        emb.Fields.Add(new JEmbedField(x =>
+                        {
+                            x.Header = "Emote";
+                            x.Text = rUser.GetEmote();
+                            x.Inline = false;
+                        }));
                         await ReplyAsync("", embed: emb.Build());
                     }
                     else if (command[0] == "test")
@@ -2241,7 +2255,8 @@ namespace ForkBot
                     {
 
                     }
-                }
+                } 
+                //in game commands
                 else if (rGame != null)
                 {
                     string msg = "";
@@ -2250,6 +2265,13 @@ namespace ForkBot
                         case "":
                             msg = rGame.StateCurrentAction();
                             break;
+                        case "end":
+                            if (rGame.Host.ID == rUser.ID)
+                            {
+                                await ReplyAsync("The host has ended the raid.");
+                                Raid.Games.Remove(rGame);
+                            }
+                            break;
                         default:
                             if ((rGame.GetCurrentTurn() as Raid.Profile).ID == rUser.ID)
                             {
@@ -2257,14 +2279,14 @@ namespace ForkBot
                                 var success = await player.Act(command);
                                 if (!success)
                                 {
-
-                                    string failMsg = "Invalid action, make sure everything is typed correctly.\nValid directions are: `up`,`down`,`left`,`right`.";
+                                    string failMsg = "Invalid action, make sure everything is typed correctly.\nValid directions are: `up`,`down`,`left`,`right`. You can also just use the first letter, i.e. `;r move d` will move you down.";
                                     if (command[0] == "move")
                                         failMsg += "\nThe space you're trying to move into may not be available.";
                                     await ReplyAsync(failMsg);
                                 }
                                 msg = rGame.StateCurrentAction();
                             }
+                            else msg = $"It is currently {rGame.GetCurrentTurn().GetName()}'s turn. Please wait.";
                             break;
                         
                     }
@@ -2276,15 +2298,7 @@ namespace ForkBot
                 Console.WriteLine(e);
             }
         }
-
-        static string spellList = "";
-        [Command("addspell")]
-        public async Task AddSpell(string name, string emote, [Remainder] string desc)
-        {
-            if (name == "done") await ReplyAsync(spellList);
-            else spellList += $"new Spell(\"{name}\", \"{emote}\", \"{desc}\"),\n";
-        }
-
+        
         #endregion
 
         #region Mod Commands
