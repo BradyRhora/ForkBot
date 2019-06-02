@@ -382,6 +382,28 @@ namespace ForkBot
             public int GetSize() { return Size; }
         }
 
-                
+        public class Help
+        {
+            static Help[] helps =
+            {
+                new Help("","move"),
+                new Help("","attack"),
+                new Help("","spell"),
+                new Help("","class"),
+                new Help("","monster"),
+                new Help("","party"),
+                new Help("","dungeon"),
+                new Help("","item")
+            };
+
+            string[] KeyWords;
+            string HelpMsg;
+
+            public Help(string msg, params string[] words)
+            {
+                HelpMsg = msg;
+                KeyWords = words;
+            }
+        }
     }
 }
