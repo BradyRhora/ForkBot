@@ -20,8 +20,6 @@ namespace ForkBot
         {
             return Games.Where(x => x.GetChannel().Id == channel.Id).FirstOrDefault();
         }
-
-        
         
         public static List<Game> Games = new List<Game>();
         public class Game
@@ -158,7 +156,7 @@ namespace ForkBot
                 }
 
 
-                if (turn.GetType() == typeof(Monster) || turn.Dead) msg += '\n' + StateCurrentAction(); //not so sure about this line, why does it use `turn` again?
+                if (turn.GetType() == typeof(Monster) || turn.Dead) msg += '\n' + StateCurrentAction();
                 return msg;
             }
         }
@@ -167,7 +165,7 @@ namespace ForkBot
         {
             Monster[] Enemies;
             int Number;
-            Item[] Loot;
+            public List<Item> Loot = new List<Item>();
             int Size;
             public string[,] Board { get; private set; }
             Game Game;
@@ -184,8 +182,8 @@ namespace ForkBot
                 GenerateRoom();
                 GenerateEnemies();
                 PlacePlayers();
-                GenerateLoot();
                 RollInitiative();
+                GenerateLoot();
             }
 
             void GenerateRoom()
@@ -241,11 +239,18 @@ namespace ForkBot
 
             void GenerateLoot()
             {
-                Loot = new Item[Size / 3];
                 for (int i = 0; i < Size/3; i++)
                 {
                     int index = rdm.Next(Item.Items.Count());
-                    Loot[i] = Item.Items[index].Clone();
+                    Loot.Add(Item.Items[index].Clone());
+                    int x, y;
+                    do
+                    {
+                        x = rdm.Next(Size);
+                        y = rdm.Next(Size);
+                    }
+                    while (!IsSpaceEmpty(x, y,includeItems:true));
+                    Loot[i].SetLocation(x, y);
                 }
             }
 
@@ -281,10 +286,10 @@ namespace ForkBot
             public string BuildBoard()
             {
                 var b2 = (string[,])Board.Clone();
-
+                // remember in array its [Y,X] not [X,Y]
+                for (int i = 0; i < Loot.Count(); i++) b2[Loot[i].Y, Loot[i].X] = "loot|" + i;
                 for (int i = 0; i < Enemies.Count(); i++) if (Enemies[i].Dead && IsSpaceEmpty(Enemies[i].X,Enemies[i].Y,false) || !Enemies[i].Dead) b2[Enemies[i].Y, Enemies[i].X] = "enemy|" + i;
                 for (int i = 0; i < Players.Count(); i++) b2[Players[i].Y, Players[i].X] = "player|" + i;
-                for (int i = 0; i < Loot.Count(); i++) b2[Loot[i].X, Loot[i].Y] = "loot|" + i;
 
                     string board = "";
                 for (int x = 0; x < Size; x++)
@@ -357,26 +362,34 @@ namespace ForkBot
 
             public Placeable GetPlaceableAt(int x, int y, bool alive = true, Type type = null)
             {
-                Placeable[] placeables = ((Dictionary<Placeable, int>)Initiative).Keys.ToArray(); //set this fr
-                for (int i = 0; i < Initiative.Count(); i++) placeables[i] = Initiative.ElementAt(i).Key; // add loot
+                List<Placeable> placeables = new List<Placeable>();
+                for (int i = 0; i < Initiative.Count(); i++) placeables.Add(Initiative.ElementAt(i).Key);
+                for (int i = 0; i < Loot.Count(); i++) placeables.Add(Loot[i]);
                 foreach (var p in placeables)
                 {
-                    if (p.X == x && p.Y == y)
+                    if (p.X == x && p.Y == y) //check item coords
                         if (alive && !p.Dead || !alive)
                             if (type == null) return p;
                             else if (type == p.GetType()) return p;
                 }
                 return null;
             }
-            public bool IsSpaceEmpty(int x, int y, bool includedead = true)
+            public bool IsSpaceEmpty(int x, int y, bool includeDead = true, bool includeItems = false)
             {
                 var onboard = x >= 0 && y >= 0 && x < Size && y < Size;
-                bool people = false;
-                if (includedead)
+
+                bool people = true;
+                if (includeDead)
                     people = Initiative.Where(o => o.Key.X == x && o.Key.Y == y).Count() <= 0;
                 else
                     people = Initiative.Where(o => o.Key.X == x && o.Key.Y == y && !o.Key.Dead).Count() <= 0;
-                var empty = onboard && people;
+
+                bool items = true;
+                if (includeItems)
+                    items = Loot.Where(o => o != null && o.X == x && o.Y == y).Count() <= 0;
+                
+
+                var empty = onboard && people && items;
                 return empty;
             }
             public int GetSize() { return Size; }
@@ -386,14 +399,29 @@ namespace ForkBot
         {
             static Help[] helps =
             {
-                new Help("","move"),
-                new Help("","attack"),
-                new Help("","spell"),
-                new Help("","class"),
-                new Help("","monster"),
-                new Help("","party"),
-                new Help("","dungeon"),
-                new Help("","item")
+                new Help("This action is used to move around the board while in game. The syntax is `;r mo&&&ve [dire&&&ction] (amount)`.\n"+
+                         "The [direction] parameter is mandatory and specifies which direction to move in. Valid directions include `up`,`down`,`left`,`right`."+
+                         "You may also use just the first letter of the direction, which includes `u`,`d`,`l`,`r`.\n"+
+                         "The `(amount)` parameter is optional and used when you want to move one direction multiple times. If something blocks your path before "+
+                         "you reach your destination, the movement will be stopped.",
+                         "move","walk","run"),
+                new Help("This action is used to attack other creatures on the board with your currently equipped weapon. The syntax is `;r att&&&ack [dire&&&ction]`"+
+                         "The [direction] parameter is mandatory and specifies which direction to attack in. Valid directions include `up`,`down`,`left`,`right`."+
+                         "You may also use just the first letter of the direction, which includes `u`,`d`,`l`,`r`.\n",
+                         "attack"),
+                new Help("","spell"),//
+                new Help("The bad guys in the dungeon. Defeat all of them to move onto the next room of the dungeon. As you progress through the dungeon, the monsters "+
+                         "will become increasingly powerful. Monsters occasionally drop loot, and sometimes stronger monsters can drop better loot. Stronger "+
+                         "monsters can move more spaces in their turn and deal more damage with their attacks. Sometimes certain monsters will have special "+
+                         "abilities as well.",
+                         "monster","enemy"),
+                new Help("","party","host","join","kick","close","start"),//
+                new Help("","dungeon"),//
+                new Help("","item","weapon","armour","equip"),//
+                new Help("","direction"),//
+                new Help("","dungeon"),//
+                new Help("","emote","emoji","icon"),//
+                new Help("","profile","player","exp","experience","level","class")//
             };
 
             string[] KeyWords;
@@ -403,6 +431,66 @@ namespace ForkBot
             {
                 HelpMsg = msg;
                 KeyWords = words;
+            }
+
+            public static Help GetHelp(string keyWord)
+            {
+                foreach (Help h in helps)
+                {
+                    if (h.KeyWords.Contains(keyWord)) return h;
+                }
+                return null;
+            }
+
+            public Embed BuildHelpEmbed()
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = KeyWords[0].ToTitleCase();
+                List<string> allKeyWords = new List<string>();
+                foreach (Help h in helps) foreach (string kw in h.KeyWords) allKeyWords.Add(kw);
+                string words = "";
+                foreach(string kw in KeyWords.OrderBy(x=>x.ToString()))
+                {
+                    words += $"`{kw}` ";
+                }
+                emb.Description = words.Trim();
+
+                string msg = HelpMsg;
+
+                foreach(string kw in allKeyWords)
+                {
+                    msg = msg.Replace(kw, $"**{kw}**");
+                }
+                msg = msg.Replace("&&&", "");
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Description";
+                    x.Text = msg;
+                }));
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                emb.Footer.Text = "Bolded words have their own help pages. Use `;r help [word]` for more information on them.";
+                return emb.Build();
+            }
+
+            public static Embed ShowAllHelps()
+            {
+                IOrderedEnumerable<Help> orderedHelps = helps.OrderBy(x => x.KeyWords[0]);
+                JEmbed emb = new JEmbed();
+                emb.Title = "Raid Help";
+                emb.Description = "Use `;r help [topic]` to get more information on the inputted topic.";
+                string topics = "";
+                foreach(Help h in orderedHelps)
+                {
+                    topics += $"`{h.KeyWords[0]}`, ";
+                }
+                topics = topics.Trim(',', ' ');
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Topics";
+                    x.Text = topics;
+                }));
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                return emb.Build();
             }
         }
     }
