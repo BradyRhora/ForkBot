@@ -95,7 +95,7 @@ namespace ForkBot
         public async Task HandleCommand(SocketMessage messageParam)
         {
             SocketUserMessage message = messageParam as SocketUserMessage;
-            bool isDM = message.Channel.Name == (await message.Author.GetOrCreateDMChannelAsync()).Name;
+            bool isDM = await Functions.isDM(message.Channel as IMessage);
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x=>x.Id==message.Author.Id).Count() <= 0) return;

@@ -667,6 +667,11 @@ namespace ForkBot
         [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day."), Alias(new string[] { "buy" })]
         public async Task Shop([Remainder] string command = null)
         {
+            if (await Functions.isDM(Context.Message))
+            {
+                await ReplyAsync("Sorry, this command cannot be used in private messages.");
+                return;
+            }
             var u = Functions.GetUser(Context.User);
             DateTime day = new DateTime();
             DateTime currentDay = new DateTime();
@@ -1279,6 +1284,11 @@ namespace ForkBot
         [Command("allowance"), Summary("[FUN] Receive your daily free coins.")]
         public async Task Allowance()
         {
+            if (await Functions.isDM(Context.Message))
+            {
+                await ReplyAsync("Sorry, this command cannot be used in private messages.");
+                return;
+            }
             var u = Functions.GetUser(Context.User);
             var lA = u.GetData("allowance");
             DateTime lastAllowance;
@@ -1564,6 +1574,11 @@ namespace ForkBot
         [Command("present"), Summary("[FUN] Get a cool gift!")]
         public async Task Present()
         {
+            if (await Functions.isDM(Context.Message))
+            {
+                await ReplyAsync("Sorry, this command cannot be used in private messages.");
+                return;
+            }
             if (!Var.presentWaiting)
             {
                 if (Var.presentTime < Var.CurrentDate() - Var.presentWait)
@@ -1719,6 +1734,11 @@ namespace ForkBot
         [Command("lottery"), Summary("[FUN] The Happy Lucky Lottery! Buy a lotto card and check daily to see if your numbers match!")]
         public async Task Lottery(string command = "")
         {
+            if (await Functions.isDM(Context.Message))
+            {
+                await ReplyAsync("Sorry, this command cannot be used in private messages.");
+                return;
+            }
             User u = Functions.GetUser(Context.User);
 
             if (command == "")
@@ -2002,6 +2022,11 @@ namespace ForkBot
         [Command("forkparty"), Summary("[FUN] Begin a game of ForkParty:tm: with up to 4 players!"), Alias(new string[] { "fp" })]
         public async Task ForkParty([Remainder] string command = "")
         {
+            if (await Functions.isDM(Context.Message))
+            {
+                await ReplyAsync("Sorry, this command cannot be used in private messages.");
+                return;
+            }
             var user = Functions.GetUser(Context.User);
             var chanGames = Var.FPGames.Where(x => x.Channel.Id == Context.Channel.Id);
             ForkParty game = null;
@@ -2063,6 +2088,11 @@ namespace ForkBot
         [Command("raid"), Summary("[FUN] Choose a class then take on enemies to level up and gain glorious loot!"), Alias(new string[] { "r" })]
         public async Task RaidCommand(params string[] command)
         {
+            if (await Functions.isDM(Context.Message))
+            {
+                await ReplyAsync("Sorry, this command cannot be used in private messages.");
+                return;
+            }
             try
             {
                 if (command.Count() == 0) command = new string[] { "" };
@@ -2723,21 +2753,31 @@ namespace ForkBot
         [Command("debugmode"), Summary("[BRADY] Set bot to debug mode, disables other users and enables some other features.")]
         public async Task DebugMode(int code)
         {
-            if (code == Var.DebugCode)
+            if (code == Var.DebugCode && Context.User.Id == Constants.Users.BRADY)
             {
                 Var.DebugMode = !Var.DebugMode;
                 Console.WriteLine("DebugMode set to " + Var.DebugMode);
+                await (Context.Channel.SendMessageAsync(Var.DebugMode.ToString()));
             }
         }
 
         [Command("givedebug"), Summary("[BRADY] Allows or blocks the specified user from being able to use commands while in debug mode.")]
         public async Task GiveDebug(IUser user)
         {
-            if (Var.DebugUsers.Where(x => x.Id == user.Id).Count() > 0)
+            if (Context.User.Id == Constants.Users.BRADY)
             {
-                Var.DebugUsers = Var.DebugUsers.Where(x => x.Id != user.Id).ToList();
+                if (Var.DebugUsers.Where(x => x.Id == user.Id).Count() > 0)
+                {
+                    Var.DebugUsers = Var.DebugUsers.Where(x => x.Id != user.Id).ToList();
+                    await ReplyAsync("Removed.");
+                }
+                else
+                {
+                    Var.DebugUsers.Add(user);
+                    await ReplyAsync("Added.");
+                }
+                
             }
-            else Var.DebugUsers.Add(user);
         }
         /*
         [Command("snap")]
