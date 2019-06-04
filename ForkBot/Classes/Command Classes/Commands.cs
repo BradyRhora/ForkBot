@@ -1284,7 +1284,7 @@ namespace ForkBot
         [Command("allowance"), Summary("[FUN] Receive your daily free coins.")]
         public async Task Allowance()
         {
-            if (await Functions.isDM(Context.Message))
+            if (await Functions.isDM(Context.Message))//
             {
                 await ReplyAsync("Sorry, this command cannot be used in private messages.");
                 return;
