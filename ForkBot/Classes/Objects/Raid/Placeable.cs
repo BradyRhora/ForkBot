@@ -481,57 +481,77 @@ namespace ForkBot
                 AddDataA("inventory", tags + item.Name);
             }
 
-            public async Task<bool> Act(string[] commands)
+            public string Act(string[] commands)
             {
                 string actionS = commands[0];
                 Action action = Actions.Where(x => x.Name.ToLower() == actionS.ToLower()).FirstOrDefault();
-                if (action == null) return false;
+                if (action == null) return null;
                 if (action.Equals(Action.Move))
                 {
-                    if (StepsLeft <= 0) return false;
-                     string direction = commands[1].ToLower();
-                    switch (direction)
+                    if (StepsLeft <= 0) return null;
+
+                    string direction = commands[1].ToLower();
+                    int steps = 1;
+                    if (commands.Count() > 2)
+                        steps = Convert.ToInt32(commands[2]);
+
+                    string itemMsg = "";
+                    bool moveFailed = false;
+                    for (int i = 0; i < steps; i++)
                     {
-                        case "left":
-                        case "l":
-                            if (Game.GetCurrentRoom().IsSpaceEmpty(X-1,Y))
-                                X--;
-                            else
-                                return false;
-                            
-                            break;
-                        case "right":
-                        case "r":
-                             if (Game.GetCurrentRoom().IsSpaceEmpty(X + 1, Y))
-                                X++;
-                            else
-                                return false;
-                            break;
-                        case "down":
-                        case "d":
-                            if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y+1))
-                                Y++;
-                            else
-                                return false;
-                            break;
-                        case "up":
-                        case "u":
-                            if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y-1))
-                                Y--;
-                            else
-                                return false;
-                            break;
-                        default:
-                            return false;
+                        switch (direction)
+                        {
+                            case "left":
+                            case "l":
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X - 1, Y))
+                                    X--;
+                                else
+                                    moveFailed = true;
+
+                                break;
+                            case "right":
+                            case "r":
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X + 1, Y))
+                                    X++;
+                                else
+                                    moveFailed = true;
+                                break;
+                            case "down":
+                            case "d":
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y + 1))
+                                    Y++;
+                                else
+                                    moveFailed = true;
+                                break;
+                            case "up":
+                            case "u":
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y - 1))
+                                    Y--;
+                                else
+                                    moveFailed = true;
+                                break;
+                            default:
+                                moveFailed = true;
+                                break;
+                        }
+
+                        if (moveFailed)
+                        {
+                            return null;
+                        }
+
+                        var item = Game.GetCurrentRoom().GetPlaceableAt(X, Y, type: typeof(Item));
+                        
+                        if (item != null)
+                        {
+                            GiveItem((Item)item);
+                            Game.GetCurrentRoom().Loot.Remove((Item)item);
+                            itemMsg = $"You picked up a(n) {item.GetName()} {item.GetEmote()}.\n";
+                        }
+                        StepsLeft--;
+                        Moved = true;
                     }
-                    var item = Game.GetCurrentRoom().GetPlaceableAt(X, Y, type:typeof(Item));
-                    if (item != null)
-                    {
-                        GiveItem((Item)item);
-                    }
-                    StepsLeft--;
-                    Moved = true;
-                    await Game.GetChannel().SendMessageAsync(Game.ShowCurrentRoom(false));
+                    return itemMsg+Game.ShowCurrentRoom(describe:false);
                 }
                 else if (action == Action.Attack)
                 {
@@ -556,10 +576,12 @@ namespace ForkBot
                             attackCoords[1]--;
                             break;
                         default:
-                            return false;
+                            return null;
                     }
                     Placeable target = Game.GetCurrentRoom().GetPlaceableAt(attackCoords[0], attackCoords[1]);
-                    if (target == null) await Game.GetChannel().SendMessageAsync($"{GetEmote()} {GetName()} attacks the air to their {direction}.");
+                    Acted = true;
+                    Game.GetCurrentRoom().NextInitiative();
+                    if (target == null) return $"{GetEmote()} {GetName()} attacks the air to their {direction}.";
                     else
                     {
                         var damage = RollAttackDamage();
@@ -573,9 +595,8 @@ namespace ForkBot
                             xtraMSG += " You gained " + exp + " experience.";
                         }
                         else if (target.Health <= target.MaxHealth / 2) xtraMSG = " It looks pretty hurt!";
-                        await Game.GetChannel().SendMessageAsync($"{GetName()} attacks {target.GetName()} for (*roll: {damage- (GetClass().Power / 2)}* + {GetClass().Power / 2}) = **{damage}** damage using their {"[weapon]"}." + xtraMSG);
+                        return $"{GetName()} attacks {target.GetName()} for (*roll: {damage- (GetClass().Power / 2)}* + {GetClass().Power / 2}) = **{damage}** damage using their {"[weapon]"}." + xtraMSG;
                     }
-                    Acted = true;
                 }
                 else if (action == Action.Pass)
                 {
@@ -584,7 +605,7 @@ namespace ForkBot
 
                 //await Game.GetChannel().SendMessageAsync($"{GetName()} acts.");
                 if (Acted) Game.GetCurrentRoom().NextInitiative();
-                return true;
+                return "nomsg";
             }
         }
         public class Item : Placeable

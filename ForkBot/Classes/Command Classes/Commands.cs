@@ -2074,6 +2074,17 @@ namespace ForkBot
                 switch (command[0])
                 {
                     case "help":
+                        Raid.Help help;
+                        if (command.Count() > 1)
+                            help = Raid.Help.GetHelp(command[1]);
+                        else help = null;
+
+                        if (help == null)
+                        {
+                            await ReplyAsync("",embed:Raid.Help.ShowAllHelps());
+                        }
+                        else
+                            await ReplyAsync("", embed: help.BuildHelpEmbed());
                         break;
                     default:
                         commanded = false;
@@ -2282,14 +2293,16 @@ namespace ForkBot
                                 if ((rGame.GetCurrentTurn() as Raid.Profile).ID == rUser.ID)
                                 {
                                     var player = rGame.GetPlayer(rUser);
-                                    var success = await player.Act(command);
-                                    if (!success)
+                                    var actMsg = player.Act(command);
+                                    if (actMsg == null)
                                     {
                                         string failMsg = "Invalid action, make sure everything is typed correctly.\nValid directions are: `up`,`down`,`left`,`right`. You can also just use the first letter, i.e. `;r move d` will move you down.";
                                         if (command[0] == "move")
                                             failMsg += "\nThe space you're trying to move into may not be available.";
                                         await ReplyAsync(failMsg);
                                     }
+                                    else if (actMsg != "nomsg")
+                                        await ReplyAsync(actMsg);
                                     msg = rGame.StateCurrentAction();
                                 }
                                 else msg = $"It is currently {rGame.GetCurrentTurn().GetName()}'s turn. Please wait.";
