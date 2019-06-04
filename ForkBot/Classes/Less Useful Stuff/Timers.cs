@@ -11,30 +11,6 @@ namespace ForkBot
 {
     public class Timers
     {
-
-        public static Timer mvTimer;
-        public static IChannel mvChannel;
-        public static IReadOnlyCollection<ITextChannel> mvChannels;
-        public static IUser[] mvUsers;
-        
-        public static async void MoveTimer(object state)
-        {
-            OverwritePermissions op2 = new OverwritePermissions(viewChannel: PermValue.Inherit);
-            foreach (IGuildChannel c in mvChannels)
-            {
-                foreach (IUser u in mvUsers)
-                {
-                    try
-                    {
-                        if (c != null && c.Id != mvChannel.Id) await c.AddPermissionOverwriteAsync(u, op2);
-                    }
-                    catch (Exception) { }
-                }
-            }
-
-            mvTimer.Dispose();
-        }
-
         public static Timer unpurge;
         public static async void UnPurge(object state)
         {
@@ -69,6 +45,25 @@ namespace ForkBot
                 File.WriteAllLines("Files/userreminders.txt", reminders.Where(x => x != ""));
             }
             
+        }
+
+        public static Timer BidTimer;
+        public static async void Bid(object state)
+        {
+            string[] posts = File.ReadAllLines("Files/FreeMarket.txt");
+            List<string> expired = new List<string>();
+            List<string> expiringSoon = new List<string>();
+            foreach(string post in posts)
+            {
+                var expiryDate = Functions.StringToDateTime(post.Split('|')[5]);
+                if (expiryDate - Var.CurrentDate() < new TimeSpan(0)) expired.Add(post);
+                else if (expiryDate - Var.CurrentDate() < new TimeSpan(1,0,0,0)) expired.Add(post);
+            }
+
+            foreach(string warn in expiringSoon)
+            {
+                //ulong userID = 
+            }
         }
     }
 }

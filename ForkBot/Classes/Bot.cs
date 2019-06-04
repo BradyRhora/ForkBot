@@ -56,6 +56,7 @@ namespace ForkBot
                 int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
                 await client.SetGameAsync(strikeCount + " days since last strike", type: ActivityType.Watching);
                 Timers.RemindTimer = new Timer(Timers.Remind, null, 1000 * 30, 1000 * 60);
+                Timers.BidTimer = new Timer(Timers.Bid, null, 1000 * 30, 1000 * 60);
                 await Task.Delay(-1);
             }
             catch (Exception e)

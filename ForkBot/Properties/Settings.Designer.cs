@@ -25,20 +25,6 @@ namespace ForkBot.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfLong xmlns:xsi=\"http://www.w3.or" +
-            "g/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <lon" +
-            "g>0</long>\r\n  <long>0</long>\r\n</ArrayOfLong>")]
-        public long[] lastTweet {
-            get {
-                return ((long[])(this["lastTweet"]));
-            }
-            set {
-                this["lastTweet"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public global::System.Collections.Specialized.StringCollection sBlocked {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["sBlocked"]));
@@ -81,6 +67,17 @@ namespace ForkBot.Properties {
             }
             set {
                 this["recordClaims"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection warnedFMs {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["warnedFMs"]));
+            }
+            set {
+                this["warnedFMs"] = value;
             }
         }
     }

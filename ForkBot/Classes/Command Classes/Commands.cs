@@ -16,6 +16,8 @@ using ImageProcessor;
 using ImageProcessor.Imaging;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Globalization;
+
 namespace ForkBot
 {
     public class Commands : ModuleBase
@@ -208,7 +210,12 @@ namespace ForkBot
             {
                 if (code == "")
                 {
-                    await ReplyAsync($"To use this command, use the format:\n`;course [subject][level]`\nFor example, if you want the course information for MATH1190, simply type: `;course math1190`.\nYou can also specify the term of the course you want, either FW or SU (for fall/winter and summer respectively). For example,\n `;course eecs4404 fw`\nwill give you the fall/winter course for EECS4404. If you don't specify, it will use the current term. *(Current term is:* **{Var.term}** *)*");
+                    await ReplyAsync($"To use this command, use the format:\n"+
+                        "`;course [subject][level]`\n" +
+                        "For example, if you want the course information for MATH1190, simply type: `;course math1190`.\n"+
+                        "You can also specify the term of the course you want, either FW or SU (for fall/winter and summer respectively). For example,\n" +
+                        "`;course eecs4404 fw`\n" +
+                        "will give you the fall/winter course for EECS4404. If you don't specify, it will use the current term. *(Current term is:* **{Var.term}** *)*");
                     return;
                 }
 
@@ -894,7 +901,8 @@ namespace ForkBot
                                  "You can also use certain parameters, `lowest`, `highest`, and `[itemname]` to narrow down or sort the Free Market.\n"+
                                  "To buy an item in the free market, use `;fm buy [ID]`. The ID is the characters that appear in the title of the sale in `;fm`\n" +
                                  "To post an item for sale, do ;fm post [item] [price]. You can also include the amount of items you want to sell in the format `[item]*[amount]`\n" +
-                                 "To cancel a posting, use `;fm cancel [ID]`\nThere is a 200 coin fee for cancelling posts in order to avoid abuse. This will be automatically charged upon cancellation, if you cannot afford the fee, you cannot cancel.\n\n" +
+                                 "To cancel a posting, use `;fm cancel [ID]`\nThere is a 25% coin fee for cancelling posts in order to avoid abuse. This will be automatically charged upon cancellation, if you cannot afford the fee, you cannot cancel.\n" +
+                                 "There is a 2 week expiry on postings. You will be given a warning before your posting expires, and if the posting is not removed by the expiry time it will be auctioned off to other users and the coins will go towards the slots, **not you**.\n\n" +
                                  "Examples:\n\n" +
                                  "`;fm view 3` Views the third Free Market page.\n"+
                                  "`;fm view lowest` Views all items sorted by the lowest price.\n"+
@@ -936,17 +944,21 @@ namespace ForkBot
                 for (int i = 0; i < amount; i++) user.RemoveItem(item);
 
 
+                //do{
                 string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                 for (int i = 0; i < 5; i++)
                 {
                     id += key[rdm.Next(key.Count())];
                 }
+                //}while(listings contains key)
 
                 string plural = "";
                 if (price > 1) plural = "s";
                 string market = File.ReadAllText("Files/FreeMarket.txt");
-                File.WriteAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}\n" + market);
-                await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {id}.");
+                File.WriteAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}|{Functions.DateTimeToString(Var.CurrentDate())}\n" + market);
+                var expiryDate = Var.CurrentDate() + new TimeSpan(14, 0, 0, 0);
+                await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {id}.\n" +
+                    $"The posting will expire on {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(expiryDate.Month)} {expiryDate.Day}.");
             }
             else if (command[0] == "buy")
             {
@@ -1003,15 +1015,16 @@ namespace ForkBot
                 
                         if (sellerID == $"{Context.User.Id}")
                         {
-                            if (user.GetCoins() >= 200)
+                            int fee = (int)(Convert.ToInt32(sData[4])*.25);
+                            if (user.GetCoins() >= fee)
                             {
-                                user.GiveCoins(-200);
+                                user.GiveCoins(-fee);
                                 items[i] = "";
                                 for (int o = 0; o < amount; o++) user.GiveItem(itemName);
                                 File.WriteAllLines("Files/FreeMarket.txt", items.Where(x => x != ""));
-                                await ReplyAsync($"You have successfully canceled your posting of {amount} {itemName}(s). They have returned to your inventory and you have been charged the cancellation fee of 200 coins.");
+                                await ReplyAsync($"You have successfully canceled your posting of {amount} {itemName}(s). They have returned to your inventory and you have been charged the cancellation fee of {fee} coins.");
                             }
-                            else await ReplyAsync("You cannot afford the cancellation fee of 200 coins and have not cancelled this posting.");
+                            else await ReplyAsync($"You cannot afford the cancellation fee of {fee} coins and have not cancelled this posting.");
                             
                             break;
                         }
