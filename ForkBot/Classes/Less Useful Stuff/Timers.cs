@@ -118,11 +118,42 @@ namespace ForkBot
                 File.WriteAllLines("Files/FreeMarket.txt", posts.Where(x => x != ""));
 
                 if (!File.Exists("Files/Bids.txt")) File.WriteAllText("Files/Bids.txt", "");
+                string bidsToAppend = "";
                 foreach (string bid in bids)
                 {
-                    //finish bids
+                    var data = bid.Split('|');
+                    bidsToAppend += $"{data[0]}|{data[2]}|{data[3]}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
+                }
+                File.AppendAllText("Files/Bids.txt",bidsToAppend);
+            }
+
+            if (!File.Exists("Files/Bids.txt")) File.WriteAllText("Files/Bids.txt", "");
+            string[] allBids = File.ReadAllLines("Files/Bids.txt");
+
+
+            bool changed = false;
+            for(int i = 0; i < allBids.Count(); i++)
+            {
+                var data = allBids[i].Split('|');
+                var date = Functions.StringToDateTime(data[3]);
+                var endTime = (date + new TimeSpan(1, 0, 0, 0)) - Var.CurrentDate();
+                if (endTime <= new TimeSpan(0))
+                {
+                    var item = data[1];
+                    var amount = Convert.ToInt32(data[2]);
+                    var bidder = Bot.client.GetUser(Convert.ToUInt64(data[5]));
+                    if (bidder != null)
+                    {
+                        await bidder.SendMessageAsync($"Congratulations! You've won the bid for {Functions.GetItemEmote(item)} {amount} {item}(s).");
+                        var user = Functions.GetUser(bidder);
+                        for (int j = 0; j < amount; j++) user.GiveItem(item);
+                    }
+                    allBids[i] = "";
+                    changed = true;
                 }
             }
+
+            if (changed) File.WriteAllLines("Files/Bids.txt", allBids.Where(x => x != ""));
         }
     }
 }

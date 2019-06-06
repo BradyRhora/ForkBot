@@ -671,7 +671,7 @@ namespace ForkBot
             await ReplyAsync(msg);
         }
 
-        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day."), Alias(new string[] { "buy" })]
+        [Command("shop"), Summary("[FUN] Open the shop and buy stuff! New items each day."), Alias("buy")]
         public async Task Shop([Remainder] string command = null)
         {
             if (await Functions.isDM(Context.Message))
@@ -1105,6 +1105,87 @@ namespace ForkBot
             foreach (string m in msgs) await ReplyAsync(m);
         }
 
+        [Command("bid"), Alias("auction")]
+        public async Task Bid(params string[] commands)
+        {
+            if (!File.Exists("Files/Bids.txt")) File.WriteAllText("Files/Bids.txt", "");
+            var bids = File.ReadAllLines("Files/Bids.txt");
+            if (commands.Count() == 0) commands = new string[] { "" };
+
+            switch (commands[0])
+            {
+                case "":
+                    // ID|ITEM|AMOUNT|DATE_POSTED|BID|BIDDERID
+
+                    JEmbed emb = new JEmbed();
+                    emb.Title = "Auctions";
+                    emb.ColorStripe = Constants.Colours.YORK_RED;
+                    emb.Footer.Text = "To bid, use `;bid [ID] [Amount]`";
+                    if (bids.Count() == 0) emb.Description = "There are currently no auctions going on.";
+                    foreach (string bid in bids)
+                    {
+                        var data = bid.Split('|');
+                        var id = data[0];
+                        var item = data[1];
+                        var amount = Convert.ToInt32(data[2]);
+                        var date = Functions.StringToDateTime(data[3]);
+                        var currentBid = Convert.ToInt32(data[4]);
+                        var bidder = await Context.Guild.GetUserAsync(Convert.ToUInt64(data[5]));
+                        var endTime = (date + new TimeSpan(1, 0, 0, 0)) - Var.CurrentDate();
+                        string bidderMsg = "";
+
+                        if (bidder != null) bidderMsg = $" by {Functions.GetName(bidder)}.";
+                        emb.Fields.Add(new JEmbedField(x =>
+                        {
+                            x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
+                            x.Text =   $"<:blank:528431788616318977> :moneybag: Current bid: {currentBid} coins{bidderMsg}\n" +
+                                       $"<:blank:528431788616318977> Ending in: {endTime.Hours} hours and {endTime.Minutes} minutes.";
+                        }));
+                    }
+                    await ReplyAsync("", embed: emb.Build());
+                    break;
+                default:
+                    string BidID = commands[0];
+                    int bidAmount = Convert.ToInt32(commands[1]);
+                    bool found = false, changed = false;
+                    for(int i = 0; i < bids.Count(); i++)
+                    {
+                        var data = bids[i].Split('|');
+                        if (data[0] == BidID.ToUpper())
+                        {
+                            found = true;
+                            var item = data[1];
+                            var amount = Convert.ToInt32(data[2]);
+                            var currentBid = Convert.ToInt32(data[4]);
+                            if (bidAmount > currentBid)
+                            {
+                                var user = Functions.GetUser(Context.User);
+                                if (user.ID.ToString() != data[5])
+                                {
+                                    if (user.GetCoins() >= bidAmount)
+                                    {
+                                        changed = true;
+                                        var newBid = $"{data[0]}|{data[1]}|{data[2]}|{data[3]}|{bidAmount}|{Context.User.Id}";
+                                        bids[i] = newBid;
+                                        user.GiveCoins(-bidAmount);
+                                        var oldUser = Functions.GetUser(Convert.ToUInt64(data[5]));
+                                        oldUser.GiveCoins(currentBid);
+                                        await ReplyAsync($"You are now the highest bidder for {Functions.GetItemEmote(item)} {amount} {item}(s) with {bidAmount} coins.");
+                                        break;
+                                    }
+                                    else await ReplyAsync("You do not have the specified amount of coins.");
+                                }
+                                else await ReplyAsync("You already have the highest bid for this item.");
+                            }
+                            else await ReplyAsync("Your bid must be higher than the current bid.");
+                        }
+                    }
+                    if (!found) await ReplyAsync("Bid ID not found. Make sure you've typed it correctly.");
+                    if (changed) File.WriteAllLines("Files/Bids.txt", bids);
+                    break;
+            }
+
+        }
         #endregion
 
         #region Fun
