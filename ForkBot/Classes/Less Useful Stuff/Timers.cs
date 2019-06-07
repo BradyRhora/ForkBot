@@ -11,6 +11,8 @@ namespace ForkBot
 {
     public class Timers
     {
+        static Random rdm = new Random();
+
         public static Timer unpurge;
         public static async void UnPurge(object state)
         {
@@ -142,10 +144,13 @@ namespace ForkBot
                     var item = data[1];
                     var amount = Convert.ToInt32(data[2]);
                     var bidder = Bot.client.GetUser(Convert.ToUInt64(data[5]));
+                    var currentBid = Convert.ToInt32(data[4]);
                     if (bidder != null)
                     {
                         await bidder.SendMessageAsync($"Congratulations! You've won the bid for {Functions.GetItemEmote(item)} {amount} {item}(s).");
                         var user = Functions.GetUser(bidder);
+                        Properties.Settings.Default.jackpot += currentBid;
+                        Properties.Settings.Default.Save();
                         for (int j = 0; j < amount; j++) user.GiveItem(item);
                     }
                     allBids[i] = "";
@@ -154,6 +159,29 @@ namespace ForkBot
             }
 
             if (changed) File.WriteAllLines("Files/Bids.txt", allBids.Where(x => x != ""));
+
+            if (Var.CurrentDate().DayOfWeek == DayOfWeek.Friday && Properties.Settings.Default.lastBid.DayOfYear != Var.CurrentDate().DayOfYear)
+            {
+                Properties.Settings.Default.lastBid = Var.CurrentDate();
+                Properties.Settings.Default.Save();
+
+                var bidItems = new string[] { "key","unicorn","key2","package","pokeball","santa","gift","calling" };
+                int amount = rdm.Next(5) + 3;
+
+                string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                string id = "";
+
+                string item = bidItems[rdm.Next(bidItems.Count())];
+
+                for (int i = 0; i < 5; i++)
+                {
+                    id += key[rdm.Next(key.Count())];
+                }
+
+                string newBid = $"{id}|{item}|{amount}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
+
+                File.AppendAllText("Files/Bids.txt", newBid);
+            }
         }
     }
 }

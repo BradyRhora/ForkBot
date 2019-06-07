@@ -1195,6 +1195,18 @@ namespace ForkBot
                     var Pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemon.ToLower());
                     emb.Title = Functions.GetItemEmote("pokedex") + Pokemon.Name.ToTitleCase() + Functions.GetItemEmote("pokeball");
                     emb.ImageUrl = Pokemon.Sprites.FrontMale;
+
+                    var spec = await DataFetcher.GetNamedApiObject<PokemonSpecies>(Pokemon.Species.Name);
+                    string desc = "";
+                    for (int i = 0; i < spec.FlavorTexts.Count(); i++)
+                        if (spec.FlavorTexts[i].Language.Name == "en")
+                        {
+                            desc += spec.FlavorTexts[i].FlavorText + "\n";
+                            break;
+                        }
+
+                    emb.Description = desc;
+
                     emb.Fields.Add(new JEmbedField(x => {
                         x.Header = "Type";
                         string types = "";
@@ -1219,6 +1231,7 @@ namespace ForkBot
                         x.Text = Pokemon.Mass + "kg";
                         x.Inline = true;
                     }));
+
                 }
                 else
                 {
@@ -1230,7 +1243,12 @@ namespace ForkBot
             await ReplyAsync("", embed: emb.Build());
         }
 
-
+        [Command("telescope")]
+        public async Task Telescope()
+        {
+            if (Check(Context, "telecope", false)) return;
+            await ReplyAsync("You see.... Something...\n\nAnd it's getting closer.");
+        }
     }
 
 

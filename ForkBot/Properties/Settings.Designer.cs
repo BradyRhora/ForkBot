@@ -80,5 +80,16 @@ namespace ForkBot.Properties {
                 this["warnedFMs"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime lastBid {
+            get {
+                return ((global::System.DateTime)(this["lastBid"]));
+            }
+            set {
+                this["lastBid"] = value;
+            }
+        }
     }
 }

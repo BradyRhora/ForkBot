@@ -323,7 +323,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.5\n-more recent free market posts now appear at the top of the list\n-hecka buffed lottery rewards\n-added pokeball and pokedex\n-added HECKA ;raid```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.7\n-more recent free market posts now appear at the top of the list\n-hecka buffed lottery rewards\n-added pokeball and pokedex\n-added HECKA ;raid\n-fm posts now expire after 2 weeks and are auctioned off, along with a random auction every friday at 12am\n-added more to ;pokedex [pokemon]```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -1108,6 +1108,12 @@ namespace ForkBot
         [Command("bid"), Alias("auction")]
         public async Task Bid(params string[] commands)
         {
+            if (await Functions.isDM(Context.Message))
+            {
+                await ReplyAsync("This command can not be used in direct messages.");
+                return;
+            }
+
             if (!File.Exists("Files/Bids.txt")) File.WriteAllText("Files/Bids.txt", "");
             var bids = File.ReadAllLines("Files/Bids.txt");
             if (commands.Count() == 0) commands = new string[] { "" };
@@ -1130,11 +1136,18 @@ namespace ForkBot
                         var amount = Convert.ToInt32(data[2]);
                         var date = Functions.StringToDateTime(data[3]);
                         var currentBid = Convert.ToInt32(data[4]);
-                        var bidder = await Context.Guild.GetUserAsync(Convert.ToUInt64(data[5]));
+                        var userID = Convert.ToUInt64(data[5]);
+                        var bidder = await Context.Guild.GetUserAsync(userID);
                         var endTime = (date + new TimeSpan(1, 0, 0, 0)) - Var.CurrentDate();
                         string bidderMsg = "";
+                        
 
                         if (bidder != null) bidderMsg = $" by {Functions.GetName(bidder)}.";
+                        else if (userID != 0)
+                        {
+                            var user = Bot.client.GetUser(userID);
+                            bidderMsg += $" by {user.Username}";
+                        }
                         emb.Fields.Add(new JEmbedField(x =>
                         {
                             x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
