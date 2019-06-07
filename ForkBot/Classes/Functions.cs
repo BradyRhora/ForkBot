@@ -300,6 +300,11 @@ namespace ForkBot
             return File.ReadAllLines("Files/pokemon.txt");
         }
 
+        public static string[] GetLegendaryPokemonList()
+        {
+            return File.ReadAllLines("Files/legendaryPokemon.txt");
+        }
+
         public static async Task<bool> isDM(IMessage message)
         {
             return message.Channel.Name == (await message.Author.GetOrCreateDMChannelAsync()).Name;

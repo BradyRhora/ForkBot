@@ -1172,6 +1172,33 @@ namespace ForkBot
             await ReplyAsync("", embed: emb.Build());
         }
 
+        [Command("masterball")]
+        public async Task Masterball()
+        {
+            if (Check(Context, "masterball")) return;
+            var user = Functions.GetUser(Context.User);
+            if (!user.GetItemList().Contains("pokedex"))
+            {
+                await ReplyAsync("You got your first Pokemon! Here's a Pokedex to keep track of all the Pokemon you've collected.\n" +
+                    $"**{Functions.GetItemEmote("pokedex")} Pokedex obtained!**");
+                user.GiveItem("pokedex");
+            }
+
+            var pokemonList = Functions.GetLegendaryPokemonList();
+            int poke = rdm.Next(pokemonList.Count());
+            var pokemonS = pokemonList[poke];
+            var pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
+            user.AddDataA("pokemon", pokemon.Name);
+
+            JEmbed emb = new JEmbed();
+            emb.Title = "Legendary Pokemon Obtained!";
+            emb.Description = $"{Functions.GetItemEmote("pokedex")} You got a {pokemon.Name.ToTitleCase()}! {Functions.GetItemEmote("pokedex")}";
+            emb.ImageUrl = pokemon.Sprites.FrontMale;
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+            await ReplyAsync("", embed: emb.Build());
+        }
+
+
         [Command("pokedex")]
         public async Task Pokedex(string pokemon = "")
         {
@@ -1246,7 +1273,7 @@ namespace ForkBot
         [Command("telescope")]
         public async Task Telescope()
         {
-            if (Check(Context, "telecope", false)) return;
+            if (Check(Context, "telescope", false)) return;
             await ReplyAsync("You see.... Something...\n\nAnd it's getting closer.");
         }
     }

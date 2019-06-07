@@ -292,6 +292,7 @@
     <Content Include="bin\Debug\Files\Images\Kick.png" />
     <Content Include="bin\Debug\Files\items.txt" />
     <Content Include="bin\Debug\Files\jobs.txt" />
+    <Content Include="bin\Debug\Files\legendaryPokemon.txt" />
     <Content Include="bin\Debug\Files\MarketItems.xml" />
     <Content Include="bin\Debug\Files\pokemon.txt" />
     <Content Include="bin\Debug\Files\reminders.txt" />
