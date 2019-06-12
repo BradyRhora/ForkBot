@@ -69,6 +69,9 @@ namespace ForkBot
         }
 
         [Command("fax")]
+        public async Task Fax(IUser user, [Remainder] string message) => await Fax(user.Id, message);
+        
+        [Command("fax")]
         public async Task Fax(ulong user, [Remainder] string message)
         {
             var reciever = Bot.client.GetUser(user);
@@ -85,6 +88,7 @@ namespace ForkBot
                 else newMSG += c;
             }
 
+            await ReplyAsync("🕵 Message delivered.");
             await reciever.SendMessageAsync(newMSG);
         }
     }
