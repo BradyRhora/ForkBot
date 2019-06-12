@@ -26,7 +26,7 @@ namespace ForkBot
         [Command("tickets")]
         public async Task tickets(string command = "")
         {
-            if (Check(Context,"tickets")) return;
+            if (Check(Context, "tickets")) return;
             var user = Functions.GetUser(Context.User);
 
             if (user.GetData("bmlotto") == "0")
@@ -51,7 +51,11 @@ namespace ForkBot
         [Command("warning")]
         public async Task warning()
         {
-
+            User u = Functions.GetUser(Context.User);
+            if (u.GetItemList().Contains("warning"))
+            {
+                await ReplyAsync("gimme a bit longer");
+            }
         }
 
         [Command("gem")]
@@ -64,11 +68,24 @@ namespace ForkBot
             await ReplyAsync("Your stat increases will be multiplied for 3 hours!");
         }
 
-        [Command("postbox")]
-        public async Task postbox()
+        [Command("fax")]
+        public async Task Fax(ulong user, [Remainder] string message)
         {
+            var reciever = Bot.client.GetUser(user);
+            if (reciever == null || Check(Context, "fax", true)) return;
 
+
+            string[] characters = { "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ", "ᴀAʙBᴄCᴅDᴇEғFɢGʜHɪIᴊJᴋKʟLᴍMɴNᴏOᴘPǫQʀRsSᴛTᴜUᴠVᴡWxXʏYᴢZ", "ₐₐbBcCdDₑₑfFgGₕₕᵢᵢⱼⱼₖₖₗₗₘₘₙₙₒₒₚₚqQᵣᵣₛₛₜₜᵤᵤᵥᵥwWₓₓyYzZ", "ᵃᴬᵇᴮᶜᶜᵈᴰᵉᴱᶠᶠᵍᴳʰᴴᶦᴵʲᴶᵏᴷˡᴸᵐᴹⁿᴺᵒᴼᵖᴾᑫQʳᴿˢˢᵗᵀᵘᵁᵛⱽʷᵂˣˣʸʸᶻᶻ" };
+            string newMSG = "🕵💬 ";
+            foreach (char c in message)
+            {
+                int script = rdm.Next(2) + 1;
+                if (characters[0].Contains(c))
+                    newMSG += characters[script][characters[0].IndexOf(c)];
+                else newMSG += c;
+            }
+
+            await reciever.SendMessageAsync(newMSG);
         }
-
     }
 }
