@@ -1158,10 +1158,20 @@ namespace ForkBot
                 user.GiveItem("pokedex");
             }
 
-            var pokemonList = Functions.GetPokemonList();
-            int poke = rdm.Next(pokemonList.Count());
-            var pokemonS = pokemonList[poke];
-            var pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
+            Pokemon pokemon = null;
+            string pokemonS = "";
+            do
+            {
+                try
+                {
+                    var pokemonList = Functions.GetPokemonList();
+                    int poke = rdm.Next(pokemonList.Count());
+                    pokemonS = pokemonList[poke];
+                    pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
+                }
+                catch (Exception) { Console.WriteLine("Error getting pokemon: " + pokemonS); }
+            } while (pokemon == null);
+
             user.AddDataA("pokemon", pokemon.Name);
 
             JEmbed emb = new JEmbed();
@@ -1184,10 +1194,20 @@ namespace ForkBot
                 user.GiveItem("pokedex");
             }
 
-            var pokemonList = Functions.GetLegendaryPokemonList();
-            int poke = rdm.Next(pokemonList.Count());
-            var pokemonS = pokemonList[poke];
-            var pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
+            Pokemon pokemon = null;
+            string pokemonS = "";
+            do
+            {
+                try
+                {
+                    var pokemonList = Functions.GetLegendaryPokemonList();
+                    int poke = rdm.Next(pokemonList.Count());
+                    pokemonS = pokemonList[poke];
+                    pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
+                }
+                catch (Exception) { Console.WriteLine("Error getting pokemon: " + pokemonS); }
+            } while (pokemon == null);
+
             user.AddDataA("pokemon", pokemon.Name);
 
             JEmbed emb = new JEmbed();
