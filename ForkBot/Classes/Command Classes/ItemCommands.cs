@@ -1197,8 +1197,7 @@ namespace ForkBot
             emb.ColorStripe = Constants.Colours.YORK_RED;
             await ReplyAsync("", embed: emb.Build());
         }
-
-
+        
         [Command("pokedex")]
         public async Task Pokedex(string pokemon = "")
         {
@@ -1274,7 +1273,7 @@ namespace ForkBot
         public async Task Telescope()
         {
             if (Check(Context, "telescope", false)) return;
-            await ReplyAsync("You see.... Something...\n\nAnd it's getting closer.");
+            await ReplyAsync("You look to see if the thing you saw earlier remains.\nIt's gone.");
         }
     }
 

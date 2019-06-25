@@ -2456,6 +2456,12 @@ namespace ForkBot
             }
         }
         
+        [Command("pokemon"), Summary("[FUN] Use various pokemon commands.")]
+        public async Task Pokemon(params  string[] command)
+        {
+            if (command.Length == 0) command = new string[] { "" };
+
+        }
         #endregion
 
         #region Mod Commands

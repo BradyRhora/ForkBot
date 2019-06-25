@@ -1,13 +1,13 @@
 poop|Oh, that's just disgusting.|2
 shirt|Now you can look fashionable!|10
 dress|Oh! You'll look so pretty in this!|20
-high_heel|It's what the men like!|20
+high_heel|Not the most comfortable to walk in, but they look good!|20
 athletic_shoe|Now you can go for a run!|16
 dark_sunglasses|Don't look directly into the sun!|10
 eyeglasses|They seem.. special? Try looking at an item with them on..|100
 umbrella2|For those rainy days!|12
 briefcase|Now you can, uh.. hold stuff.|-
-purse|I know you like it.|-
+purse|Fancy AND useful.|-
 baby|Oh, I guess you're a parent now.|100
 santa|Merry Christmas! You get five more gifts!|-
 cat|Meow|40
@@ -17,18 +17,18 @@ egg|EGG.|10
 eggplant|Oh my.. So.... *Phallic...*|10
 ramen|Aka gods gift to humanity.|25
 beer|Drink responsibly!|50
-spoon|Well, it's not a fork but it'll do.|5
+spoon|Not quite a fork.|5
 8ball|Ask it a question with `;8ball`!|100
 bow_and_arrow|Watch where you're shooting!|20
 ping_pong|Smack some balls around!|16
-microphone|Does this mean we can have karaoke night now?|10
-video_game|The cause of all evil in the world!|30
+microphone|Time to show off that singing voice.|10
+video_game|A device used by the most oppressed group on the planet.|30
 game_die|Roll it with `;roll`!|100
 bike|Ring ring! Who needs the TTC?|30
 watch|And an expensive one too!|75
 iphone|The latest in mobile technology!|100
 joystick|For the classics!|20
-moneybag|The best but lamest gift!|-
+moneybag|The best but worst gift!|-
 knife|Careful, it's sharp!|300
 bomb|How did that get in there|350
 gun|Hahah hey whoa... watch it buddy..|1000
@@ -80,5 +80,5 @@ spy|He's able to obtain secret information... and maybe more?|-*
 hole|What's inside? Only one way to find out!|-*
 calling|There's a number inputted, try calling it!|-*
 pokeball|A mysterious device used to capture Pokemon:tm:!|-|581691138495348737
-masterball|A special version of the Pokeball that has a 100% success rate.|-|586390106730922014
+masterball|A special version of the Pokeball that has a 100% success rate.|-*|586390106730922014
 pokedex|A device created to track and research Pokemon:tm:!|*-|581704291719577610

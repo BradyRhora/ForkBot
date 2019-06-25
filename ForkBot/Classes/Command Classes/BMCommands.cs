@@ -87,7 +87,7 @@ namespace ForkBot
                     newMSG += characters[script][characters[0].IndexOf(c)];
                 else newMSG += c;
             }
-
+            
             await ReplyAsync("🕵 Message delivered.");
             await reciever.SendMessageAsync(newMSG);
         }
