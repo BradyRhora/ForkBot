@@ -12,17 +12,14 @@ namespace ForkBot
         public string Section { get; }
         public string Professor { get; }
         public Dictionary<string, string> DayTimes = new Dictionary<string, string>();
-        //public string WeekDay { get; set; }
-        //public string Time { get; set; }
+        public string CAT { get; }
 
-        public CourseDay(string term, string section, string prof)
+        public CourseDay(string term, string section, string prof, string CAT)
         {
             Term = term;
             Section = section;
             Professor = prof;
-            //WeekDay = "";
-            //Time = "";
-
+            this.CAT = CAT;
         }
 
         public void AddDayTime(string day, string time)

@@ -247,7 +247,7 @@ namespace ForkBot
 
                 foreach (CourseDay day in course.GetSchedule().Days)
                 {
-                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\n";
+                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\nCatalog Number: {day.CAT}\n";
                     foreach (var dayTime in day.DayTimes)
                     {
                         if (dayTime.Key == "") emb.Description += "\nOnline";
@@ -323,7 +323,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.7\n-more recent free market posts now appear at the top of the list\n-hecka buffed lottery rewards\n-added pokeball and pokedex\n-added HECKA ;raid\n-fm posts now expire after 2 weeks and are auctioned off, along with a random auction every friday at 12am\n-added more to ;pokedex [pokemon]```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.7\n-more recent free market posts now appear at the top of the list\n-hecka buffed lottery rewards\n-added pokeball and pokedex\n-added HECKA ;raid\n-fm posts now expire after 2 weeks and are auctioned off, along with a random auction every friday at 12am\n-added more to ;pokedex [pokemon]\n;course command now shows catalog numbers for course enrollment```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]

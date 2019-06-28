@@ -32,6 +32,7 @@ namespace ForkBot
                     var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ", "|").Replace(" ", "").Replace("(Glendoncampus)", "").Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries);
 
                     var TermAndSec = termSec.Split(new char[]{' '},StringSplitOptions.RemoveEmptyEntries);
+                    var CAT = schedule.ChildNodes[2].InnerText;
                     var term = TermAndSec[0] + " " + TermAndSec[1];
                     var section = TermAndSec[2] + " " + TermAndSec[3];
                     
@@ -39,8 +40,7 @@ namespace ForkBot
 
                     if (timedayInfo.Count() == 1 && timedayInfo[0] == "") break;
 
-                    CourseDay cDay = new CourseDay(term, section, professor);
-
+                    CourseDay cDay = new CourseDay(term, section, professor, CAT);
                     for (int i = 0; i < timedayInfo.Count(); i++)
                     {
                         string day = Convert.ToString(timedayInfo[i][0]);
