@@ -91,5 +91,48 @@ namespace ForkBot.Properties {
                 this["lastBid"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>weedswell</string>
+  <string>superwell</string>
+  <string>santawell</string>
+  <string>ragewell</string>
+  <string>patswell</string>
+  <string>mariowell</string>
+  <string>luigiwell</string>
+  <string>jerkswell</string>
+  <string>goldswell</string>
+  <string>eggswell</string>
+  <string>batswell</string>
+  <string>jattswell</string>
+  <string>Ahegaoswell</string>
+  <string>monkaSwell</string>
+  <string>lennyswell</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection unclaimedMaxwells {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["unclaimedMaxwells"]));
+            }
+            set {
+                this["unclaimedMaxwells"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>0|0</string>\r\n</ArrayOfString>")]
+        public string[] investigating {
+            get {
+                return ((string[])(this["investigating"]));
+            }
+            set {
+                this["investigating"] = value;
+            }
+        }
     }
 }

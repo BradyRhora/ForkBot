@@ -902,6 +902,7 @@ namespace ForkBot
                                  "To buy an item in the free market, use `;fm buy [ID]`. The ID is the characters that appear in the title of the sale in `;fm`\n" +
                                  "To post an item for sale, do ;fm post [item] [price]. You can also include the amount of items you want to sell in the format `[item]*[amount]`\n" +
                                  "To cancel a posting, use `;fm cancel [ID]`\nThere is a 25% coin fee for cancelling posts in order to avoid abuse. This will be automatically charged upon cancellation, if you cannot afford the fee, you cannot cancel.\n" +
+                                 "There is a 5 posting limit.\n" +
                                  "There is a 2 week expiry on postings. You will be given a warning before your posting expires, and if the posting is not removed by the expiry time it will be auctioned off to other users and the coins will go towards the slots, **not you**.\n\n" +
                                  "Examples:\n\n" +
                                  "`;fm view 3` Views the third Free Market page.\n"+
@@ -943,14 +944,20 @@ namespace ForkBot
                 }
                 for (int i = 0; i < amount; i++) user.RemoveItem(item);
 
-
-                //do{
-                string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                for (int i = 0; i < 5; i++)
+                var items = File.ReadAllLines("Files/FreeMarket.txt");
+                if (items.Where(x => x.Split('|')[1] == Context.User.Id.ToString()).Count() >= 5)
                 {
-                    id += key[rdm.Next(key.Count())];
+                    await ReplyAsync(":x: You've reached the maximum of 5 Free Market postings.");
                 }
-                //}while(listings contains key)
+
+                string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                do
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        id += key[rdm.Next(key.Count())];
+                    }
+                } while (items.Where(x => x.Split('|')[0] == id).Count() > 0);
 
                 string plural = "";
                 if (price > 1) plural = "s";

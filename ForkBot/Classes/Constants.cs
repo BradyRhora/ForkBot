@@ -55,6 +55,7 @@ namespace ForkBot
             public static ulong NEWS_DEBATE = 364867272126365696;
             public static ulong LIFESTYLE = 404142837685551107;
             public static ulong DEBUG = 582651340157878283;
+            public static ulong ELITE = 586590798515011605;
         }
 
         public class EmoteAnimations

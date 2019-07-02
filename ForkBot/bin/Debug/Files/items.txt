@@ -1,4 +1,4 @@
-poop|Oh, that's just disgusting.|2
+﻿poop|Oh, that's just disgusting.|2
 shirt|Now you can look fashionable!|10
 dress|Oh! You'll look so pretty in this!|20
 high_heel|Not the most comfortable to walk in, but they look good!|20
@@ -82,3 +82,19 @@ calling|There's a number inputted, try calling it!|-*
 pokeball|A mysterious device used to capture Pokemon:tm:!|-|581691138495348737
 masterball|A special version of the Pokeball that has a 100% success rate.|-*|586390106730922014
 pokedex|A device created to track and research Pokemon:tm:!|*-|581704291719577610
+weedswell|Blaze it.|-*|578000411940880394
+venomswell|Why are we still here? Just to suffer?|-*|579945537181319169
+superwell|And this is to go... Even further.... BEYOND..!|-*|579930272037077002
+santawell|Ho ho ho!|-*|576627675309801492
+ragewell|Fukfcin... ANGERY!|-*|579941211138424832
+patswell|Cheers!|-*|578000412062253056
+mariowell|Mama mia!|-*|579918396519350272
+luigiwell|Wahoo!|-*|579918714577616915
+jerkswell|Finna jerk it.|-*|579934190372519946
+goldswell|So shiny.|-*|579927921997905936
+eggswell|I hope that's just chocolate.|-*|576627674684981248
+batswell|I'm Batman.|-*|581144377519374336
+jattswell|o kidaaaaaaaa|-*|579927940767285248
+Ahegaoswell|Join my patreon|-*|576627674169212939
+monkaSwell|o... fuk...|-*|576627675343355925
+lennyswell|( ͡° ͜ʖ ͡°)|-*|576627673342672914

@@ -20,5 +20,31 @@
     <Setting Name="lastBid" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="unclaimedMaxwells" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;weedswell&lt;/string&gt;
+  &lt;string&gt;superwell&lt;/string&gt;
+  &lt;string&gt;santawell&lt;/string&gt;
+  &lt;string&gt;ragewell&lt;/string&gt;
+  &lt;string&gt;patswell&lt;/string&gt;
+  &lt;string&gt;mariowell&lt;/string&gt;
+  &lt;string&gt;luigiwell&lt;/string&gt;
+  &lt;string&gt;jerkswell&lt;/string&gt;
+  &lt;string&gt;goldswell&lt;/string&gt;
+  &lt;string&gt;eggswell&lt;/string&gt;
+  &lt;string&gt;batswell&lt;/string&gt;
+  &lt;string&gt;jattswell&lt;/string&gt;
+  &lt;string&gt;Ahegaoswell&lt;/string&gt;
+  &lt;string&gt;monkaSwell&lt;/string&gt;
+  &lt;string&gt;lennyswell&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="investigating" Type="System.String[]" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;0|0&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
