@@ -1300,7 +1300,9 @@ namespace ForkBot
             if (scopeData == "0") lastScope = new DateTime(0);
             else lastScope = Functions.StringToDateTime(scopeData);
 
-            if (rdm.Next(100) < 10 && DateTime.Now - lastScope > new TimeSpan(1, 0, 0))
+            int roll = rdm.Next(100) + 1;
+
+            if (roll < 10 && DateTime.Now - lastScope > new TimeSpan(1, 0, 0))
             {
                 await Context.Message.DeleteAsync();
                 var invess = Properties.Settings.Default.investigating.ToList();
@@ -1310,7 +1312,8 @@ namespace ForkBot
                 await Context.User.SendMessageAsync("A light flashes from the sky, and crashes down into the Earth. Use `;investigate` in DM's to check it out.");
                 await Bot.client.GetUser(Constants.Users.BRADY).SendMessageAsync($"{Context.User.Mention} has awakened a Maxwell.");
             }
-            else await ReplyAsync("You thought you saw a flash in the corner of the scope.\nIt was probably nothing.");
+            else if (roll < 20) await ReplyAsync("You thought you saw a flash in the corner of the scope.\nIt was probably nothing.");
+            else await ReplyAsync("You look up to the sky hoping to see something.\nJust stars.");
         }
 
         [Command("investigate"), Alias("inv")]
@@ -1324,6 +1327,7 @@ namespace ForkBot
                 var user = Functions.GetUser(Context.User);
                 int i = Convert.ToInt32(inv.Split('|')[1]);
 
+                bool end = false;
 
                 switch (i)
                 {
@@ -1336,10 +1340,10 @@ namespace ForkBot
                         i++;
                         break;
                     case 2:
-                        if (i < 1 || i > 2) return;
+                        if (choice < 1 || choice > 2) return;
                         else
                         {
-                            if (i == 1)
+                            if (choice == 1)
                             {
                                 await ReplyAsync("You grit your teeth and bare through it. As you push further through the heat, it feels as if it's pushing you away." +
                                     " Your skin begins to feel as if it's melting. You've gone too far to give up now, your body feels as if it's moving on it's own.");
@@ -1383,10 +1387,10 @@ namespace ForkBot
                         i++;
                         break;
                     case 10:
-                        if (i < 1 || i > 2) return;
+                        if (choice < 1 || choice > 2) return;
                         else
                         {
-                            if (i == 1)
+                            if (choice == 1)
                             {
                                 await ReplyAsync("You extend your arm out towards him, and upon contact it begins to shine a beautiful light. You feel a happiness that you've never felt before. " +
                                     "Maxwell smiles at you, and begins to fade away.");
@@ -1406,7 +1410,7 @@ namespace ForkBot
                         break;
                     case 12:
                         await ReplyAsync("A voice echoes inside your mind. You recognize it immediately as the voice that just spoke to you.\n*\"My child...\nBefore we can gain the powers we require, there " +
-                            "is something we must do.* ***Someone*** *we must take care of.\"*\nHis voice begins to sound malicious.");
+                            "is something we must do.* ***Someone*** *we must take care of.\"*.");
                         i++;
                         break;
 
@@ -1421,7 +1425,7 @@ namespace ForkBot
                     case 100://go back
                         break;
 
-                    case 200://reject maxwell
+                    case 200:
                         await ReplyAsync("You wait, now alone, in the never-ending shadows.");
                         i++;
                         break;
@@ -1439,15 +1443,31 @@ namespace ForkBot
                         i++;
                         break;
                     case 207:
-                        await ReplyAsync("You stumble back towards your home, struggling to recall exactly what just happened. ")
+                        await ReplyAsync("You stumble back towards your home, struggling to recall exactly what just happened. As you approach you notice your telescope is set up outside.");
+                        i++;
+                        break;
+                    case 208:
+                        await ReplyAsync("You can't remember what you were using it for, or where you just came from. Everything seems fuzzy.\nYou approach your telescope.");
+                        i++;
+                        break;
+                    case 209:
+                        await ReplyAsync("You look up to the sky hoping to see something.\nJust stars.");
+                        end = true;
+                        break;
                 }
 
                 var invs = Properties.Settings.Default.investigating;
-                for (int o = 0; o < invs.Count(); o++)
+
+                if (end) invs = invs.Where(x => x.Split('|')[0] != Context.User.Id.ToString()).ToArray();
+                else
                 {
-                    if (invs[o].StartsWith(Context.User.Id.ToString() + "|"))
+                    for (int o = 0; o < invs.Count(); o++)
                     {
-                        invs[o] = Context.User.Id.ToString() + "|" + i;
+                        if (invs[o].StartsWith(Context.User.Id.ToString() + "|"))
+                        {
+                            invs[o] = Context.User.Id.ToString() + "|" + i;
+                            break;
+                        }
                     }
                 }
 
