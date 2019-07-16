@@ -104,6 +104,19 @@ namespace ForkBot
             if (CourseLink == "") throw new CourseNotFoundException();
 
             var pageDoc = web.Load(CourseLink).DocumentNode;
+
+            try
+            {
+                var sError = pageDoc.SelectSingleNode("/html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td/table[1]/tbody/tr/td[1]/p");
+                if (sError.InnerText == "Current Courses Search Results")
+                {
+                    var listTable = pageDoc.SelectSingleNode("/html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td/table[2]/tbody");
+                    var newLink = listTable.ChildNodes.Last().ChildNodes[3];
+                }
+            }
+            catch { }
+
+
             string desc;
             try
             {
