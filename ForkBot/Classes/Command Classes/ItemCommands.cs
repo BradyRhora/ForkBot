@@ -1413,7 +1413,10 @@ namespace ForkBot
                             "is something we must do.* ***Someone*** *we must take care of.\"*.");
                         i++;
                         break;
-
+                    case 13:
+                        await ReplyAsync("Maxwell guides you in the direction you must go.");
+                        i++;
+                        break;
 
                         
 
@@ -1477,6 +1480,13 @@ namespace ForkBot
 
 
             }
+        }
+
+        [Command("maxwell"), Alias("weedswell", "venomswell", "superwell", "santawell", "ragewell", "patswell", "mariowell", "luigiwell", "jerkswell", "goldswell", "eggswell", "batswell", "jattswell", "Ahegaoswell", "monkaSwell", "lennyswell")]
+        public async Task Maxwell([Remainder] string command)
+        {
+            if (Check(Context.Message.Content.Split(' ')[0].Trim(';'),false))
+            if (command == "")
         }
     }
 
