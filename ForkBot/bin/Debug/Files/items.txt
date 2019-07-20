@@ -82,3 +82,9 @@ calling|There's a number inputted, try calling it!|-*
 pokeball|A mysterious device used to capture Pokemon:tm:!|-|581691138495348737
 masterball|A special version of the Pokeball that has a 100% success rate.|-*|586390106730922014
 pokedex|A device created to track and research Pokemon:tm:!|*-|581704291719577610
+warning|???|-*
+gem|???|-*
+fax|???|-*
+postbox|???|-*
+credit_card|???|-*
+tickets|???|-*

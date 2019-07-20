@@ -7306,3 +7306,6 @@ SC/STS  4785 3.00 Science, Health and Food
 # Automatically added courses
 AP/ITEC 2220 3.00 Scripting Languages
 AP/SOSC 1731 9.00 CyberCities: The Community and Communication in Changing Urban Areas
+AP/ITEC 4310   3.00 Applied Artificial Intelligence
+AP/ITEC 4100   3.00 Topics in Information Technology
+AP/WRIT 2201   3.00 Effective Writing and Research in Information Technology
