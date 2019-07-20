@@ -1082,11 +1082,24 @@ namespace ForkBot
             
 
             string result = ItemCombo.CheckCombo(items);
+            
             if (result != null)
             {
-                foreach(string item in items) u.RemoveItem(item);
-                u.GiveItem(result);
-                await ReplyAsync($"You have successfully made a {result}! " + Functions.GetItemEmote(result));
+                if (result.StartsWith("special:"))
+                {
+                    var spec = result.Split(':')[1];
+                    switch (spec)
+                    {
+                        case "oldbm":
+                            await ReplyAsync(":spy: Sorry... We ain't accepting that no more. I might take somethin shinier though.");
+                            break;
+                    }
+                }
+                else {
+                    foreach (string item in items) u.RemoveItem(item);
+                    u.GiveItem(result);
+                    await ReplyAsync($"You have successfully made a {result}! " + Functions.GetItemEmote(result));
+                }
             }
             else
             {

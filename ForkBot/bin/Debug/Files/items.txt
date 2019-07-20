@@ -19,7 +19,7 @@ ramen|Aka gods gift to humanity.|25
 beer|Drink responsibly!|50
 spoon|Not quite a fork.|5
 8ball|Ask it a question with `;8ball`!|100
-bow_and_arrow|Watch where you're shooting!|20
+bow_and_arrow|Watch where you're shooting!|100
 ping_pong|Smack some balls around!|16
 microphone|Time to show off that singing voice.|10
 video_game|A device used by the most oppressed group on the planet.|30
@@ -98,3 +98,5 @@ jattswell|o kidaaaaaaaa|-*|579927940767285248
 Ahegaoswell|Join my patreon|-*|576627674169212939
 monkaSwell|o... fuk...|-*|576627675343355925
 lennyswell|( ͡° ͜ʖ ͡°)|-*|576627673342672914
+ring|Seal the deal!|-*
+crown|Fit for a king! It's kinda big on you though.|-*

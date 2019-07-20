@@ -1302,7 +1302,7 @@ namespace ForkBot
 
             int roll = rdm.Next(100) + 1;
 
-            if (roll < 10 && DateTime.Now - lastScope > new TimeSpan(1, 0, 0))
+            if (roll == -1 && DateTime.Now - lastScope > new TimeSpan(1, 0, 0))
             {
                 await Context.Message.DeleteAsync();
                 var invess = Properties.Settings.Default.investigating.ToList();
@@ -1489,9 +1489,63 @@ namespace ForkBot
         [Command("maxwell"), Alias("weedswell", "venomswell", "superwell", "santawell", "ragewell", "patswell", "mariowell", "luigiwell", "jerkswell", "goldswell", "eggswell", "batswell", "jattswell", "Ahegaoswell", "monkaSwell", "lennyswell")]
         public async Task Maxwell([Remainder] string command)
         {
-            if (Check(Context.Message.Content.Split(' ')[0].Trim(';'),false))
+            if (Check(Context, Context.Message.Content.Split(' ')[0].Trim(';'), false)) return;
+
             if (command == "")
+            {
+                await ReplyAsync("You feel Maxwell's power radiating through you, waiting to be unlocked.");
+            }
         }
+
+        [Command("bow_and_arrow"),Alias("bowandarrow","bow")]
+        public async Task Bow_And_Arrow(string target)
+        {
+            if (Check(Context, "bow_and_arrow", false)) return;
+            var user = Functions.GetUser(Context.User);
+            if (!user.GetItemList().Contains(target)) target = "null";
+            switch (target)
+            {
+                case "tiger":
+                    int chance = rdm.Next(100);
+                    user.RemoveItem("tiger");
+                    user.RemoveItem("bow_and_arrow");
+                    if (chance < 45)
+                    {
+                        int coinLoss = rdm.Next(300);
+                        string itemLoss = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                        user.GiveCoins(-coinLoss);
+                        user.RemoveItem(itemLoss);
+                        await ReplyAsync($"The tiger looks towards you, and it looks *pissed*. It lunges at you!\nYou lost {coinLoss} coins and your {itemLoss}!");
+                    }
+                    else
+                    {
+                        int coinGain = rdm.Next(100)+100;
+                        await ReplyAsync($"The tiger falls to the ground, and you take some nice pictures! You're also able to sell its pelt for {coinGain} coins.");
+                    }
+                    break;
+                case "man":
+                    int coins = rdm.Next(50, 200);
+                    user.GiveCoins(coins);
+                    user.RemoveItem("bow_and_arrow");
+                    user.RemoveItem("man");
+                    await ReplyAsync("The arrow pierces through his body and he collapses to the ground. His wallet slides out of his pocket as his face collides with the concrete.\n" +
+                        $"You got {coins} coins! :moneybag:");
+                    break;
+                case "older_woman":
+                    user.RemoveItem("older_woman");
+                    user.RemoveItem("bow_and_arrow");
+                    await ReplyAsync("The arrow pierces through her frail body and she collapses to the ground.\nOh, that's a nice ring!\nYou got a ring! :ring:");
+                    break;
+                case "null":
+                    await ReplyAsync("You don't have one of those.");
+                    break;
+                default:
+                    await ReplyAsync("You feel like you shouldn't shoot at that.");
+                    break;
+            }
+            
+        }
+    
     }
 
 
