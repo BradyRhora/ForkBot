@@ -1414,9 +1414,11 @@ namespace ForkBot
                         i++;
                         break;
                     case 13:
-                        await ReplyAsync("Maxwell guides you in the direction you must go.");
+                        await ReplyAsync("Your body feels as if it moves on it's own. Maxwell guides you to where you need to go.\nHours pass, yet you feel fine. Maxwell resides in you," +
+                            " giving you the strength to continue.");
                         i++;
                         break;
+                    case 14:
 
                         
 
@@ -1424,9 +1426,11 @@ namespace ForkBot
 
 
 
-
                     case 100://go back
                         break;
+
+
+
 
                     case 200:
                         await ReplyAsync("You wait, now alone, in the never-ending shadows.");
