@@ -21,7 +21,7 @@ namespace ForkBot
                                                           new ItemCombo("tiger","cat","milk","meat_on_bone"),
                                                           new ItemCombo("unlock","key2","lock"),
                                                           new ItemCombo("spy","gun","man"),
-                                                          new ItemCombo("hole","unlock","spy"),
+                                                          new ItemCombo("special:oldbm","unlock","spy"),
                                                           new ItemCombo("package","lock","box")};
         public string[] Items;
         public string Result;

@@ -374,3 +374,4 @@ ASALocalRun/
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
 ForkBot/bin/Debug/Files/tags.txt
+/ForkBot/Classes/Objects/YorkAPI.rar
