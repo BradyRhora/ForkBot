@@ -1,4 +1,4 @@
-﻿poop|Oh, that's just disgusting.|2
+poop|Oh, that's just disgusting.|2
 shirt|Now you can look fashionable!|10
 dress|Oh! You'll look so pretty in this!|20
 high_heel|Not the most comfortable to walk in, but they look good!|20
@@ -82,6 +82,12 @@ calling|There's a number inputted, try calling it!|-*
 pokeball|A mysterious device used to capture Pokemon:tm:!|-|581691138495348737
 masterball|A special version of the Pokeball that has a 100% success rate.|-*|586390106730922014
 pokedex|A device created to track and research Pokemon:tm:!|*-|581704291719577610
+warning|???|-*
+gem|???|-*
+fax|???|-*
+postbox|???|-*
+credit_card|???|-*
+tickets|???|-*
 weedswell|Blaze it.|-*|578000411940880394
 venomswell|Why are we still here? Just to suffer?|-*|579945537181319169
 superwell|And this is to go... Even further.... BEYOND..!|-*|579930272037077002
@@ -97,6 +103,6 @@ batswell|I'm Batman.|-*|581144377519374336
 jattswell|o kidaaaaaaaa|-*|579927940767285248
 Ahegaoswell|Join my patreon|-*|576627674169212939
 monkaSwell|o... fuk...|-*|576627675343355925
-lennyswell|( ͡° ͜ʖ ͡°)|-*|576627673342672914
+lennyswell|( ?� ?? ?�)|-*|576627673342672914
 ring|Seal the deal!|-*
 crown|Fit for a king! It's kinda big on you though.|-*

@@ -14,12 +14,10 @@ replay yoshis island
 add even more hangman words
 base hangman coins off of word difficulty
 pen says 2 but 1
-dont trade urself
 battleship (done through dm?)
 ;ban (days)
 make gift opening one message
 show trusted / not trusted
-log trusted removal
 add min/mins to remind
 seperate hangman games
 remove names from wordlist.txt
@@ -31,7 +29,6 @@ fix bug where you "replace" OLD present when the last present was claimed by you
 remove proper nouns from wordlist
 penalty for losing hangman
 change mic description
-telescope sees hidden player stuff(?)
 fix dummy join dates
 more ;dividers features
 fix rounding bug, poo poo head!
@@ -42,3 +39,16 @@ fix multiple hosts ;raid
 pokedex dm
 resend map when players turn
 fix ;r emote message
+don't let enemies see dead players
+append number to move multiple spaces in raid
+alt report service
+;raid help
+raise gnome price?
+add username when user is not in guild for ;bid
+alert in #commands when there is a new auction, or maybe users can sign up for auction notifications?
+attacking item in raid breaks game
+fix wish 0
+stop enemies from attacking corpses again
+decrease default bid
+;top bottom params
+remove ;def command, API is no longer public
