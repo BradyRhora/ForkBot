@@ -37,9 +37,10 @@ namespace ForkBot
         {
             File.WriteAllText($@"Users\{ID}.user", fileString);
         }
-        public void Archive()
+        public void Archive(bool copy = false)
         {
-            File.Move($@"Users\{ID}.user", $@"Users\{ID}.archiveuser");
+            if (!copy) File.Move($@"Users\{ID}.user", $@"Users\{ID}.archiveuser");
+            else File.Copy($@"Users\{ID}.user", $@"Users\{ID}.archiveuser");
         }
 
         public string GetData(string data)

@@ -2939,10 +2939,12 @@ namespace ForkBot
         public async Task Transfer(IUser oldUser, IUser newUser)
         {
             if (Context.User.Id != Constants.Users.BRADY) return;
-            var user = Functions.GetUser(oldUser);
-            string oldData = user.GetFileString();
-            Functions.GetUser(newUser).SetFileString(oldData);
-            user.Archive();
+            var user1 = Functions.GetUser(oldUser);
+            var user2 = Functions.GetUser(newUser);
+            string oldData = user1.GetFileString();
+            user2.Archive(true);
+            user2.SetFileString(oldData);
+            user1.Archive();
             await ReplyAsync("Successfully transfered data and archived old user.");
         }
 
