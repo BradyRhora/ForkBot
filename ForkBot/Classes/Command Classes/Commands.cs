@@ -948,6 +948,7 @@ namespace ForkBot
                 if (items.Where(x => x.Split('|')[1] == Context.User.Id.ToString()).Count() >= 5)
                 {
                     await ReplyAsync(":x: You've reached the maximum of 5 Free Market postings.");
+                    return;
                 }
 
                 string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
