@@ -2938,6 +2938,7 @@ namespace ForkBot
         [Command("transfer"), Summary("[BRADY] Transfers all account data from one user to another.")]
         public async Task Transfer(IUser oldUser, IUser newUser)
         {
+            if (Context.User.Id != Constants.Users.BRADY) return;
             var user = Functions.GetUser(oldUser);
             string oldData = user.GetFileString();
             Functions.GetUser(newUser).SetFileString(oldData);
