@@ -2942,7 +2942,7 @@ namespace ForkBot
             string oldData = user.GetFileString();
             Functions.GetUser(newUser).SetFileString(oldData);
             user.Archive();
-            
+            await ReplyAsync("Successfully transfered data and archived old user.");
         }
 
         /*
