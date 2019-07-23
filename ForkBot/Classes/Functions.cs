@@ -178,7 +178,7 @@ namespace ForkBot
                 bottom = true;
                 stat = "";
             }
-            var userFiles = Directory.GetFiles(@"Users");
+            var userFiles = Directory.GetFiles(@"Users").Where(x=>x.EndsWith(".user")).ToArray();
             ulong[] userIDs = new ulong[1];
             
             userIDs = userFiles.Select(x => Convert.ToUInt64(Path.GetFileName(x).Replace(".user", ""))).ToArray();
