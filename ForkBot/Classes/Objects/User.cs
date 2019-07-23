@@ -29,6 +29,19 @@ namespace ForkBot
             return Functions.GetName(await guild.GetUserAsync(ID));
         }
 
+        public string GetFileString()
+        {
+            return File.ReadAllText($@"Users\{ID}.user");
+        }
+        public void SetFileString(string fileString)
+        {
+            File.WriteAllText($@"Users\{ID}.user", fileString);
+        }
+        public void Archive()
+        {
+            File.Move($@"Users\{ID}.user", $@"Users\{ID}.archiveuser");
+        }
+
         public string GetData(string data)
         {
             string userPath = $@"Users\{ID}.user";
