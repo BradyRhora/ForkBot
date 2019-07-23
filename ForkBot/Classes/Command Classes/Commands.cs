@@ -942,7 +942,6 @@ namespace ForkBot
                     await ReplyAsync(":x: You either do not have the item, or enough of the item in your inventory. :x:");
                     return;
                 }
-                for (int i = 0; i < amount; i++) user.RemoveItem(item);
 
                 var items = File.ReadAllLines("Files/FreeMarket.txt");
                 if (items.Where(x => x.Split('|')[1] == Context.User.Id.ToString()).Count() >= 5)
@@ -951,6 +950,7 @@ namespace ForkBot
                     return;
                 }
 
+                for (int i = 0; i < amount; i++) user.RemoveItem(item);
                 string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                 do
                 {
