@@ -323,7 +323,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.8\n-set fm post limit to 5\n-created ;transfer command\n-item changes```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.81\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -2951,6 +2951,24 @@ namespace ForkBot
             user2.SetFileString(oldData);
             user1.Archive();
             await ReplyAsync("Successfully transfered data and archived old user.");
+        }
+
+        [Command("makebid"), Summary("[BRADY] Creates a new bid starting at 100 coins.")]
+        public async Task MakeBid(string item, int amount)
+        {
+            if (Context.User.Id != Constants.Users.BRADY) return;
+            
+            string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string id = "";
+            
+            for (int i = 0; i < 5; i++)
+            {
+                id += key[rdm.Next(key.Count())];
+            }
+
+            string newBid = $"{id}|{item}|{amount}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
+
+            File.AppendAllText("Files/Bids.txt", newBid);
         }
 
         /*
