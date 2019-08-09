@@ -1172,8 +1172,9 @@ namespace ForkBot
                         emb.Fields.Add(new JEmbedField(x =>
                         {
                             x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
-                            x.Text =   $"<:blank:528431788616318977> :moneybag: Current bid: {currentBid} coins{bidderMsg}\n" +
-                                       $"<:blank:528431788616318977> Ending in: {endTime.Hours} hours and {endTime.Minutes} minutes.";
+                            x.Text =   $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
+                                       $"<:blank:528431788616318977> Minimum Next Bid: **{currentBid + currentBid*0.15}** coins.\n" +
+                                       $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
                         }));
                     }
                     await ReplyAsync("", embed: emb.Build());
@@ -1198,14 +1199,18 @@ namespace ForkBot
                                 {
                                     if (user.GetCoins() >= bidAmount)
                                     {
-                                        changed = true;
-                                        var newBid = $"{data[0]}|{data[1]}|{data[2]}|{data[3]}|{bidAmount}|{Context.User.Id}";
-                                        bids[i] = newBid;
-                                        user.GiveCoins(-bidAmount);
-                                        var oldUser = Functions.GetUser(Convert.ToUInt64(data[5]));
-                                        oldUser.GiveCoins(currentBid);
-                                        await ReplyAsync($"You are now the highest bidder for {Functions.GetItemEmote(item)} {amount} {item}(s) with {bidAmount} coins.");
-                                        break;
+                                        if (bidAmount > currentBid + (currentBid * 0.15))
+                                        {
+                                            changed = true;
+                                            var newBid = $"{data[0]}|{data[1]}|{data[2]}|{data[3]}|{bidAmount}|{Context.User.Id}";
+                                            bids[i] = newBid;
+                                            user.GiveCoins(-bidAmount);
+                                            var oldUser = Functions.GetUser(Convert.ToUInt64(data[5]));
+                                            oldUser.GiveCoins(currentBid);
+                                            await ReplyAsync($"You are now the highest bidder for {Functions.GetItemEmote(item)} {amount} {item}(s) with {bidAmount} coins.");
+                                            break;
+                                        }
+                                        else await ReplyAsync($"Your bid must be at least 15% higher than the current. ({currentBid + currentBid * 0.15} coins)");
                                     }
                                     else await ReplyAsync("You do not have the specified amount of coins.");
                                 }
