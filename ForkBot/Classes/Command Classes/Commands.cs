@@ -101,6 +101,7 @@ namespace ForkBot
         [Command("define"), Alias(new string[] { "def" }), Summary("Returns the definiton for the inputted word.")]
         public async Task Define([Remainder]string word)
         {
+            throw new NotSupportedException("The Oxford Dictionary API has been discontinued");
             OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
             var result = await client.SearchEntries(word, CancellationToken.None);
             if (result != null)
@@ -323,7 +324,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.8\n-set fm post limit to 5\n-created ;transfer command\n-item changes```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.8\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-changed current term to 'fm'\n-fixed bow not giving stated items```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]

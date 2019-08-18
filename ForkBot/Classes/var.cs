@@ -73,7 +73,7 @@ namespace ForkBot
         public static List<MineSweeper> MSGames = new List<MineSweeper>();
         public static List<ForkParty> FPGames = new List<ForkParty>();
 
-        public static string term = "SU";
+        public static string term = "FW";
 
         public static List<IUser> DebugUsers = new List<IUser>();
     }

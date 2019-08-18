@@ -1509,19 +1509,21 @@ namespace ForkBot
                     int chance = rdm.Next(100);
                     user.RemoveItem("tiger");
                     user.RemoveItem("bow_and_arrow");
+                    int coinLoss = 0, coinGain = 0;
                     if (chance < 45)
                     {
-                        int coinLoss = rdm.Next(300);
+                        coinLoss = rdm.Next(300);
                         string itemLoss = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
-                        user.GiveCoins(-coinLoss);
                         user.RemoveItem(itemLoss);
                         await ReplyAsync($"The tiger looks towards you, and it looks *pissed*. It lunges at you!\nYou lost {coinLoss} coins and your {itemLoss}!");
                     }
                     else
                     {
-                        int coinGain = rdm.Next(100)+100;
+                        coinGain = rdm.Next(100)+100;
                         await ReplyAsync($"The tiger falls to the ground, and you take some nice pictures! You're also able to sell its pelt for {coinGain} coins.");
                     }
+
+                    user.GiveCoins(coinGain-coinLoss);
                     break;
                 case "man":
                     int coins = rdm.Next(50, 200);
@@ -1534,13 +1536,14 @@ namespace ForkBot
                 case "older_woman":
                     user.RemoveItem("older_woman");
                     user.RemoveItem("bow_and_arrow");
+                    user.GiveItem("ring");
                     await ReplyAsync("The arrow pierces through her frail body and she collapses to the ground.\nOh, that's a nice ring!\nYou got a ring! :ring:");
                     break;
                 case "null":
                     await ReplyAsync("You don't have one of those.");
                     break;
                 default:
-                    await ReplyAsync("You feel like you shouldn't shoot at that.");
+                    await ReplyAsync("You feel like you shouldn't shoot at that. (Yet)");
                     break;
             }
             
