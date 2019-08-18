@@ -324,7 +324,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.8\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-changed current term to 'fm'\n-fixed bow not giving stated items```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.82\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -1173,8 +1173,9 @@ namespace ForkBot
                         emb.Fields.Add(new JEmbedField(x =>
                         {
                             x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
-                            x.Text =   $"<:blank:528431788616318977> :moneybag: Current bid: {currentBid} coins{bidderMsg}\n" +
-                                       $"<:blank:528431788616318977> Ending in: {endTime.Hours} hours and {endTime.Minutes} minutes.";
+                            x.Text =   $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
+                                       $"<:blank:528431788616318977> Minimum Next Bid: **{currentBid + currentBid*0.15}** coins.\n" +
+                                       $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
                         }));
                     }
                     await ReplyAsync("", embed: emb.Build());
@@ -1199,14 +1200,18 @@ namespace ForkBot
                                 {
                                     if (user.GetCoins() >= bidAmount)
                                     {
-                                        changed = true;
-                                        var newBid = $"{data[0]}|{data[1]}|{data[2]}|{data[3]}|{bidAmount}|{Context.User.Id}";
-                                        bids[i] = newBid;
-                                        user.GiveCoins(-bidAmount);
-                                        var oldUser = Functions.GetUser(Convert.ToUInt64(data[5]));
-                                        oldUser.GiveCoins(currentBid);
-                                        await ReplyAsync($"You are now the highest bidder for {Functions.GetItemEmote(item)} {amount} {item}(s) with {bidAmount} coins.");
-                                        break;
+                                        if (bidAmount > currentBid + (currentBid * 0.15))
+                                        {
+                                            changed = true;
+                                            var newBid = $"{data[0]}|{data[1]}|{data[2]}|{data[3]}|{bidAmount}|{Context.User.Id}";
+                                            bids[i] = newBid;
+                                            user.GiveCoins(-bidAmount);
+                                            var oldUser = Functions.GetUser(Convert.ToUInt64(data[5]));
+                                            oldUser.GiveCoins(currentBid);
+                                            await ReplyAsync($"You are now the highest bidder for {Functions.GetItemEmote(item)} {amount} {item}(s) with {bidAmount} coins.");
+                                            break;
+                                        }
+                                        else await ReplyAsync($"Your bid must be at least 15% higher than the current. ({currentBid + currentBid * 0.15} coins)");
                                     }
                                     else await ReplyAsync("You do not have the specified amount of coins.");
                                 }
@@ -2947,6 +2952,24 @@ namespace ForkBot
             user2.SetFileString(oldData);
             user1.Archive();
             await ReplyAsync("Successfully transfered data and archived old user.");
+        }
+
+        [Command("makebid"), Summary("[BRADY] Creates a new bid starting at 100 coins.")]
+        public async Task MakeBid(string item, int amount)
+        {
+            if (Context.User.Id != Constants.Users.BRADY) return;
+            
+            string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string id = "";
+            
+            for (int i = 0; i < 5; i++)
+            {
+                id += key[rdm.Next(key.Count())];
+            }
+
+            string newBid = $"{id}|{item}|{amount}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
+
+            File.AppendAllText("Files/Bids.txt", newBid);
         }
 
         /*

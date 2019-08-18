@@ -109,13 +109,16 @@ namespace ForkBot
                 if (trustedMsgs == "0") user.SetData("trustedMsgs", "false");
                 if (trustedMsgs != "true")
                 {
-                    int msgCount = Convert.ToInt32(user.GetData("messages")) + 1;
-
-                    if (msgCount >= 500)
+                    if (message.Channel.Id == Constants.Channels.GENERAL_SLOW)
                     {
-                        user.SetData("trustedMsgs", "true");
+                        int msgCount = Convert.ToInt32(user.GetData("messages")) + 1;
+
+                        if (msgCount >= 500)
+                        {
+                            user.SetData("trustedMsgs", "true");
+                        }
+                        else user.SetData("messages", Convert.ToString(msgCount));
                     }
-                    else user.SetData("messages", Convert.ToString(msgCount));
                 }
 
 
