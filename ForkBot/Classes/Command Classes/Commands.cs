@@ -324,7 +324,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.82\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.83\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -2621,7 +2621,8 @@ namespace ForkBot
         {
             if (Context.User.Id != Constants.Users.BRADY) return;
             Var.LockDown = !Var.LockDown;
-            await Context.Message.DeleteAsync();
+            if (Var.LockDown) await ReplyAsync("Server locked.");
+            else await ReplyAsync("Server unlocked.");
         }
         #endregion
 
