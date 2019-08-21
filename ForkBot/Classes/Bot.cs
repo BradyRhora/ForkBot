@@ -348,6 +348,7 @@ namespace ForkBot
         }
         public async Task HandleJoin(SocketGuildUser user)
         {
+            if (Var.DebugMode) return;
             if (Var.LockDown && user.Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
             {
                 await user.KickAsync();
@@ -357,6 +358,7 @@ namespace ForkBot
         }
         public async Task HandleLeave(SocketGuildUser user)
         {
+            if (Var.DebugMode) return;
             if (!Var.LockDown) await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
         }
         public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)

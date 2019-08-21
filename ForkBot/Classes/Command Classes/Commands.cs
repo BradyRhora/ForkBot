@@ -216,7 +216,7 @@ namespace ForkBot
                         "For example, if you want the course information for MATH1190, simply type: `;course math1190`.\n"+
                         "You can also specify the term of the course you want, either FW or SU (for fall/winter and summer respectively). For example,\n" +
                         "`;course eecs4404 fw`\n" +
-                        "will give you the fall/winter course for EECS4404. If you don't specify, it will use the current term. *(Current term is:* **{Var.term}** *)*");
+                        $"will give you the fall/winter course for EECS4404. If you don't specify, it will use the current term. *(Current term is:* **{Var.term}** *)*");
                     return;
                 }
 
@@ -243,12 +243,15 @@ namespace ForkBot
 
                 JEmbed emb = new JEmbed();
                 emb.Title = course.GetTitle();
+                emb.TitleUrl = course.GetScheduleLink();
                 emb.Description = course.GetDescription() + "\n\n";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
                 foreach (CourseDay day in course.GetSchedule().Days)
                 {
-                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\nCatalog Number: {day.CAT}\n";
+                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\n";
+                    if (day.HasLabs) emb.Description += "This section has labs, click the title to see times and catalog numbers.\n";
+                    else emb.Description += $"Catalog Number: {day.CAT}\n";
                     foreach (var dayTime in day.DayTimes)
                     {
                         if (dayTime.Key == "") emb.Description += "\nOnline";
@@ -324,7 +327,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.83\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.84\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -2562,7 +2565,8 @@ namespace ForkBot
         public async Task Record(IGuildUser user)
         {
             var u = Functions.GetUser(user);
-            var joinDate = user.JoinedAt.GetValueOrDefault();
+            var joinDate = user.JoinedAt.Value;
+            
             var lastInfraction = u.GetData("lastInfraction");
             var messageCount = u.GetData("messages");
             var isTrusted = u.GetData("isTrusted");
@@ -2608,7 +2612,10 @@ namespace ForkBot
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Join Date";
-                x.Text = $"{joinDate.Day}/{joinDate.Month}/{joinDate.Year} {joinDate.Hour-4}:{joinDate.Minute}";
+                if (joinDate != null)
+                    x.Text = $"{joinDate.Day}/{joinDate.Month}/{joinDate.Year} {joinDate.Hour - 4}:{joinDate.Minute}";
+                else
+                    x.Text = "?";
                 x.Inline = true;
             }));
 

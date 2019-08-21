@@ -25,14 +25,15 @@ namespace ForkBot
             {
                 if (child.Name == "tr")
                 {
-                    var termSec = child.SelectSingleNode($"td/table/tr[1]").InnerText.Replace("\n", "").Replace("\t", "").Replace("&nbsp;", "").Trim();
-                    var sessionDir = child.SelectSingleNode($"td/table/tr[2]").InnerText.Replace("Please click here to see availability.", "").Replace("&nbsp;", "").Trim();
+                    var termSec = child.SelectSingleNode($"td/table/tr[1]").InnerText.Replace("\n", "").Replace("\t", "").Replace("&nbsp;", "").Trim(',').Trim();
+                    var sessionDir = child.SelectSingleNode($"td/table/tr[2]").InnerText.Replace("Please click here to see availability.", "").Replace("&nbsp;", " ").Trim().Replace("   ", ", ");
                     var schedule = child.SelectSingleNode($"td/table/tr[3]/td/table/tr[2]");
                     var type = schedule.ChildNodes[0].InnerText;
                     var timedayInfo = schedule.ChildNodes[1].InnerText.Replace("&nbsp;", "").Trim().Replace("     ", "|").Replace(" ", "").Replace("(Glendoncampus)", "").Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries);
 
                     var TermAndSec = termSec.Split(new char[]{' '},StringSplitOptions.RemoveEmptyEntries);
                     var CAT = schedule.ChildNodes[2].InnerText;
+
                     var term = TermAndSec[0] + " " + TermAndSec[1];
                     var section = TermAndSec[2] + " " + TermAndSec[3];
                     
