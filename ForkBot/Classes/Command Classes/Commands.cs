@@ -327,7 +327,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.84\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.84.1\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs\n-fixed ;meme error with no profile pic (sorta)```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot.")]
@@ -1308,113 +1308,120 @@ namespace ForkBot
         [Command("meme")]
         public async Task Meme(IUser user)
         {
-            string path = @"Files\Templates";
-            string picURL = user.GetAvatarUrl();
-            using (ImageFactory proc = new ImageFactory())
+            try
             {
-                var imgID = rdm.Next(7) + 1;
-                proc.Load(path + $@"\{imgID}.png");
-                using (WebClient web = new WebClient())
+                string path = @"Files\Templates";
+                string picURL = user.GetAvatarUrl();
+                using (ImageFactory proc = new ImageFactory())
                 {
-                    bool downloaded = false;
-                    while (!downloaded)
+                    var imgID = rdm.Next(7) + 1;
+                    proc.Load(path + $@"\{imgID}.png");
+                    using (WebClient web = new WebClient())
                     {
-                        try { web.DownloadFile(picURL, path + @"\0.png"); downloaded = true; }
-                        catch (Exception) { }
+                        bool downloaded = false;
+                        while (!downloaded)
+                        {
+                            try { web.DownloadFile(picURL, path + @"\0.png"); downloaded = true; }
+                            catch (Exception) { }
+                        }
                     }
-                }
-                var img = new ImageLayer();
-                img.Image = System.Drawing.Image.FromFile(path + @"\0.png");
+                    var img = new ImageLayer();
+                    img.Image = System.Drawing.Image.FromFile(path + @"\0.png");
 
-                string[] texts = { "is a dingus", "is an ape", "is cool", "is dumb", "knows how to hold a fork", "eats poo", "is a wasteman" };
+                    string[] texts = { "is a dingus", "is an ape", "is cool", "is dumb", "knows how to hold a fork", "eats poo", "is a wasteman" };
 
-                bool overlay = true;
-                switch (imgID)
-                {
-                    case 1:
-                        proc.Load(path + @"\0.png");
-                        proc.Resize(new Size(350, 350));
-                        img.Image = System.Drawing.Image.FromFile(path + $@"\{imgID}.png");
-                        img.Size = new Size(200, 200);
-                        img.Position = new Point(75, 0);
-                        break;
-                    case 2:
-                        img.Position = new Point(60, 440);
-                        img.Size = new Size(100, 100);
-                        break;
-                    case 3:
-                        img.Position = new Point(335, 190);
-                        break;
-                    case 4:
-                        proc.Resize(new ResizeLayer(size: new Size(600, 600), resizeMode: ResizeMode.Min));
-                        overlay = false;
-                        var txt = new TextLayer();
-                        txt.Text = user.Username + " " + texts[rdm.Next(texts.Count())];
-                        txt.FontSize = 50 - (int)(txt.Text.Count() / 1.3);
-                        if (txt.FontSize <= 0) txt.FontSize = 1;
-                        txt.Position = new Point(20, 630);
-                        proc.Watermark(txt);
-                        break;
-                    case 5:
-                        img.Position = new Point(390, 500);
-                        break;
-                    case 6:
-                        var img2 = new ImageLayer();
-                        img2.Image = img.Image;
-                        var img3 = new ImageLayer();
-                        img3.Image = img.Image;
-                        img.Position = new Point(60, 100);
-                        img.Size = new Size(50, 50);
+                    bool overlay = true;
+                    switch (imgID)
+                    {
+                        case 1:
+                            proc.Load(path + @"\0.png");
+                            proc.Resize(new Size(350, 350));
+                            img.Image = System.Drawing.Image.FromFile(path + $@"\{imgID}.png");
+                            img.Size = new Size(200, 200);
+                            img.Position = new Point(75, 0);
+                            break;
+                        case 2:
+                            img.Position = new Point(60, 440);
+                            img.Size = new Size(100, 100);
+                            break;
+                        case 3:
+                            img.Position = new Point(335, 190);
+                            break;
+                        case 4:
+                            proc.Resize(new ResizeLayer(size: new Size(600, 600), resizeMode: ResizeMode.Min));
+                            overlay = false;
+                            var txt = new TextLayer();
+                            txt.Text = user.Username + " " + texts[rdm.Next(texts.Count())];
+                            txt.FontSize = 50 - (int)(txt.Text.Count() / 1.3);
+                            if (txt.FontSize <= 0) txt.FontSize = 1;
+                            txt.Position = new Point(20, 630);
+                            proc.Watermark(txt);
+                            break;
+                        case 5:
+                            img.Position = new Point(390, 500);
+                            break;
+                        case 6:
+                            var img2 = new ImageLayer();
+                            img2.Image = img.Image;
+                            var img3 = new ImageLayer();
+                            img3.Image = img.Image;
+                            img.Position = new Point(60, 100);
+                            img.Size = new Size(50, 50);
 
-                        img2.Position = new Point(290, 150);
-                        img2.Size = new Size(50, 50);
+                            img2.Position = new Point(290, 150);
+                            img2.Size = new Size(50, 50);
 
-                        img3.Position = new Point(370, 330);
-                        img3.Size = new Size(50, 50);
+                            img3.Position = new Point(370, 330);
+                            img3.Size = new Size(50, 50);
 
-                        proc.Overlay(img2);
-                        proc.Overlay(img3);
+                            proc.Overlay(img2);
+                            proc.Overlay(img3);
 
-                        var text = new TextLayer();
+                            var text = new TextLayer();
 
-                        text.Text = user.Username + " " + texts[rdm.Next(texts.Count())];
+                            text.Text = user.Username + " " + texts[rdm.Next(texts.Count())];
 
-                        char[] cText = text.Text.ToCharArray();
-                        int insertCount = 0;
-                        for (int i = 7; i < cText.Count(); i++)
-                        {
-                            if (cText[i] == ' ' && insertCount == 0)
+                            char[] cText = text.Text.ToCharArray();
+                            int insertCount = 0;
+                            for (int i = 7; i < cText.Count(); i++)
                             {
-                                cText[i] = '\n';
-                                i += 7;
+                                if (cText[i] == ' ' && insertCount == 0)
+                                {
+                                    cText[i] = '\n';
+                                    i += 7;
+                                }
                             }
-                        }
 
-                        for (int i = cText.Count() - 1; i >= 0; i--)
-                        {
-                            if (cText[i] == ' ')
+                            for (int i = cText.Count() - 1; i >= 0; i--)
                             {
-                                cText[i] = '\n';
-                                break;
+                                if (cText[i] == ' ')
+                                {
+                                    cText[i] = '\n';
+                                    break;
+                                }
                             }
-                        }
 
-                        text.Text = new string(cText);
-                        text.FontSize = 15;
-                        text.Position = new Point(95, 300);
-                        proc.Watermark(text);
-                        break;
-                    case 7:
-                        img.Position = new Point(280, 100);
-                        img.Size -= new Size(10, 10);
-                        break;
+                            text.Text = new string(cText);
+                            text.FontSize = 15;
+                            text.Position = new Point(95, 300);
+                            proc.Watermark(text);
+                            break;
+                        case 7:
+                            img.Position = new Point(280, 100);
+                            img.Size -= new Size(10, 10);
+                            break;
+                    }
+
+                    if (overlay) proc.Overlay(img);
+                    var sImgID = rdm.Next(1000000);
+                    proc.Save(path + $@"\{sImgID}.png");
+                    await Context.Channel.SendFileAsync(path + $@"\{sImgID}.png");
+                    File.Delete(path + $@"\{sImgID}.png");
                 }
-
-                if (overlay) proc.Overlay(img);
-                var sImgID = rdm.Next(1000000);
-                proc.Save(path + $@"\{sImgID}.png");
-                await Context.Channel.SendFileAsync(path + $@"\{sImgID}.png");
-                File.Delete(path + $@"\{sImgID}.png");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Meme error:\n" + e.StackTrace);
             }
         }
 
@@ -2486,10 +2493,15 @@ namespace ForkBot
             }
         }
         
-        [Command("pokemon"), Summary("[FUN] Use various pokemon commands.")]
+        [Command("pokemon"), Summary("[FUN] Use various pokemon commands."), Alias("pm")]
         public async Task Pokemon(params  string[] command)
         {
             if (command.Length == 0) command = new string[] { "" };
+
+            /*switch (command[0])
+            {
+                case "trade"
+            }*/
 
         }
         #endregion
