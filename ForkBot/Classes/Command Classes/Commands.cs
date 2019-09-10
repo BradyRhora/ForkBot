@@ -2567,7 +2567,7 @@ namespace ForkBot
             await ReplyAsync("", embed: new InfoEmbed("Word Blocked", "Word successfully added to filter.").Build());
             await Context.Message.DeleteAsync();
         }
-
+        
         [Command("trust"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Makes a user trusted.")]
         public async Task Trust(IGuildUser user)
         {
