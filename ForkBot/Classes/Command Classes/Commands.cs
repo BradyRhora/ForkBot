@@ -330,7 +330,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.84.1\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs\n-fixed ;meme error with no profile pic (sorta)```");
         }
 
-        [Command("stats"), Summary("See stats regarding Forkbot.")]
+        [Command("stats"), Summary("See stats regarding Forkbot."), Alias("uptime")]
         public async Task Stats()
         {
             var guilds = Bot.client.Guilds;
@@ -344,7 +344,7 @@ namespace ForkBot
 
             JEmbed emb = new JEmbed();
             emb.Title = "ForkBot Stats";
-            emb.Description = $"ForkBot is developed by Brady#0010 for use in the York University Discord server.\nIt has many uses, such as professor lookup, course lookup, word defining, and many fun commands.";
+            emb.Description = $"ForkBot is developed by Brady#0010 for use in the York University Discord server.\nIt has many uses, such as professor lookup, course lookup, and many fun commands with coins, items, and more!";
             emb.ColorStripe = Constants.Colours.YORK_RED;
             emb.Fields.Add(new JEmbedField(x =>
             {
