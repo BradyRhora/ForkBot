@@ -169,7 +169,8 @@ namespace ForkBot
                 Console.WriteLine(e.Message);
             }
         }
-        
+
+        string[] stats = { "hygiene", "fashion", "happiness", "fitness", "fullness", "healthiness", "sobriety" };
         public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
         {
             var bottom = false;

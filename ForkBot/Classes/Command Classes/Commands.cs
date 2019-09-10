@@ -1177,7 +1177,7 @@ namespace ForkBot
                         {
                             x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
                             x.Text =   $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
-                                       $"<:blank:528431788616318977> Minimum Next Bid: **{currentBid + currentBid*0.15}** coins.\n" +
+                                       $"<:blank:528431788616318977> Minimum Next Bid: **{Math.Ceiling(currentBid + currentBid*0.15)}** coins.\n" +
                                        $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
                         }));
                     }
@@ -2016,7 +2016,7 @@ namespace ForkBot
         public async Task Tip(int tipNumber = -1)
         {
             string[] tips = { "Use `;makekey` to combine 5 packages into a key!",
-                "Get presents occasionally with `;present'! No presents left? Use a ticket to add more to the batch, or a stopwatch to shorten the time until the next batch!",
+                "Get presents occasionally with `;present`! No presents left? Use a ticket to add more to the batch, or a stopwatch to shorten the time until the next batch!",
                 "Get coins for items you don't need or want by selling them with `;sell`! Item can't be sold? Just `;trash` it!",
                 "Give other users coins with the `;donate` command!",
                 "Legend says of a secret shop that only the most elite may enter! I think the **man** knows...",
@@ -2547,6 +2547,15 @@ namespace ForkBot
             if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
             else Var.blockedUsers.Add(u);
             
+        }
+
+        [Command("block")]
+        public async Task Block(ulong id)
+        {
+            if (Context.User.Id != Constants.Users.BRADY) { await ReplyAsync("This can only be used by the bot owner."); return; }
+            var u = Bot.client.GetUser(id);
+            if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
+            else Var.blockedUsers.Add(u);
         }
         
         [Command("blockword"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Adds the inputted word to the word filter.")]

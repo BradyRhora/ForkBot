@@ -305,8 +305,8 @@ namespace ForkBot
         [Command("wish")]
         public async Task Wish(int choice)
         {
-            if (Check(Context, "unicorn")) return;
             if (choice <= 0 || choice > 5) return;
+            if (Check(Context, "unicorn")) return;
             var user = Functions.GetUser(Context.User);
             string msg = ":unicorn: Your wish is my command!\n";
             bool repeat;
