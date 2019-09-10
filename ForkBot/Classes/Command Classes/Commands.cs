@@ -2544,9 +2544,17 @@ namespace ForkBot
         public async Task Block(IUser u)
         {
             if (Context.User.Id != Constants.Users.BRADY) { await ReplyAsync("This can only be used by the bot owner."); return; }
-            if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
-            else Var.blockedUsers.Add(u);
-            
+            if (Var.blockedUsers.Contains(u))
+            {
+                Var.blockedUsers.Remove(u);
+                await ReplyAsync("Unblocked.");
+            }
+            else
+            {
+                Var.blockedUsers.Add(u);
+                await ReplyAsync("Blocked.");
+            }
+
         }
 
         [Command("block")]
@@ -2554,8 +2562,17 @@ namespace ForkBot
         {
             if (Context.User.Id != Constants.Users.BRADY) { await ReplyAsync("This can only be used by the bot owner."); return; }
             var u = Bot.client.GetUser(id);
-            if (Var.blockedUsers.Contains(u)) Var.blockedUsers.Remove(u);
-            else Var.blockedUsers.Add(u);
+            if (Var.blockedUsers.Contains(u))
+            {
+                Var.blockedUsers.Remove(u);
+                await ReplyAsync("Unblocked.");
+            }
+            else
+            {
+                Var.blockedUsers.Add(u);
+                await ReplyAsync("Blocked.");
+            }
+            
         }
         
         [Command("blockword"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Adds the inputted word to the word filter.")]
