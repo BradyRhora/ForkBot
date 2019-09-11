@@ -89,6 +89,7 @@ namespace ForkBot
             client.ReactionAdded += HandleReact;
             client.MessageUpdated += HandleEdit;
             client.UserVoiceStateUpdated += HandleVoiceUpdate;
+            client.UserUpdated += HandleUserUpdate;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), services: null);
         }
 
@@ -204,7 +205,7 @@ namespace ForkBot
             if (Var.blockedUsers.Where(x=>x.Id == message.Author.Id).Count() > 0) return; //prevents "blocked" users from using the bot
 
             ulong[] blockedChannels = { Constants.Channels.GENERAL_SLOW, Constants.Channels.GENERAL_TRUSTED, Constants.Channels.NEWS_DEBATE, Constants.Channels.LIFESTYLE };
-            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD)) return;
+            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.BOOSTER)) return;
             
             if (message.Author.IsBot && message.Author.Id != Constants.Users.FORKPY) return;
             
@@ -516,6 +517,28 @@ namespace ForkBot
             {
                 if (newState.VoiceChannel != null) await gUser.AddRoleAsync(gUser.Guild.GetRole(Constants.Roles.TTS));
                 else await gUser.RemoveRoleAsync(gUser.Guild.GetRole(Constants.Roles.TTS));
+            }
+        }
+        public async Task HandleUserUpdate(SocketUser oldstate, SocketUser newState)
+        {
+            var gUser = newState as IGuildUser;
+            if (gUser.GuildId != Constants.Guilds.YORK_UNIVERSITY) return;
+            if (!(oldstate as IGuildUser).RoleIds.Contains(Constants.Roles.BOOSTER) && gUser.RoleIds.Contains(Constants.Roles.BOOSTER))
+            {
+                var reports = client.GetChannel(Constants.Channels.REPORTED) as IMessageChannel;
+                await reports.SendMessageAsync(newState.Mention + " has boosted the server!");
+                if (!gUser.RoleIds.Contains(Constants.Roles.TRUSTED))
+                {
+                    var u = Functions.GetUser(newState);
+                    u.SetData("isTrusted", "true");
+                    u.SetData("lastInfraction", "0");
+                    await gUser.AddRoleAsync(gUser.Guild.GetRole(Constants.Roles.TRUSTED));
+                }
+            }
+            else if ((oldstate as IGuildUser).RoleIds.Contains(Constants.Roles.BOOSTER) && !gUser.RoleIds.Contains(Constants.Roles.BOOSTER))
+            {
+                var reports = client.GetChannel(Constants.Channels.REPORTED) as IMessageChannel;
+                await reports.SendMessageAsync(newState.Mention + " is no longer boosting the server!");
             }
         }
     }

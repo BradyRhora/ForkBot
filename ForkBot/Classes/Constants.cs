@@ -33,6 +33,7 @@ namespace ForkBot
             public static ulong TTS = 369001773202931734;
             public static ulong DUST = 562334977606418433;
             public static ulong TRUSTED = 561299358637752345;
+            public static ulong BOOSTER = 585568436223082522;
         }
 
         public class Colours

@@ -327,7 +327,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.84.1\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs\n-fixed ;meme error with no profile pic (sorta)```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.85\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs\n-fixed ;meme error with no profile pic (sorta)\n-added booster privileges\n-hopefully fixed ;record with null join date```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot."), Alias("uptime")]
@@ -2603,7 +2603,7 @@ namespace ForkBot
         public async Task Record(IGuildUser user)
         {
             var u = Functions.GetUser(user);
-            var joinDate = user.JoinedAt.Value;
+            var joinDate = user.JoinedAt;
             
             var lastInfraction = u.GetData("lastInfraction");
             var messageCount = u.GetData("messages");
@@ -2650,8 +2650,8 @@ namespace ForkBot
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Join Date";
-                if (joinDate != null)
-                    x.Text = $"{joinDate.Day}/{joinDate.Month}/{joinDate.Year} {joinDate.Hour - 4}:{joinDate.Minute}";
+                if (joinDate.HasValue)
+                    x.Text = $"{joinDate.Value.Day}/{joinDate.Value.Month}/{joinDate.Value.Year} {joinDate.Value.Hour - 4}:{joinDate.Value.Minute}";
                 else
                     x.Text = "?";
                 x.Inline = true;
