@@ -98,6 +98,7 @@ namespace ForkBot
         {
             SocketUserMessage message = messageParam as SocketUserMessage;
             bool isDM = await Functions.isDM(message as IMessage);
+            if (isDM && Var.LockDM) return;
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
             if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x=>x.Id==message.Author.Id).Count() <= 0) return;

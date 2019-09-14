@@ -69,6 +69,7 @@ namespace ForkBot
         public static bool DebugMode = true;
 
         public static bool LockDown = false;
+        public static bool LockDM = false;
 
         public static List<MineSweeper> MSGames = new List<MineSweeper>();
         public static List<ForkParty> FPGames = new List<ForkParty>();
