@@ -3022,6 +3022,7 @@ namespace ForkBot
         [Command("lockdm"), Summary("[BRADY] Locks command usage via DM.")]
         public async Task LockDM()
         {
+            if (Context.User.Id != Constants.Users.BRADY) return;
             Var.LockDM = !Var.LockDM;
 
             if (Var.LockDM) await ReplyAsync("DM Commands have been disabled.");
