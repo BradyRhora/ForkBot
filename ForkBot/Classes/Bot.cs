@@ -105,6 +105,8 @@ namespace ForkBot
             if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x=>x.Id==message.Author.Id).Count() <= 0) return;
             if (!Var.DebugMode && message.Channel.Id == Constants.Channels.DEBUG) return;
             var user = Functions.GetUser(message.Author);
+
+            #region Pre-Command Functions
             //trusted management
             if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
             {
@@ -187,10 +189,7 @@ namespace ForkBot
                     await guildUser.SendMessageAsync("You have successfully fulfilled all requirements and have gained the trusted role. You now have access to all `trusted` channels.");
                 }
             }
-
             
-            int argPos = 0;
-
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
             {
                 int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
@@ -294,25 +293,28 @@ namespace ForkBot
                     }
                 }
             }
-
-            // new user prevention
-            var userCreationDate = message.Author.CreatedAt;
-            var existenceTime = DateTime.UtcNow.Subtract(userCreationDate.DateTime);
-            var week = new TimeSpan(7,0,0,0);
-            if (existenceTime < week)
-            {
-                if (!newUsers.Contains(message.Author.Id))
-                {
-                    newUsers.Add(message.Author.Id);
-                    await message.Author.SendMessageAsync("Hi there! Welcome to Discord. In order to avoid bot abuse, your account must have been created for a few days.\n" +
-                        "If you don't understand, just message <@108312797162541056> about it.\nThanks!");
-                }
-                return;
-            }
-
+            
+            #endregion
+            
+            int argPos = 0;
             //detect and execute commands
             if (message.HasCharPrefix(';', ref argPos))
             {
+                // new user prevention
+                var userCreationDate = message.Author.CreatedAt;
+                var existenceTime = DateTime.UtcNow.Subtract(userCreationDate.DateTime);
+                var week = new TimeSpan(7, 0, 0, 0);
+                if (existenceTime < week)
+                {
+                    if (!newUsers.Contains(message.Author.Id))
+                    {
+                        newUsers.Add(message.Author.Id);
+                        await message.Author.SendMessageAsync("Hi there! Welcome to Discord. In order to avoid bot abuse, your account must be older than a few days.\n" +
+                            "If you don't understand, just message <@108312797162541056> about it.\nThanks!");
+                    }
+                    return;
+                }
+
                 var context = new CommandContext(client, message);
                 var result = await commands.ExecuteAsync(context, argPos, services: null);
 
