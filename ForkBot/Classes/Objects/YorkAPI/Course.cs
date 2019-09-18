@@ -77,6 +77,7 @@ namespace ForkBot
                         Course course = new Course();
                         try
                         {
+                            Console.WriteLine($"Testing: {fac}/{code.ToUpper()} {credit}.00 Temp Name");
                             course.LoadCourse($"{fac}/{code.ToUpper()} {credit}.00 Temp Name", term);
                             File.AppendAllText("Files/courselist.txt", $"\n{course.Title}");
                             Console.WriteLine($"Added {code} to courselist");
@@ -107,15 +108,17 @@ namespace ForkBot
 
             try
             {
-                var sError = pageDoc.SelectSingleNode("/html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td/table[1]/tbody/tr/td[1]/p");
+                var sError = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]/p[1]"); //note to future self, don't include `tbody`
+                
                 if (sError.InnerText == "Current Courses Search Results")
                 {
-                    var listTable = pageDoc.SelectSingleNode("/html/body/table/tbody/tr[2]/td[2]/table/tbody/tr[2]/td/table/tbody/tr/td/table[2]/tbody");
-                    var newLink = listTable.ChildNodes.Last().ChildNodes[3];
+                    
+                    var listTable = pageDoc.SelectSingleNode("/html/body/table/tr[2]/td[2]/table/tr[2]/td/table/tr/td/table[2]");
+                    var newLink = listTable.ChildNodes.Last().ChildNodes[3].InnerText;
+                    pageDoc = web.Load(newLink).DocumentNode;
                 }
             }
-            catch { }
-
+            catch {  }
 
             string desc;
             try

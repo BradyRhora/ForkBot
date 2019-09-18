@@ -94,6 +94,7 @@ namespace ForkBot
         }
 
         DateTime lastDay = Var.CurrentDate();
+        List<ulong> newUsers = new List<ulong>();
         public async Task HandleCommand(SocketMessage messageParam)
         {
             SocketUserMessage message = messageParam as SocketUserMessage;
@@ -292,6 +293,21 @@ namespace ForkBot
                         return;
                     }
                 }
+            }
+
+            // new user prevention
+            var userCreationDate = message.Author.CreatedAt;
+            var existenceTime = DateTime.UtcNow.Subtract(userCreationDate.DateTime);
+            var week = new TimeSpan(7,0,0,0);
+            if (existenceTime < week)
+            {
+                if (!newUsers.Contains(message.Author.Id))
+                {
+                    newUsers.Add(message.Author.Id);
+                    await message.Author.SendMessageAsync("Hi there! Welcome to Discord. In order to avoid bot abuse, your account must have been created for a few days.\n" +
+                        "If you don't understand, just message <@108312797162541056> about it.\nThanks!");
+                }
+                return;
             }
 
             //detect and execute commands
