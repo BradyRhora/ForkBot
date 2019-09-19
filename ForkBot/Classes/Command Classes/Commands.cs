@@ -327,7 +327,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.85\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs\n-fixed ;meme error with no profile pic (sorta)\n-added booster privileges\n-hopefully fixed ;record with null join date```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.9\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs\n-fixed ;meme error with no profile pic (sorta)\n-added booster privileges\n-hopefully fixed ;record with null join date\n-added extra security\n-added new item: pouch!```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot."), Alias("uptime")]
@@ -1731,13 +1731,19 @@ namespace ForkBot
                     Var.presentClaims.Clear();
                 }
 
-                if (Var.presentCount > 0 && !Var.presentClaims.Any(x => x.Id == Context.User.Id))
+                User user = Functions.GetUser(Context.User);
+                if (Var.presentCount > 0 && (!Var.presentClaims.Any(x => x.Id == Context.User.Id) || user.GetData("pouch") == "1"))
                 {
                     if (Var.presentClaims.Count() <= 0)
                     {
                         Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
                         Var.presentTime = Var.CurrentDate();
                     }
+                    
+                    if (Var.presentClaims.Any(x => x.Id == Context.User.Id))
+                        user.SetData("pouch", "0");
+                    
+
                     Var.presentCount--;
                     var gUser = Context.User as IGuildUser;
                     if (gUser != null)
@@ -1755,7 +1761,6 @@ namespace ForkBot
                     else
                     {
                         Var.presentRigged = false;
-                        User user = Functions.GetUser(Context.User);
 
                         if (user.GetData("gnoming") == "1")
                         {
@@ -1799,13 +1804,11 @@ namespace ForkBot
                     if (Var.presentClaims.Count() > 0)
                     {
                         msg += "\nLast claimed by:\n```\n";
-                        foreach (IUser user in Var.presentClaims)
+                        foreach (IUser u in Var.presentClaims)
                         {
-                            var gUser = user as IGuildUser;
-                            if (gUser != null)
-                                msg += $"\n{gUser.Username} in {gUser.Guild}";
-                            else
-                                msg += $"\n{user.Username} in Private Messages";
+                            var gUser = u as IGuildUser;
+                            msg += $"\n{gUser.Username} in {gUser.Guild}";
+                            user.SetData("pouch", "0");
                         }
                         msg += "\n```";
                     }

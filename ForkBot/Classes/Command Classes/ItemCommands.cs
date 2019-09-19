@@ -1357,8 +1357,8 @@ namespace ForkBot
                         }
                         break;
                     case 3:
-                        await ReplyAsync("As you continue to push on, your being to lose your vision. Everything around you fades, eventually, there's nothing but darkness.\n" +
-                            "You can no longer feel the heat.\nYou no longer feel anything.\nJust.\nDarkness.");
+                        await ReplyAsync("As you continue to push on, you begin to lose your vision. Everything around you fades, eventually, there's nothing but darkness.\n" +
+                            "You can no longer feel the heat.\nYou no longer feel anything.\nJust...\nDarkness.");
                         i++;
                         break;
                     case 4:
@@ -1548,7 +1548,21 @@ namespace ForkBot
             }
             
         }
-    
+
+        [Command("pouch")]
+        public async Task Pouch()
+        {
+            if (Check(Context, "pouch",false)) return;
+            var user = Functions.GetUser(Context.User);
+            if (user.GetData("pouch") == "0")
+            {
+                user.SetData("pouch", "1");
+                await ReplyAsync("You equip your pouch! Plenty of space for an extra present now.\n(You can claim an extra present with `;present` one time now!)");
+                user.RemoveItem("pouch");
+            }
+            else await ReplyAsync("You try to equip your pouch... But you've already got one on!");
+        }
+
     }
 
 
