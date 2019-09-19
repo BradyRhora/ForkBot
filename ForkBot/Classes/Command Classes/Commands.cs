@@ -2663,7 +2663,17 @@ namespace ForkBot
             await ReplyAsync("", embed: emb.Build());
 
         }
-        
+
+        [Command("lockdown"), Summary("[MOD] Locks the server")]
+        public async Task Lockdown()
+        {
+            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) return;
+            var gUser = Context.User as IGuildUser;
+            if (!gUser.GuildPermissions.Administrator) return;
+            Var.LockDown = !Var.LockDown;
+            if (Var.LockDown) await ReplyAsync("Server locked.");
+            else await ReplyAsync("Server unlocked.");
+        }
         #endregion
 
         #region Brady Commands
@@ -3011,15 +3021,6 @@ namespace ForkBot
             string newBid = $"{id}|{item}|{amount}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
 
             File.AppendAllText("Files/Bids.txt", newBid);
-        }
-
-        [Command("lockdown"), Summary("[BRADY] Locks the server")]
-        public async Task Lockdown()
-        {
-            if (Context.User.Id != Constants.Users.BRADY) return;
-            Var.LockDown = !Var.LockDown;
-            if (Var.LockDown) await ReplyAsync("Server locked.");
-            else await ReplyAsync("Server unlocked.");
         }
         
         [Command("lockdm"), Summary("[BRADY] Locks command usage via DM.")]
