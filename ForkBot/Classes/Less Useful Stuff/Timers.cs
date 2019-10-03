@@ -52,6 +52,7 @@ namespace ForkBot
         public static Timer BidTimer;
         public static async void Bid(object state)
         {
+            if (!File.Exists("Files/FreeMarket.txt")) File.Create("Files/FreeMarket.txt");
             string[] posts = File.ReadAllLines("Files/FreeMarket.txt");
             List<string> expired = new List<string>();
             List<string> expiringSoon = new List<string>();
