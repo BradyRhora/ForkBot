@@ -1161,10 +1161,18 @@ namespace ForkBot
 
             Pokemon pokemon = null;
             string pokemonS = "";
+            int attemptCounter = 0;
             do
             {
                 try
                 {
+                    attemptCounter++;
+                    if (attemptCounter >= 5)
+                    {
+                        await ReplyAsync("Sorry, there was an error getting Pokemon. Try again later!");
+                        user.GiveItem("pokeball");
+                        return;
+                    }
                     var pokemonList = Functions.GetPokemonList();
                     int poke = rdm.Next(pokemonList.Count());
                     pokemonS = pokemonList[poke];
