@@ -32,8 +32,9 @@ namespace ForkBot
             public static ulong NON_YORK = 000000000000000;
             public static ulong TTS = 369001773202931734;
             public static ulong DUST = 562334977606418433;
-            public static ulong TRUSTED = 561299358637752345;
+            //public static ulong TRUSTED = 561299358637752345;
             public static ulong BOOSTER = 585568436223082522;
+            public static ulong VERIFIED = 637082388677132288;
         }
 
         public class Colours
@@ -57,6 +58,7 @@ namespace ForkBot
             public static ulong LIFESTYLE = 404142837685551107;
             public static ulong DEBUG = 582651340157878283;
             public static ulong ELITE = 586590798515011605;
+            public static ulong LANDING = 626164302084309002;
         }
 
         public class EmoteAnimations

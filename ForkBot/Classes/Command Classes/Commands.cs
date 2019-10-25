@@ -2588,7 +2588,15 @@ namespace ForkBot
             await Context.Message.DeleteAsync();
         }
         
-        [Command("trust"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Makes a user trusted.")]
+        [Command("verify"), RequireUserPermission(GuildPermission.ManageRoles), Summary("[MOD] Verifies new users to give them server access.")]
+        public async Task Verify(IGuildUser user)
+        {
+            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) return;
+            await user.AddRoleAsync(user.Guild.GetRole(Constants.Roles.VERIFIED));
+            
+        }
+        //trusted related commands
+        /*[Command("trust"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Makes a user trusted.")]
         public async Task Trust(IGuildUser user)
         {
             if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) { await ReplyAsync("This command is only for the York University server."); return; }
@@ -2663,6 +2671,7 @@ namespace ForkBot
             await ReplyAsync("", embed: emb.Build());
 
         }
+        */
 
         [Command("lockdown"), Summary("[MOD] Locks the server")]
         public async Task Lockdown()

@@ -108,7 +108,7 @@ namespace ForkBot
 
             #region Pre-Command Functions
             //trusted management
-            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
+            /*if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY)
             {
                 string trustedMsgs = user.GetData("trustedMsgs");
                 if (trustedMsgs == "0") user.SetData("trustedMsgs", "false");
@@ -189,7 +189,8 @@ namespace ForkBot
                     await guildUser.SendMessageAsync("You have successfully fulfilled all requirements and have gained the trusted role. You now have access to all `trusted` channels.");
                 }
             }
-            
+            */
+
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
             {
                 int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
@@ -374,7 +375,11 @@ namespace ForkBot
                 await user.KickAsync();
                 await (user.Guild.GetChannel(Constants.Channels.REPORTED) as ITextChannel).SendMessageAsync($"LOCKDOWN:\n```Auto kicked: {user.Username}#{user.DiscriminatorValue}\n```");
             }
-            else await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Mention}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role using the `?ranks` command.");
+            else
+            {
+                await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Mention}! Welcome to {user.Guild.Name}! To gain access to all channels, simply ping an Admin or Moderator and they will let you in. Enjoy!");
+                await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Mention}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role using the `?ranks` command.");
+            }
         }
         public async Task HandleLeave(SocketGuildUser user)
         {
@@ -546,13 +551,14 @@ namespace ForkBot
             {
                 var reports = client.GetChannel(Constants.Channels.REPORTED) as IMessageChannel;
                 await reports.SendMessageAsync(newState.Mention + " has boosted the server!");
+                /* give boosters trusted
                 if (!gUser.RoleIds.Contains(Constants.Roles.TRUSTED))
                 {
                     var u = Functions.GetUser(newState);
                     u.SetData("isTrusted", "true");
                     u.SetData("lastInfraction", "0");
                     await gUser.AddRoleAsync(gUser.Guild.GetRole(Constants.Roles.TRUSTED));
-                }
+                }*/
             }
             else if ((oldstate as IGuildUser).RoleIds.Contains(Constants.Roles.BOOSTER) && !gUser.RoleIds.Contains(Constants.Roles.BOOSTER))
             {
