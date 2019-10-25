@@ -377,7 +377,7 @@ namespace ForkBot
             }
             else
             {
-                await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Mention}! Welcome to {user.Guild.Name}! To gain access to all channels, simply ping an Admin or Moderator and they will let you in. Enjoy!");
+                await (user.Guild.GetChannel(Constants.Channels.LANDING) as IMessageChannel).SendMessageAsync($"{user.Mention}! Welcome to {user.Guild.Name}! To gain access to all channels, simply ping an Admin or Moderator and they will let you in. Enjoy!");
                 await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Mention}! Welcome to {user.Guild.Name}! Go to <#271843457121779712> to get a role using the `?ranks` command.");
             }
         }
