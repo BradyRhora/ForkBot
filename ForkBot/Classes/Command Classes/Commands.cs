@@ -1732,7 +1732,8 @@ namespace ForkBot
                 }
 
                 User user = Functions.GetUser(Context.User);
-                if (Var.presentCount > 0 && (!Var.presentClaims.Any(x => x.Id == Context.User.Id) || user.GetData("pouch") == "1"))
+                bool hasPouch = user.GetData("pouch") == "1";
+                if (Var.presentCount > 0 && (!Var.presentClaims.Any(x => x.Id == Context.User.Id) || hasPouch))
                 {
                     if (Var.presentClaims.Count() <= 0)
                     {
@@ -1740,7 +1741,7 @@ namespace ForkBot
                         Var.presentTime = Var.CurrentDate();
                     }
                     
-                    if (Var.presentClaims.Any(x => x.Id == Context.User.Id))
+                    if (Var.presentClaims.Any(x => x.Id == Context.User.Id) && hasPouch)
                         user.SetData("pouch", "0");
                     
 
@@ -1808,7 +1809,6 @@ namespace ForkBot
                         {
                             var gUser = u as IGuildUser;
                             msg += $"\n{gUser.Username} in {gUser.Guild}";
-                            user.SetData("pouch", "0");
                         }
                         msg += "\n```";
                     }
