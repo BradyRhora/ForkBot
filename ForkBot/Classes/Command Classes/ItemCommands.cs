@@ -1310,198 +1310,30 @@ namespace ForkBot
 
             int roll = rdm.Next(100) + 1;
 
-            if (roll == -1 && DateTime.Now - lastScope > new TimeSpan(1, 0, 0))
+            if (roll == -1 && DateTime.Now - lastScope > new TimeSpan(1, 0, 0)) //change from -1 to 1 when ready 
             {
                 await Context.Message.DeleteAsync();
-                var invess = Properties.Settings.Default.investigating.ToList();
-                invess.Add($"{Context.User.Id}|0");
-                Properties.Settings.Default.investigating = invess.ToArray();
-                Properties.Settings.Default.Save();
-                await Context.User.SendMessageAsync("A light flashes from the sky, and crashes down into the Earth. Use `;investigate` in DM's to check it out.");
+                await Context.User.SendMessageAsync("A light flashes from the sky, and crashes down into the Earth. You go to investigate.\n" +
+                    $"**Maxwell** appears before you.\n" +
+                    $"*\"{Context.User.Mention}... You have found me.\n" +
+                    $"I require your assistance. There is something I must do. Something that should have been done long.. long ago.\"*");
+                await Context.User.SendMessageAsync("\"My power is currently a fraction of it's normal amount. With your help I can reclaim my lost abilities.\n" +
+                    "But it will require sacrifice. If you are prepared for this sacrifice... Use the `;maxwell` command.\"");
                 await Bot.client.GetUser(Constants.Users.BRADY).SendMessageAsync($"{Context.User.Mention} has awakened a Maxwell.");
+                user.SetData("maxwellWaiting", "1");
             }
             else if (roll < 20) await ReplyAsync("You thought you saw a flash in the corner of the scope.\nIt was probably nothing.");
             else await ReplyAsync("You look up to the sky hoping to see something.\nJust stars.");
         }
 
-        [Command("investigate"), Alias("inv")]
-        public async Task Investigate(int choice = -1)
-        {
-            if (!await Functions.isDM(Context.Message)) return;
-            var invess = Properties.Settings.Default.investigating.Where(x => x.StartsWith(Context.User.Id.ToString() + "|"));
-            if (invess.Count() > 0)
-            {
-                var inv = invess.First();
-                var user = Functions.GetUser(Context.User);
-                int i = Convert.ToInt32(inv.Split('|')[1]);
-
-                bool end = false;
-
-                switch (i)
-                {
-                    case 0:
-                        await ReplyAsync("You journey over to the crash site. You find a large crater with a smoking, glowing object inside.\nUse `;inv` to continue.");
-                        i++;
-                        break;
-                    case 1:
-                        await ReplyAsync("As you begin to approach the crashed object, you can feel the heat emmiting from it. Advancing any further could prove to be fatal. What do you do?\n1. Continue\n2. Go Back\nWhen given a choice like this, use `;inv [#]` to choose.");
-                        i++;
-                        break;
-                    case 2:
-                        if (choice < 1 || choice > 2) return;
-                        else
-                        {
-                            if (choice == 1)
-                            {
-                                await ReplyAsync("You grit your teeth and bare through it. As you push further through the heat, it feels as if it's pushing you away." +
-                                    " Your skin begins to feel as if it's melting. You've gone too far to give up now, your body feels as if it's moving on it's own.");
-                                i++;
-                            }
-                            else
-                            {
-                                await ReplyAsync("You turn around and begin to head back home.");
-                                i = 100;
-                            }
-                        }
-                        break;
-                    case 3:
-                        await ReplyAsync("As you continue to push on, you begin to lose your vision. Everything around you fades, eventually, there's nothing but darkness.\n" +
-                            "You can no longer feel the heat.\nYou no longer feel anything.\nJust...\nDarkness.");
-                        i++;
-                        break;
-                    case 4:
-                        await ReplyAsync("But then, a light.");
-                        i++;
-                        break;
-                    case 5:
-                        await ReplyAsync("It grows brighter and brighter, and you begin to hear a voice.");
-                        i++;
-                        break;
-                    case 6:
-                        await ReplyAsync("*\"My child...\"* The voice speaks, *\"Your persistance has paid off. I am one of many beings that has been blessed upon this land. " +
-                            "The power of your soul has helped to free me from the prison that contained me. Together, we shall become more powerful than you can imagine.\"*");
-                        i++;
-                        break;
-                    case 7:
-                        await ReplyAsync("A face emerges from the light.");
-                        i++;
-                        break;
-                    case 8:
-                        await ReplyAsync("https://cdn.discordapp.com/emojis/393212931979870238.png\nIt's Maxwell.");
-                        i++;
-                        break;
-                    case 9:
-                        await ReplyAsync("He reaches his hand out towards you, and patiently waits for you to grab it.\n1. Grab it\n2. Stay still");
-                        i++;
-                        break;
-                    case 10:
-                        if (choice < 1 || choice > 2) return;
-                        else
-                        {
-                            if (choice == 1)
-                            {
-                                await ReplyAsync("You extend your arm out towards him, and upon contact it begins to shine a beautiful light. You feel a happiness that you've never felt before. " +
-                                    "Maxwell smiles at you, and begins to fade away.");
-                                i++;
-                            }
-                            else
-                            {
-                                await ReplyAsync("Maxwell looks at you, disappointedly. *\"I do not have time for those who hesitate.\"* he says, before quickly vanishing.");
-                                i = 200;
-                            }
-                        }
-                        break;
-                    case 11:
-                        await ReplyAsync("Everything comes back to you. You awaken to see a starry sky above you. A dream? This thought is quickly washed away as you look around you, realizing you are still " +
-                            "inside the crater formed earlier. The heat is gone, and in the center of the crater is a medium sized shiny orb, with the top broken off as if something hatched from it.");
-                        i++;
-                        break;
-                    case 12:
-                        await ReplyAsync("A voice echoes inside your mind. You recognize it immediately as the voice that just spoke to you.\n*\"My child...\nBefore we can gain the powers we require, there " +
-                            "is something we must do.* ***Someone*** *we must take care of.\"*.");
-                        i++;
-                        break;
-                    case 13:
-                        await ReplyAsync("Your body feels as if it moves on it's own. Maxwell guides you to where you need to go.\nHours pass, yet you feel fine. Maxwell resides in you," +
-                            " giving you the strength to continue.");
-                        i++;
-                        break;
-                    case 14:
-
-                        
-
-
-
-
-
-                    case 100://go back
-                        break;
-
-
-
-
-                    case 200:
-                        await ReplyAsync("You wait, now alone, in the never-ending shadows.");
-                        i++;
-                        break;
-                    case 201:
-                    case 202:
-                    case 203:
-                    case 204:
-                    case 205:
-                        await ReplyAsync("And wait...");
-                        i++;
-                        break;
-                    case 206:
-                        await ReplyAsync("Until finally... You awaken.\nYour head feels as if someone just spend that last few minutes attempting to drill into your skull. " +
-                            "Looking around, you realize you currently lie in the crater from earlier. The heat is gone, and in the center of the creater is a medium sized shiny orb, with the top broken off as if something hatched from it.");
-                        i++;
-                        break;
-                    case 207:
-                        await ReplyAsync("You stumble back towards your home, struggling to recall exactly what just happened. As you approach you notice your telescope is set up outside.");
-                        i++;
-                        break;
-                    case 208:
-                        await ReplyAsync("You can't remember what you were using it for, or where you just came from. Everything seems fuzzy.\nYou approach your telescope.");
-                        i++;
-                        break;
-                    case 209:
-                        await ReplyAsync("You look up to the sky hoping to see something.\nJust stars.");
-                        end = true;
-                        break;
-                }
-
-                var invs = Properties.Settings.Default.investigating;
-
-                if (end) invs = invs.Where(x => x.Split('|')[0] != Context.User.Id.ToString()).ToArray();
-                else
-                {
-                    for (int o = 0; o < invs.Count(); o++)
-                    {
-                        if (invs[o].StartsWith(Context.User.Id.ToString() + "|"))
-                        {
-                            invs[o] = Context.User.Id.ToString() + "|" + i;
-                            break;
-                        }
-                    }
-                }
-
-                Properties.Settings.Default.investigating = invs;
-                Properties.Settings.Default.Save();
-
-
-
-            }
-        }
-
         [Command("maxwell"), Alias("weedswell", "venomswell", "superwell", "santawell", "ragewell", "patswell", "mariowell", "luigiwell", "jerkswell", "goldswell", "eggswell", "batswell", "jattswell", "Ahegaoswell", "monkaSwell", "lennyswell")]
         public async Task Maxwell([Remainder] string command)
         {
-            if (Check(Context, Context.Message.Content.Split(' ')[0].Trim(';'), false)) return;
-
-            if (command == "")
+            //if (Check(Context, Context.Message.Content.Split(' ')[0].Trim(';'), false)) return;
+            var user = Functions.GetUser(Context.User);
+            if (user.GetData("maxwellWaiting") == "1")
             {
-                await ReplyAsync("You feel Maxwell's power radiating through you, waiting to be unlocked.");
+
             }
         }
 
