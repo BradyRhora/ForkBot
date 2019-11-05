@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using DuckDuckGo.Net;
-using OxfordDictionariesAPI;
 using HtmlAgilityPack;
 using System.Drawing;
 using System.Net;
@@ -102,7 +101,7 @@ namespace ForkBot
         public async Task Define([Remainder]string word)
         {
             throw new NotSupportedException("The Oxford Dictionary API has been discontinued");
-            OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
+            /*OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
             var result = await client.SearchEntries(word, CancellationToken.None);
             if (result != null)
             {
@@ -127,7 +126,7 @@ namespace ForkBot
                 }
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            else await Context.Channel.SendMessageAsync($"Could not find definition for: {word}.");
+            else await Context.Channel.SendMessageAsync($"Could not find definition for: {word}.");*/
         }
 
         [Command("professor"), Alias(new string[] { "prof", "rmp" }), Summary("Check out a professors rating from RateMyProfessors.com!")]

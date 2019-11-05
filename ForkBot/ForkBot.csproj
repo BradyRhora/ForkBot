@@ -231,8 +231,6 @@
     <Compile Include="Classes\Objects\YorkAPI\Course.cs" />
     <Compile Include="Classes\Objects\YorkAPI\CourseDay.cs" />
     <Compile Include="Classes\Objects\YorkAPI\CourseSchedule.cs" />
-    <Compile Include="Classes\OxfordDictionariesAPI\Models\Models.cs" />
-    <Compile Include="Classes\OxfordDictionariesAPI\OxfordDictionaryClient.cs" />
     <Compile Include="Classes\Less Useful Stuff\Timers.cs" />
     <Compile Include="Classes\Objects\User.cs" />
     <Compile Include="Classes\Var.cs" />
@@ -259,7 +257,6 @@
     <None Include="App.config" />
     <None Include="bin\Debug\Files\ForkParty\ForkPartyMap.psd" />
     <None Include="bin\Debug\ForkBot.exe.config" />
-    <None Include="Classes\OxfordDictionariesAPI\Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -463,7 +460,6 @@
     <Content Include="bin\Debug\System.Xml.XPath.XDocument.dll" />
     <Content Include="bin\Debug\TensorFlowSharp.dll" />
     <Content Include="bin\Debug\TensorFlowSharp.xml" />
-    <Content Include="Classes\OxfordDictionariesAPI\OxfordDictionariesAPI.csproj" />
     <Content Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
