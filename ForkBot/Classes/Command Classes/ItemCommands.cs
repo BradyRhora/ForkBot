@@ -986,6 +986,8 @@ namespace ForkBot
         [Command("dividers"), Alias(new string[] { "sort", "divider" })]
         public async Task Dividers()
         {
+            await ReplyAsync("stop trying to lag bot thanks im gonna make this faster.");
+            return;
             if (Check(Context, "dividers")) return;
             var user = Functions.GetUser(Context.User);
             var items = user.GetItemList().AsEnumerable();
@@ -1050,7 +1052,7 @@ namespace ForkBot
         public async Task Calling()
         {
             if (Check(Context, "calling")) return;
-            int index = rdm.Next(5);
+            int index = rdm.Next(4);
             string msg = "";
             var u = Functions.GetUser(Context.User);
             switch (index)
@@ -1078,7 +1080,7 @@ namespace ForkBot
                     break;
                 case 2:
                     msg = "<:rhonda:504902977069383681> Rhonda Lenton answered the phone! \"It's me, Rhonda. Here's a scholarship!\"";
-                    int coins = rdm.Next(500, 1500);
+                    int coins = rdm.Next(1500, 3000);
                     msg += $"\nYou got {coins} coins!";
                     u.GiveCoins(coins);
                     break;
@@ -1088,11 +1090,6 @@ namespace ForkBot
                     if (coins2 > u.GetCoins()) coins2 = u.GetCoins();
                     msg += $"\nOh no! You lost {coins2} coins!";
                     u.GiveCoins(-coins2);
-                    break;
-                case 4:
-                    msg = "<:youness:373579959899258880> Oh my, Youness picks up the phone! You're on speaker in his class and hear an entire math lecture.";
-                    msg += "\nYou got a Youness!";
-                    u.GiveItem("youness");
                     break;
             }
             await ReplyAsync(msg);
@@ -1146,11 +1143,12 @@ namespace ForkBot
                 Functions.GetUser(Context.User).AddData("stat.happiness", 18);
             }
         }
-        
+
         [Command("pokeball")]
         public async Task Pokeball()
         {
-            if (Check(Context, "pokeball")) return;
+            await ReplyAsync("Sorry! PokeAPI stinky poopy! Haha! No pokemon allowed!");
+            /*if (Check(Context, "pokeball")) return;
             var user = Functions.GetUser(Context.User);
             if (!user.GetItemList().Contains("pokedex"))
             {
@@ -1296,6 +1294,7 @@ namespace ForkBot
             }
             emb.ColorStripe = Constants.Colours.YORK_RED;
             await ReplyAsync("", embed: emb.Build());
+        }*/
         }
 
         [Command("telescope")]
