@@ -360,7 +360,7 @@ namespace ForkBot
                     Var.lastMessage[context.User.Id] = Var.CurrentDate();
                 }
             }
-            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY || message.Channel.Id == Constants.Channels.COMMANDS))
+            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY || message.Channel.Id == Constants.Channels.COMMANDS || message.Channel.Id == 265998661606047744))
                 Functions.Respond(message);
             else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
                 Functions.Respond(message);

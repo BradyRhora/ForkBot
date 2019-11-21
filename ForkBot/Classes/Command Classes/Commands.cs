@@ -2720,7 +2720,10 @@ namespace ForkBot
             else
             {
                 string reminders = File.ReadAllText("Files/reminders.txt");
-                await Context.Channel.SendMessageAsync(reminders);
+                foreach (string s in Functions.SplitMessage(reminders))
+                {
+                    await Context.Channel.SendMessageAsync(s);
+                }
             }
         }
         
