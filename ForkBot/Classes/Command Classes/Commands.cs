@@ -416,6 +416,7 @@ namespace ForkBot
                                 remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0));
                                 break;
                             case "minute":
+                            case "mins":
                                 remindTime = remindTime.Add(new TimeSpan(0, Convert.ToInt32(amount), 0));
                                 break;
                             default:
@@ -600,7 +601,7 @@ namespace ForkBot
                             if (success == false)
                             {
                                 if (trade.Accepted)
-                                    await Context.Channel.SendMessageAsync("Unable to add item. Are you sure you have it?");
+                                    await Context.Channel.SendMessageAsync("Unable to add item. Are you sure you have enough?");
                                 else
                                     await ReplyAsync("The other user has not accepted the trade yet.");
                             }

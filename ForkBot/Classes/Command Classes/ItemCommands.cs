@@ -999,7 +999,7 @@ namespace ForkBot
             await ReplyAsync("Your items have been sorted!");
         }
         
-        [Command("meat_on_bone")]
+        [Command("meat_on_bone"), Alias("meat")]
         public async Task MeatOnBone()
         {
             if (Check(Context, "meat_on_bone")) return;
