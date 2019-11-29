@@ -255,8 +255,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="bin\Debug\Constants\bottoken" />
     <None Include="bin\Debug\Files\ForkParty\ForkPartyMap.psd" />
     <None Include="bin\Debug\ForkBot.exe.config" />
+    <None Include="bin\Debug\Raid\108312797162541056.raid" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

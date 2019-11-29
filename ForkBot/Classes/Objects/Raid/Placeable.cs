@@ -477,8 +477,8 @@ namespace ForkBot
             {
                 string tags = "";
                 for (int i = 0; i < item.Tags.Count(); i++) tags += item.Tags[i] + ",";
-                tags = tags.Trim(',') + "|";
-                AddDataA("inventory", tags + item.Name);
+                tags = tags.Trim(',');
+                AddDataA("inventory", tags + item.Name + "|" + tags);
             }
 
             public string Act(string[] commands)
