@@ -1176,9 +1176,12 @@ namespace ForkBot
                         emb.Fields.Add(new JEmbedField(x =>
                         {
                             x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
-                            x.Text =   $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
-                                       $"<:blank:528431788616318977> Minimum Next Bid: **{Math.Ceiling(currentBid + currentBid*0.15)}** coins.\n" +
-                                       $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
+                            x.Text = $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
+                                       $"<:blank:528431788616318977> Minimum Next Bid: **{Math.Ceiling(currentBid + currentBid * 0.15)}** coins.\n";
+
+                            if (endTime.Hours < 1) x.Text = $"<:blank:528431788616318977> Ending in: **{endTime.Minutes}** minutes and **{endTime.Seconds}** seconds.";
+                            else x.Text += $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
+
                         }));
                     }
                     await ReplyAsync("", embed: emb.Build());
@@ -2432,6 +2435,7 @@ namespace ForkBot
                             Raid.Room r;
                             var profile = new Raid.Profile(Context.User);
                             var game = new Raid.Game(profile, Context.Channel);
+                            Raid.Games.Add(game);
                             await game.Start();
 
                         }
