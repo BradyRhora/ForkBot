@@ -423,3 +423,4 @@ C:\Users\brady\Source\Repos\BradyRhora\ForkBot\ForkBot\bin\Debug\tr\Microsoft.Co
 C:\Users\brady\Source\Repos\BradyRhora\ForkBot\ForkBot\bin\Debug\zh-Hans\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\brady\Source\Repos\BradyRhora\ForkBot\ForkBot\bin\Debug\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\brady\Source\Repos\BradyRhora\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CopyComplete
+C:\Users\brady\Source\Repos\BradyRhora\ForkBot\ForkBot\bin\Debug\libtensorflow.dll

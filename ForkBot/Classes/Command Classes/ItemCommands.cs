@@ -421,7 +421,7 @@ namespace ForkBot
             }
             else
             {
-                await Context.Channel.SendMessageAsync($":egg: You throw your egg at {user.Username}!\n**Their Happiness-10**");
+                await Context.Channel.SendMessageAsync($":egg: {Context.User.Username} throws their egg at {user.Username}!\n**Their Happiness-10**");
                 u.AddData("stat.happiness", -10);
             }
         }
@@ -999,7 +999,7 @@ namespace ForkBot
             await ReplyAsync("Your items have been sorted!");
         }
         
-        [Command("meat_on_bone")]
+        [Command("meat_on_bone"), Alias("meat")]
         public async Task MeatOnBone()
         {
             if (Check(Context, "meat_on_bone")) return;

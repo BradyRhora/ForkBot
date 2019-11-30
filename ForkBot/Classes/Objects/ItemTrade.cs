@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using System.Text.RegularExpressions;
 
 namespace ForkBot
 {
@@ -37,6 +38,14 @@ namespace ForkBot
         public bool AddItem(IUser u, string item)
         {
             if (!Accepted) return false;
+            int amount = 1;
+            if (item.Contains("*"))
+            {
+                var stuff = item.Split('*');
+                amount = Convert.ToInt32(stuff[1]);
+                item = stuff[0];
+            }
+
             int coins;
             if (u.Id == u1.ID)
             {
@@ -50,12 +59,19 @@ namespace ForkBot
                     }
                 }
 
-                if (u1.GetItemList().Contains(item)) 
+                var itemList = u1.GetItemList();
+                int userHas = itemList.Where(x => x == item).Count();
+                if (amount <= userHas)
                 {
-                    items1.Add(item);
-                    u1.RemoveItem(item);
+                    for (int i = 0; i < amount; i++)
+                    {
+                        items1.Add(item);
+                        u1.RemoveItem(item);
+                    }
                     return true;
                 }
+                else return false;
+                
             }
             else
             {
@@ -69,12 +85,18 @@ namespace ForkBot
                     }
                 }
 
-                if (u2.GetItemList().Contains(item))
+                var itemList = u2.GetItemList();
+                int userHas = itemList.Where(x => x == item).Count();
+                if (amount <= userHas)
                 {
-                    items2.Add(item);
-                    u2.RemoveItem(item);
+                    for (int i = 0; i < amount; i++)
+                    {
+                        items2.Add(item);
+                        u2.RemoveItem(item);
+                    }
                     return true;
                 }
+                else return false;
             }
 
             return false;
@@ -90,7 +112,7 @@ namespace ForkBot
             string u1Name = Bot.client.GetUser(u1.ID).Username;
             string u2Name = Bot.client.GetUser(u2.ID).Username;
             emb.Title = $"Trade: {u1Name} - {u2Name}";
-            emb.Description = "Use `;trade add [item]` to add an item, or `;trade add [number]` to add coins.\nWhen done, use `;trade finish` or use `;trade cancel` to cancel the trade.";
+            emb.Description = "Use `;trade add [item]` to add an item, or `;trade add [number]` to add coins.\nWhen done, use `;trade finish` or use `;trade cancel` to cancel the trade.\nYou can now put `*[#]` at the end to add multiple items! (i.e. `;trade add key*10`)";
 
             emb.Fields.Add(new JEmbedField(x =>
             {
