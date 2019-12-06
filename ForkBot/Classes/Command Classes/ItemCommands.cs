@@ -843,7 +843,7 @@ namespace ForkBot
             User u = Functions.GetUser(Context.User);
             if (u.GetItemList().Contains("key2") && u.GetItemList().Contains("postbox"))
             {
-                string[] lootboxItems = { "pokeball", "lock", "key", "moneybag","briefcase", "gun", "knife", "mag", "ticket", "stopwatch", "gift","unicorn","watch", "stopwatch","santa","shopping_cart","poop" };
+                string[] lootboxItems = { "pouch", "lock", "key", "moneybag","briefcase", "gun", "knife", "mag", "ticket", "stopwatch", "gift","unicorn","watch", "stopwatch","santa","shopping_cart","poop" };
 
                 u.RemoveItem("key2");
                 u.RemoveItem("postbox");

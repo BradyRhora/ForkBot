@@ -54,42 +54,28 @@ namespace ForkBot
                 return classes.Where(x => x.Name.ToLower() == className.ToLower()).FirstOrDefault();
             }
         }
-        public class Spell
-        {
-            static Spell Lightning_Bolt = new Spell("lightning bolt", "⚡", "Fires a jolt of lightning that can zap through multiple enemies.");
-            static Spell Magic_missile = new Spell("magic missile", "☄", "Multiple beams of light launch at various enemies.");
-            static Spell Fire_Bolt = new Spell("fire bolt", "🔥", "Launches a burning flame at the enemy, possibly setting it aflame.");
-            static Spell Tornado = new Spell("tornado", "🌪", "Creates a powerful cyclone of wind that sucks in enemies and deals damage over time.");
-            static Spell Summon_Familiar = new Spell("summon familiar", "🐺", "Summons a creature to aid you in battle!");
-            static Spell[] Spells = { Lightning_Bolt, Magic_missile, Fire_Bolt, Tornado, Summon_Familiar };
-
-            string Name { get; }
-            string Emote { get; }
-            string Description { get; }
-            public Spell(string name, string emote, string description)
-            {
-                Name = name;
-                Emote = emote;
-                Description = description;
-
-            }
-        }
+        
         public class Action
         {
             public static Action Attack = new Action("attack", "Use your fists or currently equipped weapon to attack an enemy in range.", Type.Attack);
             public static Action Move = new Action("move", "Move somewhere else on the board.", Type.Movement);
-            public static Action Spell = new Action("spell", "Cast a spell.", Type.Spell);
             public static Action Pass = new Action("pass", "End your turn without taking an action.", Type.Pass);
-            public static Action[] Actions = new Action[] { Attack, Move, Spell, Pass };
+            public static Action Equip = new Action("equip", "Equip an item from your inventory to use as a weapon", Type.Equip);
+            public static Action[] Actions = new Action[] { Attack, Move, Pass, Equip };
             public string Name;
             public string Description;
-            Type type;
+            public Type type;
 
             public Action(string name, string description, Type type)
             {
                 Name = name;
                 Description = description;
                 this.type = type;
+            }
+
+            public Action()
+            {
+
             }
 
             public override bool Equals(object obj)
@@ -111,7 +97,45 @@ namespace ForkBot
                 Attack,
                 Movement,
                 Spell,
-                Pass
+                Pass,
+                Equip,
+                Skill
+            }
+        }
+        public class Spell : Action
+        {
+            static Spell Lightning_Bolt = new Spell("lightning bolt", "⚡", "Fires a jolt of lightning that can zap through multiple enemies.");
+            static Spell Magic_missile = new Spell("magic missile", "☄", "Multiple beams of light launch at various enemies.");
+            static Spell Fire_Bolt = new Spell("fire bolt", "🔥", "Launches a burning flame at the enemy, possibly setting it aflame.");
+            static Spell Tornado = new Spell("tornado", "🌪", "Creates a powerful cyclone of wind that sucks in enemies and deals damage over time.");
+            static Spell Summon_Familiar = new Spell("summon familiar", "🐺", "Summons a creature to aid you in battle!");
+            static Spell Heal = new Spell("heal", "❤️", "Restores an ally's heath.");
+            static Spell Flame_Wall = new Spell("flame wall", "🔥", "Creates a wall of fire across the room that lasts for several turns.");
+
+            static Spell[] Spells = { Lightning_Bolt, Magic_missile, Fire_Bolt, Tornado, Summon_Familiar, Heal, Flame_Wall };
+
+            string Emote { get; }
+            public Spell(string name, string description, string emote)
+            {
+                Name = name;
+                Emote = emote;
+                Description = description;
+                type = Type.Spell;
+            }
+        }
+
+        public class Skill : Action
+        {
+            static Skill[] Skills = { };
+
+            string Emote { get; }
+
+            public Skill(string name, string description, string emote)
+            {
+                Name = name;
+                Emote = emote;
+                Description = description;
+                type = Type.Skill;
             }
         }
     }

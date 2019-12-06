@@ -597,7 +597,15 @@ namespace ForkBot
                     case "add":
                         if (param != "")
                         {
-                            var success = trade.AddItem(Context.User, param);
+                            string item = param;
+                            int amount = 1;
+                            if (item.Contains("*"))
+                            {
+                                var stuff = item.Split('*');
+                                amount = Convert.ToInt32(stuff[1]);
+                                item = stuff[0];
+                            }
+                            var success = trade.AddItem(Context.User, item, amount);
                             if (success == false)
                             {
                                 if (trade.Accepted)
@@ -1176,11 +1184,12 @@ namespace ForkBot
                         emb.Fields.Add(new JEmbedField(x =>
                         {
                             x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
-                            x.Text = $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
+                            var text = $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
                                        $"<:blank:528431788616318977> Minimum Next Bid: **{Math.Ceiling(currentBid + currentBid * 0.15)}** coins.\n";
 
-                            if (endTime.Hours < 1) x.Text = $"<:blank:528431788616318977> Ending in: **{endTime.Minutes}** minutes and **{endTime.Seconds}** seconds.";
-                            else x.Text += $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
+                            if (endTime.Hours < 1) text = $"<:blank:528431788616318977> Ending in: **{endTime.Minutes}** minutes and **{endTime.Seconds}** seconds.";
+                            else text += $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
+                            x.Text = text;
 
                         }));
                     }
@@ -1206,7 +1215,7 @@ namespace ForkBot
                                 {
                                     if (user.GetCoins() >= bidAmount)
                                     {
-                                        if (bidAmount > currentBid + (currentBid * 0.15))
+                                        if (bidAmount > Math.Ceiling(currentBid + (currentBid * 0.15)))
                                         {
                                             changed = true;
                                             var newBid = $"{data[0]}|{data[1]}|{data[2]}|{data[3]}|{bidAmount}|{Context.User.Id}";
@@ -1217,7 +1226,7 @@ namespace ForkBot
                                             await ReplyAsync($"You are now the highest bidder for {Functions.GetItemEmote(item)} {amount} {item}(s) with {bidAmount} coins.");
                                             break;
                                         }
-                                        else await ReplyAsync($"Your bid must be at least 15% higher than the current. ({currentBid + currentBid * 0.15} coins)");
+                                        else await ReplyAsync($"Your bid must be at least 15% higher than the current. ({Math.Ceiling(currentBid + currentBid * 0.15)} coins)");
                                     }
                                     else await ReplyAsync("You do not have the specified amount of coins.");
                                 }
@@ -2400,35 +2409,8 @@ namespace ForkBot
                         }
                         else if (command[0] == "profile")
                         {
-                            JEmbed emb = new JEmbed();
-                            emb.ColorStripe = Constants.Colours.YORK_RED;
-                            Raid.Class rClass = rUser.GetClass();
-                            emb.Author.Name = $"{Functions.GetName(Context.User as IGuildUser)} the {rClass.Name}";
-                            emb.Fields.Add(new JEmbedField(x =>
-                            {
-                                x.Header = "Class";
-                                x.Text = rClass.Emote + " " + rClass.Name;
-                                x.Inline = false;
-                            }));
-                            emb.Fields.Add(new JEmbedField(x =>
-                            {
-                                x.Header = "Level";
-                                x.Text = rUser.GetLevel().ToString();
-                                x.Inline = true;
-                            }));
-                            emb.Fields.Add(new JEmbedField(x =>
-                            {
-                                x.Header = "EXP";
-                                x.Text = rUser.GetEXP().ToString() + "/" + rUser.EXPToNextLevel();
-                                x.Inline = true;
-                            }));
-                            emb.Fields.Add(new JEmbedField(x =>
-                            {
-                                x.Header = "Emote";
-                                x.Text = rUser.GetEmote();
-                                x.Inline = false;
-                            }));
-                            await ReplyAsync("", embed: emb.Build());
+                            var profile = rUser.BuildProfileEmbed();
+                            await ReplyAsync("", embed: profile);
                         }
                         else if (command[0] == "test")
                         {
@@ -2463,6 +2445,7 @@ namespace ForkBot
                     else if (rGame != null)
                     {
                         string msg = "";
+                        var player = rGame.GetPlayer(rUser);
                         switch (command[0])
                         {
                             case "":
@@ -2471,14 +2454,28 @@ namespace ForkBot
                             case "end":
                                 if (rGame.Host.ID == rUser.ID)
                                 {
-                                    await ReplyAsync("The host has ended the raid.");
+                                    msg = "The host has ended the raid.";
                                     Raid.Games.Remove(rGame);
                                 }
+                                break;
+                            case "quit":
+                                if (rGame.Host.ID == player.ID)
+                                {
+                                    bool next = false;
+                                    for (int i = 0; i < rGame.GetPlayers().Count(); i++)
+                                    {
+                                        if (next) { rGame.Host = rGame.GetPlayers()[i]; break; }
+                                        if (rGame.GetPlayers()[i].ID == player.ID) next = true;
+                                    }
+                                }
+
+                                msg = player.TakeDamage(player.Health);
+                                rGame.GetCurrentRoom().NextInitiative();
+                                msg += "\n" + rGame.StateCurrentAction();
                                 break;
                             default:
                                 if ((rGame.GetCurrentTurn() as Raid.Profile).ID == rUser.ID)
                                 {
-                                    var player = rGame.GetPlayer(rUser);
                                     var actMsg = player.Act(command);
                                     if (actMsg == null)
                                     {

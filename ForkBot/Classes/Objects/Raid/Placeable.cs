@@ -16,6 +16,8 @@ namespace ForkBot
             public int Y { get; set; }
             public int Health { get; set; }
             public int MaxHealth { get; set; }
+
+            public Item Equipped { get; set; }
             public Game Game { get; set; }
             public Action[] Actions;
             public int StepsLeft { get; set; }
@@ -25,7 +27,7 @@ namespace ForkBot
             public bool Attackable { get; set; } = true;
             public Placeable()
             {
-                Actions = new Action[] { Action.Pass, Action.Move, Action.Attack };
+                Actions = new Action[] { Action.Pass, Action.Move, Action.Attack, Action.Equip };
             }
 
             public int GetDistance(Placeable p)
@@ -51,7 +53,7 @@ namespace ForkBot
                 {
                     Health = 0;
                     Dead = true;
-                    return $"{GetEmote()} {GetName()} falls to the ground, dead.";
+                    return $"☠️ {GetEmote()} {GetName()} falls to the ground, dead. ☠️";
                     
                 }
                 return null;
@@ -69,10 +71,10 @@ namespace ForkBot
             static Monster Dragon = new Monster("dragon", "🐉", 10);
             static Monster Mind_Flayer = new Monster("mind flayer", "🦑", 7);
             static Monster Snake = new Monster("snake", "🐍", 1);
-            static Monster GiantSnake = new Monster("giant snake", "🐍", 4);
+            static Monster Giant_Snake = new Monster("giant snake", "🐍", 4);
             static Monster Bat = new Monster("bat", "🦇", 1);
             #endregion
-            public readonly static Monster[] Monsters = { Imp, Ghost, Skeleton, Alien, Robot, Spider, Dragon, Mind_Flayer, Snake, Bat };
+            public readonly static Monster[] Monsters = { Imp, Ghost, Skeleton, Alien, Robot, Spider, Dragon, Mind_Flayer, Snake, Bat, Giant_Snake };
 
             string Name;
             string Emote;
@@ -105,7 +107,7 @@ namespace ForkBot
             {
                 var room = Game.GetCurrentRoom();
                 int closestIndex = 0;
-                int closestDist = GetDistance(room.Players[0]);
+                int closestDist = 100;
                 for (int i = 1; i < room.Players.Count(); i++)
                 {
                     int dist = GetDistance(room.Players[i]);
@@ -163,7 +165,7 @@ namespace ForkBot
                 var target = FindClosestEnemy();
                 string msg = "";
                 var coords = GetClosestSide(target.X, target.Y);
-                if (GetDistance(target.X, target.Y) - 1 <= GetMoveDistance() && coords[0] != -1)
+                if (GetDistance(target.X, target.Y) - 1 <= GetMoveDistance() && coords[0] != -1) //if target is within move distance
                 {
                     if (!(coords[0] == X && coords[1] == Y))
                     {
@@ -277,10 +279,12 @@ namespace ForkBot
             public ulong ID;
             string Name;
             string[] profileData;
+            IUser DiscordUser;
             public Profile(IUser user)
             {
                 Name = Functions.GetName(user as IGuildUser);
                 ID = user.Id;
+                DiscordUser = user;
                 if (!Directory.Exists("Raid")) Directory.CreateDirectory("Raid");
                 if (File.Exists($"Raid/{ID}.raid")) profileData = File.ReadAllLines($"Raid/{ID}.raid");
                 else
@@ -295,6 +299,7 @@ namespace ForkBot
                 ID = user.ID;
                 profileData = user.profileData;
                 Name = user.GetName();
+                DiscordUser = user.DiscordUser;
             }
 
             public string GetData(string data)
@@ -401,9 +406,99 @@ namespace ForkBot
                 Save();
             }
 
+            public Embed BuildProfileEmbed()
+            {
+                JEmbed emb = new JEmbed();
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                Raid.Class rClass = GetClass();
+                emb.Author.Name = $"{Functions.GetName(DiscordUser as IGuildUser)} the {rClass.Name}";
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Class";
+                    x.Text = rClass.Emote + " " + rClass.Name;
+                    x.Inline = false;
+                }));
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Level";
+                    x.Text = GetLevel().ToString();
+                    x.Inline = true;
+                }));
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "EXP";
+                    x.Text = GetEXP().ToString() + "/" + EXPToNextLevel();
+                    x.Inline = true;
+                }));
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    x.Header = "Emote";
+                    x.Text = GetEmote();
+                    x.Inline = false;
+                }));
+
+                var items = GetItems();
+                Dictionary<Raid.Item, int> inv = new Dictionary<Raid.Item, int>();
+                for (int i = 0; i < items.Count(); i++)
+                {
+                    if (inv.ContainsKey(items[i])) inv[items[i]]++;
+                    else inv.Add(items[i], 1);
+                }
+                List<string> fields = new List<string>();
+                string txt = "";
+                foreach (KeyValuePair<Raid.Item, int> item in inv)
+                {
+                    string itemListing = $"{item.Key.Emote} {item.Key.GetTagsString()} {item.Key.Name}";
+                    if (item.Value > 1) itemListing += $" x{item.Value} ";
+                    if (txt.Count() + itemListing.Count() > 1024)
+                    {
+                        fields.Add(txt);
+                        txt = itemListing;
+                    }
+                    else txt += itemListing + "\n";
+                }
+                fields.Add(txt);
+
+                string title = "Inventory";
+                foreach (string f in fields)
+                {
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = title + ":";
+                        x.Text = f;
+                    }));
+                    title += " (cont.)";
+                }
+
+                return emb.Build();
+            }
             private void Save()
             {
                 File.WriteAllLines($"Raid/{ID}.raid", profileData);
+            }
+
+            public Item[] GetItems()
+            {
+                var strItems = GetDataA("inventory");
+                List<Item> items = new List<Item>();
+                foreach(var i in strItems)
+                {
+                    var itemData = i.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    string name = itemData[0];
+                    string[] tags = new string[0];
+                    if (itemData.Count() > 1) tags = itemData[1].Split(',');
+                    Item newItem = Item.GetItem(name, tags);
+                    items.Add(newItem);
+                }
+                return items.ToArray();
+            }
+
+            public Item GetItemByName(string name)
+            {
+                var items = GetItems();
+                foreach(Item i in items)
+                    if (i.Name.ToLower() == name.ToLower()) return i;
+                return null;
             }
 
             public Class GetClass()
@@ -452,7 +547,9 @@ namespace ForkBot
             }
             public override int RollAttackDamage()
             {
-                return rdm.Next(GetClass().Power) + (GetClass().Power / 2); //add weapon damage
+                var dmg = rdm.Next(GetClass().Power) + (GetClass().Power / 2); //add weapon damage
+                if (Equipped != null) dmg += Equipped.Strength;
+                return dmg;
             }
 
             public int EXPToNextLevel()
@@ -503,7 +600,7 @@ namespace ForkBot
                         {
                             case "left":
                             case "l":
-                                if (Game.GetCurrentRoom().IsSpaceEmpty(X - 1, Y))
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X - 1, Y, false))
                                     X--;
                                 else
                                     moveFailed = true;
@@ -511,21 +608,21 @@ namespace ForkBot
                                 break;
                             case "right":
                             case "r":
-                                if (Game.GetCurrentRoom().IsSpaceEmpty(X + 1, Y))
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X + 1, Y, false))
                                     X++;
                                 else
                                     moveFailed = true;
                                 break;
                             case "down":
                             case "d":
-                                if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y + 1))
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y + 1, false))
                                     Y++;
                                 else
                                     moveFailed = true;
                                 break;
                             case "up":
                             case "u":
-                                if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y - 1))
+                                if (Game.GetCurrentRoom().IsSpaceEmpty(X, Y - 1, false))
                                     Y--;
                                 else
                                     moveFailed = true;
@@ -537,7 +634,7 @@ namespace ForkBot
 
                         if (moveFailed)
                         {
-                            return null;
+                            return "You are stopped by something in your way.\n" + Game.ShowCurrentRoom(describe: false);
                         }
 
                         var item = Game.GetCurrentRoom().GetPlaceableAt(X, Y, type: typeof(Item));
@@ -595,8 +692,34 @@ namespace ForkBot
                             xtraMSG += " You gained " + exp + " experience.";
                         }
                         else if (target.Health <= target.MaxHealth / 2) xtraMSG = " It looks pretty hurt!";
-                        return $"{GetName()} attacks {target.GetName()} for (*roll: {damage- (GetClass().Power / 2)}* + {GetClass().Power / 2}) = **{damage}** damage using their {"[weapon]"}." + xtraMSG;
+                        var weapon = Equipped;
+                        string weaponName, weaponEmote;
+                        if (weapon == null)
+                        {
+                            weaponName = "Fists";
+                            weaponEmote = "✊";
+                        }
+                        else
+                        {
+                            weaponName = weapon.Name;
+                            weaponEmote = weapon.Emote;
+                        }
+                        var equippedDmg = 0;
+                        if (Equipped != null) equippedDmg = Equipped.Strength;
+                        return $"{GetName()} attacks {target.GetName()} for (*roll: {damage - (GetClass().Power / 2) - equippedDmg}* + {GetClass().Power / 2 + equippedDmg}) = **{damage}** damage using their {weaponEmote} {weaponName}." + xtraMSG;
                     }
+                }
+                else if (action == Action.Equip)
+                {
+                    if (commands.Count() < 2) return "You must specify an item in your inventory to equip.";
+                    string itemStr = commands[1];
+                    Item item = GetItemByName(itemStr);
+                    if (item != null)
+                    {
+                        Equipped = item;
+                        return $"{GetName()} prepares their {item.GetEmote()} {item.GetName()} for combat.";
+                    }
+                    else return $"Item not found. Are you sure you have a(n) '{itemStr}'?";
                 }
                 else if (action == Action.Pass)
                 {
@@ -612,37 +735,44 @@ namespace ForkBot
         {
             public static Item[] Items =
             {
-                new Item("dagger", "🗡", 50, "A short, deadly blade that can be coated in poison."),
-                new Item("key", "🔑", -1, "An item found in dungeons. Used to open doors and chests."),
-                new Item("ring", "💍", 150, "A valuable item that can sold in shops or enchanted."),
-                new Item("bow and arrow", "🏹", 50, "A well crafted piece of wood with a string attached, used to launch arrows at enemies to damage them from a distance."),
-                new Item("pill", "💊", 25, "A drug with various effects."),
-                new Item("syringe", "💉", 65, "A needle filled with healing liquids to regain health."),
-                new Item("shield", "🛡", 45, "A sturdy piece of metal that can be used to block incoming attacks."),
-                new Item("gem", "💎", 200, "A large valuable gem that can be sold or used as an arcane focus to increase a spells power."),
-                new Item("apple", "🍎", 10, "A red fruit that provides minor healing."),
-                new Item("banana", "🍌", 12, "A long yellow fruit that provides minor healing."),
-                new Item("potato", "🥔", 15, "A vegetable that can be cooked in various ways and provides minor healing."),
-                new Item("meat", "🍖", 20, "Meat from some sort of animal that can be cooked and provides more than minor healing."),
-                new Item("cake", "🍰", 25, "A baked good, that's usually eaten during celebrations. Provides minor healing for all party members."),
-                new Item("ale", "🍺", 10, "A cheap drink that provides minor healing, but may have unwanted side effects."),
-                new Item("guitar", "🎸", 50, "A musical instrument, usually with six strings that play different notes."),
-                new Item("saxophone", "🎷", 50, "A brass musical instrument."),
-                new Item("drum", "🥁", 50, "A musical instrument that usually requires sticks to play beats."),
-                new Item("candle", "🕯", 50, "A chunk of wax with a wick in the middle that slowly burns to create minor light.")
+                new Item("dagger", "🗡", 50, 5, "A short, deadly blade that can be coated in poison."),
+                new Item("key", "🔑", -1, 1, "An item found in dungeons. Used to open doors and chests."),
+                new Item("ring", "💍", 150, 1, "A valuable item that can sold in shops or enchanted."),
+                new Item("bow and arrow", "🏹", 50, 2, "A well crafted piece of wood with a string attached, used to launch arrows at enemies to damage them from a distance."),
+                new Item("pill", "💊", 25, 0, "A drug with various effects."),
+                new Item("syringe", "💉", 65, 1, "A needle filled with healing liquids to regain health."),
+                new Item("shield", "🛡", 45, 3, "A sturdy piece of metal that can be used to block incoming attacks."),
+                new Item("gem", "💎", 200, 0, "A large valuable gem that can be sold or used as an arcane focus to increase a spells power."),
+                new Item("apple", "🍎", 10, 0, "A red fruit that provides minor healing."),
+                new Item("banana", "🍌", 12, 0, "A long yellow fruit that provides minor healing."),
+                new Item("potato", "🥔", 15, 0, "A vegetable that can be cooked in various ways and provides minor healing."),
+                new Item("meat", "🍖", 20, 0, "Meat from some sort of animal that can be cooked and provides more than minor healing."),
+                new Item("cake", "🍰", 25, 0,"A baked good, that's usually eaten during celebrations. Provides minor healing for all party members."),
+                new Item("ale", "🍺", 10, 1, "A cheap drink that provides minor healing, but may have unwanted side effects."),
+                new Item("guitar", "🎸", 50, 3, "A musical instrument, usually with six strings that play different notes."),
+                new Item("saxophone", "🎷", 50, 2, "A brass musical instrument."),
+                new Item("drum", "🥁", 50, 2, "A musical instrument that usually requires sticks to play beats."),
+                new Item("candle", "🕯", 50, 0, "A chunk of wax with a wick in the middle that slowly burns to create minor light.")
             };
+            public static Item GetItem(string name, params string[] tags)
+            {
+                Item i = Items.Where(x => x.Name == name).First().Clone();
+                List<Tag> tagList = new List<Tag>();
+                foreach(var t in tags) tagList.Add(Tag.GetTagByName(t));
+                
+                i.Tags = tagList.ToArray();
+                return i;
+            }
 
             public string Name { get; }
             public string Description { get; }
             public int Value { get; }
+
+            public int Strength { get; }
             public string Emote { get; }
-            public string[] Tags;
+            public Tag[] Tags;
 
-            static string[] ItemTags = new string[]
-            {
-                "golden","sharp","powerful"
-            };
-
+            
             public override string GetEmote()
             {
                 return Emote;
@@ -660,18 +790,100 @@ namespace ForkBot
                 return Name;
             }
 
-            public Item(string name, string emote, int value, string description, params string[] tags)
+            public string[] GetTagNames()
+            {
+                List<string> names = new List<string>();
+                foreach(Tag t in Tags) names.Add(t.Name);
+                return names.ToArray();
+            }
+            public string GetTagsString()
+            {
+                return string.Join(", ", GetTagNames());
+            }
+            public Item(string name, string emote, int value, int strength, string description, params Tag[] tags)
             {
                 Name = name;
                 Emote = emote;
                 Value = value;
                 Description = description;
                 Tags = tags;
+                Strength = strength;
             }
-
+            
             public Item Clone()
             {
-                return new Item(Name, Emote, Value, Description, Tags);
+                return new Item(Name, Emote, Value, Strength, Description, Tags);
+            }
+
+            public static bool operator ==(Item a, Item b) 
+            {
+                object objA = a, objB = b;
+                if (objA == null && objB == null) return true;
+                if (objA == null || objB == null) return false;
+                return a.Name == b.Name && a.Tags.OrderBy(x=>x).SequenceEqual(b.Tags.OrderBy(x=>x));
+            }
+            public static bool operator !=(Item a, Item b)
+            {
+                object objA = a, objB = b;
+                if (objA == null && objB == null) return false;
+                if (objA == null || objB == null) return true;
+                return a.Name != b.Name || !a.Tags.OrderBy(x => x).SequenceEqual(b.Tags.OrderBy(x => x));
+            }
+
+            public override bool Equals(object i)
+            {
+                if (i == null) return false;
+                Item b = i as Item;
+                return Name == b.Name && Tags.OrderBy(x => x).SequenceEqual(b.Tags.OrderBy(x => x));
+            }
+            public override int GetHashCode()
+            {
+                int hash = 13;
+                hash = (hash * 7) + Name.GetHashCode();
+                foreach (Tag tag in Tags)
+                {
+                    hash = (hash * 7) + tag.GetHashCode();
+                }
+                return hash;
+            }
+        }
+
+        public class Tag
+        {
+            public static Tag[] Tags = new Tag[]
+            {
+                new Tag("golden",5),
+                new Tag("sharp",5),
+                new Tag("powerful",5)
+            };
+
+            public static Tag GetTagByName(string name)
+            {
+                return Tags.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefault();
+            }
+
+            public string Name;
+            public int Chance;
+
+            public Tag(string name, int chance)
+            {
+                Name = name;
+                Chance = chance;
+            }
+
+            public Tag Clone()
+            {
+                return new Tag(Name, Chance);
+            }
+
+            public override bool Equals(Object t)
+            {
+                return Name == (t as Tag).Name;
+            }
+
+            public override int GetHashCode()
+            {
+                return Name.GetHashCode();
             }
         }
     }

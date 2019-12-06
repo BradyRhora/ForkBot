@@ -20,7 +20,7 @@ namespace ForkBot
         public int Cost { get; set; }
         public string GetEmote()
         {
-            if (Custom) return $":{Name}:";
+            if (!Custom) return $":{Name}:";
             else return $"<:{Name}:{ID}>";
         }
 

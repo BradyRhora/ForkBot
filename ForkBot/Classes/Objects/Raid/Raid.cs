@@ -24,7 +24,7 @@ namespace ForkBot
         public static List<Game> Games = new List<Game>();
         public class Game
         {
-            public Profile Host { get; }
+            public Profile Host { get; set; }
             List<Player> Players = new List<Player>();
             IMessageChannel Channel;
             public bool Started { get; private set; }
@@ -107,7 +107,7 @@ namespace ForkBot
 
                 if (turn.Dead)
                 {
-                    msg = $"{turn.GetEmote()} {turn.GetName()} lies there, dead.";
+                    msg = $"☠️ {turn.GetEmote()} {turn.GetName()} lies there, dead. ☠️";
                     room.NextInitiative();
                 }
                 else if (turn.GetType() == typeof(Player))
@@ -170,6 +170,8 @@ namespace ForkBot
             public string[,] Board { get; private set; }
             Game Game;
             public Player[] Players { get; private set; }
+            public Player[] AllPlayers { get; private set; }
+
             public IOrderedEnumerable<KeyValuePair<Placeable, int>> Initiative;
             public int Counter { get; private set; } = 0;
             public bool FirstAction = true;
@@ -179,6 +181,7 @@ namespace ForkBot
                 Number = num;
                 Game = game;
                 Players = Game.GetPlayers();
+                AllPlayers = Game.GetPlayers();
                 GenerateRoom();
                 GenerateEnemies();
                 PlacePlayers();
@@ -228,6 +231,7 @@ namespace ForkBot
             {
                 int playerCount = Players.Count();
                 int y = Size / 2 - playerCount / 2;
+                Players = Players.Where(x => !x.Dead).ToArray();
                 for (int i = 0; i < playerCount; i++)
                     Players[i].SetLocation(0, y + i);
 

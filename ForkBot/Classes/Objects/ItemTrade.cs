@@ -10,7 +10,7 @@ namespace ForkBot
 {
     public class ItemTrade
     {
-        User u1, u2;
+        public User u1, u2;
         List<string> items1, items2;
         int coins1 = 0, coins2 = 0;
         public bool Accepted;
@@ -35,16 +35,10 @@ namespace ForkBot
         /// <param name="u">The user adding the item</param>
         /// <param name="item">The item to be added</param>
         /// <returns></returns>
-        public bool AddItem(IUser u, string item)
+        public bool AddItem(IUser u, string item, int amount)
         {
             if (!Accepted) return false;
-            int amount = 1;
-            if (item.Contains("*"))
-            {
-                var stuff = item.Split('*');
-                amount = Convert.ToInt32(stuff[1]);
-                item = stuff[0];
-            }
+            
 
             int coins;
             if (u.Id == u1.ID)
