@@ -118,3 +118,5 @@ free;tag|free;tag free
 koray|🐛
 fuckchiggers|test
 your|ma
+=>|$*
+var|guild = Bot.client.GetGuild(360947546060750878);
