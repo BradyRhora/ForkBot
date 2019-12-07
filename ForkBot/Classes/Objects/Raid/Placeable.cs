@@ -573,7 +573,8 @@ namespace ForkBot
             public void GiveItem(Item item)
             {
                 string tags = "";
-                for (int i = 0; i < item.Tags.Count(); i++) tags += item.Tags[i] + ",";
+                if (item.Tags != null)
+                    for (int i = 0; i < item.Tags.Count(); i++) tags += item.Tags[i] + ",";
                 tags = tags.Trim(',');
                 AddDataA("inventory", tags + item.Name + "|" + tags);
             }
@@ -742,7 +743,7 @@ namespace ForkBot
                 new Item("pill", "💊", 25, 0, "A drug with various effects."),
                 new Item("syringe", "💉", 65, 1, "A needle filled with healing liquids to regain health.", purchaseable:true),
                 new Item("shield", "🛡", 45, 3, "A sturdy piece of metal that can be used to block incoming attacks.", purchaseable:true),
-                new Item("gem", "💎", 200, 0, "A large valuable gem that can be sold or used as an arcane focus to increase a spells power.", purchaseable:true),
+                new Item("gem", "💎", 200, 0, "A large valuable gem that can be sold at a high price or used as an arcane focus to increase a spells power.", purchaseable:true),
                 new Item("apple", "🍎", 10, 0, "A red fruit that provides minor healing.", purchaseable:true),
                 new Item("banana", "🍌", 12, 0, "A long yellow fruit that provides minor healing.", purchaseable:true),
                 new Item("potato", "🥔", 15, 0, "A vegetable that can be cooked in various ways and provides minor healing.", purchaseable:true),
@@ -809,7 +810,10 @@ namespace ForkBot
                 Emote = emote;
                 Value = value; 
                 Description = description;
-                Tags = tags;
+                if (tags == null)
+                    Tags = new Tag[0];
+                else
+                    Tags = tags;
                 Strength = strength;
                 ForSale = purchaseable;
             }
@@ -844,13 +848,11 @@ namespace ForkBot
             {
                 int hash = 13;
                 hash = (hash * 7) + Name.GetHashCode();
-                if (Tags != null)
+                foreach (Tag tag in Tags)
                 {
-                    foreach (Tag tag in Tags)
-                    {
-                        hash = (hash * 7) + tag.GetHashCode();
-                    }
+                    hash = (hash * 7) + tag.GetHashCode();
                 }
+                
                 return hash;
             }
         }
