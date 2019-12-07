@@ -28,7 +28,6 @@ more ;dividers features
 fix rounding bug, poo poo head!
 meme https://i.redd [dot] it/4u5p6w9jj5v11.jpg
 don't let choose class after already chosen
-fix multiple hosts ;raid
 resend map when players turn
 don't let enemies see dead players
 alert in #commands when there is a new auction, or maybe users can sign up for auction notifications?
@@ -37,11 +36,10 @@ stop enemies from attacking corpses again
 ;top bottom params
 raid display map after moving multiple spaces and crashing
 make command to set current term
-make bid show seconds when no minutes left
-fix bid minimum
 bid ending time
 make ;prof include review count
 add ;meme https://images-ext-2.discordapp{DOT]net/external/Uao5LTmGlI-WqCFVGmjojHWSEzjulxSa1GZJfwhL6MM/https/i.imgur.com/pGxIkLV.jpg?width=641&height=641
+rmp busted again
 ;r quit to force end raid (counts as death)
 error walking into item line 576
 but i still moved???
