@@ -55,27 +55,28 @@ namespace ForkBot
             }
         }
         
-        public class Action
+        public class Action : IShoppable
         {
             public static Action Attack = new Action("attack", "Use your fists or currently equipped weapon to attack an enemy in range.", Type.Attack);
             public static Action Move = new Action("move", "Move somewhere else on the board.", Type.Movement);
             public static Action Pass = new Action("pass", "End your turn without taking an action.", Type.Pass);
             public static Action Equip = new Action("equip", "Equip an item from your inventory to use as a weapon", Type.Equip);
             public static Action[] Actions = new Action[] { Attack, Move, Pass, Equip };
-            public string Name;
-            public string Description;
+            public string Name { get; set; }
+            public string Description { get; set; }
             public Type type;
+
+            //shop vars
+            public int Price { get; set; }
+            public bool ForSale { get; set; }
+            public string Emote { get; set; }
+
 
             public Action(string name, string description, Type type)
             {
                 Name = name;
                 Description = description;
                 this.type = type;
-            }
-
-            public Action()
-            {
-
             }
 
             public override bool Equals(object obj)
@@ -112,31 +113,36 @@ namespace ForkBot
             static Spell Heal = new Spell("heal", "❤️", "Restores an ally's heath.");
             static Spell Flame_Wall = new Spell("flame wall", "🔥", "Creates a wall of fire across the room that lasts for several turns.");
 
-            static Spell[] Spells = { Lightning_Bolt, Magic_missile, Fire_Bolt, Tornado, Summon_Familiar, Heal, Flame_Wall };
-
-            string Emote { get; }
-            public Spell(string name, string description, string emote)
+            public static Spell[] Spells = { Lightning_Bolt, Magic_missile, Fire_Bolt, Tornado, Summon_Familiar, Heal, Flame_Wall };
+            string EffectEmote;
+            public Spell(string name, string emote, string description) : base(name,description, Type.Spell)
             {
-                Name = name;
-                Emote = emote;
-                Description = description;
-                type = Type.Spell;
+                ForSale = true;
+                Emote = "📖";
+                EffectEmote = emote;
             }
         }
 
         public class Skill : Action
         {
-            static Skill[] Skills = { };
+            public static Skill[] Skills = { };
 
-            string Emote { get; }
 
-            public Skill(string name, string description, string emote)
+            public Skill(string name, string description, string emote) :base(name,description,Type.Skill)
             {
-                Name = name;
+                ForSale = true;
                 Emote = emote;
-                Description = description;
-                type = Type.Skill;
             }
+        }
+
+        public interface IShoppable
+        {
+            bool ForSale { get; set; }
+            int Price { get; set; }
+            string Description { get; set; }
+            string Name { get; set; }
+
+            string Emote { get; set; }
         }
     }
 }

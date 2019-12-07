@@ -425,7 +425,8 @@ namespace ForkBot
                 new Help("","direction"),//
                 new Help("","dungeon"),//
                 new Help("","emote","emoji","icon"),//
-                new Help("","profile","player","exp","experience","level","class")//
+                new Help("","profile","player","exp","experience","level","class"),//
+                new Help("","shop","store","buy")
             };
 
             string[] KeyWords;
@@ -495,6 +496,58 @@ namespace ForkBot
                 }));
                 emb.ColorStripe = Constants.Colours.YORK_RED;
                 return emb.Build();
+            }
+        }
+
+        public class Shop
+        {
+            static Shop CurrentShop;
+            Dictionary<IShoppable, int> Stock = new Dictionary<IShoppable, int>();
+            string Name = "Ye Olde Wares";
+
+            public Shop()
+            {
+                SetStock();
+            }
+
+            void SetStock()
+            {
+                List<IShoppable> items = new List<IShoppable>();
+                foreach (IShoppable i in Item.Items) if (i.ForSale) items.Add(i);
+                foreach (IShoppable i in Spell.Spells) if (i.ForSale) items.Add(i);
+                foreach (IShoppable i in Skill.Skills) if (i.ForSale) items.Add(i);
+
+                List<int> inShop = new List<int>();
+                for (int i = 0; i < 5; i++)
+                {
+                    var index = -1;
+                    while (index == -1 || inShop.Contains(index)) index = rdm.Next(items.Count());
+                    Stock.Add(items[index], 5);
+                    inShop.Add(index);
+                }
+            }
+
+            public Embed BuildShopEmbed()
+            {
+                var emb = new JEmbed();
+                emb.Title = Name;
+                emb.ColorStripe = new Color(165, 42, 42);
+                foreach(KeyValuePair<IShoppable,int> i in Stock)
+                {
+                    emb.Fields.Add(new JEmbedField(x => 
+                    {
+                        x.Header = $"[{i.Key.GetType().Name}] {i.Key.Emote} {i.Key.Name.ToTitleCase()} - {i.Key.Price} gold [{i.Value} left in stock]";
+                        x.Text = i.Key.Description;
+                    }));
+                }
+
+                return emb.Build();
+            }
+
+            public static Shop GetCurrentShop()
+            {
+                if (CurrentShop == null) CurrentShop = new Shop();
+                return CurrentShop;
             }
         }
     }

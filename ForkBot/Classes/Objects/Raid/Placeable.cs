@@ -59,7 +59,7 @@ namespace ForkBot
                 return null;
             }
         }
-        public class Monster : Placeable
+        public class Monster : Placeable 
         {
             #region Monsters
             static Monster Imp = new Monster("imp", "👿", 2);
@@ -731,28 +731,28 @@ namespace ForkBot
                 return "nomsg";
             }
         }
-        public class Item : Placeable
+        public class Item : Placeable, IShoppable
         {
             public static Item[] Items =
             {
-                new Item("dagger", "🗡", 50, 5, "A short, deadly blade that can be coated in poison."),
+                new Item("dagger", "🗡", 50, 5, "A short, deadly blade that can be coated in poison.", purchaseable:true),
                 new Item("key", "🔑", -1, 1, "An item found in dungeons. Used to open doors and chests."),
-                new Item("ring", "💍", 150, 1, "A valuable item that can sold in shops or enchanted."),
-                new Item("bow and arrow", "🏹", 50, 2, "A well crafted piece of wood with a string attached, used to launch arrows at enemies to damage them from a distance."),
+                new Item("ring", "💍", 150, 1, "A valuable item that can sold in shops or enchanted.", purchaseable:true),
+                new Item("bow and arrow", "🏹", 50, 2, "A well crafted piece of wood with a string attached, used to launch arrows at enemies to damage them from a distance.", purchaseable:true),
                 new Item("pill", "💊", 25, 0, "A drug with various effects."),
-                new Item("syringe", "💉", 65, 1, "A needle filled with healing liquids to regain health."),
-                new Item("shield", "🛡", 45, 3, "A sturdy piece of metal that can be used to block incoming attacks."),
-                new Item("gem", "💎", 200, 0, "A large valuable gem that can be sold or used as an arcane focus to increase a spells power."),
-                new Item("apple", "🍎", 10, 0, "A red fruit that provides minor healing."),
-                new Item("banana", "🍌", 12, 0, "A long yellow fruit that provides minor healing."),
-                new Item("potato", "🥔", 15, 0, "A vegetable that can be cooked in various ways and provides minor healing."),
-                new Item("meat", "🍖", 20, 0, "Meat from some sort of animal that can be cooked and provides more than minor healing."),
-                new Item("cake", "🍰", 25, 0,"A baked good, that's usually eaten during celebrations. Provides minor healing for all party members."),
-                new Item("ale", "🍺", 10, 1, "A cheap drink that provides minor healing, but may have unwanted side effects."),
-                new Item("guitar", "🎸", 50, 3, "A musical instrument, usually with six strings that play different notes."),
-                new Item("saxophone", "🎷", 50, 2, "A brass musical instrument."),
-                new Item("drum", "🥁", 50, 2, "A musical instrument that usually requires sticks to play beats."),
-                new Item("candle", "🕯", 50, 0, "A chunk of wax with a wick in the middle that slowly burns to create minor light.")
+                new Item("syringe", "💉", 65, 1, "A needle filled with healing liquids to regain health.", purchaseable:true),
+                new Item("shield", "🛡", 45, 3, "A sturdy piece of metal that can be used to block incoming attacks.", purchaseable:true),
+                new Item("gem", "💎", 200, 0, "A large valuable gem that can be sold or used as an arcane focus to increase a spells power.", purchaseable:true),
+                new Item("apple", "🍎", 10, 0, "A red fruit that provides minor healing.", purchaseable:true),
+                new Item("banana", "🍌", 12, 0, "A long yellow fruit that provides minor healing.", purchaseable:true),
+                new Item("potato", "🥔", 15, 0, "A vegetable that can be cooked in various ways and provides minor healing.", purchaseable:true),
+                new Item("meat", "🍖", 20, 0, "Meat from some sort of animal that can be cooked and provides more than minor healing.", purchaseable:true),
+                new Item("cake", "🍰", 25, 0,"A baked good, that's usually eaten during celebrations. Provides minor healing for all party members.", purchaseable:true),
+                new Item("ale", "🍺", 10, 1, "A cheap drink that provides minor healing, but may have unwanted side effects.", purchaseable:true),
+                new Item("guitar", "🎸", 50, 3, "A musical instrument, usually with six strings that play different notes.", purchaseable:true),
+                new Item("saxophone", "🎷", 50, 2, "A brass musical instrument.", purchaseable:true),
+                new Item("drum", "🥁", 50, 2, "A musical instrument that usually requires sticks to play beats.", purchaseable:true),
+                new Item("candle", "🕯", 50, 0, "A chunk of wax with a wick in the middle that slowly burns to create minor light.", purchaseable:true)
             };
             public static Item GetItem(string name, params string[] tags)
             {
@@ -764,15 +764,18 @@ namespace ForkBot
                 return i;
             }
 
-            public string Name { get; }
-            public string Description { get; }
+            public string Name { get; set; }
+            public string Description { get; set; }
             public int Value { get; }
 
             public int Strength { get; }
-            public string Emote { get; }
+            public string Emote { get; set; }
             public Tag[] Tags;
 
-            
+            //shop vars
+            public int Price { get; set; }
+            public bool ForSale { get; set; }
+
             public override string GetEmote()
             {
                 return Emote;
@@ -800,14 +803,15 @@ namespace ForkBot
             {
                 return string.Join(", ", GetTagNames());
             }
-            public Item(string name, string emote, int value, int strength, string description, params Tag[] tags)
+            public Item(string name, string emote, int value, int strength, string description, Tag[] tags = null, bool purchaseable = false)
             {
                 Name = name;
                 Emote = emote;
-                Value = value;
+                Value = value; 
                 Description = description;
                 Tags = tags;
                 Strength = strength;
+                ForSale = purchaseable;
             }
             
             public Item Clone()
@@ -840,9 +844,12 @@ namespace ForkBot
             {
                 int hash = 13;
                 hash = (hash * 7) + Name.GetHashCode();
-                foreach (Tag tag in Tags)
+                if (Tags != null)
                 {
-                    hash = (hash * 7) + tag.GetHashCode();
+                    foreach (Tag tag in Tags)
+                    {
+                        hash = (hash * 7) + tag.GetHashCode();
+                    }
                 }
                 return hash;
             }
