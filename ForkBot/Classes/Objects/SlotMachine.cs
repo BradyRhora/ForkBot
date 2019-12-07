@@ -13,18 +13,44 @@ namespace ForkBot
         IUser gambler;
         int bet;
         int[] spins = new int[3];
-        Random rdm = new Random();
+        static Random rdm = new Random();
         int spinCounter = 0;
         bool cashedOut = false;
 
+        static Slot[][] Slots = new Slot[3][];
         public SlotMachine(IUser user, int bet)
         {
+            if (Slots[0] == null) SetSlots();
             gambler = user;
             this.bet = bet;
         }
 
+        public void SetSlots()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                Slots[i] = ShuffleSlots();
+            }
+        }
+        
+        public static Slot[] ShuffleSlots()
+        {
+            List<int> added = new List<int>();
+            List<Slot> slotReturn = new List<Slot>();
+            for (int i = 0; i < slotOptions.Count(); i++)
+            {
+                int index;
+                do 
+                    index = rdm.Next(slotOptions.Count());
+                while (added.Contains(index));
+                slotReturn.Add(slotOptions[index]);
+                added.Add(index);
+            }
+            return slotReturn.ToArray();
+        }
+
         static Slot BlankSlot = new Slot("black_large_square", 0);
-        Slot[] slots =
+        static Slot[] slotOptions =
         {
             BlankSlot,
             new Slot("apple",2,"fruit"),
@@ -39,7 +65,8 @@ namespace ForkBot
 
         public string Spin()
         {
-            for (int i = 0; i < 3; i++) spins[i] = rdm.Next(slots.Count());
+            var slot = Slots[0];
+            for (int i = 0; i < 3; i++) spins[i] = rdm.Next(Slots[i].Count());
 
             int winnings = Convert.ToInt32(GetWinnings());
             Properties.Settings.Default.jackpot -= winnings;
@@ -65,16 +92,16 @@ namespace ForkBot
                            "===========\n" +
                            ":gem: " + Properties.Settings.Default.jackpot + "\n" +
                            "===========\n" +
-                           $"{slots[Prev(spins[0])]} : {slots[Prev(spins[1])]} : {slots[Prev(spins[2])]}\n" +
-                           $"{slots[spins[0]]} : {slots[spins[1]]} : {slots[spins[2]]} :arrow_left:\n" +
-                           $"{slots[Next(spins[0])]} : {slots[Next(spins[1])]} : {slots[Next(spins[2])]}";
+                           $"{Slots[0][Prev(spins[0],0)]} : {Slots[1][Prev(spins[1],1)]} : {Slots[2][Prev(spins[2],2)]}\n" +
+                           $"{Slots[0][spins[0]]} : {Slots[1][spins[1]]} : {Slots[2][spins[2]]} :arrow_left:\n" +
+                           $"{Slots[0][Next(spins[0],0)]} : {Slots[1][Next(spins[1],1)]} : {Slots[2][Next(spins[2],2)]}";
             return board;
         }
         public int SpinCount() { return spinCounter; }
 
         public double GetWinnings()
         {
-            for (int i = 0; i < slots.Count(); i++)
+            for (int i = 0; i < slotOptions.Count(); i++)
             {
                 if (SlotCount("gem") == 3)
                 {
@@ -83,7 +110,7 @@ namespace ForkBot
                     Properties.Settings.Default.Save();
                     return jackpot;
                 }
-                else if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue() * bet;
+                else if (Slots[0][spins[0]].ToString() == slotOptions[i].ToString() && Slots[1][spins[1]].ToString() == slotOptions[i].ToString() && Slots[2][spins[2]].ToString() == slotOptions[i].ToString()) return slotOptions[i].GetValue() * bet;
                 else if (SlotCount("seven") == 2) return 5 * bet;
                 else if (CategoryCount("fruit") == 3) return 1.5 * bet;
                 else if (CategoryCount("fruit") == 2) return 1.2 * bet;
@@ -95,14 +122,14 @@ namespace ForkBot
         public int GetBet() { return bet; }
         public bool CashedOut() { return cashedOut; }
 
-        int Prev(int index)
+        int Prev(int index, int slotIndex)
         {
-            if (index - 1 < 0) return slots.Count() - 1;
+            if (index - 1 < 0) return Slots[slotIndex].Count() - 1;
             else return index - 1;
         }
-        int Next(int index)
+        int Next(int index, int slotIndex)
         {
-            if (index + 1 > slots.Count() - 1) return 0;
+            if (index + 1 > Slots[slotIndex].Count() - 1) return 0;
             else return index + 1;
         }
 
@@ -111,7 +138,7 @@ namespace ForkBot
             int categoryCount = 0;
             for (int i = 0; i < 3; i++)
             {
-                if (slots[spins[i]].GetCategory() == category) categoryCount++;
+                if (Slots[i][spins[i]].GetCategory() == category) categoryCount++;
             }
             return categoryCount;
         }
@@ -120,7 +147,7 @@ namespace ForkBot
             int slotCount = 0;
             for (int i = 0; i < 3; i++)
             {
-                if (slots[spins[i]].ToString() == ":" + slot + ":") slotCount++;
+                if (Slots[i][spins[i]].ToString() == ":" + slot + ":") slotCount++;
             }
             return slotCount;
         }

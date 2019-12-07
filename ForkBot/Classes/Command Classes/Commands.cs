@@ -488,7 +488,11 @@ namespace ForkBot
             }
         }
 
+        [Command("status"), Summary("See your status in ForkBot society.")]
+        public async Task Status()
+        {
 
+        }
 
         #endregion
 
