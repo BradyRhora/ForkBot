@@ -40,3 +40,7 @@ bid ending time
 make ;prof include review count
 add ;meme https://images-ext-2.discordapp{DOT]net/external/Uao5LTmGlI-WqCFVGmjojHWSEzjulxSa1GZJfwhL6MM/https/i.imgur.com/pGxIkLV.jpg?width=641&height=641
 rmp busted again
+;r quit to force end raid (counts as death)
+error walking into item line 576
+but i still moved???
+but i dont get item

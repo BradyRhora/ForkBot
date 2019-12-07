@@ -1146,7 +1146,7 @@ namespace ForkBot
                 await ReplyAsync("This command can not be used in direct messages.");
                 return;
             }
-
+             
             if (!File.Exists("Files/Bids.txt")) File.WriteAllText("Files/Bids.txt", "");
             var bids = File.ReadAllLines("Files/Bids.txt");
             if (commands.Count() == 0) commands = new string[] { "" };
@@ -1187,7 +1187,7 @@ namespace ForkBot
                             var text = $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
                                        $"<:blank:528431788616318977> Minimum Next Bid: **{Math.Ceiling(currentBid + currentBid * 0.15)}** coins.\n";
 
-                            if (endTime.Hours < 1) text = $"<:blank:528431788616318977> Ending in: **{endTime.Minutes}** minutes and **{endTime.Seconds}** seconds.";
+                            if (endTime.Hours < 1) text += $"<:blank:528431788616318977> Ending in: **{endTime.Minutes}** minutes and **{endTime.Seconds}** seconds.";
                             else text += $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
                             x.Text = text;
 
@@ -2438,7 +2438,7 @@ namespace ForkBot
                         }
                         else if (command[0] == "shop")
                         {
-
+                            await ReplyAsync("", embed: Raid.Shop.GetCurrentShop().BuildShopEmbed());
                         }
                     }
                     //in game commands
