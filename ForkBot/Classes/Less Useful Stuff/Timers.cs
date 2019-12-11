@@ -109,7 +109,7 @@ namespace ForkBot
                 var notifyUsers = File.ReadAllLines("Files/BidNotify.txt").Select(x => Bot.client.GetUser(Convert.ToUInt64(x)));
                 foreach (IUser u in notifyUsers)
                 {
-                    await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {count} {item}(s)! Get it with the ID: {postID}.\n*You are recieving this message because you have opted in to new bid notifications.*").Build());
+                    await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {count} {item}(s)! Get it with the ID: {postID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
                 }
                 bids.Add(expiry);
                 for (int i = 0; i < posts.Count(); i++)
@@ -191,7 +191,7 @@ namespace ForkBot
                 var notifyUsers = File.ReadAllLines("Files/BidNotify.txt").Select(x => Bot.client.GetUser(Convert.ToUInt64(x)));
                 foreach (IUser u in notifyUsers)
                 {
-                    await u.SendMessageAsync("", embed: new InfoEmbed("Bi-Weekly Bid Alert", $"The bi-weekly bid is on! This time: {amount} {item}(s)! Get it with the ID: {id}.\n*You are recieving this message because you have opted in to new bid notifications.*").Build());
+                    await u.SendMessageAsync("", embed: new InfoEmbed("Bi-Weekly Bid Alert", $"The bi-weekly bid is on! This time: {amount} {item}(s)! Get it with the ID: {id}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
                 }
             }
         }

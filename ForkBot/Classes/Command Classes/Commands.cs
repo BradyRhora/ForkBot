@@ -129,77 +129,84 @@ namespace ForkBot
             else await Context.Channel.SendMessageAsync($"Could not find definition for: {word}.");*/
         }
 
-        [Command("professor"), Alias(new string[] { "prof", "rmp" }), Summary("Check out a professors rating from RateMyProfessors.com!")]
-        public async Task Professor([Remainder]string name)
+
+        HtmlWeb web = new HtmlWeb();
+        string GetProfCode(string name)
         {
-            HtmlWeb web = new HtmlWeb();
-
-            string link = "http://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ", "%20");
-            var page = web.Load(link);
-            //var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li[1]");
-            var node = page.DocumentNode.SelectSingleNode("//*[@id=\"searchResultsBox\"]/div[2]/ul/li/a");
+            string link = "https://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ", "%20");
+            var page = web.Load(link).DocumentNode;
+            var node = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div/div[2]/ul/li/a").Attributes[0].Value;
             if (node != null)
-            {
-                var newLink = "http://www.ratemyprofessors.com" + node.Attributes[0].Value;
-                page = web.Load(newLink);
-
-                var rating = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
-                var takeAgain = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
-                var difficulty = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
-                var titleText = page.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
-                string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
-                string university = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[1]/div[1]/div[1]/div[3]/h2/a").InnerText;
-                university = university.Replace(" (all campuses)", "");
-                var tagBox = page.DocumentNode.SelectSingleNode("//*[@id=\"mainContent\"]/div[1]/div[3]/div[2]/div[2]");
-                List<string> tags = new List<string>();
-                for (int i = 0; i < tagBox.ChildNodes.Count(); i++)
-                {
-                    if (tagBox.ChildNodes[i].Name == "span") tags.Add(tagBox.ChildNodes[i].InnerText);
-                }
-                
-                JEmbed emb = new JEmbed();
-
-                emb.Title = profName + " - " + university;
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Header = "Rating:";
-                    x.Text = rating;
-                    x.Inline = true;
-                }));
-
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Header = "Difficulty:";
-                    x.Text = difficulty;
-                    x.Inline = true;
-                }));
-
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Header = "Would take again?:";
-                    x.Text = takeAgain;
-                    x.Inline = true;
-                }));
-
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Header = "Top Tags:";
-                    string text = "";
-                    foreach (string s in tags)
-                    {
-                        text += s;
-                    }
-                    x.Text = text;
-                    x.Inline = false;
-                }));
-
-                emb.ColorStripe = Constants.Colours.YORK_RED;
-                await Context.Channel.SendMessageAsync("", embed: emb.Build());
-            }
+                return node.Replace("/ShowRatings.jsp?tid=", "");
             else
+                return null;
+        }
+
+        [Command("professor"), Alias(new string[] { "prof", "rmp" }), Summary("Check out a professors rating from RateMyProfessors.com!")]
+        public async Task Professor([Remainder] string name)
+        {
+            var id = GetProfCode(name);
+            if (id == null)
             {
-                await Context.Channel.SendMessageAsync("Professor not found!");
+                await ReplyAsync("Prof not found!");
+                return;
             }
+            Thread.Sleep(1111);
+            var link = "https://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + id;
+            var page = web.Load(link).DocumentNode;
+
+            var rating = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
+            var takeAgain = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
+            var difficulty = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
+            var titleText = page.SelectSingleNode("/html/head/title").InnerText;
+            string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
+            string university = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[1]/div[1]/div[1]/div[3]/h2/a").InnerText;
+            university = university.Replace(" (all campuses)", "");
+            var tagBox = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[2]/div[2]");
+            List<string> tags = new List<string>();
+            for (int i = 0; i < tagBox.ChildNodes.Count(); i++)
+            {
+                if (tagBox.ChildNodes[i].Name == "span") tags.Add(tagBox.ChildNodes[i].InnerText + " " + tagBox.ChildNodes[i].FirstChild.InnerText);
+            }
+
+            JEmbed emb = new JEmbed();
+
+            emb.Title = profName + " - " + university;
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Rating:";
+                x.Text = rating;
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Difficulty:";
+                x.Text = difficulty;
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Would take again?:";
+                x.Text = takeAgain;
+                x.Inline = true;
+            }));
+
+            emb.Fields.Add(new JEmbedField(x =>
+            {
+                x.Header = "Top Tags:";
+                string text = "";
+                foreach (string s in tags)
+                {
+                    text += s;
+                }
+                x.Text = text;
+                x.Inline = false;
+            }));
+
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
         }
 
         [Command("course"), Summary("Shows details for a course using inputted course code.")]
@@ -326,7 +333,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.9\n-set fm post limit to 5\n-created ;transfer command\n-item changes\n-added minimum bid amount (15%)\n-added a [BRADY] command, `;makebid [item] [amount]`\n-fixed still removing item after reaching fm limit\n-changed current term to 'fm'\n-fixed bow not giving stated items\n-updated lockdown to give more messages\n-added course link to course embed\n-changed how to treat null join dates\n-removed catalog number display from courses with labs\n-fixed ;meme error with no profile pic (sorta)\n-added booster privileges\n-hopefully fixed ;record with null join date\n-added extra security\n-added new item: pouch!```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.95\n-many raid updates! check it out\n-new bid opt-in! get notified when theres a new auction```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot."), Alias("uptime")]
@@ -2109,92 +2116,92 @@ namespace ForkBot
                 proc.Load($@"{imgs[imgID]}");
 
                 TextLayer sender = new TextLayer();
-                TextLayer reciever = new TextLayer();
+                TextLayer receiver = new TextLayer();
 
                 sender.Text = Functions.GetName(Context.User as IGuildUser);
-                reciever.Text = Functions.GetName(user as IGuildUser);
+                receiver.Text = Functions.GetName(user as IGuildUser);
 
                 int fontsize = 20;
                 
                 switch (imgID)
                 {
                     case 0:
-                        reciever.Position = new Point(70, 170);
+                        receiver.Position = new Point(70, 170);
                         sender.Position = new Point(70, 205);
                         break;
                     case 1:
-                        reciever.Position = new Point(130, 210);
+                        receiver.Position = new Point(130, 210);
                         sender.Position = new Point(130, 250);
                         break;
                     case 2:
                         fontsize = 50;
-                        reciever.Position = new Point(130, 330);
+                        receiver.Position = new Point(130, 330);
                         sender.Position = new Point(130, 465);
                         break;
                     case 3:
                         fontsize = 15;
-                        reciever.Position = new Point(140, 25);
+                        receiver.Position = new Point(140, 25);
                         sender.Position = new Point(140, 55);
                         break;
                     case 4:
-                        reciever.Position = new Point(300, 190);
+                        receiver.Position = new Point(300, 190);
                         sender.Position = new Point(330, 250);
                         break;
                     case 5:
                         fontsize = 15;
-                        reciever.Position = new Point(50,110);
+                        receiver.Position = new Point(50,110);
                         sender.Position = new Point(50, 140);
                         break;
                     case 6:
-                        reciever.Position = new Point(120, 140);
+                        receiver.Position = new Point(120, 140);
                         sender.Position = new Point(130, 190);
                         break;
                     case 7:
-                        reciever.Position = new Point(530, 320);
+                        receiver.Position = new Point(530, 320);
                         sender.Position = new Point(560, 360);
                         break;
                     case 8:
-                        reciever.Position = new Point(300, 150);
+                        receiver.Position = new Point(300, 150);
                         sender.Position = new Point(300, 200);
                         break;
                     case 9:
                         sender.Position = new Point(380, 210);
-                        reciever.Position = new Point(340, 175);
+                        receiver.Position = new Point(340, 175);
                         break;
                     case 10:
-                        reciever.Position = new Point(320, 270);
+                        receiver.Position = new Point(320, 270);
                         sender.Position = new Point(350, 310);
                         break;
                     case 11:
                         sender.Position = new Point(210, 305);
-                        reciever.Position = new Point(180, 230);
+                        receiver.Position = new Point(180, 230);
                         break;
                     case 12:
                         sender.Position = new Point(450,310);
-                        reciever.Position = new Point(400, 250);
+                        receiver.Position = new Point(400, 250);
                         break;
                     case 13:
                         sender.Position = new Point(360, 250);
-                        reciever.Position = new Point(340, 215);
+                        receiver.Position = new Point(340, 215);
                         break;
                     case 14:
                         sender.Position = new Point(70, 300);
-                        reciever.Position = new Point(70, 230);
+                        receiver.Position = new Point(70, 230);
                         break;
                     case 15:
                         sender.Position = new Point(430, 100);
-                        reciever.Position = new Point(400,60);
+                        receiver.Position = new Point(400,60);
                         break;
                     case 16:
                         sender.Position = new Point(285, 220);
-                        reciever.Position = new Point(260, 190);
+                        receiver.Position = new Point(260, 190);
                         break;
 
                 }
                 sender.FontSize = fontsize;
-                reciever.FontSize = fontsize;
+                receiver.FontSize = fontsize;
                 proc.Watermark(sender);
-                proc.Watermark(reciever);
+                proc.Watermark(receiver);
                 var sImgID = rdm.Next(1000000);
                 proc.Save(path + $@"\{sImgID}.png");
                 await Context.Channel.SendFileAsync(path + $@"\{sImgID}.png");
@@ -2866,7 +2873,7 @@ namespace ForkBot
                 }
                 catch (Exception) { Console.WriteLine($"Unable to give user ({u}) item."); }
             }
-            if (msg != "") await ReplyAsync("", embed: new InfoEmbed("", msg += $"\nEveryone has recieved a(n) {item}!", Constants.Images.ForkBot).Build());
+            if (msg != "") await ReplyAsync("", embed: new InfoEmbed("", msg += $"\nEveryone has received a(n) {item}!", Constants.Images.ForkBot).Build());
         }
 
         [Command("courses")]
@@ -3082,7 +3089,7 @@ namespace ForkBot
             var notifyUsers = File.ReadAllLines("Files/BidNotify.txt").Select(x => Bot.client.GetUser(Convert.ToUInt64(x)));
             foreach(IUser u in notifyUsers)
             {
-                await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {amount} {item}(s)! Get it with the ID: {id}.\n*You are recieving this message because you have opted in to new bid notifications.*").Build());
+                await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {amount} {item}(s)! Get it with the ID: {id}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
             }
         }
         
