@@ -662,7 +662,7 @@ namespace ForkBot
         }
         
         [Command("give"), Summary("[FUN] Give the specified user some of your items!")]
-        public async Task give(IUser user, params string[] donation)
+        public async Task Give(IUser user, params string[] donation)
         {
             User u1 = Functions.GetUser(Context.User);
             User u2 = Functions.GetUser(user);
@@ -1154,7 +1154,9 @@ namespace ForkBot
             if (!File.Exists("Files/Bids.txt")) File.WriteAllText("Files/Bids.txt", "");
             var bids = File.ReadAllLines("Files/Bids.txt");
             if (commands.Count() == 0) commands = new string[] { "" };
-
+            if (!File.Exists("Files/BidNotify.txt")) File.Create("Files/BidNotify.txt").Dispose();
+            var notifyUserIDs = File.ReadAllLines("Files/BidNotify.txt").Select(x=>Convert.ToUInt64(x));
+            
             switch (commands[0])
             {
                 case "":
@@ -1164,6 +1166,8 @@ namespace ForkBot
                     emb.Title = "Auctions";
                     emb.ColorStripe = Constants.Colours.YORK_RED;
                     emb.Footer.Text = "To bid, use `;bid [ID] [Amount]`";
+                    if (!notifyUserIDs.Contains(Context.User.Id)) emb.Footer.Text += " \n Want to be notified when there's a new auction? Use `;bid opt-in`!";
+
                     if (bids.Count() == 0) emb.Description = "There are currently no auctions going on.";
                     foreach (string bid in bids)
                     {
@@ -1198,6 +1202,22 @@ namespace ForkBot
                         }));
                     }
                     await ReplyAsync("", embed: emb.Build());
+                    break;
+                case "opt-in":
+                case "opt-out":
+                    bool optedIn = notifyUserIDs.Contains(Context.User.Id);
+                    if (optedIn)
+                    {
+                        notifyUserIDs = notifyUserIDs.Where(x => x != Context.User.Id);
+                        await ReplyAsync("Successfully opted-out of bid notifications.");
+                    }
+                    else
+                    {
+                        notifyUserIDs = notifyUserIDs.Concat(new ulong[] { Context.User.Id });
+                        await ReplyAsync("Successfully opted-in to bid notifications.");
+                    }
+
+                    File.WriteAllLines("Files/BidNotify.txt", notifyUserIDs.Select(x => x.ToString()));
                     break;
                 default:
                     string BidID = commands[0];
@@ -1254,7 +1274,7 @@ namespace ForkBot
         public async Task Tag(string tag)
         {
             if (Context.Guild.Id == Constants.Guilds.YORK_UNIVERSITY) return;
-            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt").Dispose();
             string[] tags = File.ReadAllLines("Files/tags.txt");
             bool sent = false;
             string msg = "";
@@ -1289,7 +1309,7 @@ namespace ForkBot
         public async Task Tag(string tag, [Remainder]string content)
         {
             if (Context.Guild.Id == Constants.Guilds.YORK_UNIVERSITY) return;
-            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt");
+            if (!File.Exists("Files/tags.txt")) File.Create("Files/tags.txt").Dispose();
             bool exists = false;
             if (tag == "list") exists = true;
             else if (tag == "delete" && Context.User.Id == Constants.Users.BRADY)
@@ -2290,17 +2310,32 @@ namespace ForkBot
                     {
                         if (command[0] == "choose")
                         {
+
                             if (Raid.Class.Classes().Where(x => x.Name.ToLower() == command[1].ToLower()).Count() > 0) //checks if the specified class exists
                             {
-                                rUser.SetMultipleData(new string[,] { { "class", command[1].ToLower() }, { "level", "1" }, { "exp", "0" }, { "emote", "👨" }, { "gold", "100" } });
+                                var c = rUser.GetClass();
+                                if (c != null)
+                                {
+                                    if (command.Count() <= 2 || command.Count() > 2 && command[2] != "confirm")
+                                    {
+                                        await ReplyAsync($"Are you sure? This will reset your character back to level 1 and you will lose everything.\nUse: `;r choose {command[1]} confirm` to confirm.");
+                                        return;
+                                    }
+                                }
+
+                                var chosenClass = Raid.Class.GetClass(command[1]);
+                                rUser.SetMultipleData(new string[,] { { "class", command[1].ToLower() }, { "level", "1" }, { "exp", "0" }, { "emote", "👨" }, { "gold", "100" }, { "power",  chosenClass.BasePower.ToString()}, { "speed", chosenClass.BaseSpeed.ToString() }, { "magic_power", chosenClass.BaseMagic_Power.ToString() } });
+                                rUser.AddDataA("actions", chosenClass.BaseActions.Select(x => x.Name).ToArray());
+                                
                                 await ReplyAsync($"You are now a {command[1]}, form your party with `;r host` or join another with `;r join` and go fourth!\n" +
                                     "You may also set your own custom emote with `;r emote [emote]` the emote must be a Unicode emote (not a custom one!) and " +
                                     "how your character will be represented in battle!");
                             }
+                            else await ReplyAsync("Invalid class. Make sure you're just putting the class name. (i.e. `;r choose rogue`)");
                         }
-                        else if (rUser.GetData("class") == "0")
+                        else if (rUser.GetClass() == null)
                         {
-                            await ReplyAsync(Raid.Class.startMessage());
+                            await ReplyAsync(Raid.Class.StartMessage());
                             return;
                         }
                         else if (command[0] == "")
@@ -2442,7 +2477,7 @@ namespace ForkBot
                         }
                         else if (command[0] == "shop")
                         {
-                            await ReplyAsync("", embed: Raid.Shop.GetCurrentShop().BuildShopEmbed());
+                            await ReplyAsync("", embed: Raid.Shop.GetCurrentShop().BuildShopEmbed(rUser));
                         }
                     }
                     //in game commands
@@ -3043,6 +3078,12 @@ namespace ForkBot
             string newBid = $"{id}|{item}|{amount}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
 
             File.AppendAllText("Files/Bids.txt", newBid);
+
+            var notifyUsers = File.ReadAllLines("Files/BidNotify.txt").Select(x => Bot.client.GetUser(Convert.ToUInt64(x)));
+            foreach(IUser u in notifyUsers)
+            {
+                await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {amount} {item}(s)! Get it with the ID: {id}.\n*You are recieving this message because you have opted in to new bid notifications.*").Build());
+            }
         }
         
         [Command("lockdm"), Summary("[BRADY] Locks command usage via DM.")]

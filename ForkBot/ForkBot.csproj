@@ -211,7 +211,6 @@
     <Compile Include="Classes\Less Useful Stuff\Interfaces.cs" />
     <Compile Include="Classes\Command Classes\ItemCommands.cs" />
     <Compile Include="Classes\Objects\ChannelStats.cs" />
-    <Compile Include="Classes\Objects\DND.cs" />
     <Compile Include="Classes\Objects\EmoteAnimation.cs" />
     <Compile Include="Classes\Bot.cs" />
     <Compile Include="Classes\Command Classes\Commands.cs" />

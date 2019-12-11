@@ -93,7 +93,6 @@ namespace ForkBot
                 else return false;
             }
 
-            return false;
         }
 
         /// <summary>

@@ -105,6 +105,12 @@ namespace ForkBot
                                                                     $"{count} {item} for {price} coins has expired. You have not removed it, and now it will " +
                                                                     $"be auctioned off and the coins will go towards slots.").Build());
 
+                if (!File.Exists("Files/BidNotify.txt")) File.Create("Files/BidNotify.txt").Dispose();
+                var notifyUsers = File.ReadAllLines("Files/BidNotify.txt").Select(x => Bot.client.GetUser(Convert.ToUInt64(x)));
+                foreach (IUser u in notifyUsers)
+                {
+                    await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {count} {item}(s)! Get it with the ID: {postID}.\n*You are recieving this message because you have opted in to new bid notifications.*").Build());
+                }
                 bids.Add(expiry);
                 for (int i = 0; i < posts.Count(); i++)
                 {
@@ -161,7 +167,7 @@ namespace ForkBot
 
             if (changed) File.WriteAllLines("Files/Bids.txt", allBids.Where(x => x != ""));
 
-            if (Var.CurrentDate().DayOfWeek == DayOfWeek.Friday && Properties.Settings.Default.lastBid.DayOfYear != Var.CurrentDate().DayOfYear)
+            if ((Var.CurrentDate().DayOfWeek == DayOfWeek.Friday || Var.CurrentDate().DayOfWeek == DayOfWeek.Wednesday) && Properties.Settings.Default.lastBid.DayOfYear != Var.CurrentDate().DayOfYear)
             {
                 Properties.Settings.Default.lastBid = Var.CurrentDate();
                 Properties.Settings.Default.Save();
@@ -182,6 +188,11 @@ namespace ForkBot
                 string newBid = $"{id}|{item}|{amount}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
 
                 File.AppendAllText("Files/Bids.txt", newBid);
+                var notifyUsers = File.ReadAllLines("Files/BidNotify.txt").Select(x => Bot.client.GetUser(Convert.ToUInt64(x)));
+                foreach (IUser u in notifyUsers)
+                {
+                    await u.SendMessageAsync("", embed: new InfoEmbed("Bi-Weekly Bid Alert", $"The bi-weekly bid is on! This time: {amount} {item}(s)! Get it with the ID: {id}.\n*You are recieving this message because you have opted in to new bid notifications.*").Build());
+                }
             }
         }
     }

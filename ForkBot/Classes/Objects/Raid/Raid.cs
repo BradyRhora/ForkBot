@@ -122,13 +122,15 @@ namespace ForkBot
                             room.FirstAction = false;
                         }
                         msg += $"It's {player.GetEmote()} <@{player.ID}>'s turn.\nChoose one of the following actions with `;r [action]`. Don't forget to specify a direction if necessary.\n" +
-                               $"You can move `{player.StepsLeft}` more spaces. `Health: {player.Health}/{player.MaxHealth}` \n```\n";
+                               $"You can move `{player.StepsLeft}` more spaces. `❤️ {player.Health}/{player.MaxHealth}` \n```\n";
                         var actions = player.GetActions();
                         for (int i = 0; i < actions.Count(); i++)
                         {
-                            msg += $"{actions[i].Name}: {actions[i].Description}\n";
+                            msg += $"{actions[i].Name}";
+                            if (actions[i].RequiresDirection) msg += " [direction]\n";
+                            else msg += "\n";
                         }
-                        msg += "```";
+                        msg += "```\nGet more info on an action with `;r info [action]`";
                     }
                     else msg += $"You can move `{player.StepsLeft}` more spaces.";
                 }
@@ -163,7 +165,7 @@ namespace ForkBot
 
         public class Room
         {
-            Monster[] Enemies;
+            public Monster[] Enemies;
             int Number;
             public List<Item> Loot = new List<Item>();
             int Size;
@@ -191,7 +193,7 @@ namespace ForkBot
 
             void GenerateRoom()
             {
-                Size = 6;// rdm.Next(5, 10 + Number / 2);
+                Size = rdm.Next(5, 10 + Number / 2);
                 if (Size > 16) Size = 16;
                 Board = new string[Size, Size];
                 for (int x = 0; x < Size; x++)
@@ -229,9 +231,9 @@ namespace ForkBot
 
             void PlacePlayers()
             {
+                Players = Players.Where(x => !x.Dead).ToArray();
                 int playerCount = Players.Count();
                 int y = Size / 2 - playerCount / 2;
-                Players = Players.Where(x => !x.Dead).ToArray();
                 for (int i = 0; i < playerCount; i++)
                     Players[i].SetLocation(0, y + i);
 
@@ -264,7 +266,7 @@ namespace ForkBot
                 foreach (Player p in Players)
                 {
                     p.StepsLeft = p.GetMoveDistance();
-                    int roll = rdm.Next(10) + 1 + p.GetClass().Speed;
+                    int roll = rdm.Next(10) + 1 + p.Speed;
                     rolls.Add(p, roll);
                 }
 
@@ -293,7 +295,7 @@ namespace ForkBot
                 // remember in array its [Y,X] not [X,Y]
                 for (int i = 0; i < Loot.Count(); i++) b2[Loot[i].Y, Loot[i].X] = "loot|" + i;
                 for (int i = 0; i < Enemies.Count(); i++) if (Enemies[i].Dead && IsSpaceEmpty(Enemies[i].X,Enemies[i].Y,false) || !Enemies[i].Dead) b2[Enemies[i].Y, Enemies[i].X] = "enemy|" + i;
-                for (int i = 0; i < Players.Count(); i++) b2[Players[i].Y, Players[i].X] = "player|" + i;
+                for (int i = 0; i < Players.Count(); i++) if (Players[i].Dead && IsSpaceEmpty(Players[i].X, Players[i].Y, false) || !Players[i].Dead) b2[Players[i].Y, Players[i].X] = "player|" + i;
 
                     string board = "";
                 for (int x = 0; x < Size; x++)
@@ -366,9 +368,7 @@ namespace ForkBot
 
             public Placeable GetPlaceableAt(int x, int y, bool alive = true, Type type = null)
             {
-                List<Placeable> placeables = new List<Placeable>();
-                for (int i = 0; i < Initiative.Count(); i++) placeables.Add(Initiative.ElementAt(i).Key);
-                for (int i = 0; i < Loot.Count(); i++) placeables.Add(Loot[i]);
+                Placeable[] placeables = Initiative.Select(i => i.Key).Concat(Loot).ToArray();
                 foreach (var p in placeables)
                 {
                     if (p.X == x && p.Y == y) //check item coords
@@ -377,6 +377,19 @@ namespace ForkBot
                             else if (type == p.GetType()) return p;
                 }
                 return null;
+            }
+            public int[] GetProjectileContact(int x, int y, int dirX, int dirY, int range)
+            {
+                int currentX = x, currentY = y;
+                for(int i = 0; i < range; i++)
+                {
+                    currentX += dirX;
+                    currentY += dirY;
+                    if (currentX < 0 || currentX > Size || currentY < 0 || currentY > Size) return new int[] { currentX-dirX, currentY-dirY };
+                    var p = GetPlaceableAt(currentX, currentY);
+                    if (p != null) return new int[] { currentX, currentY };
+                }
+                return new int[] { currentX, currentY };
             }
             public bool IsSpaceEmpty(int x, int y, bool includeDead = true, bool includeItems = false)
             {
@@ -503,10 +516,17 @@ namespace ForkBot
         {
             static Shop CurrentShop;
             Dictionary<IShoppable, int> Stock = new Dictionary<IShoppable, int>();
-            string Name = "Ye Olde Wares";
+            string Name;
+            string Title;
+            string Emote;
+            ItemType Type;
+            string Description;
+            DateTime StockTime;
 
             public Shop()
             {
+                StockTime = DateTime.Now;
+                SetInfo();
                 SetStock();
             }
 
@@ -521,33 +541,135 @@ namespace ForkBot
                 for (int i = 0; i < 5; i++)
                 {
                     var index = -1;
-                    while (index == -1 || inShop.Contains(index)) index = rdm.Next(items.Count());
-                    Stock.Add(items[index], 5);
+                    while (index == -1 || inShop.Contains(index) || !items[index].Types.Contains(Type)) index = rdm.Next(items.Count());
+                    Stock.Add(items[index], rdm.Next(5)+1);
                     inShop.Add(index);
                 }
             }
+            void SetInfo()
+            {
+                string[] emotes = { "🧙", "🧙‍♂️", "🧙‍♀️", "👨‍🌾", "👵", "🧝‍♀️", "🧝", "🧝‍♂️"};
+                string[] names = { "Brady", "Gartilda", "Garnkle", "Velsha", "Marlo", "Peter", "Vecna", "Fro", "Karmle" };
+                string[] titles = { "Shop", "Shoppe", "Store", "Market", "Booth" };
 
-            public Embed BuildShopEmbed()
+                Emote = emotes[rdm.Next(emotes.Count())];
+                Name = names[rdm.Next(names.Count())];
+                Title = titles[rdm.Next(titles.Count())];
+                Type = (ItemType)(rdm.Next(Enum.GetNames(typeof(ItemType)).Count()));
+                
+                
+                string[] descriptions = new string[0];
+
+                if (Type == ItemType.Weapon)
+                    descriptions = new string[] { $"Welcome, traveller! Fancy a new sword? Maybe a bow? {Name} here's got it all! ...While supplies last.", $"O.. hullo.. {Name} forge new weapon today... You buy, yes?", $"Ah, welcome! My {Title} has the finest selection of tools for slaying those awful dungeon creatures." };
+                else if (Type == ItemType.General)
+                    descriptions = new string[] { $"Hey there! Welcome to my {Title}. Take a look around!", "Howdy, fancy some supplies?", "Welcome.. No dilly dallyin'.", "Hiya! Please keep all weapons and spellbooks tucked away.", $"Hey there, the name's {Name}. Welcome to my {Title}!" };
+                else if (Type == ItemType.Magic)
+                    descriptions = new string[] { "Welcome dearie... Looking for some new spells?", "Ohoho! Welcome adventurer! In the market for some spellbooks?", "Buy somethin' or leave.", $"Welcome! If I, {Name} the wizard, got any spells you don't know yet, I'd be happy to sell you them!", $"Make sure you tell people! {Name}'s {Title} has the best prices!" };
+                else if (Type == ItemType.Food)
+                    descriptions = new string[] { "Just got a new batch, fresh and ready!", "Sellin' food ain't always easy... But it's honest work.", "Hey there! I got somethin' that'll fill ya right up.", $"Welcome to {Name}'s {Title}, where our stock is as delicious as our.. wait, what's the catchphrase again?" };
+                else if (Type == ItemType.Skill)
+                    descriptions = new string[] { "Welcome, traveller. I can teach you moves that will aid you in combat.", "Hello. I can show you powerful skills... for some gold, of course.", "Well? What skill should I demonstrate?" };
+
+                Description = descriptions[rdm.Next(descriptions.Count())];
+            }
+
+            public Embed BuildShopEmbed(Profile user = null)
             {
                 var emb = new JEmbed();
-                emb.Title = Name;
+                emb.Title = $"{Emote} {Name}'s {Type} {Title}";
                 emb.ColorStripe = new Color(165, 42, 42);
-                foreach(KeyValuePair<IShoppable,int> i in Stock)
+                emb.Description = $"*\"{Description}\"*";
+                foreach (KeyValuePair<IShoppable, int> i in Stock)
                 {
-                    emb.Fields.Add(new JEmbedField(x => 
+                    emb.Fields.Add(new JEmbedField(x =>
                     {
                         x.Header = $"[{i.Key.GetType().Name}] {i.Key.Emote} {i.Key.Name.ToTitleCase()} - {i.Key.Price} gold [{i.Value} left in stock]";
                         x.Text = i.Key.Description;
                     }));
                 }
-
+                if (user != null) emb.Footer.Text = $"You currently have: 💰 {user.GetGold()} gold.";
                 return emb.Build();
             }
+            
 
-            public static Shop GetCurrentShop()
+                public static Shop GetCurrentShop()
             {
                 if (CurrentShop == null) CurrentShop = new Shop();
                 return CurrentShop;
+            }
+        }
+
+        public enum Direction
+        {
+            None,
+            Left,
+            Right,
+            Up,
+            Down,
+            UpRight,
+            DownRight,
+            UpLeft,
+            DownLeft,
+            All,
+            Cardinal,
+            Diagonal,
+        }
+
+        public static bool DirectionEquals(Direction a, Direction b)
+        {
+            switch (a)
+            {
+                case Direction.All:
+                    return b == Direction.All;
+                case Direction.Cardinal:
+                    switch (b)
+                    {
+                        case Direction.Left:
+                        case Direction.Right:
+                        case Direction.Up:
+                        case Direction.Down:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case Direction.Diagonal:
+                    switch (b)
+                    {
+                        case Direction.UpLeft:
+                        case Direction.UpRight:
+                        case Direction.DownLeft:
+                        case Direction.DownRight:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case Direction.None:
+                    return b == Direction.None;
+                case Direction.Up:
+                case Direction.Down:
+                case Direction.Left:
+                case Direction.Right:
+                    switch (b)
+                    {
+                        case Direction.Cardinal: return true;
+                        default:
+                            if (a == b) return true;
+                            return false;
+                    }
+                case Direction.UpLeft:
+                case Direction.UpRight:
+                case Direction.DownLeft:
+                case Direction.DownRight:
+                    switch (b)
+                    {
+                        case Direction.Diagonal: return true;
+                        default:
+                            if (a == b) return true;
+                            return false;
+                    }
+                default:
+                    return false;
             }
         }
     }
