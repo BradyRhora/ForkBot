@@ -221,9 +221,6 @@
     <Compile Include="Classes\Objects\ItemTrade.cs" />
     <Compile Include="Classes\Objects\MineSweeper.cs" />
     <Compile Include="Classes\Objects\Poll.cs" />
-    <Compile Include="Classes\Objects\Raid\GameThings.cs" />
-    <Compile Include="Classes\Objects\Raid\Placeable.cs" />
-    <Compile Include="Classes\Objects\Raid\Raid.cs" />
     <Compile Include="Classes\Objects\Shop.cs" />
     <Compile Include="Classes\Objects\Slot.cs" />
     <Compile Include="Classes\Objects\SlotMachine.cs" />
@@ -257,7 +254,6 @@
     <None Include="bin\Debug\Constants\bottoken" />
     <None Include="bin\Debug\Files\ForkParty\ForkPartyMap.psd" />
     <None Include="bin\Debug\ForkBot.exe.config" />
-    <None Include="bin\Debug\Raid\108312797162541056.raid" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -478,6 +474,7 @@
     <Folder Include="bin\Debug\Files\ChannelStats\" />
     <Folder Include="bin\Debug\Files\Items\" />
     <Folder Include="bin\Debug\Files\Users\" />
+    <Folder Include="bin\Debug\Raid\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.2\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
