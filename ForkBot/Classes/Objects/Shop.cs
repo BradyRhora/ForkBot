@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,25 +9,25 @@ namespace ForkBot
 {
     public class Shop
     {
-        public List<string> items;
+        public List<int> items;
         public List<int> stock;
         DateTime openDate;
         Random rdm = new Random();
         bool isBM;
         public Shop(bool bm = false)
         {
-            string[] nItems;
             isBM = bm;
-            if (!isBM) nItems = Functions.GetItemList();
-            else nItems = Functions.GetBlackMarketItemList();
-            List<string> items = new List<string>();
+            int[] nItems;
+            if (isBM) nItems = DBFunctions.GetBMItemIDList();
+            else nItems = DBFunctions.GetItemIDList(includeBM: false);
+            List<int> items = new List<int>();
             List<int> stock = new List<int>();
             for (int i = 0; i < 5; i++)
             {
-                int itemID = rdm.Next(nItems.Length);
-                if (!items.Contains(nItems[itemID]) && !nItems[itemID].Split('|')[2].Contains("-"))
+                int itemIndex = rdm.Next(nItems.Length);
+                if (!items.Contains(nItems[itemIndex]) && DBFunctions.ItemIsShoppable(nItems[itemIndex]))
                 {
-                    items.Add(nItems[itemID]);
+                    items.Add(nItems[itemIndex]);
                     if (!isBM) stock.Add(rdm.Next(5, 16));
                     else stock.Add(rdm.Next(1, 5));
                 }
@@ -52,12 +53,13 @@ namespace ForkBot
             else emb.Description = $"Welcome to the Black Market... Buy somethin and get out. We'll restock in {restock.Hours} hours and {restock.Minutes} minutes.";
             for(int i = 0; i < 5; i++)
             {
-                var data = items[i].Split('|');
-                string emote = Functions.GetItemEmote(items[i]);
-                string name = data[0];
-                string desc = data[1];
+                var itemID = items[i];
+                string emote = DBFunctions.GetItemEmote(items[i]);
+                string name = DBFunctions.GetItemName(itemID);
+                string desc;
+                desc = DBFunctions.GetItemDescription(itemID, isBM);
                 int stockAmt = stock[i];
-                int price = Convert.ToInt32(data[2]);
+                int price = DBFunctions.GetItemPrice(itemID);
                 if (price < 0) price = -price;
                 emb.Fields.Add(new JEmbedField(x =>
                 {
@@ -65,6 +67,22 @@ namespace ForkBot
                     x.Text = desc;
                 }));
             }
+
+            if (!isBM)
+            {
+                var count = DBFunctions.GetRelevantNewsCount();
+
+                if (count > 0)
+                {
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        var newsPrice = DBFunctions.GetItemPrice("newspaper");
+                        x.Header = "📰 Newspaper - " + newsPrice;
+                        x.Text = "The Daily Fork! Get all the now information of what's going on around ForkBot!";
+                    }));
+                }
+            }
+
             return emb;
         }
     }

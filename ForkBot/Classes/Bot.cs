@@ -56,7 +56,7 @@ namespace ForkBot
                 int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
                 await client.SetGameAsync(strikeCount + " days since last strike", type: ActivityType.Watching);
                 Timers.RemindTimer = new Timer(Timers.Remind, null, 1000 * 30, 1000 * 60);
-                Timers.BidTimer = new Timer(Timers.Bid, null, 1000 * 30, 1000 * 60);
+                Timers.BidTimer = new Timer(Timers.BidTimerCallBack, null, 1000 * 30, 1000 * 60);
                 await Task.Delay(-1);
             }
             catch (Exception e)
@@ -102,7 +102,8 @@ namespace ForkBot
             if (isDM && Var.LockDM) { Console.WriteLine(message.Author.Username + " [" + message.Author.Id + "] attempted to use a command in DM's:\n'"+message.Content+"'"); return; }
             if (message == null) return;
             if (message.Author.Id == client.CurrentUser.Id) return; //doesn't allow the bot to respond to itself
-            if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x=>x.Id==message.Author.Id).Count() <= 0) return;
+            if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x => x.Id == message.Author.Id).Count() <= 0) return;
+            
             if (!Var.DebugMode && message.Channel.Id == Constants.Channels.DEBUG) return;
             var user = Functions.GetUser(message.Author);
 
@@ -133,34 +134,33 @@ namespace ForkBot
             {
                 Var.presentWaiting = false;
                 await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
-                var presents = Functions.GetItemList();
-                int presRDM;
-                string[] presentData;
+                var presents = DBFunctions.GetItemIDList();
+                int presID;
                 do
                 {
-                    presRDM = rdm.Next(presents.Count());
-                    presentData = presents[presRDM].Split('|');
-                } while (presentData[2].Contains("*"));
-                Var.present = presentData[0];
+                    var presIndex = rdm.Next(presents.Count());
+                    presID = presents[presIndex];
+                } while (!DBFunctions.ItemIsPresentable(presID));
+                Var.present = DBFunctions.GetItemName(presID);
                 Var.rPresent = Var.present;
                 var presentName = Var.present;
-                var pMessage = presentData[1];
-                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {Functions.GetItemEmote(presents[presRDM])} {pMessage}");
+                var pMessage = DBFunctions.GetItemDescription(presID);
+                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {DBFunctions.GetItemEmote(presID)} {pMessage}");
                 if (Var.present == "santa")
                 {
                     await message.Channel.SendMessageAsync("You got...");
                     string sMessage = "";
                     for (int i = 0; i < 5; i++)
                     {
-                        var sPresentData = presents[rdm.Next(presents.Count())];
-                        if (sPresentData.Contains("*"))
+                        var sPresentID = presents[rdm.Next(presents.Count())];
+                        if (!DBFunctions.ItemIsPresentable(sPresentID))
                         {
                             i--;
                             continue;
                         }
-                        string sPresentName = sPresentData.Split('|')[0];
+                        string sPresentName = DBFunctions.GetItemName(sPresentID);
                         user.GiveItem(sPresentName);
-                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {Functions.GetItemEmote(sPresentData)} {sPresentData.Split('|')[1]}\n";
+                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {DBFunctions.GetItemEmote(sPresentID)} {DBFunctions.GetItemDescription(sPresentID)}\n";
                     }
                     await message.Channel.SendMessageAsync(sMessage);
 
@@ -177,10 +177,10 @@ namespace ForkBot
             }
             else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
             {
-                if (user.GetItemList().Contains(Var.present))
+                if (user.HasItem(Var.present))
                 {
                     user.RemoveItem(Var.present);
-                    await message.Channel.SendMessageAsync($":convenience_store: {Functions.GetItemEmote(Var.present)} :runner: \nA **new** present appears! :gift: Press {Var.presentNum} to open it!");
+                    await message.Channel.SendMessageAsync($":convenience_store: {DBFunctions.GetItemEmote(Var.present)} :runner: \nA **new** present appears! :gift: Press {Var.presentNum} to open it!");
                     Var.presentWaiting = true;
                     Var.replacing = false;
                     Var.replaceable = false;
@@ -246,7 +246,7 @@ namespace ForkBot
                     }
                     else
                     {
-                        if (user.GetItemList().Contains(message.Content.Replace(";", "")))
+                        if (user.HasItem(message.Content.Replace(";", "")))
                         {
                             await message.Channel.SendMessageAsync("Nothing happens... *Use `;suggest [suggestion]` if you have an idea for this item!*");
                         }

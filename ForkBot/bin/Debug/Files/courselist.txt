@@ -7309,3 +7309,4 @@ AP/SOSC 1731 9.00 CyberCities: The Community and Communication in Changing Urban
 AP/ITEC 4310   3.00 Applied Artificial Intelligence
 AP/ITEC 4100   3.00 Topics in Information Technology
 AP/WRIT 2201   3.00 Effective Writing and Research in Information Technology
+AP/ADMS 3345   3.00 Systems Thinking and Modeling for Management

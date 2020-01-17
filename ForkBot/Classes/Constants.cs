@@ -86,7 +86,7 @@ namespace ForkBot
             public static Emoji DIE = new Emoji("🎲");
             public static Emoji QUESTION = new Emoji("❓");
             public static Emote BRADY = Emote.Parse("<:brady:465359176575614980>");
-            
+            public static Emote BLANK = Emote.Parse("<:blank:528431788616318977>");
 
         }
 
@@ -99,6 +99,7 @@ namespace ForkBot
         {
             public static double SELL_VAL = .45;
             public static string GNOME_VID = "https://tenor.com/view/gnome-your-chums-gnomed-gnome-gnoblin-gnelf-gif-12675740";
+            public static string DB_CONNECTION_STRING = @"data source=Files\ForkDB.db";
         }
     }
 }

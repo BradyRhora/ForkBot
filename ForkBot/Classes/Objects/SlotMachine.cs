@@ -108,6 +108,8 @@ namespace ForkBot
                     var jackpot = Properties.Settings.Default.jackpot;
                     Properties.Settings.Default.jackpot = 0;
                     Properties.Settings.Default.Save();
+                    DBFunctions.AddNews($"{gambler.Username.ToUpper()} TAKES THE JACKPOT!", $"{Var.CurrentDateFormatted()} {gambler.Username} scored big time, and got those lucky three gems in a row " +
+                        $"from the Slots! They went home with a whopping {jackpot} coins and a big smile! Just don't spend it all in one place!");
                     return jackpot;
                 }
                 else if (Slots[0][spins[0]].ToString() == slotOptions[i].ToString() && Slots[1][spins[1]].ToString() == slotOptions[i].ToString() && Slots[2][spins[2]].ToString() == slotOptions[i].ToString()) return slotOptions[i].GetValue() * bet;

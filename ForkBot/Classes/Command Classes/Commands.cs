@@ -16,6 +16,8 @@ using ImageProcessor.Imaging;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Globalization;
+using System.Data.SQLite;
+using System.Data;
 
 namespace ForkBot
 {
@@ -333,7 +335,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 2.95\n-many raid updates! check it out\n-new bid opt-in! get notified when theres a new auction```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 3 - The Database Update!\n-The time has finally come! All users and items have been fully converted to an sql database!```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot."), Alias("uptime")]
@@ -511,24 +513,24 @@ namespace ForkBot
         {
             var u = Functions.GetUser(Context.User);
             string msg = "";
-            var itemList = Functions.GetItemList();
+            var itemList = DBFunctions.GetItemNameList();
             if (items.Count() == 1 && items[0] == "all") await ReplyAsync("Are you sure you want to sell **all** of your items? Use `;sell allforreal` if so.");
             else if (items.Count() == 1 && items[0] == "allforreal")
             {
                 int coinGain = 0;
-                foreach (string item in u.GetItemList())
+                foreach (var item in u.GetItemList())
                 {
-                    u.RemoveItem(item);
-                    int price = 0;
-                    foreach (string line in itemList)
-                    {
-                        if (line.Split('|')[0] == item)
+                    for (int i = 0; i < item.Value; i++) {
+                        var name = DBFunctions.GetItemName(item.Key);
+                        u.RemoveItem(item.Key);
+                        int price = 0;
+                        foreach (string line in itemList)
                         {
-                            if (!line.Split('|')[2].Contains("-"))
-                                price = (int)(Convert.ToInt32(line.Split('|')[2]) * Constants.Values.SELL_VAL);
-                            else price = 10;
+                            price = (int)(DBFunctions.GetItemPrice(item.Key) * Constants.Values.SELL_VAL);
+
                             coinGain += price;
                             break;
+
                         }
                     }
                 }
@@ -539,20 +541,10 @@ namespace ForkBot
             {
                 foreach (string item in items)
                 {
-                    if (u.GetItemList().Contains(item))
+                    if (u.HasItem(item))
                     {
                         u.RemoveItem(item);
-                        int price = 0;
-                        foreach (string line in itemList)
-                        {
-                            if (line.Split('|')[0] == item)
-                            {
-                                if (!line.Split('|')[2].Contains("-"))
-                                    price = (int)(Convert.ToInt32(line.Split('|')[2]) * Constants.Values.SELL_VAL);
-                                else price = 10;
-                                break;
-                            }
-                        }
+                        int price = (int)(DBFunctions.GetItemPrice(item) * Constants.Values.SELL_VAL);
 
                         u.GiveCoins(price);
                         msg += $"You successfully sold your {item} for {price} coins!\n";
@@ -679,7 +671,7 @@ namespace ForkBot
             string fDonations = "";
             foreach(string item in donation)
             {
-                if (u1.GetItemList().Contains(item))
+                if (u1.HasItem(item))
                 {
                     u1.RemoveItem(item);
                     u2.GiveItem(item);
@@ -716,8 +708,13 @@ namespace ForkBot
             }
 
             List<string> itemNames = new List<string>();
-            foreach (string item in Var.currentShop.items) itemNames.Add(item.Split('|')[0]);
+            foreach (int item in Var.currentShop.items) itemNames.Add(DBFunctions.GetItemName(item));
+            var newsCount = DBFunctions.GetRelevantNewsCount();
 
+            if (newsCount > 0)
+            {
+                itemNames.Add("newspaper");
+            }
 
 
             if (command == null)
@@ -726,16 +723,34 @@ namespace ForkBot
                 emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
+            else if (itemNames.Select(x=>x.ToLower()).Contains(command.ToLower()))
             {
-                foreach (string item in Var.currentShop.items)
+                if (newsCount > 0 && command.ToLower() == "newspaper")
                 {
-                    if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
+                    string name = "newspaper";
+                    int price = DBFunctions.GetItemPrice(name);
+
+                    if (price < 0) price *= -1;
+                    if (Convert.ToInt32(u.GetCoins()) >= price)
                     {
-                        var data = item.Split('|');
-                        string name = data[0];
-                        string desc = data[1];
-                        int price = Convert.ToInt32(data[2]);
+                        u.GiveCoins(-price);
+                        u.GiveItem(name);
+                        Properties.Settings.Default.jackpot += price;
+                        Properties.Settings.Default.Save();
+                        await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {DBFunctions.GetItemEmote(name)} for {price} coins!");
+                    }
+                    else await Context.Channel.SendMessageAsync("Either you cannot afford this item or it is not in stock.");
+                    return;
+                }
+
+                foreach (int item in Var.currentShop.items)
+                {
+                    var itemName = DBFunctions.GetItemName(item);
+                    if (itemName.ToLower() == command.ToLower())
+                    {
+                        string name = itemName;
+                        int price = DBFunctions.GetItemPrice(item);
+
                         if (price < 0) price *= -1;
                         int stock = Var.currentShop.stock[Var.currentShop.items.IndexOf(item)];
                         if (Convert.ToInt32(u.GetCoins()) >= price && stock > 0)
@@ -744,9 +759,10 @@ namespace ForkBot
                             Var.currentShop.stock[Var.currentShop.items.IndexOf(item)] = stock;
                             u.GiveCoins(-price);
                             u.GiveItem(name);
-                            await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {Functions.GetItemEmote(Functions.GetItemData(name))} for {price} coins!");
+                            await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {DBFunctions.GetItemEmote(name)} for {price} coins!");
                         }
                         else await Context.Channel.SendMessageAsync("Either you cannot afford this item or it is not in stock.");
+                        break;
                     }
                 }
             }
@@ -757,7 +773,7 @@ namespace ForkBot
         public async Task BlackMarket([Remainder] string command = null)
         {
             var u = Functions.GetUser(Context.User);
-            if (u.GetData("bm") != "true") return;
+            if (u.GetData<bool>("has_bm") != true) return;
             else
             {
                 DateTime day = new DateTime();
@@ -773,7 +789,7 @@ namespace ForkBot
                 }
 
                 List<string> itemNames = new List<string>();
-                foreach (string item in Var.blackmarketShop.items) itemNames.Add(item.Split('|')[0]);
+                foreach (int item in Var.blackmarketShop.items) itemNames.Add(DBFunctions.GetItemName(item));
 
                 if (command == null)
                 {
@@ -781,16 +797,16 @@ namespace ForkBot
                     emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
                     await Context.Channel.SendMessageAsync("", embed: emb.Build());
                 }
-                else if (itemNames.Contains(command.ToLower().Replace(" ", "_")))
+                else if (itemNames.Select(x=>x.ToLower()).Contains(command.ToLower()))
                 {
-                    foreach (string item in Var.blackmarketShop.items)
+                    foreach (int item in Var.blackmarketShop.items)
                     {
-                        if (item.Split('|')[0] == command.ToLower().Replace(" ", "_"))
+                        var itemName = DBFunctions.GetItemName(item);
+                        if (itemName.ToLower() == command.ToLower())
                         {
-                            var data = item.Split('|');
-                            string name = data[0];
-                            string desc = data[1];
-                            int price = Convert.ToInt32(data[2]);
+                            string name = itemName;
+                            string desc = DBFunctions.GetItemDescription(item);
+                            int price = DBFunctions.GetItemPrice(item);
                             if (price < 0) price *= -1;
                             int stock = Var.blackmarketShop.stock[Var.blackmarketShop.items.IndexOf(item)];
                             if (Convert.ToInt32(u.GetCoins()) >= price && stock > 0)
@@ -799,7 +815,7 @@ namespace ForkBot
                                 Var.blackmarketShop.stock[Var.blackmarketShop.items.IndexOf(item)] = stock;
                                 u.GiveCoins(-price);
                                 u.GiveItem(name);
-                                await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {Functions.GetItemEmote(Functions.GetItemData(name))} for {price} coins!");
+                                await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {DBFunctions.GetItemEmote(name)} for {price} coins!");
                             }
                             else await Context.Channel.SendMessageAsync("Either you cannot afford this item or it is not in stock.");
                         }
@@ -834,41 +850,39 @@ namespace ForkBot
                         else itemParam = true;
                     }
 
-                    if (command.Count() >= 3) int.TryParse(command[command.Count()-1], out page);
+                    if (command.Count() >= 3) int.TryParse(command[command.Count() - 1], out page);
                 }
 
 
 
                 if (page < 1) page = 1;
-                
-                if (!File.Exists("Files/FreeMarket.txt"))
-                {
-                    File.AppendAllText("Files/FreeMarket.txt","");
-                }
 
-                var itemList = File.ReadAllLines("Files/FreeMarket.txt").ToList();
-                IOrderedEnumerable<string> sortedList;
-                string[] items = itemList.ToArray();
+
+                var postList = MarketPost.GetAllPosts();
+
+                IOrderedEnumerable<MarketPost> sortedList;
+                MarketPost[] posts = postList.ToArray();
 
                 if (sort)
                 {
-                    if (lowest) sortedList = itemList.OrderBy(x => Convert.ToInt32(x.Split('|')[4]));
-                    else sortedList = itemList.OrderByDescending(x => Convert.ToInt32(x.Split('|')[4]));
-                    items = sortedList.ToArray();
+                    if (lowest) sortedList = postList.OrderBy(x => x.Price);
+                    else sortedList = postList.OrderByDescending(x => x.Price);
+                    posts = sortedList.ToArray();
                 }
 
                 if (itemParam)
                 {
-                    items = items.Where(x => x.Split('|')[2] == command[1]).ToArray();
+                    string searchedItem = command[1];
+                    posts = posts.Where(x => x.Item_ID == DBFunctions.GetItemID(searchedItem)).ToArray();
                 }
-                
+
 
                 const int ITEMS_PER_PAGE = 10;
 
                 JEmbed emb = new JEmbed();
                 emb.Title = "Free Market";
                 emb.Description = "To buy an item, use ;fm buy [ID]! For more help and examples, use ;fm help.";
-                double pageCount = Math.Ceiling((double)items.Count() / ITEMS_PER_PAGE);
+                double pageCount = Math.Ceiling((double)posts.Count() / ITEMS_PER_PAGE);
                 emb.Footer.Text = $"Page {page}/{pageCount}";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
@@ -877,15 +891,15 @@ namespace ForkBot
                 int itemStart = ITEMS_PER_PAGE * page;
                 int itemEnd = itemStart + ITEMS_PER_PAGE;
 
-                if (itemStart > items.Count())
+                if (itemStart > posts.Count())
                 {
                     await ReplyAsync("Invalid page number.");
                     return;
                 }
 
-                if (itemEnd > items.Count()) itemEnd = items.Count();
-                
-                if (items.Count() == 0)
+                if (itemEnd > posts.Count()) itemEnd = posts.Count();
+
+                if (posts.Count() == 0)
                 {
                     emb.Fields.Add(new JEmbedField(x =>
                     {
@@ -897,19 +911,19 @@ namespace ForkBot
 
                 for (int i = itemStart; i < itemEnd; i++)
                 {
-                    string[] sData = items[i].Split('|');
-                    string id = sData[0];
-                    string sellerID = sData[1];
-                    string itemName = sData[2];
-                    int amount = Convert.ToInt32(sData[3]);
-                    int price = Convert.ToInt32(sData[4]);
+                    string id = posts[i].ID;
+                    var seller = posts[i].User;
+                    string itemName = DBFunctions.GetItemName(posts[i].Item_ID);
+                    int amount = Convert.ToInt32(posts[i].Amount);
+                    int price = Convert.ToInt32(posts[i].Price);
 
                     string plural = "";
                     if (amount > 1) plural = "s";
 
 
-                    emb.Fields.Add(new JEmbedField(x => {
-                        x.Header = $"{Functions.GetItemEmote(itemName)} ({amount}) {itemName}{plural} - id: {id}";
+                    emb.Fields.Add(new JEmbedField(x =>
+                    {
+                        x.Header = $"{DBFunctions.GetItemEmote(itemName)} ({amount}) {itemName}{plural} - id: {id}";
                         x.Text = $"<:blank:528431788616318977>:moneybag: {price} Coins\n<:blank:528431788616318977>";
                         x.Inline = false;
                     }));
@@ -921,19 +935,19 @@ namespace ForkBot
             {
                 await ReplyAsync("Free Market Help!\n\n" +
                                  "To view the Free Market, use either `;fm` or `;fm view`. You can do `;fm view [page #]` to view other pages.\n" +
-                                 "You can also use certain parameters, `lowest`, `highest`, and `[itemname]` to narrow down or sort the Free Market.\n"+
+                                 "You can also use certain parameters, `lowest`, `highest`, and `[itemname]` to narrow down or sort the Free Market.\n" +
                                  "To buy an item in the free market, use `;fm buy [ID]`. The ID is the characters that appear in the title of the sale in `;fm`\n" +
                                  "To post an item for sale, do ;fm post [item] [price]. You can also include the amount of items you want to sell in the format `[item]*[amount]`\n" +
                                  "To cancel a posting, use `;fm cancel [ID]`\nThere is a 25% coin fee for cancelling posts in order to avoid abuse. This will be automatically charged upon cancellation, if you cannot afford the fee, you cannot cancel.\n" +
                                  "There is a 5 posting limit.\n" +
                                  "There is a 2 week expiry on postings. You will be given a warning before your posting expires, and if the posting is not removed by the expiry time it will be auctioned off to other users and the coins will go towards the slots, **not you**.\n\n" +
                                  "Examples:\n\n" +
-                                 "`;fm view 3` Views the third Free Market page.\n"+
-                                 "`;fm view lowest` Views all items sorted by the lowest price.\n"+
-                                 "`;fm view key 5` Views the fifth page of just keys.\n"+
-                                 "`;fm post apple 100` Posts 1 apple for sale for 100 coins.\n"+
-                                 "`;fm post gun*10 7500` Posts 10 guns for sale for 7500 coins.\n"+
-                                 "`;fm buy A1B2C3` buys an item with the ID `A1B2C3`.\n\n"+
+                                 "`;fm view 3` Views the third Free Market page.\n" +
+                                 "`;fm view lowest` Views all items sorted by the lowest price.\n" +
+                                 "`;fm view key 5` Views the fifth page of just keys.\n" +
+                                 "`;fm post apple 100` Posts 1 apple for sale for 100 coins.\n" +
+                                 "`;fm post gun*10 7500` Posts 10 guns for sale for 7500 coins.\n" +
+                                 "`;fm buy A1B2C3` buys an item with the ID `A1B2C3`.\n\n" +
                                  "If something still doesn't make sense, just ask Brady.");
             }
             else if (command[0] == "post")
@@ -958,78 +972,66 @@ namespace ForkBot
                     return;
                 }
 
-                string id = "";
-
-                if (user.GetItemList().Where(x=>x == item).Count() < amount)
+                if (!user.HasItem(item, amount))
                 {
                     await ReplyAsync(":x: You either do not have the item, or enough of the item in your inventory. :x:");
                     return;
                 }
 
-                var items = File.ReadAllLines("Files/FreeMarket.txt");
-                if (items.Where(x => x.Split('|')[1] == Context.User.Id.ToString()).Count() >= 5)
+                if (MarketPost.GetPostsByUser(Context.User.Id).Count() >= 5)
                 {
                     await ReplyAsync(":x: You've reached the maximum of 5 Free Market postings.");
                     return;
                 }
 
                 for (int i = 0; i < amount; i++) user.RemoveItem(item);
-                string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                do
-                {
-                    for (int i = 0; i < 5; i++)
-                    {
-                        id += key[rdm.Next(key.Count())];
-                    }
-                } while (items.Where(x => x.Split('|')[0] == id).Count() > 0);
+
 
                 string plural = "";
                 if (price > 1) plural = "s";
-                string market = File.ReadAllText("Files/FreeMarket.txt");
-                File.WriteAllText("Files/FreeMarket.txt", $"{id}|{Context.User.Id}|{item}|{amount}|{price}|{Functions.DateTimeToString(Var.CurrentDate())}\n" + market);
+
+                MarketPost mp = new MarketPost(Context.User, DBFunctions.GetItemID(item), amount, price, Var.CurrentDate());
+
                 var expiryDate = Var.CurrentDate() + new TimeSpan(14, 0, 0, 0);
-                await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {id}.\n" +
+                await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {mp.ID}.\n" +
                     $"The posting will expire on {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(expiryDate.Month)} {expiryDate.Day}.");
             }
             else if (command[0] == "buy")
             {
                 string id = command[1].ToUpper();
-                var items = File.ReadAllLines("Files/FreeMarket.txt");
-                for (int i = 0; i < items.Count(); i++)
+                var post = MarketPost.GetPost(id);
+
+
+                if (post.User.Id == Context.User.Id)
                 {
-                    if (items[i].Split('|')[0] == id)
-                    {
-                        string[] sData = items[i].Split('|');
-                        ulong sellerID = Convert.ToUInt64(sData[1]);
-                        if (sellerID == Context.User.Id)
-                        {
-                            await ReplyAsync(":x: You cannot purchase your own posting. :x:");
-                            break;
-                        }
-                        string itemName = sData[2];
-                        int amount = Convert.ToInt32(sData[3]);
-                        int price = Convert.ToInt32(sData[4]);
-
-                        if (user.GetCoins() >= price)
-                        {
-                            for (int o = 0; o < amount; o++) user.GiveItem(itemName);
-                            user.GiveCoins(-price);
-                            items[i] = "";
-                            File.WriteAllLines("Files/FreeMarket.txt", items.Where(x => x != ""));
-
-                            string plural = "";
-                            if (amount > 1) plural = "s";
-
-                            string pluralC = "";
-                            if (price > 1) pluralC = "s";
-                            await ReplyAsync($"You have successfully purchased {amount} {itemName}{plural} for {price} coin{pluralC}!");
-                            Functions.GetUser(sellerID).GiveCoins(price);
-                            await Bot.client.GetUser(Convert.ToUInt64(sellerID)).SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}{plural} for {price} coin{pluralC}.");
-                            break;
-                        }
-                        else await ReplyAsync(":x: You cannot afford this posting. :x:");
-                    }
+                    await ReplyAsync(":x: You cannot purchase your own posting. :x:");
+                    return;
                 }
+                string itemName = DBFunctions.GetItemName(post.Item_ID);
+                int amount = post.Amount;
+                int price = post.Price;
+
+                if (user.GetCoins() >= price)
+                {
+                    for (int o = 0; o < amount; o++) user.GiveItem(itemName);
+                    user.GiveCoins(-price);
+
+                    MarketPost.DeletePost(id);
+
+                    string plural = "";
+                    if (amount > 1) plural = "s";
+
+                    string pluralC = "";
+                    if (price > 1) pluralC = "s";
+
+                    await ReplyAsync($"You have successfully purchased {amount} {itemName}{plural} for {price} coin{pluralC}!");
+                    Functions.GetUser(post.User).GiveCoins(price);
+                    await post.User.SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}{plural} for {price} coin{pluralC}.");
+                    
+                }
+                else await ReplyAsync(":x: You cannot afford this posting. :x:");
+
+
             }
             else if (command[0] == "cancel")
             {
@@ -1043,10 +1045,10 @@ namespace ForkBot
                     {
                         string itemName = sData[2];
                         int amount = Convert.ToInt32(sData[3]);
-                
+
                         if (sellerID == $"{Context.User.Id}")
                         {
-                            int fee = (int)(Convert.ToInt32(sData[4])*.25);
+                            int fee = (int)(Convert.ToInt32(sData[4]) * .25);
                             if (user.GetCoins() >= fee)
                             {
                                 user.GiveCoins(-fee);
@@ -1056,7 +1058,7 @@ namespace ForkBot
                                 await ReplyAsync($"You have successfully canceled your posting of {amount} {itemName}(s). They have returned to your inventory and you have been charged the cancellation fee of {fee} coins.");
                             }
                             else await ReplyAsync($"You cannot afford the cancellation fee of {fee} coins and have not cancelled this posting.");
-                            
+
                             break;
                         }
                         else
@@ -1069,25 +1071,20 @@ namespace ForkBot
         }
 
         [Command("iteminfo"), Summary("Its like a pokedex but for items!")]
-        public async Task ItemInfo(string item)
+        public async Task ItemInfo([Remainder] string item)
         {
-            var items = Functions.GetItemList();
-            foreach(string i in items)
-            {
-                if (i.StartsWith(item))
-                {
-                    var itemInfo = i.Split('|');
-                    JEmbed emb = new JEmbed();
-                    emb.Title = Functions.GetItemEmote(item) + " " + Func.ToTitleCase(itemInfo[0]).Replace('_',' ');
-                    emb.Description = itemInfo[1];
-                    emb.ColorStripe = Constants.Colours.YORK_RED;
-                    if (itemInfo[2].Contains("-")) emb.Description += $"\n\n:moneybag: Cannot be purchased. Find through presents or combining! Sell: 10 coins.";
-                    else emb.Description += $"\n\n:moneybag: Buy: {itemInfo[2]} coins.\nSell: {Convert.ToInt32(Convert.ToInt32(itemInfo[2])* Constants.Values.SELL_VAL)} coins.";
-                    await ReplyAsync("", embed: emb.Build());
-                    return;
-                }
-            }
-            await ReplyAsync("Item not found.");
+            var itemID = DBFunctions.GetItemID(item);
+
+            JEmbed emb = new JEmbed();
+            emb.Title = DBFunctions.GetItemEmote(item) + " " + DBFunctions.GetItemName(itemID);
+            emb.Description = DBFunctions.GetItemDescription(itemID);
+            emb.ColorStripe = Constants.Colours.YORK_RED;
+            if (!DBFunctions.ItemIsShoppable(itemID)) emb.Description += $"\n\n:moneybag: Cannot be purchased. Find through presents or combining!\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
+            else emb.Description += $"\n\n:moneybag: Buy: {DBFunctions.GetItemPrice(itemID)} coins.\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
+            await ReplyAsync("", embed: emb.Build());
+            return;
+
+            //await ReplyAsync("Item not found.");
         }
 
         [Command("combine"), Summary("[FUN] Combine lame items to make rad items!")]
@@ -1097,7 +1094,7 @@ namespace ForkBot
             
             foreach (string item in items)
             {
-                if (!u.GetItemList().Contains(item))
+                if (!u.HasItem(item))
                 {
                     await ReplyAsync($"You do not have a(n) {item}!");
                     return;
@@ -1122,7 +1119,7 @@ namespace ForkBot
                 else {
                     foreach (string item in items) u.RemoveItem(item);
                     u.GiveItem(result);
-                    await ReplyAsync($"You have successfully made a {result}! " + Functions.GetItemEmote(result));
+                    await ReplyAsync($"You have successfully made a {result}! " + DBFunctions.GetItemEmote(result));
                 }
             }
             else
@@ -1138,7 +1135,7 @@ namespace ForkBot
             string msg = "";
             foreach (string item in items)
             {
-                if (u.GetItemList().Contains(item))
+                if (u.HasItem(item))
                 {
                     u.RemoveItem(item);
                     msg += ":recycle: You have succesfully thrown away your " + item + "!\n";
@@ -1157,13 +1154,12 @@ namespace ForkBot
                 await ReplyAsync("This command can not be used in direct messages.");
                 return;
             }
-             
-            if (!File.Exists("Files/Bids.txt")) File.WriteAllText("Files/Bids.txt", "");
-            var bids = File.ReadAllLines("Files/Bids.txt");
+
+            var bids = ForkBot.Bid.GetAllBids();
             if (commands.Count() == 0) commands = new string[] { "" };
-            if (!File.Exists("Files/BidNotify.txt")) File.Create("Files/BidNotify.txt").Dispose();
-            var notifyUserIDs = File.ReadAllLines("Files/BidNotify.txt").Select(x=>Convert.ToUInt64(x));
-            
+
+            var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
+
             switch (commands[0])
             {
                 case "":
@@ -1173,34 +1169,32 @@ namespace ForkBot
                     emb.Title = "Auctions";
                     emb.ColorStripe = Constants.Colours.YORK_RED;
                     emb.Footer.Text = "To bid, use `;bid [ID] [Amount]`";
-                    if (!notifyUserIDs.Contains(Context.User.Id)) emb.Footer.Text += " \n Want to be notified when there's a new auction? Use `;bid opt-in`!";
+                    if (!notifyUsers.Select(x => x.Id).Contains(Context.User.Id)) emb.Footer.Text += " \n Want to be notified when there's a new auction? Use `;bid opt-in`!";
 
                     if (bids.Count() == 0) emb.Description = "There are currently no auctions going on.";
-                    foreach (string bid in bids)
+                    foreach (var bid in bids)
                     {
-                        var data = bid.Split('|');
-                        var id = data[0];
-                        var item = data[1];
-                        var amount = Convert.ToInt32(data[2]);
-                        var date = Functions.StringToDateTime(data[3]);
-                        var currentBid = Convert.ToInt32(data[4]);
-                        var userID = Convert.ToUInt64(data[5]);
-                        var bidder = await Context.Guild.GetUserAsync(userID);
+                        var id = bid.ID;
+                        var item = DBFunctions.GetItemName(bid.Item_ID);
+                        var itemCount = bid.Amount;
+                        var date = bid.DateStarted;
+                        var currentBidAmount = bid.CurrentBid;
+                        var bidder = bid.CurrentBidder;
                         var endTime = (date + new TimeSpan(1, 0, 0, 0)) - Var.CurrentDate();
                         string bidderMsg = "";
-                        
 
-                        if (bidder != null) bidderMsg = $" by {Functions.GetName(bidder)}.";
-                        else if (userID != 0)
+
+                        if (bidder != null)
                         {
-                            var user = Bot.client.GetUser(userID);
-                            bidderMsg += $" by {user.Username}";
+                            var u = Functions.GetUser(bid.CurrentBidder);
+                            bidderMsg += $" by {await u.GetName(Context.Guild)}";
                         }
+
                         emb.Fields.Add(new JEmbedField(x =>
                         {
-                            x.Header = $"{Functions.GetItemEmote(item)} ({amount}) {item} - id: {id}";
-                            var text = $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBid}** coins{bidderMsg}\n" +
-                                       $"<:blank:528431788616318977> Minimum Next Bid: **{Math.Ceiling(currentBid + currentBid * 0.15)}** coins.\n";
+                            x.Header = $"{DBFunctions.GetItemEmote(item)} ({itemCount}) {item} - id: {id}";
+                            var text = $"<:blank:528431788616318977> :moneybag: Current bid: **{currentBidAmount}** coins{bidderMsg}\n" +
+                                       $"<:blank:528431788616318977> Minimum Next Bid: **{Math.Ceiling(currentBidAmount + currentBidAmount * 0.15)}** coins.\n";
 
                             if (endTime.Hours < 1) text += $"<:blank:528431788616318977> Ending in: **{endTime.Minutes}** minutes and **{endTime.Seconds}** seconds.";
                             else text += $"<:blank:528431788616318977> Ending in: **{endTime.Hours}** hours and **{endTime.Minutes}** minutes.";
@@ -1212,65 +1206,61 @@ namespace ForkBot
                     break;
                 case "opt-in":
                 case "opt-out":
-                    bool optedIn = notifyUserIDs.Contains(Context.User.Id);
+                    bool optedIn = notifyUsers.Select(x => x.Id).Contains(Context.User.Id);
+                    var user = Functions.GetUser(Context.User);
                     if (optedIn)
                     {
-                        notifyUserIDs = notifyUserIDs.Where(x => x != Context.User.Id);
+                        user.SetData("Notify_Bid", false);
                         await ReplyAsync("Successfully opted-out of bid notifications.");
                     }
                     else
                     {
-                        notifyUserIDs = notifyUserIDs.Concat(new ulong[] { Context.User.Id });
+                        user.SetData("Notify_Bid", true);
                         await ReplyAsync("Successfully opted-in to bid notifications.");
                     }
 
-                    File.WriteAllLines("Files/BidNotify.txt", notifyUserIDs.Select(x => x.ToString()));
                     break;
                 default:
-                    string BidID = commands[0];
+                    string bidID = commands[0];
                     int bidAmount = Convert.ToInt32(commands[1]);
-                    bool found = false, changed = false;
-                    for(int i = 0; i < bids.Count(); i++)
+                    var BID = ForkBot.Bid.GetBid(bidID);
+                    if (BID == null)
                     {
-                        var data = bids[i].Split('|');
-                        if (data[0] == BidID.ToUpper())
-                        {
-                            found = true;
-                            var item = data[1];
-                            var amount = Convert.ToInt32(data[2]);
-                            var currentBid = Convert.ToInt32(data[4]);
-                            if (bidAmount > currentBid)
-                            {
-                                var user = Functions.GetUser(Context.User);
-                                if (user.ID.ToString() != data[5])
-                                {
-                                    if (user.GetCoins() >= bidAmount)
-                                    {
-                                        if (bidAmount > Math.Ceiling(currentBid + (currentBid * 0.15)))
-                                        {
-                                            changed = true;
-                                            var newBid = $"{data[0]}|{data[1]}|{data[2]}|{data[3]}|{bidAmount}|{Context.User.Id}";
-                                            bids[i] = newBid;
-                                            user.GiveCoins(-bidAmount);
-                                            var oldUser = Functions.GetUser(Convert.ToUInt64(data[5]));
-                                            oldUser.GiveCoins(currentBid);
-                                            await ReplyAsync($"You are now the highest bidder for {Functions.GetItemEmote(item)} {amount} {item}(s) with {bidAmount} coins.");
-                                            break;
-                                        }
-                                        else await ReplyAsync($"Your bid must be at least 15% higher than the current. ({Math.Ceiling(currentBid + currentBid * 0.15)} coins)");
-                                    }
-                                    else await ReplyAsync("You do not have the specified amount of coins.");
-                                }
-                                else await ReplyAsync("You already have the highest bid for this item.");
-                            }
-                            else await ReplyAsync("Your bid must be higher than the current bid.");
-                        }
+                        await ReplyAsync("Bid ID not found. Make sure you've typed it correctly.");
+                        return;
                     }
-                    if (!found) await ReplyAsync("Bid ID not found. Make sure you've typed it correctly.");
-                    if (changed) File.WriteAllLines("Files/Bids.txt", bids);
+
+
+                    var itemID = BID.Item_ID;
+                    var amount = BID.Amount;
+                    var currentBid = BID.CurrentBid;
+
+                    if (bidAmount > currentBid)
+                    {
+                        var u = Functions.GetUser(Context.User);
+                        if (u.ID != BID.CurrentBidder.Id)
+                        {
+                            if (u.GetCoins() >= bidAmount)
+                            {
+                                if (bidAmount >= Math.Ceiling(currentBid + (currentBid * 0.15)))
+                                {
+                                    BID.Update(Context.User, bidAmount);
+                                    u.GiveCoins(-bidAmount);
+                                    var oldUser = Functions.GetUser(BID.CurrentBidder);
+                                    oldUser.GiveCoins(currentBid);
+                                    await ReplyAsync($"You are now the highest bidder for {DBFunctions.GetItemEmote(itemID)} {amount} {DBFunctions.GetItemName(itemID)}(s) with {bidAmount} coins.");
+                                    break;
+                                }
+                                else await ReplyAsync($"Your bid must be at least 15% higher than the current. ({Math.Ceiling(currentBid + currentBid * 0.15)} coins)");
+                            }
+                            else await ReplyAsync("You do not have the specified amount of coins.");
+                        }
+                        else await ReplyAsync("You already have the highest bid for this item.");
+                    }
+                    else await ReplyAsync("Your bid must be higher than the current bid.");
+
                     break;
             }
-
         }
         #endregion
 
@@ -1477,19 +1467,16 @@ namespace ForkBot
                 return;
             }
             var u = Functions.GetUser(Context.User);
-            var lA = u.GetData("allowance");
-            DateTime lastAllowance;
-            if (lA == "0") lastAllowance = new DateTime(0);
-            else lastAllowance = Functions.StringToDateTime(lA);
+            var lastAllowance = u.GetData<DateTime>("allowance_datetime");
 
             var ONE_DAY = new TimeSpan(24, 0, 0);
             if ((lastAllowance + ONE_DAY) < DateTime.Now)
             {
                 double allowance = rdm.Next(100, 500);
-                if (u.GetItemList().Contains("credit_card")) allowance *= 2.5;
+                if (u.HasItem("credit_card")) allowance *= 2.5;
                 int iallowance = (int)allowance;
                 u.GiveCoins(iallowance);
-                u.SetData("allowance", Functions.DateTimeToString(DateTime.Now));
+                u.SetData("allowance_datetime", DateTime.Now);
                 await Context.Channel.SendMessageAsync($":moneybag: | Here's your daily allowance! ***+{iallowance} coins.*** The next one will be available in 24 hours.");
             }
             else
@@ -1672,51 +1659,13 @@ namespace ForkBot
                 }));
             }
 
-            string[] items = u.GetItemList();
-
-            /* old inventory code
-            bool moreItems = true;
-            string invTitle = "Inventory";
-            while (moreItems)
-            {
-                List<string> extraItems = new List<string>();
-                moreItems = false;
-                emb.Fields.Add(new JEmbedField(x =>
-                {
-                    x.Header = invTitle + ":";
-                    string text = "";
-                    foreach (string item in items)
-                    {
-                        if (moreItems) extraItems.Add(item);
-                        else
-                        {
-                            if (text.Length + (item + ", ").Length > 1024)
-                            {
-                                moreItems = true;
-                                extraItems.Add(item);
-                                invTitle += " (cont)";
-                            }
-                            else text += item + ", ";
-                        }
-                    }
-                    x.Text = Convert.ToString(text);
-                    if (moreItems) items = extraItems.ToArray();
-                }));
-            }
-            */
-
-            Dictionary<string, int> inv = new Dictionary<string, int>();
-            for (int i = 0; i < items.Count(); i++)
-            {
-                if (inv.ContainsKey(items[i])) inv[items[i]]++;
-                else inv.Add(items[i], 1);
-            }
-
+            var items = u.GetItemList();
+            
             List<string> fields = new List<string>();
             string txt = "";
-            foreach(KeyValuePair<string,int> item in inv)
+            foreach(KeyValuePair<int,int> item in items)
             {
-                string itemListing = $"{Functions.GetItemEmote(item.Key)} {item.Key} ";
+                string itemListing = $"{DBFunctions.GetItemEmote(item.Key)} {DBFunctions.GetItemName(item.Key)} ";
                 if (item.Value > 1) itemListing += $"x{item.Value} ";
                 if (txt.Count() + itemListing.Count() > 1024)
                 {
@@ -1743,11 +1692,9 @@ namespace ForkBot
             {
                 x.Header = "Stats:";
                 string text = "";
-                foreach (string stat in u.GetStats())
+                foreach (var stat in u.GetStats())
                 {
-                    var s = stat.Replace("stat.", "");
-                    var info = s.Split(':');
-                    text += info[0] + ": " + info[1] + "\n";
+                    text += stat.Key + ": " + stat.Value + "\n";
                 }
                 x.Text = Convert.ToString(text);
             }));
@@ -1775,7 +1722,7 @@ namespace ForkBot
                 }
 
                 User user = Functions.GetUser(Context.User);
-                bool hasPouch = user.GetData("pouch") == "1";
+                bool hasPouch = user.GetData<bool>("Active_Pouch");
                 if (Var.presentCount > 0 && (!Var.presentClaims.Any(x => x.Id == Context.User.Id) || hasPouch))
                 {
                     if (Var.presentClaims.Count() <= 0)
@@ -1785,7 +1732,7 @@ namespace ForkBot
                     }
                     
                     if (Var.presentClaims.Any(x => x.Id == Context.User.Id) && hasPouch)
-                        user.SetData("pouch", "0");
+                        user.SetData("active_pouch", "0");
                     
 
                     Var.presentCount--;
@@ -1806,10 +1753,10 @@ namespace ForkBot
                     {
                         Var.presentRigged = false;
 
-                        if (user.GetData("gnoming") == "1")
+                        if (user.GetData<bool>("gnoming"))
                         {
-                            user.SetData("gnoming", "0");
-                            await ReplyAsync(Functions.GetItemEmote("gnome") + $" Whoa! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}]! Your gnome sacrificed himself to save your items!\n{Constants.Values.GNOME_VID}");
+                            user.SetData("active_gnome", "0");
+                            await ReplyAsync(DBFunctions.GetItemEmote("gnome") + $" Whoa! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}]! Your gnome sacrificed himself to save your items!\n{Constants.Values.GNOME_VID}");
                             await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
                             Var.presentWaiting = true;
                             Var.replacing = false;
@@ -1828,7 +1775,8 @@ namespace ForkBot
                                 string msg = $":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
                                 for (int i = 0; i < lossCount; i++)
                                 {
-                                    string item = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                                    int itemID = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                                    var item = DBFunctions.GetItemName(itemID);
                                     user.RemoveItem(item);
                                     msg += item + "\n";
                                 }
@@ -1895,30 +1843,82 @@ namespace ForkBot
         }
 
         [Command("top"), Summary("[FUN] View the top users of ForkBot based on their stats. Use a stat as the parameter in order to see specific stat rankings.")]
-        public async Task Top(string stat = "")
+        public async Task Top([Remainder] string stat = "")
         {
-            var top5 = Functions.GetTopList(stat);
-            string msg = "```\nTop five users";
-            if (stat == "bottom")
-            {
-                msg = msg.Replace("Top", "Bottom");
-                stat = "";
-            }
-            else if (stat != "") msg += " [" + stat + "]";
-            msg += ":\n";
             
-            int amount = 5;
-            if (top5.Count() < 5) amount = top5.Count();
-            for (int i = 0; i < amount; i++)
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
-                var user = Bot.client.GetUser(top5[i].Key);
-                string userName;
-                if (user == null) userName = $"User[{top5[i].Key}]";
-                else userName = user.Username;
-                msg += $"[{i + 1}] {userName} - {top5[i].Value} {stat}\n";
+                con.Open();
+
+                var stm = "";
+                string title = "";
+                string emote = "";
+
+                JEmbed emb = new JEmbed();
+                emb.ColorStripe = Constants.Colours.DEFAULT_COLOUR;
+
+                if (stat == "coin" || stat == "coins")
+                {
+                    stm = "SELECT USER_ID, COINS FROM USERS ORDER BY COINS DESC LIMIT 10";
+                    emb.Title = "Top 5 Richest Users";
+                    emote = ":moneybag:";
+                }
+                else if (DBFunctions.GetItemID(stat) != 0)
+                {
+                    var id = DBFunctions.GetItemID(stat);
+                    stm = $"SELECT USER_ID, COUNT FROM USER_ITEMS WHERE ITEM_ID = {id} ORDER BY COUNT DESC LIMIT 10";
+                    emb.Title = $"Top 5 Most {DBFunctions.GetItemName(id)}s";
+                    emote = DBFunctions.GetItemEmote(id);
+                }
+                else if (DBFunctions.StatExists(stat)) //specific stat
+                {
+                    stm = $"SELECT USER_ID, {stat} FROM USER_STATS ORDER BY {stat} DESC LIMIT 10";
+                    emb.Title = $"Top 5 {stat.ToTitleCase()}";
+                    emote = ":chart_with_upwards_trend:";
+                }
+                else if (stat == "") //all stats
+                {
+                    stm = "SELECT USER_ID, HYGIENE+FASHION+HAPPINESS+FITNESS+FULLNESS+HEALTHINESS+SOBRIETY FROM USER_STATS ORDER BY HYGIENE+FASHION+HAPPINESS+FITNESS+FULLNESS+HEALTHINESS+SOBRIETY DESC LIMIT 10";
+                    emb.Title = "Top 5 Total Stats";
+                    emote = ":crown:";
+                }
+                else
+                {
+                    await ReplyAsync("Invalid argument. Possible toplists are:\n`coins`, `[item_name]`, `[stat]`, or blank for total stats.");
+                    return;
+                }
+
+                using (var com = new SQLiteCommand(stm, con))
+                {
+                    var reader = com.ExecuteReader();
+                    int rank = 0;
+                    while (reader.Read() && rank < 5)
+                    {
+                        rank++;
+                        emb.Fields.Add(new JEmbedField(async x =>
+                        {
+                            var userID = Convert.ToUInt64(reader.GetInt64(0));
+                            var user = Functions.GetUser(userID);
+                            var name = await user.GetName(Context.Guild);
+                            if (name == null)
+                                rank--;
+                            else
+                            {
+                                int value = reader.GetInt32(1);
+
+                                x.Header = $"[{rank}] {name}";
+                                x.Text = $"{emote} {value}";
+
+
+                                x.Inline = false;
+                            }
+                        }));
+                    }
+
+                    await ReplyAsync("", embed: emb.Build());
+                }
             }
-            msg += "```";
-            await Context.Channel.SendMessageAsync(msg);
+            
         }
         
         [Command("lottery"), Summary("[FUN] The Happy Lucky Lottery! Buy a lotto card and check daily to see if your numbers match!")]
@@ -1946,18 +1946,18 @@ namespace ForkBot
                                   "Todays number: " + Var.todaysLotto;
                 emb.ColorStripe = Functions.GetColor(Context.User);
 
-                string uNum = u.GetData("lotto");
-                string uNum2 = u.GetData("bmlotto");
+                string uNum = u.GetData<string>("lotto_num");
+                string uNum2 = u.GetData<string>("bm_lotto_num");
 
                 if (uNum == "0") emb.Footer.Text = "Get your number today with ';lottery buy'!";
                 else
                 {
-                    var lottoDay = Functions.StringToDateTime(u.GetData("lottoDay"));
-                    if (lottoDay.DayOfYear >= Var.CurrentDate().DayOfYear && lottoDay.Year == Var.CurrentDate().Year) emb.Description+="\n\nYou've already checked the lottery today! Come back tomorrow!";
+                    var lottoDay = u.GetData<DateTime>("lotto_day").AddHours(5);
+                    if (lottoDay.DayOfYear >= currentDay.DayOfYear && lottoDay.Year == currentDay.Year) emb.Description+="\n\nYou've already checked the lottery today! Come back tomorrow!";
                     else
                     {
 
-                        u.SetData("lottoDay", Functions.DateTimeToString(Var.CurrentDate()));
+                        u.SetData("lotto_day", currentDay);
                         int matchCount = 0;
                         for (int i = 0; i < 4; i++)
                         {
@@ -1996,7 +1996,7 @@ namespace ForkBot
                                     case 2:
                                         string[] level2Items = { "gift", "key", "moneybag", "ticket", "gift" };
                                         string item = level2Items[rdm.Next(level2Items.Count())];
-                                        x.Text += $"You got 2500 coins and a(n) {item} {Functions.GetItemEmote(item)}!";
+                                        x.Text += $"You got 2500 coins and a(n) {item} {DBFunctions.GetItemEmote(item)}!";
                                         u.GiveCoins(2500);
                                         u.GiveItem(item);
                                         break;
@@ -2004,23 +2004,27 @@ namespace ForkBot
                                         string[] level3Items = { "key", "key", "calling", "gun", "unicorn", "moneybag", "moneybag" };
                                         var item01 = level3Items[rdm.Next(level3Items.Count())];
                                         var item02 = level3Items[rdm.Next(level3Items.Count())];
-                                        x.Text += $"You got 5000 coins and: {item01} {Functions.GetItemEmote(item01)}, {item02} {Functions.GetItemEmote(item02)}";
+                                        x.Text += $"You got 5000 coins and: {item01} {DBFunctions.GetItemEmote(item01)}, {item02} {DBFunctions.GetItemEmote(item02)}";
                                         u.GiveCoins(5000);
                                         u.GiveItem(item01);
                                         u.GiveItem(item02);
                                         break;
                                     case 4:
-                                        string[] level4Items = { "key2", "key", "key", "gun", "unicorn", "moneybag", "moneybag", "gem","unicorn" };
+                                        string[] level4Items = { "key2", "gun", "unicorn", "moneybag", "moneybag", "gem","unicorn" };
                                         var item1 = level4Items[rdm.Next(level4Items.Count())];
                                         var item2 = level4Items[rdm.Next(level4Items.Count())];
                                         var item3 = level4Items[rdm.Next(level4Items.Count())];
                                         var item4 = level4Items[rdm.Next(level4Items.Count())];
-                                        x.Text += $"You got 10000 coins and: {item1} {Functions.GetItemEmote(item1)}, {item2} {Functions.GetItemEmote(item2)}, {item3} {Functions.GetItemEmote(item3)}, {item4} {Functions.GetItemEmote(item4)}";
+                                        x.Text += $"You got 10000 coins and: {item1} {DBFunctions.GetItemEmote(item1)}, {item2} {DBFunctions.GetItemEmote(item2)}, {item3} {DBFunctions.GetItemEmote(item3)}, {item4} {DBFunctions.GetItemEmote(item4)}";
                                         u.GiveCoins(10000);
                                         u.GiveItem(item1);
                                         u.GiveItem(item2);
                                         u.GiveItem(item3);
                                         u.GiveItem(item4);
+                                        DBFunctions.AddNews($"{Context.User.Username.ToUpper()} WINS THE LOTTERY!", $"{Context.User.Username} is taking home the big bucks, managing to score a whopping 10,000 coins along with a " +
+                                            $"{item1}, {item2}, {item3}, and a {item4}. All these thanks to their lucky number {Var.todaysLotto}! Those four numbers are what currently separates the big leagues from us " +
+                                            $"puny mortals! {Var.CurrentDateFormatted()} {Context.User.Username} checked to see their match and was met with a lifechanging surprise! Congratulations, {Context.User.Username} and " +
+                                            $"who knows? Maybe YOU could be next! Use `;lottery buy` to get your ticket today and get your chance to live the dream! THIS MESSAGE WAS BROUGHT TO YOU BY LOTTO CO™️");
                                         break;
                                 }
                             }
@@ -2034,13 +2038,13 @@ namespace ForkBot
             }
             else if (command == "buy")
             {
-                string uNum = u.GetData("lotto");
+                string uNum = u.GetData<string>("lotto_num");
                 if (uNum == "0") await ReplyAsync("Are you sure you want to buy a lottery ticket for 10 coins? Use `;lottery confirm` to confirm!");
                 else await ReplyAsync("Are you sure you want to buy a *new* lottery ticket for 100 coins? Use `;lottery confirm` to confirm!");
             }
             else if (command == "confirm")
             {
-                string uNum = u.GetData("lotto");
+                string uNum = u.GetData<string>("lotto_num");
                 int cost = 0;
                 if (uNum == "0") cost = 10;
                 else cost = 100;
@@ -2048,7 +2052,7 @@ namespace ForkBot
                 if (u.GetCoins() >= cost)
                 {
                     u.GiveCoins(-cost);
-                    u.SetData("lotto", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
+                    u.SetData("lotto_num", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
                     await ReplyAsync($"You have successfully purchased a Happy Lucky Lottery Ticket for {cost} coins!");
                 }
                 else
@@ -2527,8 +2531,9 @@ namespace ForkBot
             if (Context.User.Id == Constants.Users.BRADY)
             {
                 User u = Functions.GetUser(user);
-                u.GiveItem(item);
-                await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given: {item}.");
+                var success = u.GiveItem(item);
+                if (success) await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given: {item}.");
+                else await ReplyAsync($"Failed to give item. Are you sure '{item}' exists?");
             }
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
         }
@@ -2785,6 +2790,7 @@ namespace ForkBot
             }
         }
 
+        /*
         [Command("transfer"), Summary("[BRADY] Transfers all account data from one user to another.")]
         public async Task Transfer(IUser oldUser, IUser newUser)
         {
@@ -2797,28 +2803,26 @@ namespace ForkBot
             user1.Archive();
             await ReplyAsync("Successfully transfered data and archived old user.");
         }
+        */
 
         [Command("makebid"), Summary("[BRADY] Creates a new bid starting at 100 coins.")]
-        public async Task MakeBid(string item, int amount)
+        public async Task MakeBid(string item = "", int amount = 0)
         {
             if (Context.User.Id != Constants.Users.BRADY) return;
             
-            string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string id = "";
-            
-            for (int i = 0; i < 5; i++)
+            if (item == "" || amount <= 0)
             {
-                id += key[rdm.Next(key.Count())];
+                await ReplyAsync("Holy shit, can you stop forgetting the fucking parameters? Idiot. It's `;makebid [item] [amount]`.\n" +
+                    "DON'T FUCKING FORGET IT.");
+                return;
             }
 
-            string newBid = $"{id}|{item}|{amount}|{Functions.DateTimeToString(Var.CurrentDate())}|100|0\n";
+            var newBid = new Bid(DBFunctions.GetItemID(item), amount);
 
-            File.AppendAllText("Files/Bids.txt", newBid);
-
-            var notifyUsers = File.ReadAllLines("Files/BidNotify.txt").Select(x => Bot.client.GetUser(Convert.ToUInt64(x)));
+            var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
             foreach(IUser u in notifyUsers)
             {
-                await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {amount} {item}(s)! Get it with the ID: {id}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
+                await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {amount} {item}(s)! Get it with the ID: {newBid.ID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
             }
         }
         
@@ -2831,39 +2835,69 @@ namespace ForkBot
             if (Var.LockDM) await ReplyAsync("DM Commands have been disabled.");
             else await ReplyAsync("DM Commands have been enabled.");
         }
-        /*
-        [Command("snap")]
-        public async Task Snap()
+
+        [Command("testsql"), Summary("[BRADY] hi")]
+        public async Task TestSQL([Remainder]string query)
         {
             if (Context.User.Id != Constants.Users.BRADY) return;
-            await Context.Channel.SendMessageAsync("When I’m done, half of humanity will still exist. Perfectly balanced, as all things should be.\n\nI know what it’s like to lose. To feel so desperately that you’re right, yet to fail nonetheless. Dread it. Run from it. Destiny still arrives. Or should I say, I have.");
-            
-            var users = await Context.Guild.GetUsersAsync();
-            List<int> dustIndex = new List<int>();
-            int userCount = users.Count();
-            int halfUsers = userCount / 2;
-            for (int i = 0; i < halfUsers; i++)
-            {
-                try
-                {
-                    int index = -1;
-                    while (index < 0 || dustIndex.Contains(index))
-                        index = rdm.Next(userCount);
 
-                    dustIndex.Add(index);
-                    await users.ElementAt(index).AddRoleAsync(Context.Guild.GetRole(Constants.Roles.DUST));
-                }
-                catch (Exception e)
+
+            string cs = @"data source=Files\ForkDB.db";
+            var con = new SQLiteConnection(cs);
+            con.Open();
+            var cmd = new SQLiteCommand(query, con);
+
+            var returnData = cmd.ExecuteReader();
+            string header = "";
+            bool headerSet = false;
+            string msg = "";
+            while (returnData.Read())
+            {
+                for (int i = 0; i < returnData.FieldCount; i++)
                 {
-                    Console.WriteLine($"{e.StackTrace}\n\n on user index {i} ({users.ElementAt(i).Username})");
+                    if (!headerSet) header += $"{returnData.GetName(i)}\t|\t";
+                    msg += $"{returnData.GetValue(i)}\t|\t";
+                }
+                headerSet = true;
+                msg += "\n";
+            }
+            await ReplyAsync(header + "\n" + msg);
+            //await ReplyAsync(version);
+        }
+
+            /*
+            [Command("snap")]
+            public async Task Snap()
+            {
+                if (Context.User.Id != Constants.Users.BRADY) return;
+                await Context.Channel.SendMessageAsync("When I’m done, half of humanity will still exist. Perfectly balanced, as all things should be.\n\nI know what it’s like to lose. To feel so desperately that you’re right, yet to fail nonetheless. Dread it. Run from it. Destiny still arrives. Or should I say, I have.");
+
+                var users = await Context.Guild.GetUsersAsync();
+                List<int> dustIndex = new List<int>();
+                int userCount = users.Count();
+                int halfUsers = userCount / 2;
+                for (int i = 0; i < halfUsers; i++)
+                {
+                    try
+                    {
+                        int index = -1;
+                        while (index < 0 || dustIndex.Contains(index))
+                            index = rdm.Next(userCount);
+
+                        dustIndex.Add(index);
+                        await users.ElementAt(index).AddRoleAsync(Context.Guild.GetRole(Constants.Roles.DUST));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"{e.StackTrace}\n\n on user index {i} ({users.ElementAt(i).Username})");
+                    }
                 }
             }
+            */
+
+
+            #endregion
+
         }
-        */
-
-
-        #endregion
-
-    }
     
 }

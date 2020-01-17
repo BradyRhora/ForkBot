@@ -15,7 +15,7 @@ namespace ForkBot
         public bool Check(ICommandContext Context, string item, bool remove = true)
         {
             var user = Functions.GetUser(Context.User);
-            if (user.GetItemList().Contains(item))
+            if (user.HasItem(item))
             {
                 if (remove) user.RemoveItem(item);
                 return false;
@@ -29,14 +29,14 @@ namespace ForkBot
             if (Check(Context, "tickets")) return;
             var user = Functions.GetUser(Context.User);
 
-            if (user.GetData("bmlotto") == "0")
+            if (user.GetData<string>("bm_lotto_num") == "0")
             {
-                user.SetData("bmlotto", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
+                user.SetData("bm_lotto_num", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
                 await ReplyAsync("You now have two lotto numbers, they will both be checked when using `;lottery`. You can only replace your second lottery number using another :tickets:.");
             }
             else
             {
-                user.SetData("bmlotto", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
+                user.SetData("bm_lotto_num", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
                 await ReplyAsync("You have successfully replaced your second lottery number.");
             }
         }
@@ -52,7 +52,7 @@ namespace ForkBot
         public async Task warning()
         {
             User u = Functions.GetUser(Context.User);
-            if (u.GetItemList().Contains("warning"))
+            if (u.HasItem("warning"))
             {
                 await ReplyAsync("gimme a bit longer");
             }
@@ -62,10 +62,13 @@ namespace ForkBot
         public async Task gem()
         {
             if (Check(Context, "gem")) return;
-            string gemTime = Functions.DateTimeToString(DateTime.Now + new TimeSpan(3, 0, 0));
+            await ReplyAsync("Sorry remind me to do this I forgot");
+            var user = Functions.GetUser(Context.User);
+            user.GiveItem("gem");
+            /*string gemTime = Functions.DateTimeToString(DateTime.Now + new TimeSpan(3, 0, 0));
             var user = Functions.GetUser(Context.User);
             user.SetData("gemtime", gemTime);
-            await ReplyAsync("Your stat increases will be multiplied for 3 hours!");
+            await ReplyAsync("Your stat increases will be multiplied for 3 hours!");*/
         }
 
         [Command("fax")]

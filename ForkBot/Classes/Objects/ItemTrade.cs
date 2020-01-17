@@ -54,7 +54,9 @@ namespace ForkBot
                 }
 
                 var itemList = u1.GetItemList();
-                int userHas = itemList.Where(x => x == item).Count();
+                var itemID = DBFunctions.GetItemID(item);
+                if (!itemList.ContainsKey(itemID)) return false;
+                int userHas = itemList[itemID];
                 if (amount <= userHas)
                 {
                     for (int i = 0; i < amount; i++)
@@ -80,7 +82,9 @@ namespace ForkBot
                 }
 
                 var itemList = u2.GetItemList();
-                int userHas = itemList.Where(x => x == item).Count();
+                var itemID = DBFunctions.GetItemID(item);
+                if (!itemList.ContainsKey(itemID)) return false;
+                int userHas = itemList[itemID];
                 if (amount <= userHas)
                 {
                     for (int i = 0; i < amount; i++)
@@ -112,7 +116,7 @@ namespace ForkBot
                 x.Header = u1Name + "'s Items";
 
                 string itemlist = "";
-                foreach(string item in items1)  itemlist += Functions.GetItemEmote(item);
+                foreach(string item in items1)  itemlist += DBFunctions.GetItemEmote(item);
                 if(coins1 > 0) itemlist += ":moneybag:" + coins1 + " coins";
 
                 x.Text = itemlist;
@@ -123,7 +127,7 @@ namespace ForkBot
                 x.Header = u2Name + "'s Items";
 
                 string itemlist = "";
-                foreach (string item in items2) itemlist += Functions.GetItemEmote(item);
+                foreach (string item in items2) itemlist += DBFunctions.GetItemEmote(item);
                 if (coins2 > 0) itemlist += ":moneybag:" + coins2 + " coins";
 
                 x.Text = itemlist;

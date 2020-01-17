@@ -11,6 +11,7 @@ using Discord.WebSocket;
 using System.Net;
 using System.Xml;
 using System.Text.RegularExpressions;
+using System.Data.SQLite;
 
 namespace ForkBot
 {
@@ -67,44 +68,7 @@ namespace ForkBot
                 return user.Username;
             return user.Nickname;
         }
-                
-        public static string[] GetItemList()
-        {
-            return File.ReadAllLines("Files/items.txt");
-        }
-
-        public static string[] GetBlackMarketItemList()
-        {
-            return File.ReadAllLines("Files/bmitems.txt");
-        }
-
-        public static string GetItemEmote(string item)
-        {
-            string itemData;
-            string[] data;
-            try
-            {
-                if (item.Split('|').Count() > 1) itemData = item;
-                else itemData = GetItemData(item);
-                data = itemData.Split('|');
-                if (data.Count() > 3) return $"<:{data[0]}:{data[3]}>";
-                return ":" + data[0] + ":";
-            }
-            catch (Exception e)
-            {
-                return ":question:";
-            }
-        }
-        public static string GetItemData(string item)
-        {
-            foreach(string data in GetItemList().Concat(GetBlackMarketItemList()))
-            {
-                if (data.StartsWith(item + "|"))
-                    return data;
-            }
-            return null;
-        }
-
+        
         public static ItemTrade GetTrade(IUser user)
         {
             foreach (ItemTrade trade in Var.trades)
@@ -117,6 +81,7 @@ namespace ForkBot
             return null;
         }
 
+        
         public static string DateTimeToString(DateTime d)
         {
             return $"{d.Year}:{d.Month}:{d.Day}:{d.Hour}:{d.Minute}";
@@ -129,6 +94,7 @@ namespace ForkBot
             for (int i = 0; i < 5; i++) iData[i] = Convert.ToInt32(data[i]);
             return new DateTime(iData[0],iData[1],iData[2],iData[3],iData[4],0);
         }
+        
 
         static WebClient web = new WebClient();
         public static async void Respond(IMessage message)
@@ -171,7 +137,7 @@ namespace ForkBot
         }
 
         string[] stats = { "hygiene", "fashion", "happiness", "fitness", "fullness", "healthiness", "sobriety" };
-        public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
+        /*public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
         {
             var bottom = false;
             if (stat == "bottom")
@@ -199,7 +165,7 @@ namespace ForkBot
             {
                 foreach (User u in users) totalStats.Add(u.ID, u.GetCoins());
             }
-            else if (GetItemList().Where(x=>x.Split('|')[0] == stat.ToLower()).Count() > 0)
+            else if (DBFunctions.GetItemList().Where(x=>x.Split('|')[0] == stat.ToLower()).Count() > 0)
             {
                 foreach (User u in users)
                 {
@@ -230,18 +196,8 @@ namespace ForkBot
             else amount = -(ordered.Count() - 5) - 1;
             for (int i = ordered.Count()-1; i >= ordered.Count()-amount; i--) top5.Add(ordered.ToArray()[i].Key, ordered.ToArray()[i].Value);
             return top5.ToList().ToArray();
-        }
-
-        public static bool CheckUserHasItem(User user, string item, bool remove = true)
-        {
-            if (user.GetItemList().Contains(item))
-            {
-                if (remove) user.RemoveItem(item);
-                return false;
-            }
-            return true;
-        }
-
+        }*/
+        
         public static bool Filter(string msg)
         {
             string[] blockedWords = Properties.Settings.Default.blockedWords.Split('|');

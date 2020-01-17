@@ -61,12 +61,13 @@ namespace ForkBot
 
         //gets DateTime in Eastern Standard Time
         public static DateTime CurrentDate() { return DateTime.UtcNow - new TimeSpan(5, 0, 0); }
+        public static string CurrentDateFormatted() { return $"On {CurrentDate().ToString("dddd, MMMM dd")} at {CurrentDate().ToString("h: mm tt")}"; }
 
         public static List<ChannelStats> channelStats = new List<ChannelStats>();
         public static DateTime startTime;
 
         public static int DebugCode;
-        public static bool DebugMode = true;
+        public static bool DebugMode = false;
 
         public static bool LockDown = false;
         public static bool LockDM = false;
