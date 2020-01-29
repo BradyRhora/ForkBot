@@ -19,13 +19,13 @@ namespace ForkBot
             isBM = bm;
             int[] nItems;
             if (isBM) nItems = DBFunctions.GetBMItemIDList();
-            else nItems = DBFunctions.GetItemIDList(includeBM: false);
+            else nItems = DBFunctions.GetItemIDList(shoppable: true,includeBM: false);
             List<int> items = new List<int>();
             List<int> stock = new List<int>();
             for (int i = 0; i < 5; i++)
             {
                 int itemIndex = rdm.Next(nItems.Length);
-                if (!items.Contains(nItems[itemIndex]) && DBFunctions.ItemIsShoppable(nItems[itemIndex]))
+                if (!items.Contains(nItems[itemIndex]))
                 {
                     items.Add(nItems[itemIndex]);
                     if (!isBM) stock.Add(rdm.Next(5, 16));
@@ -77,7 +77,7 @@ namespace ForkBot
                     emb.Fields.Add(new JEmbedField(x =>
                     {
                         var newsPrice = DBFunctions.GetItemPrice("newspaper");
-                        x.Header = "📰 Newspaper - " + newsPrice;
+                        x.Header = $"📰 Newspaper -  { newsPrice } [({count}) current article(s)]";
                         x.Text = "The Daily Fork! Get all the now information of what's going on around ForkBot!";
                     }));
                 }

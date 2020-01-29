@@ -23,6 +23,7 @@ namespace ForkBot
             public static ulong FORKPY = 573047938306146304;
             public static ulong SLEEP = 534564220704915456;
             public static ulong EZRA = 481633326831108096;
+            public static ulong FORKBOT = 377913570912108544;
         }
 
         public class Roles
@@ -100,6 +101,7 @@ namespace ForkBot
             public static double SELL_VAL = .45;
             public static string GNOME_VID = "https://tenor.com/view/gnome-your-chums-gnomed-gnome-gnoblin-gnelf-gif-12675740";
             public static string DB_CONNECTION_STRING = @"data source=Files\ForkDB.db";
+            public static string YORK_DB_CONNECTION_STRING = @"data source=Files\YorkDB.db";
         }
     }
 }

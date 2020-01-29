@@ -35,30 +35,12 @@ namespace ForkBot
         //gets User class for IUser, makes one if there isn't already one.
         public static User GetUser(IUser user)
         {
-            
             return GetUser(user.Id);
         }
 
         public static User GetUser(ulong userID)
         {
-
-            string userPath = @"Users\";
-            if (File.Exists(userPath + userID + ".user"))
-            {
-                return new User(userID);
-            }
-            else
-            {
-                if (!Directory.Exists("Users"))
-                {
-                    Directory.CreateDirectory("Users");
-                    Console.WriteLine("Created Users folder in bin/Debug/");
-                }
-                string newUser = "coins:0\nitems{\n}";
-                File.WriteAllText(@"Users\" + userID + ".user", newUser);
-            }
-
-            return null;
+            return new User(userID);
         }
 
         //returns a users nickname if they have one, otherwise returns their username.

@@ -33,6 +33,22 @@ namespace ForkBot
             }
         }
 
+        public static bool UserExists(ulong id)
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "SELECT COUNT(*) FROM USERS WHERE USER_ID = @id";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("id", id);
+                    var val = cmd.ExecuteScalar();
+                    var exists = Convert.ToInt32(val) == 1;
+                    return exists;
+                }
+            }
+        }
+
         public static int UserItemCount(User user, int itemID)
         {
             int itemCount = -1;
@@ -69,7 +85,8 @@ namespace ForkBot
                         List<IUser> users = new List<IUser>();
                         while (reader.Read())
                         {
-                            users.Add(Bot.client.GetUser((ulong)reader.GetInt64(0)));
+                            var user = Bot.client.GetUser((ulong)reader.GetInt64(0));
+                            if (user != null) users.Add(user);
                         }
                         return users.ToArray();
                     }
@@ -83,9 +100,10 @@ namespace ForkBot
             {
                 con.Open();
                 item = item.ToLower();
-                var getItemID = "SELECT ID FROM ITEMS WHERE LOWER(ITEM_NAME) = @item OR EMOTE_NAME = @item";
+                var getItemID = "SELECT ID FROM ITEMS WHERE ITEM_NAME like @itemN OR EMOTE_NAME like @item";
                 using (var com = new SQLiteCommand(getItemID, con))
                 {
+                    com.Parameters.AddWithValue("@itemN", item.Replace("_"," "));
                     com.Parameters.AddWithValue("@item", item);
                     var value = com.ExecuteScalar();
                     return Convert.ToInt32(value);
@@ -111,13 +129,20 @@ namespace ForkBot
             }
         }
 
-        public static int[] GetItemIDList(bool includeBM = true)
+        public static int[] GetItemIDList(bool shoppable = false, bool includeBM = true)
         {
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
                 con.Open();
                 string stm = $"SELECT ID FROM ITEMS";
-                if (!includeBM) stm += " WHERE IS_BLACK_MARKET = false";
+                if (!includeBM || shoppable) stm += " WHERE ";
+                if (!includeBM) stm += "IS_BLACK_MARKET = false";
+                if (shoppable)
+                {
+                    if (!includeBM) stm += " AND ";
+                    stm += "SHOPPABLE = true";
+                }
+
                 using (var com = new SQLiteCommand(stm, con))
                 {
                     using (var reader = com.ExecuteReader())
@@ -332,6 +357,17 @@ namespace ForkBot
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
                 con.Open();
+
+                var countStm = "SELECT COUNT(*) FROM NEWSPAPER WHERE HEADER = @head AND CONTENT = @con";
+                using (var com = new SQLiteCommand(countStm, con))
+                {
+                    com.Parameters.AddWithValue("@head", headline);
+                    com.Parameters.AddWithValue("@con", content);
+                    var count = Convert.ToInt32(com.ExecuteScalar());
+                    if (count > 0) return;
+                }
+
+
                 var stm = "INSERT INTO NEWSPAPER VALUES(@headline, @content, @date)";
                 using (var com = new SQLiteCommand(stm, con))
                 {
@@ -358,5 +394,119 @@ namespace ForkBot
                 }
             }
         }
+
+        public static int GetUserRank(IUser user, string col)
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = $"select rank from (select user_id, (select count(*) from users b  where a.{col} <= b.{col}) as rank from users a order by rank) where user_id = @id";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", user.Id);
+                    var rank = cmd.ExecuteScalar();
+                    return Convert.ToInt32(rank);
+                }
+            }
+        }
+
+        public static int GetAllCoins()
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "select sum(coins) from users";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        public static int GetInventoryValue(IUser user)
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "select a.count, b.price from user_items a join items b on (a.ITEM_ID = b.ID) where a.USER_ID = @id";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", user.Id);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        int total = 0;
+                        while (reader.Read())
+                        {
+                            total += reader.GetInt32(0) * (int)(reader.GetInt32(1) * Constants.Values.SELL_VAL);
+                        }
+                        return total;
+                    }
+                }
+            }
+        }
+
+        public static int GetUserItemCount(IUser user)
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "select sum(count) from user_items where user_id = @id";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", user.Id);
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        public static int GetTotalItemCount(string itemName)
+        {
+            return GetTotalItemCount(GetItemID(itemName));
+        }
+        public static int GetTotalItemCount(int item = -1)
+        {
+            string specItem = "";
+            if (item != -1)
+            {
+                specItem = " WHERE ITEM_ID = " + item;
+            }
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "select sum(count) from user_items" + specItem;
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        public static int GetTotalStats()
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "SELECT sum(HYGIENE + FASHION + HAPPINESS + FITNESS + FULLNESS + HEALTHINESS + SOBRIETY) FROM USER_STATS";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        public static int GetUserTotalStats(IUser user)
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "SELECT HYGIENE + FASHION + HAPPINESS + FITNESS + FULLNESS + HEALTHINESS + SOBRIETY FROM USER_STATS WHERE USER_ID = @id";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", user.Id);
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
     }
 }

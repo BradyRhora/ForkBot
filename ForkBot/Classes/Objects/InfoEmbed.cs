@@ -16,14 +16,15 @@ namespace ForkBot
             return emb.Build();
         }
 
-        public InfoEmbed(string title, string msg, string image = Constants.Images.ForkBot)
+        public InfoEmbed(string title, string msg, string footer = "", string image = Constants.Images.ForkBot)
         {
             emb = new JEmbed
             {
                 Description = msg,
                 ColorStripe = Constants.Colours.YORK_RED,
                 Title = title,
-                ThumbnailUrl = image
+                ThumbnailUrl = image,
+                Footer = new JEmbedFooter(footer)
             };
         }
     }

@@ -23,7 +23,8 @@ namespace ForkBot
                                                           new ItemCombo("spy","gun","man"),
                                                           new ItemCombo("special:oldbm","unlock","spy"),
                                                           new ItemCombo("package","lock","box"),
-                                                          new ItemCombo("poop bucket", "poop", "bucket")};
+                                                          new ItemCombo("poop bucket", "poop", "bucket"),
+                                                          new ItemCombo("super scope", "telescope", "skull","battery")};
         public string[] Items;
         public string Result;
 

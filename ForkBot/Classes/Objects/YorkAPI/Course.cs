@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Data.SQLite;
 
-namespace ForkBot
+namespace YorkU
 {
     class Course
     {
-        private string Department;
-        private string Subject;
-        private string Coursecode;
-        private double Credit;
-        private string CourseLink = "";
-        private string ScheduleLink;
-        private string Description;
-        private string Title;
-        private string Term;
-        int year = 2019;
+        public string Faculty { get; }
+        public string Department { get; }
+        public int Level { get; }
+        public string Subject { get; }
+        public string Coursecode { get; }
+        public double Credit { get; }
+        public string CourseLink = "";
+        public string ScheduleLink { get; internal set; }
+        public string Description { get; internal set; }
+        public string Title { get; }
+        public string Term { get; internal set; }
+        public string Language { get; }
+        public string Type { get; }
+
+        static int year = 2019;
         public bool CourseNotFound = false;
 
         private CourseSchedule Schedule;
@@ -30,38 +36,9 @@ namespace ForkBot
         {
 
         }
+               
 
-        public Course(string code, string term = "", bool force = false)
-        {
-            var courses = File.ReadAllLines("Files/courselist.txt");
-            string courseLine = "";
-            foreach (string course in courses)
-            {
-                var line = Regex.Replace(course, "( {2,})", " ").ToLower();
-                if (line.Contains(code.ToLower()))
-                {
-                    courseLine = course;
-                    break;
-                }
-            }
-            CourseNotFound = courseLine == ""; 
-
-            if (CourseNotFound && force)
-            {
-                var course = TryFindCourse(code);
-                if (course != null)
-                {
-                    CourseNotFound = false;
-                    courseLine = course;
-                }
-            }
-
-
-
-            if (!CourseNotFound) LoadCourse(courseLine, term);
-        }
-
-        public string TryFindCourse(string code)
+        /*public string TryFindCourse(string code)
         {
             string[] faculties = { "AP", "ED", "ES", "FA", "GL", "GS", "HH", "LE", "LW", "SB", "SC" };
             string[] terms = { "FW","SU" };
@@ -88,76 +65,117 @@ namespace ForkBot
                 }
             }
             return null;
+        }*/
+
+
+        public CourseSchedule GetSchedule() { return Schedule; }
+
+        public Course(string code, bool getInfo = true)
+        {
+            using (var con = new SQLiteConnection(ForkBot.Constants.Values.YORK_DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "SELECT * FROM COURSES WHERE CODE = @code";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@code", code.ToUpper());
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        reader.Read();
+                        Faculty = reader.GetString(0);
+                        Department = reader.GetString(1);
+                        Level = reader.GetInt32(2);
+                        Coursecode = reader.GetString(3);
+                        Credit = reader.GetDouble(4);
+                        Title = reader.GetString(5);
+                        Language = reader.GetString(6);
+                        Type = reader.GetString(7);
+                    }
+                }
+            }
+            if (getInfo) GetCourseInfo();
         }
 
-        public void LoadCourse(string courseLine, string term = "")
+        void GetCourseInfo()
         {
-            courseLine = Regex.Replace(courseLine, "( {2,})", " ");
-            if (term == "") Term = Var.term;
-            else Term = term;
-            var info = courseLine.Split(' ');
-            Department = info[0].Split('/')[0];
-            Subject = info[0].Split('/')[1];
-            Coursecode = info[1];
-            Credit = Convert.ToDouble(info[2]);
-            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay={year}&ss={Term.ToUpper()}";
-            var clback = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Department}&sj={Subject}&cn={Coursecode}&cr={Credit}&ay={year-1}&ss={Term.ToUpper()}";
-            if (CourseLink == "") throw new CourseNotFoundException();
+            if (Term == null) Term = GetCurrentTerm();
+            CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Faculty}&sj={Department}&cn={Level}&cr={Credit}&ay={year}&ss={Term.ToUpper()}";
 
             var pageDoc = web.Load(CourseLink).DocumentNode;
 
             try
             {
                 var sError = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]/p[1]"); //note to future self, don't include `tbody`
-                
+
                 if (sError.InnerText == "Current Courses Search Results")
                 {
-                    
+
                     var listTable = pageDoc.SelectSingleNode("/html/body/table/tr[2]/td[2]/table/tr[2]/td/table/tr/td/table[2]");
                     var newLink = listTable.ChildNodes.Last().ChildNodes[3].InnerText;
                     pageDoc = web.Load(newLink).DocumentNode;
                 }
             }
-            catch {  }
+            catch { }
 
             string desc;
-            try
-            {
-                desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
-            }
-            catch
-            {
-                pageDoc = web.Load(clback).DocumentNode;
-                desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
-            }
-            Title = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]").InnerText.Replace("&nbsp;", "");
+            desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
+            
             Description = desc.Replace("&quot;", "\"");
             var scheduleNode = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/p[7]/a[1]");
             ScheduleLink = "https://w2prod.sis.yorku.ca" + scheduleNode.Attributes[0].Value;
             Schedule = new CourseSchedule(this);
         }
 
-        public string GetDepartment() { return Department; }
+        static string GetCurrentTerm()
+        {
+            DateTime FallStart = new DateTime(DateTime.Now.Year, 9, 4);
+            DateTime FallEnd = new DateTime(DateTime.Now.Year, 12, 3);
 
-        public string GetSubject() { return Subject; }
+            DateTime WinterStart = new DateTime(DateTime.Now.Year, 1, 6);
+            DateTime WinterEnd = new DateTime(DateTime.Now.Year, 4, 5);
 
-        public string GetCode() { return Coursecode; }
+            DateTime SummerStart = new DateTime(DateTime.Now.Year, 5, 4);
+            DateTime SummerEnd = new DateTime(DateTime.Now.Year, 8, 5);
 
-        public double GetCredit() { return Credit; }
+            if (DateTime.Now > FallStart && DateTime.Now < WinterEnd) return "FW";
+            if (DateTime.Now > SummerStart && DateTime.Now < SummerEnd) return "SU";
+            return "FW";
 
-        public string GetCourseLink() { return CourseLink; }
+        }
 
-        public string GetScheduleLink() { return ScheduleLink; }
+        public static Course[] GetCourses(Dictionary<string,string> parameters)
+        {
+            using (var con = new SQLiteConnection(ForkBot.Constants.Values.YORK_DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "SELECT * FROM COURSES WHERE ";
+                foreach (var param in parameters)
+                {
+                    string val = param.Value.Replace("?", "_");
+                    var comparison = "=";
+                    if (param.Key == "level") comparison = "LIKE";
+                    stm += $"{param.Key.ToUpper()} {comparison} '{val.ToUpper()}' ";
 
-        public string GetDescription() { return Description; }
+                    if (!param.Equals(parameters.Last())) stm += "AND ";
+                }
 
-        public string GetTitle() { return Title; }
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        List<Course> courses = new List<Course>();
+                        while (reader.Read())
+                            courses.Add(new Course(reader.GetString(3), false));
 
-        public string GetTerm() { return Term.ToUpper(); }
+                        return courses.ToArray();
+                    }
+                }
 
-        public CourseSchedule GetSchedule() { return Schedule; }
-        
+            }
+
+        }
     }
+    
     
 
     class CourseNotFoundException : Exception { static new string Message = "Unable to find course on course list.Ensure course code is correct."; }

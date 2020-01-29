@@ -13,9 +13,23 @@ namespace ForkBot
     {
         public ulong ID { get; }
 
+        
         public User(ulong ID = 0)
         {
             this.ID = ID;
+            if (!DBFunctions.UserExists(ID))
+            {
+                using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+                {
+                    con.Open();
+                    var stm = "INSERT INTO USERS(USER_ID) VALUES(@id)";
+                    using (var cmd = new SQLiteCommand(stm, con))
+                    {
+                        cmd.Parameters.AddWithValue("@id", ID);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
         }
 
         public async Task<string> GetName(IGuild guild)
@@ -156,7 +170,7 @@ namespace ForkBot
             {
                 con.Open();
 
-                string stm = $"SELECT ITEM_ID, COUNT FROM USER_ITEMS WHERE USER_ID = @userid ORDER BY ITEM_ID";
+                string stm = $"SELECT USER_ITEMS.ITEM_ID, USER_ITEMS.COUNT, ITEMS.ITEM_NAME FROM USER_ITEMS INNER JOIN ITEMS ON USER_ITEMS.ITEM_ID = ITEMS.ID WHERE USER_ID = @userid ORDER BY ITEM_NAME";
 
                 using (var com = new SQLiteCommand(stm, con))
                 {
@@ -233,6 +247,10 @@ namespace ForkBot
                     DBFunctions.AddNews(headline, content);
                 }
             }
+
+            var forkbot = new User(Constants.Users.FORKBOT);
+            if (ID == forkbot.ID) return;
+            forkbot.GiveCoins(-amount);
         }
 
         public int GetCoins() { return GetData<int>("coins"); }

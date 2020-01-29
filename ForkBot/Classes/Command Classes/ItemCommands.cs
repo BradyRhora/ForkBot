@@ -174,8 +174,6 @@ namespace ForkBot
             if (Check(Context, "gift")) return;
             var user = Functions.GetUser(Context.User);
 
-            await Context.Channel.SendMessageAsync($"{Context.User.Username}! You got...");
-
             var presents = DBFunctions.GetItemIDList();
             int presRDM;
             do {
@@ -190,7 +188,7 @@ namespace ForkBot
             var presentName = Var.present;
             var pMessage = DBFunctions.GetItemDescription(itemID);
 
-            await Context.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {DBFunctions.GetItemEmote(itemID)} {pMessage}");
+            await Context.Channel.SendMessageAsync($"You got...\nA {Func.ToTitleCase(presentName.Replace('_', ' '))}! {DBFunctions.GetItemEmote(itemID)} {pMessage}");
             if (Var.present == "santa")
             {
                 string sMessage = "You got...\n";
@@ -256,7 +254,7 @@ namespace ForkBot
                     u1.GiveCoins(amount);
                     u2.GiveCoins(-amount);
                     await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
-                    DBFunctions.AddNews("ROBBED AT GUNPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
+                    if (rdm.Next(100) < 20) DBFunctions.AddNews("ROBBED AT GUNPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
                             $"robbing local person {user.Username} using a gun! Fearing for their life, {user.Username} handed over {amount} coins to the culprit who then escaped. Police are " +
                             $"currently investigating but currently have no leads!");
                 }
@@ -268,7 +266,7 @@ namespace ForkBot
                         await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
                                                                $" You drop your gun and run before the police arrive. {(user as IGuildUser).Mention} picks up the gun!");
                         u2.GiveItem("gun");
-                        DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY!", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
+                        if (rdm.Next(100) < 70) DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY!", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
                             $"was caught in an attempt to rob {user.Username} using a pistol. {user.Username} was able to disarm the culprit and didn't lose anything. It is currently unclear if " +
                             $"{Context.User.Username} was under the influence of any drugs or alcohol at this time, but it is believed to be so.");
                     }
@@ -279,7 +277,7 @@ namespace ForkBot
                         u1.GiveItem(item);
                         u2.RemoveItem(item);
                         await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
-                        DBFunctions.AddNews("ROBBED AT GUNPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
+                        if (rdm.Next(100) < 20) DBFunctions.AddNews("ROBBED AT GUNPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
                             $"robbing local person {user.Username} using a gun! Fearing for their life, {user.Username} handed over their {item} to the culprit who then escaped. Police are " +
                             $"currently investigating but currently have no leads!");
                     }
@@ -550,7 +548,7 @@ namespace ForkBot
                         u1.GiveCoins(amount);
                         u2.GiveCoins(-amount);
                         await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
-                        DBFunctions.AddNews("ROBBED AT KNIFEPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
+                        if (rdm.Next(100) < 20)DBFunctions.AddNews("ROBBED AT KNIFEPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen " +
                             $"robbing local person {user.Username} using a knife! Fearing for their life, {user.Username} handed over {amount} coins to the culprit, who then escaped. Police are " +
                             $"currently investigating but currently have no leads!");
                     }
@@ -563,7 +561,7 @@ namespace ForkBot
                                                                    $" You drop your knife and run before the police arrive. {(user as IGuildUser).Mention} picks up the knife!");
                             u2.GiveItem("knife");
 
-                            DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY WITH A SHARP WEAPON", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
+                            if (rdm.Next(100) < 70) DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY WITH A SHARP WEAPON", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
                             $"was caught in an attempt to rob {user.Username} using a knife. {user.Username} was able to disarm the culprit and didn't lose anything. It is currently unclear if " +
                             $"{Context.User.Username} was under the influence of any drugs or alcohol at this time, but it is believed to be so.");
                         }
@@ -574,7 +572,7 @@ namespace ForkBot
                             u1.GiveItem(item);
                             u2.RemoveItem(item);
                             await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
-                            DBFunctions.AddNews("ROBBED AT KNIFEPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
+                            if (rdm.Next(100) < 20) DBFunctions.AddNews("ROBBED AT KNIFEPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
                             $"robbing local person {user.Username} using a knife! Fearing for their life, {user.Username} handed over their {item} to the culprit, who then escaped. Police are " +
                             $"currently investigating but currently have no leads!");
                         }
@@ -583,7 +581,7 @@ namespace ForkBot
                 else
                 {
                     await Context.Channel.SendMessageAsync($":knife: Your attempt to rob {user.Username} fails! You get nothing.");
-                    DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY WITH A SHARP WEAPON", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
+                    if (rdm.Next(100) < 70) DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY WITH A SHARP WEAPON", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
                             $"was caught in an attempt to rob {user.Username} using a knife. {user.Username} was able to disarm the culprit and didn't lose anything. It is currently unclear if " +
                             $"{Context.User.Username} was under the influence of any drugs or alcohol at this time, but it is believed to be so.");
 
@@ -748,6 +746,11 @@ namespace ForkBot
         [Command("mag"), Alias("burn", "magnifyingglass", "magnifying_glass")]
         public async Task Mag(IUser user)
         {
+            if (user.Id == Constants.Users.FORKBOT)
+            {
+                await ReplyAsync("This user cannot be magged!");
+                return;
+            }
             if (Check(Context, "mag")) return;
             var u1 = Functions.GetUser(Context.User);
             var u2 = Functions.GetUser(user);
@@ -951,7 +954,7 @@ namespace ForkBot
                 $"Good work to everyone involved!");
         }
 
-        [Command("jack_o_lantern"), Alias(new string[] {"jackolantern","pumpkin" })]
+        [Command("jack_o_lantern"), Alias(new string[] {"jackolantern","pumpkin","jack-o-lantern" })]
         public async Task JackOLantern()
         {
             if (Check(Context, "jack_o_lantern")) return;
@@ -1076,7 +1079,7 @@ namespace ForkBot
             else await ReplyAsync("You need an IPhone to use this.");
         }
         
-        [Command("calling")]
+        [Command("calling"), Alias("call")]
         public async Task Calling()
         {
             if (Check(Context, "calling")) return;
@@ -1170,201 +1173,7 @@ namespace ForkBot
                 Functions.GetUser(Context.User).AddStat("happiness", 18);
             }
         }
-
-        [Command("pokeball")]
-        public async Task Pokeball()
-        {
-            await ReplyAsync("Sorry! PokeAPI stinky poopy! Haha! No pokemon allowed!");
-            /*if (Check(Context, "pokeball")) return;
-            var user = Functions.GetUser(Context.User);
-            if (!user.GetItemList().Contains("pokedex"))
-            {
-                await ReplyAsync("You got your first Pokemon! Here's a Pokedex to keep track of all the Pokemon you've collected.\n" +
-                    $"**{Functions.GetItemEmote("pokedex")} Pokedex obtained!**");
-                user.GiveItem("pokedex");
-            }
-
-            Pokemon pokemon = null;
-            string pokemonS = "";
-            int attemptCounter = 0;
-            do
-            {
-                try
-                {
-                    attemptCounter++;
-                    if (attemptCounter >= 5)
-                    {
-                        await ReplyAsync("Sorry, there was an error getting Pokemon. Try again later!");
-                        user.GiveItem("pokeball");
-                        return;
-                    }
-                    var pokemonList = Functions.GetPokemonList();
-                    int poke = rdm.Next(pokemonList.Count());
-                    pokemonS = pokemonList[poke];
-                    pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
-                }
-                catch (Exception) { Console.WriteLine("Error getting pokemon: " + pokemonS); }
-            } while (pokemon == null);
-
-            user.AddDataA("pokemon", pokemon.Name);
-
-            JEmbed emb = new JEmbed();
-            emb.Title = "Pokemon Obtained!";
-            emb.Description = $"{Functions.GetItemEmote("pokeball")} You got a {pokemon.Name.ToTitleCase()}! {Functions.GetItemEmote("pokeball")}";
-            emb.ImageUrl = pokemon.Sprites.FrontMale;
-            emb.ColorStripe = Constants.Colours.YORK_RED;
-            await ReplyAsync("", embed: emb.Build());
-        }
-
-        [Command("masterball")]
-        public async Task Masterball()
-        {
-            if (Check(Context, "masterball")) return;
-            var user = Functions.GetUser(Context.User);
-            if (!user.GetItemList().Contains("pokedex"))
-            {
-                await ReplyAsync("You got your first Pokemon! Here's a Pokedex to keep track of all the Pokemon you've collected.\n" +
-                    $"**{Functions.GetItemEmote("pokedex")} Pokedex obtained!**");
-                user.GiveItem("pokedex");
-            }
-
-            Pokemon pokemon = null;
-            string pokemonS = "";
-            do
-            {
-                try
-                {
-                    var pokemonList = Functions.GetLegendaryPokemonList();
-                    int poke = rdm.Next(pokemonList.Count());
-                    pokemonS = pokemonList[poke];
-                    pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemonS.ToLower());
-                }
-                catch (Exception) { Console.WriteLine("Error getting pokemon: " + pokemonS); }
-            } while (pokemon == null);
-
-            user.AddDataA("pokemon", pokemon.Name);
-
-            JEmbed emb = new JEmbed();
-            emb.Title = "Legendary Pokemon Obtained!";
-            emb.Description = $"{Functions.GetItemEmote("pokedex")} You got a {pokemon.Name.ToTitleCase()}! {Functions.GetItemEmote("pokedex")}";
-            emb.ImageUrl = pokemon.Sprites.FrontMale;
-            emb.ColorStripe = Constants.Colours.YORK_RED;
-            await ReplyAsync("", embed: emb.Build());
-        }
         
-        [Command("pokedex")]
-        public async Task Pokedex(string pokemon = "")
-        {
-            if (Check(Context, "pokedex", false)) return;
-            var user = Functions.GetUser(Context.User);
-            var poke = user.GetDataA("pokemon");
-            var emb = new JEmbed();
-
-            if (pokemon == "")
-            {
-                emb.Title = $"{Functions.GetItemEmote("pokedex")} {await user.GetName(Context.Guild)}'s Pokemon {Functions.GetItemEmote("pokeball")}";
-                foreach (var p in poke)
-                {
-                    emb.Description += p.ToTitleCase() + "\n";
-                }
-            }
-            else
-            {
-                if (poke.Contains(pokemon.ToLower()))
-                {
-                    var Pokemon = await DataFetcher.GetNamedApiObject<Pokemon>(pokemon.ToLower());
-                    emb.Title = Functions.GetItemEmote("pokedex") + Pokemon.Name.ToTitleCase() + Functions.GetItemEmote("pokeball");
-                    emb.ImageUrl = Pokemon.Sprites.FrontMale;
-
-                    var spec = await DataFetcher.GetNamedApiObject<PokemonSpecies>(Pokemon.Species.Name);
-                    string desc = "";
-                    for (int i = 0; i < spec.FlavorTexts.Count(); i++)
-                        if (spec.FlavorTexts[i].Language.Name == "en")
-                        {
-                            desc += spec.FlavorTexts[i].FlavorText + "\n";
-                            break;
-                        }
-
-                    emb.Description = desc;
-
-                    emb.Fields.Add(new JEmbedField(x => {
-                        x.Header = "Type";
-                        string types = "";
-                        foreach(var type in Pokemon.Types)
-                        {
-                            types += type.Type.Name.ToTitleCase()+" ";
-                        }
-                        x.Text = types;
-                        x.Inline = false;
-                    }));
-
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        x.Header = "Height";
-                        x.Text = Pokemon.Height/10.0 + "m";
-                        x.Inline = true;
-                    }));
-
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        x.Header = "Mass";
-                        x.Text = Pokemon.Mass + "kg";
-                        x.Inline = true;
-                    }));
-
-                }
-                else
-                {
-                    await ReplyAsync("You do not have the specified Pokemon.");
-                    return;
-                }
-            }
-            emb.ColorStripe = Constants.Colours.YORK_RED;
-            await ReplyAsync("", embed: emb.Build());
-        }*/
-        }
-
-        /*
-        [Command("telescope")]
-        public async Task Telescope()
-        {
-            if (Check(Context, "telescope", false)) return;
-            var user = Functions.GetUser(Context.User);
-            var scopeData = user.GetData("telescope");
-            DateTime lastScope;
-            if (scopeData == "0") lastScope = new DateTime(0);
-            else lastScope = Functions.StringToDateTime(scopeData);
-
-            int roll = rdm.Next(100) + 1;
-
-            if (roll == -1 && DateTime.Now - lastScope > new TimeSpan(1, 0, 0)) //change from -1 to 1 when ready 
-            {
-                await Context.Message.DeleteAsync();
-                await Context.User.SendMessageAsync("A light flashes from the sky, and crashes down into the Earth. You go to investigate.\n" +
-                    $"**Maxwell** appears before you.\n" +
-                    $"*\"{Context.User.Mention}... You have found me.\n" +
-                    $"I require your assistance. There is something I must do. Something that should have been done long.. long ago.\"*");
-                await Context.User.SendMessageAsync("\"My power is currently a fraction of it's normal amount. With your help I can reclaim my lost abilities.\n" +
-                    "But it will require sacrifice. If you are prepared for this sacrifice... Use the `;maxwell` command.\"");
-                await Bot.client.GetUser(Constants.Users.BRADY).SendMessageAsync($"{Context.User.Mention} has awakened a Maxwell.");
-                user.SetData("maxwellWaiting", "1");
-            }
-            else if (roll < 20) await ReplyAsync("You thought you saw a flash in the corner of the scope.\nIt was probably nothing.");
-            else await ReplyAsync("You look up to the sky hoping to see something.\nJust stars.");
-        }
-
-        [Command("maxwell"), Alias("weedswell", "venomswell", "superwell", "santawell", "ragewell", "patswell", "mariowell", "luigiwell", "jerkswell", "goldswell", "eggswell", "batswell", "jattswell", "Ahegaoswell", "monkaSwell", "lennyswell")]
-        public async Task Maxwell([Remainder] string command)
-        {
-            //if (Check(Context, Context.Message.Content.Split(' ')[0].Trim(';'), false)) return;
-            var user = Functions.GetUser(Context.User);
-            if (user.GetData("maxwellWaiting") == "1")
-            {
-
-            }
-        }
-        */
-
         [Command("bow_and_arrow"),Alias("bowandarrow","bow")]
         public async Task Bow_And_Arrow(string target)
         {
@@ -1443,9 +1252,10 @@ namespace ForkBot
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
                 con.Open();
-                var stm = "SELECT * FROM NEWSPAPER";
+                var stm = "SELECT * FROM NEWSPAPER WHERE DATE_PUBLISHED > @newsDate";
                 using (var com = new SQLiteCommand(stm, con))
                 {
+                    com.Parameters.AddWithValue("@newsDate", Var.CurrentDate().AddHours(-24));
                     using (var reader = com.ExecuteReader())
                     {
                         while (reader.Read())
@@ -1510,8 +1320,61 @@ namespace ForkBot
                                     $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, local civilian {target.Username} was " +
                                     $"minding their own business, when suddenly a crazy individual with a bucket came out of no where and dumped feces all over them! " +
                                     $"After an investigation authorities say the substance contained a mix of urine and fecal matter. \"I've never felt so disgusted in my " +
-                                    $"life.\" says {target.Username}. The police say that an investigation is underway to find this mysterious bucket welding maniac.");
+                                    $"life.\" says {target.Username}. The police say that an investigation is underway to find this mysterious bucket wielding maniac.");
             }
+        }
+
+        [Command("telescope")]
+        public async Task Telescope([Remainder] string param = "")
+        {
+            if (Check(Context, "telescope", false)) return;
+
+            if (param == "")
+            {
+                if (DateTime.Now.Hour < 5 || DateTime.Now.Hour > 20)
+                {
+                    await ReplyAsync("The stars look beautiful tonight. What else can you see?");
+                }
+                else await ReplyAsync("Seems it's too bright out to use the that right now.");
+            }
+            else
+            {
+                param = param.ToLower();
+                var users = await Context.Guild.GetUsersAsync();
+                var names = users.Select(x => x.Username.ToLower());
+                var items = new User(Context.User.Id).GetItemList();
+
+                if (param == "maxwell")
+                    await ReplyAsync("Who?");
+                else if (names.Contains(param))
+                    await ReplyAsync("They're too close! You can barely even make out any of their features.");
+                else if (items.Where(x => DBFunctions.GetItemName(x.Key).ToLower() == param).Count() > 0)
+                    if (param == "alien")
+                    {
+                        await ReplyAsync("The alien looks at directly back at you. It's eyes begin to glow. :alien:");
+                        await Context.User.SendMessageAsync(":alien: Suddenly, the alien raises it's hand and it's thoughts begin to flow into your mind," +
+                            " but only using one word for each:\n" +
+                            "*SCOPE. POWER. DEATH. VOID. ASCEND.*");
+                    }
+                    else
+                        await ReplyAsync($"Seeing your {param} up close really gives you a new perspective on it!");
+                else
+                    await ReplyAsync("You look through your telescope and see...\nA black squirrel...\nA grey cat...\nAnd a red herring!\n" +
+                        $"No sign of any {param}.");
+                
+
+            }
+        }
+
+        [Command("super_scope"), Alias("superscope")]
+        public async Task SuperScope([Remainder] string param = "")
+        {
+            if (Check(Context, "super scope", false)) return;
+
+            var arrivalDate = new DateTime(2020, 1,30);
+
+            await ReplyAsync($"The voids expansion increases. It will arrive in {(int)((arrivalDate-DateTime.Now).TotalHours)} hours.");
+
         }
 
     }

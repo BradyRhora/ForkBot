@@ -218,6 +218,7 @@
   <ItemGroup>
     <Compile Include="Classes\Command Classes\BMCommands.cs" />
     <Compile Include="Classes\DBFunctions.cs" />
+    <Compile Include="Classes\Less Useful Stuff\AwaitingVerification.cs" />
     <Compile Include="Classes\Less Useful Stuff\Evaluate.cs" />
     <Compile Include="Classes\Less Useful Stuff\Globals.cs" />
     <Compile Include="Classes\Less Useful Stuff\Interfaces.cs" />

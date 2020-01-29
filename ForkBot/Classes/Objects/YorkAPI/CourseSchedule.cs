@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 
-namespace ForkBot
+namespace YorkU
 {
     class CourseSchedule
     {
@@ -17,7 +17,7 @@ namespace ForkBot
         {
             Course = course;
             Days = new List<CourseDay>();
-            var pageDoc = web.Load(course.GetScheduleLink()).DocumentNode;
+            var pageDoc = web.Load(course.ScheduleLink).DocumentNode;
 
             var table = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[2]");
             

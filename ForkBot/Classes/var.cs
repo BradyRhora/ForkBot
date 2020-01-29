@@ -61,7 +61,7 @@ namespace ForkBot
 
         //gets DateTime in Eastern Standard Time
         public static DateTime CurrentDate() { return DateTime.UtcNow - new TimeSpan(5, 0, 0); }
-        public static string CurrentDateFormatted() { return $"On {CurrentDate().ToString("dddd, MMMM dd")} at {CurrentDate().ToString("h: mm tt")}"; }
+        public static string CurrentDateFormatted() { return $"On {CurrentDate().ToString("dddd, MMMM dd")} at {CurrentDate().ToString("h:mm tt")}"; }
 
         public static List<ChannelStats> channelStats = new List<ChannelStats>();
         public static DateTime startTime;
@@ -78,5 +78,7 @@ namespace ForkBot
         public static string term = "FW";
 
         public static List<IUser> DebugUsers = new List<IUser>();
+
+        public static List<AwaitingVerification> awaitingVerifications = new List<AwaitingVerification>();
     }
 }

@@ -25,29 +25,19 @@ namespace ForkBot
         public static Timer RemindTimer;
         public static async void Remind(object state)
         {
-            if (!File.Exists("Files/userreminders.txt")) File.WriteAllText("Files/userreminders.txt", "");
-            string[] reminders = File.ReadAllLines("Files/userreminders.txt");
-            bool changed = false;
+            var reminders = Reminder.GetAllReminders();
+
             for (int i = reminders.Count() - 1; i >= 0; i--)
             {
-                //format: user_id//#//reminder//#//datetimeString
-                var reminderData = reminders[i].Split(new string[] { "//#//" }, StringSplitOptions.None);
-                if (Var.CurrentDate() > Functions.StringToDateTime(reminderData[2]))
+                
+                if (Var.CurrentDate() > reminders[i].RemindTime)
                 {
-                    changed = true;
-                    reminders[i] = "";
-
-                    var user = Bot.client.GetUser(Convert.ToUInt64(reminderData[0]));
-                    await user.SendMessageAsync(reminderData[1]);
+                    var user = reminders[i].User;
+                    await user.SendMessageAsync(reminders[i].Text);
+                    reminders[i].Delete();
                 }
-            }
 
-            if (changed)
-            {
-                File.Delete("Files/userreminders.txt");
-                File.WriteAllLines("Files/userreminders.txt", reminders.Where(x => x != ""));
             }
-
         }
 
         public static Timer BidTimer;
@@ -119,11 +109,10 @@ namespace ForkBot
 
             var bids = Bid.GetAllBids();
 
-            bool changed = false;
             for (int i = 0; i < bids.Count(); i++)
             {
-                var date = bids[i].DateStarted;
-                var endTime = (date + new TimeSpan(1, 0, 0, 0)) - Var.CurrentDate();
+                var endDate = bids[i].EndDate;
+                var endTime = endDate - Var.CurrentDate();
                 if (endTime <= new TimeSpan(0))
                 {
                     var itemID = bids[i].Item_ID;
@@ -251,7 +240,7 @@ namespace ForkBot
                         var item_ID = reader.GetInt32(2);
                         var amount = reader.GetInt32(3);
                         var price = reader.GetInt32(4);
-                        var datePosted = reader.GetDateTime(5);
+                        var datePosted = reader.GetDateTime(5).AddHours(5);
 
                         return new MarketPost(ID, user, item_ID, amount, price, datePosted);
                     }
@@ -277,7 +266,7 @@ namespace ForkBot
                             var item_ID = reader.GetInt32(2);
                             var amount = reader.GetInt32(3);
                             var price = reader.GetInt32(4);
-                            var datePosted = reader.GetDateTime(5);
+                            var datePosted = reader.GetDateTime(5).AddHours(5);
                             posts.Add(new MarketPost(id, user, item_ID, amount, price, datePosted));
                         }
                         return posts.ToArray();
@@ -301,13 +290,15 @@ namespace ForkBot
                         List<MarketPost> posts = new List<MarketPost>();
                         while (reader.Read())
                         {
+
+                            var post_ID = reader.GetString(0);
                             var user = Bot.client.GetUser((ulong)reader.GetInt64(1));
                             var item_ID = reader.GetInt32(2);
                             var amount = reader.GetInt32(3);
                             var price = reader.GetInt32(4);
-                            var datePosted = reader.GetDateTime(5);
+                            var datePosted = reader.GetDateTime(5).AddHours(5);
 
-                            posts.Add(new MarketPost(user, item_ID, amount, price, datePosted));
+                            posts.Add(new MarketPost(post_ID, user, item_ID, amount, price, datePosted));
                         }
                         return posts.ToArray();
                     }
@@ -336,7 +327,7 @@ namespace ForkBot
         public string ID { get; }
         public int Item_ID { get; }
         public int Amount { get; }
-        public DateTime DateStarted { get; }
+        public DateTime EndDate { get; }
         public IUser CurrentBidder { get; private set; }
         public int CurrentBid { get; private set; }
 
@@ -346,17 +337,17 @@ namespace ForkBot
             Item_ID = itemID;
             Amount = amount;
             CurrentBid = 100;
-            DateStarted = Var.CurrentDate();
+            EndDate = Var.CurrentDate().AddHours(24);
             Save();
         }
 
-        public Bid(string id, int itemID, int amount, int currentBid, IUser bidder, DateTime datePosted)
+        public Bid(string id, int itemID, int amount, int currentBid, IUser bidder, DateTime endDate)
         {
             ID = id;
             Item_ID = itemID;
             Amount = amount;
             CurrentBid = currentBid;
-            DateStarted = datePosted;
+            EndDate = endDate;
             CurrentBidder = bidder;
         }
 
@@ -372,7 +363,7 @@ namespace ForkBot
                     com.Parameters.AddWithValue("@itemid", Item_ID);
                     com.Parameters.AddWithValue("@amount", Amount);
                     com.Parameters.AddWithValue("@current_bid", CurrentBid);
-                    com.Parameters.AddWithValue("@date", DateStarted);
+                    com.Parameters.AddWithValue("@date", EndDate);
                     if (CurrentBidder != null)
                         com.Parameters.AddWithValue("@bidder", CurrentBidder.Id);
                     else
@@ -419,14 +410,15 @@ namespace ForkBot
                         reader.Read();
                         var itemID = reader.GetInt32(1);
                         var amount = reader.GetInt32(2);
-                        var dateStarted = reader.GetDateTime(3);
+                        var endDate = reader.GetDateTime(3).AddHours(5);
                         var currentBid = reader.GetInt32(4);
-                        var bidderID = (ulong)reader.GetInt64(5);
+                        var bidderID = reader.GetValue(5);
+                        
                         IUser currentBidder = null;
-                        if (bidderID != 0) 
-                            currentBidder = Bot.client.GetUser(bidderID);
+                        if (bidderID.GetType() != typeof(DBNull)) 
+                            currentBidder = Bot.client.GetUser((ulong)(long)bidderID);
 
-                        return new Bid(ID, itemID, amount, currentBid, currentBidder, dateStarted);
+                        return new Bid(ID, itemID, amount, currentBid, currentBidder, endDate);
                     }
                 }
             }
@@ -448,14 +440,14 @@ namespace ForkBot
                             var bidID = reader.GetString(0);
                             var itemID = reader.GetInt32(1);
                             var amount = reader.GetInt32(2);
-                            var dateStarted = reader.GetDateTime(3);
+                            var endDate = reader.GetDateTime(3).AddHours(5);
                             var currentBid = reader.GetInt32(4);
                             var bidderID = reader.GetValue(5);
                             IUser bidder = null;
                             if (bidderID.GetType() != typeof(DBNull))
                                 bidder = Bot.client.GetUser((ulong)(long)bidderID);
 
-                            posts.Add(new Bid(bidID, itemID, amount, currentBid, bidder, dateStarted));
+                            posts.Add(new Bid(bidID, itemID, amount, currentBid, bidder, endDate));
                         }
                         return posts.ToArray();
                     }
@@ -496,6 +488,124 @@ namespace ForkBot
 
             CurrentBid = newBidAmount;
             CurrentBidder = newUser;
+        }
+        public void AddTime(TimeSpan time)
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "UPDATE BIDS SET END_DATE = @endDate WHERE ID = @id";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@endDate", EndDate.Add(time));
+                    cmd.Parameters.AddWithValue("id", ID);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+    }
+
+    public class Reminder
+    {
+        public int ID { get; }
+        public IUser User { get; }
+        public string Text { get; }
+        public DateTime RemindTime { get; }
+
+        public Reminder(IUser user, string reminder, DateTime remindTime)
+        {
+            User = user;
+            Text = reminder;
+            RemindTime = remindTime;
+            Save();
+        }
+
+        public Reminder(int ID, IUser user, string reminder, DateTime remindTime)
+        {
+            this.ID = ID;
+            User = user;
+            Text = reminder;
+            RemindTime = remindTime;
+        }
+
+        //hi bb can u read this i luv u
+        public void Save()
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "INSERT INTO USER_REMINDERS(USER_ID, TEXT, REMIND_DATE) VALUES(@userID, @text, @remindTime)";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@userID", User.Id);
+                    cmd.Parameters.AddWithValue("@text", Text);
+                    cmd.Parameters.AddWithValue("@remindTime", RemindTime);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Delete()
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "DELETE FROM USER_REMINDERS WHERE ID = @id";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", ID);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        
+        public static Reminder[] GetUserReminders(IUser user)
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "SELECT * FROM USER_REMINDERS WHERE USER_ID = @userid";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    cmd.Parameters.AddWithValue("@userid", user.Id);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        List<Reminder> reminders = new List<Reminder>();
+                        while (reader.Read())
+                        {
+                            var id = reader.GetInt32(0);
+                            var text = reader.GetString(2);
+                            var date = reader.GetDateTime(3).AddHours(5);
+                            reminders.Add(new Reminder(id,user,text,date));
+                        }
+                        return reminders.ToArray();
+                    }
+                }
+            }
+        }
+
+        public static Reminder[] GetAllReminders()
+        {
+            using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
+            {
+                con.Open();
+                var stm = "SELECT * FROM USER_REMINDERS";
+                using (var cmd = new SQLiteCommand(stm, con))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        List<Reminder> reminders = new List<Reminder>();
+                        while (reader.Read())
+                        {
+                            var user = Bot.client.GetUser((ulong)reader.GetInt64(1));
+                            reminders.Add(new Reminder(reader.GetInt32(0),user, reader.GetString(2), reader.GetDateTime(3).AddHours(5)));
+                        }
+                        return reminders.ToArray();
+                    }
+                }
+            }
         }
     }
 }

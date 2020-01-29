@@ -133,7 +133,6 @@ namespace ForkBot
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {
                 Var.presentWaiting = false;
-                await message.Channel.SendMessageAsync($"{message.Author.Username}! You got...");
                 var presents = DBFunctions.GetItemIDList();
                 int presID;
                 do
@@ -145,35 +144,16 @@ namespace ForkBot
                 Var.rPresent = Var.present;
                 var presentName = Var.present;
                 var pMessage = DBFunctions.GetItemDescription(presID);
-                await message.Channel.SendMessageAsync($"A {Func.ToTitleCase(presentName.Replace('_', ' '))}! {DBFunctions.GetItemEmote(presID)} {pMessage}");
-                if (Var.present == "santa")
-                {
-                    await message.Channel.SendMessageAsync("You got...");
-                    string sMessage = "";
-                    for (int i = 0; i < 5; i++)
-                    {
-                        var sPresentID = presents[rdm.Next(presents.Count())];
-                        if (!DBFunctions.ItemIsPresentable(sPresentID))
-                        {
-                            i--;
-                            continue;
-                        }
-                        string sPresentName = DBFunctions.GetItemName(sPresentID);
-                        user.GiveItem(sPresentName);
-                        sMessage += $"A {Func.ToTitleCase(sPresentName)}! {DBFunctions.GetItemEmote(sPresentID)} {DBFunctions.GetItemDescription(sPresentID)}\n";
-                    }
-                    await message.Channel.SendMessageAsync(sMessage);
-
-                    Var.replaceable = false;
-                }
-                else user.GiveItem(Var.present);
+                var msg = $"{message.Author.Username}! You got...\nA {Func.ToTitleCase(presentName.Replace('_', ' '))}! {DBFunctions.GetItemEmote(presID)} {pMessage}";
+                user.GiveItem(Var.present);
 
                 if (Var.replaceable)
                 {
-                    await message.Channel.SendMessageAsync($"Don't like this gift? Press {Var.presentNum} again to replace it once!");
+                    msg += $"\nDon't like this gift? Press {Var.presentNum} again to replace it once!";
                     Var.replacing = true;
                     Var.presentReplacer = message.Author;
                 }
+                await message.Channel.SendMessageAsync(msg);
             }
             else if (Var.replaceable && Var.replacing && message.Content == Convert.ToString(Var.presentNum) && message.Author == Var.presentReplacer)
             {

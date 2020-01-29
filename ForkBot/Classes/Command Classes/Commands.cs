@@ -18,6 +18,7 @@ using System.Xml;
 using System.Globalization;
 using System.Data.SQLite;
 using System.Data;
+using YorkU;
 
 namespace ForkBot
 {
@@ -59,7 +60,7 @@ namespace ForkBot
                 x.Header = "OTHER COMMANDS";
                 x.Inline = true;
             }));
-            
+
             if (Context.User.Id == Constants.Users.BRADY)
             {
                 emb.Fields.Add(new JEmbedField(x =>
@@ -219,9 +220,9 @@ namespace ForkBot
             {
                 if (code == "")
                 {
-                    await ReplyAsync($"To use this command, use the format:\n"+
+                    await ReplyAsync($"To use this command, use the format:\n" +
                         "`;course [subject][level]`\n" +
-                        "For example, if you want the course information for MATH1190, simply type: `;course math1190`.\n"+
+                        "For example, if you want the course information for MATH1190, simply type: `;course math1190`.\n" +
                         "You can also specify the term of the course you want, either FW or SU (for fall/winter and summer respectively). For example,\n" +
                         "`;course eecs4404 fw`\n" +
                         $"will give you the fall/winter course for EECS4404. If you don't specify, it will use the current term. *(Current term is:* **{Var.term}** *)*");
@@ -236,7 +237,7 @@ namespace ForkBot
                 else if (code.Split(' ').Contains("force")) force = true;
 
                 code = code.Replace(" fw", "").Replace(" su", "").Replace(" force", "");
-                
+
 
                 //formats course code correctly
                 if (Regex.IsMatch(code, "([A-z]{2,4} *[0-9]{4})"))
@@ -246,13 +247,13 @@ namespace ForkBot
                 }
 
 
-                course = new Course(code, term, force);
+                course = new Course(code);
 
 
                 JEmbed emb = new JEmbed();
-                emb.Title = course.GetTitle();
-                emb.TitleUrl = course.GetScheduleLink();
-                emb.Description = course.GetDescription() + "\n\n";
+                emb.Title = course.Title;
+                emb.TitleUrl = course.ScheduleLink;
+                emb.Description = course.Description + "\n\n";
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
                 foreach (CourseDay day in course.GetSchedule().Days)
@@ -268,12 +269,12 @@ namespace ForkBot
                     emb.Description += "\n";
                 }
 
-                emb.Footer.Text = "Term: " + course.GetTerm();
+                emb.Footer.Text = "Term: " + course.Term;
 
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 if (course != null && course.CourseNotFound) await ReplyAsync($"The specified course was not found. If you know this course exists, try `;course {code} force`. This may be very slow, so only do it once. It will then be added to the courselist and should work normally.");
                 else await ReplyAsync($"There was an error loading the course page. (Probably not available this term: **{Var.term}**)\nTry appending a different term to the end of the command (e.g. `;course {code} fw`)");
@@ -292,7 +293,7 @@ namespace ForkBot
 
             string[] courses = File.ReadAllLines("Files/courselist.txt");
             string list = "";
-            foreach(string course in courses)
+            foreach (string course in courses)
             {
                 var data = course.Split('/');
                 if (data.Count() > 1)
@@ -308,14 +309,14 @@ namespace ForkBot
             string[] msgs = Functions.SplitMessage(list);
 
 
-            if (page > msgs.Count()) page = msgs.Count()-1;
+            if (page > msgs.Count()) page = msgs.Count() - 1;
 
             JEmbed courseEmb = new JEmbed();
             courseEmb.Author.Name = $"{subject.ToUpper()} Course List";
             courseEmb.Author.IconUrl = Constants.Images.ForkBot;
             courseEmb.ColorStripe = Constants.Colours.YORK_RED;
 
-            courseEmb.Description = msgs[page-1];
+            courseEmb.Description = msgs[page - 1];
 
             courseEmb.Footer.Text = $"Page {page}/{msgs.Count()} (Use ';courselist {subject.ToUpper()} #' and replace the number with a page number!)";
 
@@ -335,7 +336,7 @@ namespace ForkBot
         [Command("updates"), Summary("See the most recent update log.")]
         public async Task Updates()
         {
-            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 3 - The Database Update!\n-The time has finally come! All users and items have been fully converted to an sql database!```");
+            await Context.Channel.SendMessageAsync("```\nFORKBOT BETA CHANGELOG 3.1 - The Database Update!\n-The time has finally come! All users and items have been fully converted to an sql database!\n-free market and bids now also use sql databases, which mesns we're fully using sql now! no more silly text files!\n-fixed fm post bug and bid outbid bug\n-some moderation updates\n-you can now see your status in society with the new `;status` command!```");
         }
 
         [Command("stats"), Summary("See stats regarding Forkbot."), Alias("uptime")]
@@ -344,7 +345,7 @@ namespace ForkBot
             var guilds = Bot.client.Guilds;
             int guildCount = guilds.Count();
             int userCount = 0;
-            foreach(IGuild g in guilds)
+            foreach (IGuild g in guilds)
             {
                 userCount += (await g.GetUsersAsync()).Count();
             }
@@ -366,7 +367,7 @@ namespace ForkBot
             }));
             await ReplyAsync("", embed: emb.Build());
         }
-        
+
         [Command("remind"), Summary("Sets a message to remind you of in the specified amount of time."), Alias(new string[] { "reminder", "rem" })]
         public async Task Remind([Remainder] string parameters = "")
         {
@@ -374,13 +375,13 @@ namespace ForkBot
             {
                 await ReplyAsync("This command reminds you of the message you choose, in the amount of time that you specify. You may have max five reminders at a time.\n" +
                                  "Seperate the message you want to be reminded of and the amount of time with the keyword `in`. If you have multiple `in`'s the last one will be used.\n" +
-                                 "eg: `;remind math1019 midterm in 6 days and 3 hours`\nYou can use any combination of days, hours, minutes. "+
-                                 "Seperate each using either a comma or the word `and`.\n"+
+                                 "eg: `;remind math1019 midterm in 6 days and 3 hours`\nYou can use any combination of days, hours, minutes. " +
+                                 "Seperate each using either a comma or the word `and`.\n" +
                                  "Use `;reminderlist` to view your reminders and `;deletereminder [#]` with the reminder number to delete it.");
             }
             else if (parameters.Contains(" in "))
             {
-                var currentReminders = File.ReadAllLines("Files/userreminders.txt").Where(x => x.StartsWith(Convert.ToString(Context.User.Id)));
+                var currentReminders = Reminder.GetUserReminders(Context.User);
                 if (currentReminders.Count() >= 5)
                 {
                     await ReplyAsync("You already have 5 reminders, which is the maximum.");
@@ -402,7 +403,7 @@ namespace ForkBot
                     reminder = reminder.Replace("//#//", "");
 
                     string time = split[split.Count() - 1];
-                    string[] splitTimes = time.Split(new string[] { ", and ", " and ", ", "  }, StringSplitOptions.None);
+                    string[] splitTimes = time.Split(new string[] { ", and ", " and ", ", " }, StringSplitOptions.None);
                     TimeSpan remindTime = new TimeSpan(0, 0, 0);
                     bool stop = false;
                     foreach (string t in splitTimes)
@@ -438,10 +439,8 @@ namespace ForkBot
                     else
                     {
                         DateTime remindAt = Var.CurrentDate() + remindTime;
-                        string timeString = Functions.DateTimeToString(remindAt);
-                        string writeString = Context.User.Id + "//#//" + reminder + "//#//" + timeString + "\n";
-
-                        File.AppendAllText("Files/userreminders.txt", writeString);
+                        
+                        new Reminder(Context.User, reminder, remindAt);
                         await ReplyAsync("Reminder added.");
                     }
                 }
@@ -452,55 +451,155 @@ namespace ForkBot
         [Command("reminderlist"), Alias(new string[] { "reminders" })]
         public async Task ReminderList()
         {
-            var currentReminders = File.ReadAllLines("Files/userreminders.txt").Where(x => x.StartsWith(Convert.ToString(Context.User.Id)));
+            var currentReminders = Reminder.GetUserReminders(Context.User);
             if (currentReminders.Count() > 0)
             {
                 string msg = "Here are your current reminders:\n```";
                 for (int i = 0; i < currentReminders.Count(); i++)
                 {
-                    msg += $"[{i + 1}]" + currentReminders.ElementAt(i).Replace("//#//", " ").Replace($"{Context.User.Id}", "").Trim() + "\n";
+                    msg += $"[{i + 1}]" + $"{currentReminders[i].Text} - {currentReminders[i].RemindTime.ToShortDateString()} {currentReminders[i].RemindTime.ToShortTimeString()}\n";
                 }
                 await ReplyAsync(msg + "\n```\nUse `;deletereminder #` to delete a reminder!");
             }
             else await ReplyAsync("You currently have no reminders.");
         }
-        
-        [Command("deletereminder"),Alias(new string[] { "delreminder" })]
+
+        [Command("deletereminder"), Alias(new string[] { "delreminder" })]
         public async Task DeleteReminder(int reminderID)
         {
-            var reminders = File.ReadAllLines("Files/userreminders.txt");
+            var reminders = Reminder.GetUserReminders(Context.User);
             int idCount = 0;
             bool deleted = false;
-            for(int i = 0; i < reminders.Count(); i++)
+            for (int i = 0; i < reminders.Count(); i++)
             {
-                if (reminders[i].StartsWith($"{Context.User.Id}"))
+                idCount++;
+                if (idCount == reminderID)
                 {
-                    idCount++;
-                    if (idCount == reminderID)
-                    {
-                        reminders[i] = "";
-                        deleted = true;
-                        break;
-                    }
+                    reminders[i].Delete();
+                    await ReplyAsync("Reminder deleted.");
+                    return;
                 }
+                
             }
+            await ReplyAsync("Reminder not found, are you sure you have a reminder with an ID of " + reminderID + "? Use `;reminderlist` to check.");
+            
+        }
+        [Command("status")]
+        public async Task Status() => await Status(Context.User);
+        
+        [Command("status"), Summary("See your status in ForkBot society.")]
+        public async Task Status(IUser user)
+        {
+            int coinPos = DBFunctions.GetUserRank(user, "coins");
+            var u = new User(user.Id);
 
-            if (deleted)
-            {
-                File.Delete("Files/userreminders.txt");
-                File.WriteAllLines("Files/userreminders.txt", reminders.Where(x => x != ""));
-                await ReplyAsync("Reminder deleted.");
-            }
-            else
-            {
-                await ReplyAsync("Reminder not found, are you sure you have a reminder with an ID of " + reminderID + "? Use `;reminderlist` to check.");
-            }
+            double coins = u.GetCoins();
+            double totalCoins = DBFunctions.GetAllCoins();
+            double percent = (coins/totalCoins)*100;
+
+            int invValue = DBFunctions.GetInventoryValue(user);
+
+            double itemCount = DBFunctions.GetUserItemCount(user);
+            double totalItems = DBFunctions.GetTotalItemCount();
+            double itemPercent = (itemCount / totalItems) * 100;
+
+            double statCount = DBFunctions.GetUserTotalStats(user);
+            double totalStats = DBFunctions.GetTotalStats();
+            double statPercent = (statCount / totalStats) * 100;
+
+            JEmbed emb = new JEmbed();
+            emb.Title = $"{await u.GetName(Context.Guild)}'s Status in Forkbot Society";
+            emb.ColorStripe = Functions.GetColor(user);
+
+            emb.Fields.Add(new JEmbedField(x => {
+                x.Header = ":moneybag: Coins :moneybag:";
+                x.Text = $"Ranked number `{coinPos}` for total coins.\n" +
+                $"`{coins}` coins total, having `{percent.ToString("0.00")}%` of the global economy of `{totalCoins}` coins";
+            }));
+
+            emb.Fields.Add(new JEmbedField(x => {
+                x.Header = ":shopping_bags: Items :shopping_bags:";
+                x.Text = $"Their total inventory value (at current prices) is `{invValue}` coins.\n"+
+                $"`{itemCount}` items total, which is `{itemPercent.ToString("0.00")}%` of the total `{totalItems}` items that exist.";
+            }));
+
+            emb.Fields.Add(new JEmbedField(x => {
+                x.Header = ":crown: Stats :crown:";
+                x.Text = $"Total stat count is `{statCount}`, which is `{statPercent.ToString("0.00")}%` of the global total of `{totalStats}`";
+            }));
+
+            await ReplyAsync("", embed:emb.Build());
         }
 
-        [Command("status"), Summary("See your status in ForkBot society.")]
-        public async Task Status()
+        [Command("verify"), Summary("Gain access to YorkU channels!")]
+        public async Task Verify([Remainder] string param)
         {
+            if (Context.Channel.Id == 626164302084309002) //#landing
+            {
+                var reportChan = await Context.Guild.GetTextChannelAsync(Constants.Channels.REPORTED) as IMessageChannel;
+                string footer = "";
+                var userAccountDate = Context.User.CreatedAt;
 
+                var reqRoles = param.Split(' ');
+                var ServerRoles = Context.Guild.Roles;
+                var requestedRoles = new List<IRole>();
+                string unknownRoles = "";
+                foreach(var role in reqRoles)
+                {
+                    var roleName = role;
+                    if (roleName == "york") continue;
+                    int year = -1;
+                    if (int.TryParse(roleName, out year))
+                    {
+                        if (year < 1) continue;
+                        switch (year)
+                        {
+                            case 1:
+                                roleName = "1st-year";
+                                break;
+                            case 2:
+                                roleName = "2nd-year";
+                                break;
+                            case 3:
+                                roleName = "3rd-year";
+                                break;
+                            case 4:
+                                roleName = "4th-year";
+                                break;
+                            default:
+                                roleName = "5th-year-plus";
+                                break;
+                        }
+                    }
+
+                    var r = ServerRoles.Where(x => x.Name.ToLower() == roleName).FirstOrDefault();
+                    if (r != null)
+                    {
+                        requestedRoles.Add(r);
+                    }
+                    else
+                    {
+                        unknownRoles += $"`{role}`, ";
+                    }
+                }
+
+                if (userAccountDate != null)
+                {
+                    if ((DateTime.Now-userAccountDate) < new TimeSpan(7, 0, 0, 0)) footer = "WARNING: New account.";
+                }
+
+                string text = "";
+                text = $"{Context.User.Mention} has requested to be verified with the following roles:\n" + string.Join(", ", requestedRoles.Select(x => $"`{x.Name}`"));
+                if (unknownRoles != "")
+                {
+                    text += $"\nThe following roles were requested but not found: {unknownRoles.Trim(' ').Trim(',')}";
+                }
+
+                text += $"\nUse `;verify [user]` to **AUTOMATICALLY GRANT** the found roles.";
+                await reportChan.SendMessageAsync(Context.Guild.GetRole(Constants.Roles.MOD).Mention, embed: new InfoEmbed("Verification Request", text, footer).Build());
+                await ReplyAsync("Moderators have recieved your verification request and will grant you access shortly.");
+                Var.awaitingVerifications.Add(new AwaitingVerification(Context.User, requestedRoles.ToArray()));
+            }
         }
 
         #endregion
@@ -659,7 +758,7 @@ namespace ForkBot
                 else await ReplyAsync("You don't have enough coins.");
             }
         }
-        
+
         [Command("give"), Summary("[FUN] Give the specified user some of your items!")]
         public async Task Give(IUser user, params string[] donation)
         {
@@ -669,7 +768,7 @@ namespace ForkBot
             string msg = $"{user.Mention}, {Context.User.Mention} has given you:\n";
             string donations = "";
             string fDonations = "";
-            foreach(string item in donation)
+            foreach (string item in donation)
             {
                 if (u1.HasItem(item))
                 {
@@ -702,7 +801,7 @@ namespace ForkBot
                 day = Var.currentShop.Date();
                 currentDay = Var.CurrentDate();
             }
-            if (Var.currentShop == null || Math.Abs(day.Hour-currentDay.Hour) >= 4)
+            if (Var.currentShop == null || Math.Abs(day.Hour - currentDay.Hour) >= 4)
             {
                 Var.currentShop = new Shop();
             }
@@ -723,7 +822,7 @@ namespace ForkBot
                 emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            else if (itemNames.Select(x=>x.ToLower()).Contains(command.ToLower()))
+            else if (itemNames.Select(x => x.ToLower()).Contains(command.ToLower()))
             {
                 if (newsCount > 0 && command.ToLower() == "newspaper")
                 {
@@ -797,7 +896,7 @@ namespace ForkBot
                     emb.Footer.Text = $"You have: {u.GetCoins()} coins.\nTo buy an item, use `;shop [item]`.";
                     await Context.Channel.SendMessageAsync("", embed: emb.Build());
                 }
-                else if (itemNames.Select(x=>x.ToLower()).Contains(command.ToLower()))
+                else if (itemNames.Select(x => x.ToLower()).Contains(command.ToLower()))
                 {
                     foreach (int item in Var.blackmarketShop.items)
                     {
@@ -978,19 +1077,19 @@ namespace ForkBot
                     return;
                 }
 
-                if (MarketPost.GetPostsByUser(Context.User.Id).Count() >= 5)
+                if (MarketPost.GetPostsByUser(Context.User.Id).Count() >= 10)
                 {
-                    await ReplyAsync(":x: You've reached the maximum of 5 Free Market postings.");
+                    await ReplyAsync(":x: You've reached the maximum of 10 Free Market postings.");
                     return;
                 }
-
-                for (int i = 0; i < amount; i++) user.RemoveItem(item);
-
 
                 string plural = "";
                 if (price > 1) plural = "s";
 
-                MarketPost mp = new MarketPost(Context.User, DBFunctions.GetItemID(item), amount, price, Var.CurrentDate());
+                var itemID = DBFunctions.GetItemID(item);
+                MarketPost mp = new MarketPost(Context.User, itemID, amount, price, Var.CurrentDate());
+
+                for (int i = 0; i < amount; i++) user.RemoveItem(item);
 
                 var expiryDate = Var.CurrentDate() + new TimeSpan(14, 0, 0, 0);
                 await ReplyAsync($"You have successfully posted {amount} {item}(s) for {price} coin{plural}. The sale ID is {mp.ID}.\n" +
@@ -1027,7 +1126,7 @@ namespace ForkBot
                     await ReplyAsync($"You have successfully purchased {amount} {itemName}{plural} for {price} coin{pluralC}!");
                     Functions.GetUser(post.User).GiveCoins(price);
                     await post.User.SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}{plural} for {price} coin{pluralC}.");
-                    
+
                 }
                 else await ReplyAsync(":x: You cannot afford this posting. :x:");
 
@@ -1081,6 +1180,7 @@ namespace ForkBot
             emb.ColorStripe = Constants.Colours.YORK_RED;
             if (!DBFunctions.ItemIsShoppable(itemID)) emb.Description += $"\n\n:moneybag: Cannot be purchased. Find through presents or combining!\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
             else emb.Description += $"\n\n:moneybag: Buy: {DBFunctions.GetItemPrice(itemID)} coins.\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
+            emb.Footer.Text = $"There are currently {DBFunctions.GetTotalItemCount(item)} in circulation.";
             await ReplyAsync("", embed: emb.Build());
             return;
 
@@ -1091,7 +1191,7 @@ namespace ForkBot
         public async Task Combine(params string[] items)
         {
             User u = Functions.GetUser(Context.User);
-            
+
             foreach (string item in items)
             {
                 if (!u.HasItem(item))
@@ -1100,10 +1200,10 @@ namespace ForkBot
                     return;
                 }
             }
-            
+
 
             string result = ItemCombo.CheckCombo(items);
-            
+
             if (result != null)
             {
                 if (result.StartsWith("special:"))
@@ -1163,8 +1263,6 @@ namespace ForkBot
             switch (commands[0])
             {
                 case "":
-                    // ID|ITEM|AMOUNT|DATE_POSTED|BID|BIDDERID
-
                     JEmbed emb = new JEmbed();
                     emb.Title = "Auctions";
                     emb.ColorStripe = Constants.Colours.YORK_RED;
@@ -1177,11 +1275,11 @@ namespace ForkBot
                         var id = bid.ID;
                         var item = DBFunctions.GetItemName(bid.Item_ID);
                         var itemCount = bid.Amount;
-                        var date = bid.DateStarted;
+                        var endDate = bid.EndDate;
                         var currentBidAmount = bid.CurrentBid;
                         var bidder = bid.CurrentBidder;
-                        var endTime = (date + new TimeSpan(1, 0, 0, 0)) - Var.CurrentDate();
                         string bidderMsg = "";
+                        var endTime = endDate - Var.CurrentDate();
 
 
                         if (bidder != null)
@@ -1238,17 +1336,31 @@ namespace ForkBot
                     if (bidAmount > currentBid)
                     {
                         var u = Functions.GetUser(Context.User);
-                        if (u.ID != BID.CurrentBidder.Id)
+                        if (BID.CurrentBidder == null || u.ID != BID.CurrentBidder.Id)
                         {
                             if (u.GetCoins() >= bidAmount)
                             {
                                 if (bidAmount >= Math.Ceiling(currentBid + (currentBid * 0.15)))
                                 {
-                                    BID.Update(Context.User, bidAmount);
                                     u.GiveCoins(-bidAmount);
-                                    var oldUser = Functions.GetUser(BID.CurrentBidder);
-                                    oldUser.GiveCoins(currentBid);
-                                    await ReplyAsync($"You are now the highest bidder for {DBFunctions.GetItemEmote(itemID)} {amount} {DBFunctions.GetItemName(itemID)}(s) with {bidAmount} coins.");
+                                    if (BID.CurrentBidder != null)
+                                    {
+                                        var oldUser = Functions.GetUser(BID.CurrentBidder);
+                                        oldUser.GiveCoins(currentBid);
+                                    }
+                                    BID.Update(Context.User, bidAmount);
+                                    
+                                    string timeExtend = "";
+                                    var endDate = BID.EndDate;
+                                    var endTime = endDate - Var.CurrentDate();
+                                    if (endTime < new TimeSpan(0, 3, 0))
+                                    {
+                                        BID.AddTime(new TimeSpan(0, 1, 0));
+                                        timeExtend = "\nThe end time has been extended by 1 minute.";
+                                    }
+
+                                    await ReplyAsync($"You are now the highest bidder for {DBFunctions.GetItemEmote(itemID)} {amount} {DBFunctions.GetItemName(itemID)}(s) with {bidAmount} coins.{timeExtend}");
+
                                     break;
                                 }
                                 else await ReplyAsync($"Your bid must be at least 15% higher than the current. ({Math.Ceiling(currentBid + currentBid * 0.15)} coins)");
@@ -1292,7 +1404,7 @@ namespace ForkBot
             if (tag == "list")
             {
                 var msgs = Functions.SplitMessage(msg);
-                foreach(string message in msgs)
+                foreach (string message in msgs)
                 {
                     await ReplyAsync($"```\n{message}\n```");
                 }
@@ -1334,7 +1446,7 @@ namespace ForkBot
                 else await Context.Channel.SendMessageAsync("Tag already exists!");
             }
         }
-        
+
         [Command("meme"), Summary("[FUN] Memify STUFF.")]
         public async Task Meme() { await Meme(Context.User); }
 
@@ -1583,7 +1695,7 @@ namespace ForkBot
                             Var.guessedChars.Add(c);
                         }
                         var u = Functions.GetUser(Context.User);
-                        int coinReward = rdm.Next(40)+10;
+                        int coinReward = rdm.Next(40) + 10;
                         u.GiveCoins(coinReward);
                         await Context.Channel.SendMessageAsync($"You did it! You got {coinReward} coins.");
                     }
@@ -1650,20 +1762,20 @@ namespace ForkBot
 
                     foreach (ulong id in gUser.RoleIds)
                     {
-                        if (Context.Guild.GetRole(id).Name != "@everyone") 
+                        if (Context.Guild.GetRole(id).Name != "@everyone")
                             text += Context.Guild.GetRole(id).Name + ", ";
                     }
 
-                    x.Text = Convert.ToString(text).Trim(' ',',');
+                    x.Text = Convert.ToString(text).Trim(' ', ',');
                     x.Inline = true;
                 }));
             }
 
             var items = u.GetItemList();
-            
+
             List<string> fields = new List<string>();
             string txt = "";
-            foreach(KeyValuePair<int,int> item in items)
+            foreach (KeyValuePair<int, int> item in items)
             {
                 string itemListing = $"{DBFunctions.GetItemEmote(item.Key)} {DBFunctions.GetItemName(item.Key)} ";
                 if (item.Value > 1) itemListing += $"x{item.Value} ";
@@ -1686,7 +1798,7 @@ namespace ForkBot
                 }));
                 title += " (cont.)";
             }
-            
+
 
             emb.Fields.Add(new JEmbedField(x =>
             {
@@ -1730,10 +1842,10 @@ namespace ForkBot
                         Var.presentWait = new TimeSpan(rdm.Next(4), rdm.Next(60), rdm.Next(60));
                         Var.presentTime = Var.CurrentDate();
                     }
-                    
+
                     if (Var.presentClaims.Any(x => x.Id == Context.User.Id) && hasPouch)
                         user.SetData("active_pouch", "0");
-                    
+
 
                     Var.presentCount--;
                     var gUser = Context.User as IGuildUser;
@@ -1845,7 +1957,7 @@ namespace ForkBot
         [Command("top"), Summary("[FUN] View the top users of ForkBot based on their stats. Use a stat as the parameter in order to see specific stat rankings.")]
         public async Task Top([Remainder] string stat = "")
         {
-            
+
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
                 con.Open();
@@ -1857,34 +1969,47 @@ namespace ForkBot
                 JEmbed emb = new JEmbed();
                 emb.ColorStripe = Constants.Colours.DEFAULT_COLOUR;
 
+                string order = "DESC";
+                if (stat.Split(' ')[0].ToLower() == "bottom")
+                {
+                    stat = stat.Split(' ')[1].ToLower();
+                    order = "";
+                }
+
                 if (stat == "coin" || stat == "coins")
                 {
-                    stm = "SELECT USER_ID, COINS FROM USERS ORDER BY COINS DESC LIMIT 10";
+                    stm = $"SELECT USER_ID, COINS FROM USERS WHERE COINS <> 0 ORDER BY COINS {order}";
                     emb.Title = "Top 5 Richest Users";
-                    emote = ":moneybag:";
+                    emote = "💰";
                 }
                 else if (DBFunctions.GetItemID(stat) != 0)
                 {
                     var id = DBFunctions.GetItemID(stat);
-                    stm = $"SELECT USER_ID, COUNT FROM USER_ITEMS WHERE ITEM_ID = {id} ORDER BY COUNT DESC LIMIT 10";
+                    stm = $"SELECT USER_ID, COUNT FROM USER_ITEMS WHERE ITEM_ID = {id} ORDER BY COUNT {order} LIMIT 10";
                     emb.Title = $"Top 5 Most {DBFunctions.GetItemName(id)}s";
                     emote = DBFunctions.GetItemEmote(id);
                 }
+                else if (stat == "item" || stat == "items")
+                {
+                    stm = $"SELECT USER_ID, SUM(count) FROM USER_ITEMS GROUP BY USER_ID ORDER BY SUM(COUNT) {order} LIMIT 5";
+                    emb.Title = "Top 5 Most Materialistic Users";
+                    emote = "🛍️";
+                }
                 else if (DBFunctions.StatExists(stat)) //specific stat
                 {
-                    stm = $"SELECT USER_ID, {stat} FROM USER_STATS ORDER BY {stat} DESC LIMIT 10";
+                    stm = $"SELECT USER_ID, {stat} FROM USER_STATS ORDER BY {stat} {order} LIMIT 10";
                     emb.Title = $"Top 5 {stat.ToTitleCase()}";
-                    emote = ":chart_with_upwards_trend:";
+                    emote = "📈";
                 }
-                else if (stat == "") //all stats
+                else if (stat == "stat" || stat == "stats") //all stats
                 {
-                    stm = "SELECT USER_ID, HYGIENE+FASHION+HAPPINESS+FITNESS+FULLNESS+HEALTHINESS+SOBRIETY FROM USER_STATS ORDER BY HYGIENE+FASHION+HAPPINESS+FITNESS+FULLNESS+HEALTHINESS+SOBRIETY DESC LIMIT 10";
+                    stm = $"SELECT USER_ID, HYGIENE+FASHION+HAPPINESS+FITNESS+FULLNESS+HEALTHINESS+SOBRIETY FROM USER_STATS ORDER BY HYGIENE+FASHION+HAPPINESS+FITNESS+FULLNESS+HEALTHINESS+SOBRIETY {order} LIMIT 10";
                     emb.Title = "Top 5 Total Stats";
-                    emote = ":crown:";
+                    emote = "👑";
                 }
                 else
                 {
-                    await ReplyAsync("Invalid argument. Possible toplists are:\n`coins`, `[item_name]`, `[stat]`, or blank for total stats.");
+                    await ReplyAsync("Invalid argument. Possible toplists are:\n`coins`, `items`, `stats`, `[item_name]`, `[stat]`");
                     return;
                 }
 
@@ -1918,9 +2043,9 @@ namespace ForkBot
                     await ReplyAsync("", embed: emb.Build());
                 }
             }
-            
+
         }
-        
+
         [Command("lottery"), Summary("[FUN] The Happy Lucky Lottery! Buy a lotto card and check daily to see if your numbers match!")]
         public async Task Lottery(string command = "")
         {
@@ -1953,7 +2078,7 @@ namespace ForkBot
                 else
                 {
                     var lottoDay = u.GetData<DateTime>("lotto_day").AddHours(5);
-                    if (lottoDay.DayOfYear >= currentDay.DayOfYear && lottoDay.Year == currentDay.Year) emb.Description+="\n\nYou've already checked the lottery today! Come back tomorrow!";
+                    if (lottoDay.DayOfYear >= currentDay.DayOfYear && lottoDay.Year == currentDay.Year) emb.Description += "\n\nYou've already checked the lottery today! Come back tomorrow!";
                     else
                     {
 
@@ -2010,7 +2135,7 @@ namespace ForkBot
                                         u.GiveItem(item02);
                                         break;
                                     case 4:
-                                        string[] level4Items = { "key2", "gun", "unicorn", "moneybag", "moneybag", "gem","unicorn" };
+                                        string[] level4Items = { "key2", "gun", "unicorn", "moneybag", "moneybag", "gem", "unicorn" };
                                         var item1 = level4Items[rdm.Next(level4Items.Count())];
                                         var item2 = level4Items[rdm.Next(level4Items.Count())];
                                         var item3 = level4Items[rdm.Next(level4Items.Count())];
@@ -2048,7 +2173,7 @@ namespace ForkBot
                 int cost = 0;
                 if (uNum == "0") cost = 10;
                 else cost = 100;
-                
+
                 if (u.GetCoins() >= cost)
                 {
                     u.GiveCoins(-cost);
@@ -2080,7 +2205,7 @@ namespace ForkBot
             await ReplyAsync($":robot::speech_balloon: " + tips[tipNumber]);
         }
 
-        [Command("minesweeper"), Summary("[FUN] Play a game of MineSweeper and earn coins!"), Alias(new string[] {"ms"})]
+        [Command("minesweeper"), Summary("[FUN] Play a game of MineSweeper and earn coins!"), Alias(new string[] { "ms" })]
         public async Task MineSweeper([Remainder]string command = "")
         {
 
@@ -2126,7 +2251,7 @@ namespace ForkBot
                 receiver.Text = Functions.GetName(user as IGuildUser);
 
                 int fontsize = 20;
-                
+
                 switch (imgID)
                 {
                     case 0:
@@ -2153,7 +2278,7 @@ namespace ForkBot
                         break;
                     case 5:
                         fontsize = 15;
-                        receiver.Position = new Point(50,110);
+                        receiver.Position = new Point(50, 110);
                         sender.Position = new Point(50, 140);
                         break;
                     case 6:
@@ -2181,7 +2306,7 @@ namespace ForkBot
                         receiver.Position = new Point(180, 230);
                         break;
                     case 12:
-                        sender.Position = new Point(450,310);
+                        sender.Position = new Point(450, 310);
                         receiver.Position = new Point(400, 250);
                         break;
                     case 13:
@@ -2194,7 +2319,7 @@ namespace ForkBot
                         break;
                     case 15:
                         sender.Position = new Point(430, 100);
-                        receiver.Position = new Point(400,60);
+                        receiver.Position = new Point(400, 60);
                         break;
                     case 16:
                         sender.Position = new Point(285, 220);
@@ -2212,7 +2337,7 @@ namespace ForkBot
                 File.Delete(path + $@"\{sImgID}.png");
             }
         }
-        
+
         [Command("forkparty"), Summary("[FUN] Begin a game of ForkParty:tm: with up to 4 players!"), Alias(new string[] { "fp" })]
         public async Task ForkParty([Remainder] string command = "")
         {
@@ -2253,7 +2378,7 @@ namespace ForkBot
                     Var.FPGames.Add(new ForkParty(user, Context.Channel));
                     await ReplyAsync("You have successfully hosted a game. Get others to join now!");
                 }
-                
+
             }
             else if (command == "join")
             {
@@ -2279,8 +2404,8 @@ namespace ForkBot
             }
         }
 
-        
-        
+
+
         /*[Command("pokemon"), Summary("[FUN] Use various pokemon commands."), Alias("pm")]
         public async Task Pokemon(params  string[] command)
         {
@@ -2296,7 +2421,7 @@ namespace ForkBot
 
         #region Mod Commands
 
-        [Command("ban"),RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user.")]
+        [Command("ban"), RequireUserPermission(GuildPermission.BanMembers), Summary("[MOD] Bans the specified user.")]
         public async Task Ban(IGuildUser u, int minutes = 0, [Remainder]string reason = null)
         {
             string rText = ".";
@@ -2360,9 +2485,9 @@ namespace ForkBot
                 Var.blockedUsers.Add(u);
                 await ReplyAsync("Blocked.");
             }
-            
+
         }
-        
+
         [Command("blockword"), RequireUserPermission(GuildPermission.ManageMessages), Summary("[MOD] Adds the inputted word to the word filter.")]
         public async Task BlockWord([Remainder] string word)
         {
@@ -2372,13 +2497,19 @@ namespace ForkBot
             await ReplyAsync("", embed: new InfoEmbed("Word Blocked", "Word successfully added to filter.").Build());
             await Context.Message.DeleteAsync();
         }
-        
+
         [Command("verify"), RequireUserPermission(GuildPermission.ManageRoles), Summary("[MOD] Verifies new users to give them server access.")]
         public async Task Verify(IGuildUser user)
         {
             if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) return;
+
+            var awaitingUser = Var.awaitingVerifications.Where(x => x.User.Id == Context.User.Id).FirstOrDefault();
+            if (awaitingUser != null)
+                await user.AddRolesAsync(awaitingUser.Roles);
             await user.AddRoleAsync(user.Guild.GetRole(Constants.Roles.VERIFIED));
-            
+
+            await ReplyAsync("Successfully verified.");
+
         }
         //trusted related commands
         /*[Command("trust"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Makes a user trusted.")]
@@ -2512,7 +2643,7 @@ namespace ForkBot
                 }
             }
         }
-        
+
         [Command("givecoins"), Summary("[BRADY] Give a user [amount] coins.")]
         public async Task Give(IUser user, int amount)
         {
@@ -2571,7 +2702,7 @@ namespace ForkBot
             Properties.Settings.Default.Save();
             await Context.Channel.SendMessageAsync("Blocked");
         }
-        
+
         [Command("addcourse"), Summary("[BRADY] Adds the specified course to the course list.")]
         public async Task AddCourse([Remainder]string course = "")
         {
@@ -2584,7 +2715,7 @@ namespace ForkBot
             }
             else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
         }
-        
+
         [Command("fban"), Summary("[BRADY] Pretend to ban someone hahahahaha..")]
         public async Task FBan(string user)
         {
@@ -2611,10 +2742,10 @@ namespace ForkBot
         }
 
         [Command("courses")]
-        public async Task Courses() { await Courses("",""); }
-        
+        public async Task Courses() { await Courses("", ""); }
+
         [Command("courses"), Summary("[BRADY] Return all courses with certain parameters. Leave parameters blank for examples. THIS COMMAND MAY TAKE A LONG TIME.")]
-        public async Task Courses(string subject, [Remainder] string commands)
+        public async Task Courses(string subject, [Remainder] string commands = "")
         {
             if (Context.User.Id != Constants.Users.BRADY)
             {
@@ -2622,7 +2753,7 @@ namespace ForkBot
                 return;
             }
 
-            if (commands == "")
+            if (subject == "" && commands == "")
             {
                 string msg = "This command generates a list of courses that fall under the chosen parameters in order to help find courses with certain criteria easier.\n\n" +
                              "`;courses EECS day:MTWR term:W` Shows EECS courses with classes from Monday to Thursday (Thursday is an R to reflect York website) during the **W**inter term.\n\n" +
@@ -2634,7 +2765,7 @@ namespace ForkBot
                 return;
             }
 
-            if (commands.Split(' ').Count()  > 4)
+            if (commands.Split(' ').Count() > 4)
             {
                 await ReplyAsync("Over max parameter count. Are you sure all parameters are correct and you are not using the same one multiple times?");
                 return;
@@ -2642,10 +2773,11 @@ namespace ForkBot
 
             await ReplyAsync("Filtering... Please wait...");
 
-            commands = commands.Replace("time>", "time>:").Replace("time<", "time<:");
+            commands = commands.Replace("time>", "time>:").Replace("time<", "time<:").ToLower();
 
             Dictionary<string, string> parameters = new Dictionary<string, string>();
-            foreach (string command in commands.Split(' '))
+            parameters.Add("department", subject);
+            foreach (string command in commands.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (!command.Contains(':') && command.Length > 1) await ReplyAsync($"Parameter '{command}' invalid. Continuing without this parameter.");
                 else if (!command.Contains(':'))
@@ -2662,92 +2794,14 @@ namespace ForkBot
                 }
             }
 
-
-            string[] courses = File.ReadAllLines("Files/courselist.txt");
-            List<string> courselist = new List<string>();
-            foreach (string course in courses)
-            {
-                var data = course.Split('/');
-                if (data.Count() > 1)
-                    if (data[1].StartsWith(subject.ToUpper())) courselist.Add(course);
-            }
-
-            List<string> filteredCourseList = new List<string>();
-
-            foreach(string course in courselist)
-            {
-                bool qualifies = true;
-                Course c = new Course();
-                try
-                {
-                    c.LoadCourse(course);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine($"Failed to load course page for {course}");
-                    qualifies = false;
-                    continue;
-                }
-                var courseDays = c.GetSchedule().Days;
-
-                foreach (KeyValuePair<string,string> param in parameters)
-                {
-                    switch(param.Key)
-                    {
-                        //credit level day time 
-                        case "day":
-                            qualifies = false;
-                            Dictionary<char, string> DayConversion = new Dictionary<char, string>() { { 'M', "Monday" }, { 'T', "Tuesday" }, { 'W', "Wednesday" }, { 'R', "Thursday" }, { 'F', "Friday" } };
-                            string days = param.Value.ToUpper();
-                            var filterDays = days.Select(x => DayConversion[x]);
-
-                            foreach(CourseDay day in courseDays)
-                            {
-                                foreach (string d in filterDays)
-                                {
-                                    if (day.DayTimes.ContainsKey(d))
-                                    {
-                                        qualifies = true;
-                                        break;
-                                    }
-                                }
-                                if (qualifies) break;
-                            }                            
-                            break;
-
-                        case "time":
-
-
-                            break;
-
-                        case "credit":
-
-                            if (c.GetCredit() != Convert.ToDouble(param.Value)) qualifies = false;
-                            break;
-
-                        case "level":
-
-                            string fLevel = param.Value.ToUpper(); //filter level
-                            string level = c.GetCode();
-                            for (int x = 0; x < 4; x++) if ((fLevel[x] != '?' && fLevel[x] != level[x])) { qualifies = false; break; }
-                            break;
-
-                        default:
-
-                            await ReplyAsync($"Parameter '{param.Key}' invalid. Continuing without this parameter.");
-                            break;
-
-                    }
-                    if (!qualifies) break;
-                }
-
-                if (qualifies) filteredCourseList.Add(course);
-
-
-            }
+            var courses = YorkU.Course.GetCourses(parameters);
 
             string text = "";
-            foreach (string course in filteredCourseList) text += course + "\n";
+            foreach(Course c in courses)
+            {
+                text += $"{c.Coursecode} - {c.Title}\n";
+            }
+
 
             JEmbed emb = new JEmbed();
             emb.Title = $"Filtered course list: [{subject} {commands}]";
@@ -2786,7 +2840,7 @@ namespace ForkBot
                     Var.DebugUsers.Add(user);
                     await ReplyAsync("Added.");
                 }
-                
+
             }
         }
 
@@ -2809,7 +2863,7 @@ namespace ForkBot
         public async Task MakeBid(string item = "", int amount = 0)
         {
             if (Context.User.Id != Constants.Users.BRADY) return;
-            
+
             if (item == "" || amount <= 0)
             {
                 await ReplyAsync("Holy shit, can you stop forgetting the fucking parameters? Idiot. It's `;makebid [item] [amount]`.\n" +
@@ -2820,12 +2874,12 @@ namespace ForkBot
             var newBid = new Bid(DBFunctions.GetItemID(item), amount);
 
             var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
-            foreach(IUser u in notifyUsers)
+            foreach (IUser u in notifyUsers)
             {
                 await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {amount} {item}(s)! Get it with the ID: {newBid.ID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
             }
         }
-        
+
         [Command("lockdm"), Summary("[BRADY] Locks command usage via DM.")]
         public async Task LockDM()
         {
@@ -2836,7 +2890,7 @@ namespace ForkBot
             else await ReplyAsync("DM Commands have been enabled.");
         }
 
-        [Command("testsql"), Summary("[BRADY] hi")]
+        [Command("testsql"), Summary("[BRADY] Run an SQL query.")]
         public async Task TestSQL([Remainder]string query)
         {
             if (Context.User.Id != Constants.Users.BRADY) return;
@@ -2865,39 +2919,46 @@ namespace ForkBot
             //await ReplyAsync(version);
         }
 
-            /*
-            [Command("snap")]
-            public async Task Snap()
+        [Command("makenews"), Summary("[BRADY] Create a news article and add it to the newspaper.")]
+        public async Task MakeNews(string title, string content)
+        {
+            DBFunctions.AddNews(title, content);
+            await ReplyAsync("Done.");
+        }
+
+        /*
+        [Command("snap")]
+        public async Task Snap()
+        {
+            if (Context.User.Id != Constants.Users.BRADY) return;
+            await Context.Channel.SendMessageAsync("When I’m done, half of humanity will still exist. Perfectly balanced, as all things should be.\n\nI know what it’s like to lose. To feel so desperately that you’re right, yet to fail nonetheless. Dread it. Run from it. Destiny still arrives. Or should I say, I have.");
+
+            var users = await Context.Guild.GetUsersAsync();
+            List<int> dustIndex = new List<int>();
+            int userCount = users.Count();
+            int halfUsers = userCount / 2;
+            for (int i = 0; i < halfUsers; i++)
             {
-                if (Context.User.Id != Constants.Users.BRADY) return;
-                await Context.Channel.SendMessageAsync("When I’m done, half of humanity will still exist. Perfectly balanced, as all things should be.\n\nI know what it’s like to lose. To feel so desperately that you’re right, yet to fail nonetheless. Dread it. Run from it. Destiny still arrives. Or should I say, I have.");
-
-                var users = await Context.Guild.GetUsersAsync();
-                List<int> dustIndex = new List<int>();
-                int userCount = users.Count();
-                int halfUsers = userCount / 2;
-                for (int i = 0; i < halfUsers; i++)
+                try
                 {
-                    try
-                    {
-                        int index = -1;
-                        while (index < 0 || dustIndex.Contains(index))
-                            index = rdm.Next(userCount);
+                    int index = -1;
+                    while (index < 0 || dustIndex.Contains(index))
+                        index = rdm.Next(userCount);
 
-                        dustIndex.Add(index);
-                        await users.ElementAt(index).AddRoleAsync(Context.Guild.GetRole(Constants.Roles.DUST));
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"{e.StackTrace}\n\n on user index {i} ({users.ElementAt(i).Username})");
-                    }
+                    dustIndex.Add(index);
+                    await users.ElementAt(index).AddRoleAsync(Context.Guild.GetRole(Constants.Roles.DUST));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{e.StackTrace}\n\n on user index {i} ({users.ElementAt(i).Username})");
                 }
             }
-            */
-
-
-            #endregion
-
         }
+        */
+
+
+        #endregion
+
+    }
     
 }
