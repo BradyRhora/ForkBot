@@ -36,9 +36,12 @@ namespace ForkBot
         {
             try
             {
-                return Functions.GetName(await guild.GetUserAsync(ID));
+                if (guild == null) return Bot.client.GetUser(ID).Username;
+                var gUser = await guild.GetUserAsync(ID);
+                if (gUser == null) throw new Exception("User not in guild");
+                return Functions.GetName(gUser);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 try
                 {
@@ -97,6 +100,7 @@ namespace ForkBot
                 {
                     com.Parameters.AddWithValue("@userid", ID);
                     var obj = com.ExecuteScalar();
+                    if (obj.GetType() == typeof(DBNull)) return default(T);
                     var value = (T)Convert.ChangeType(obj, typeof(T));
                     return value;
                 }
@@ -285,6 +289,9 @@ namespace ForkBot
 
         public void AddStat(string stat, int addition)
         {
+            var userGemTime = GetData<DateTime>("gem_time");
+            if (DateTime.Now < userGemTime) addition = (int)(addition * 2.5);
+
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
                 con.Open();
@@ -320,8 +327,8 @@ namespace ForkBot
 
                 if (topUserID != newtopUserID)
                 {
-                    var name1 = Functions.GetUser(topUserID).GetName(null);
-                    var name2 = Functions.GetUser(newtopUserID).GetName(null);
+                    var name1 = Bot.client.GetUser(topUserID).Username;
+                    var name2 = Bot.client.GetUser(newtopUserID).Username;
                     var headline = $"{name2} TAKES {name1}'S PLACE AS THE KING OF {stat.ToUpper()}!";
                     var content = $"Outstandingly, {name2} has taken over as the new leader of {stat}! They smashed the current record of {topUserAmount} with ease " +
                         $"on {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}. If you were looking to be the person with the most {stat}," +

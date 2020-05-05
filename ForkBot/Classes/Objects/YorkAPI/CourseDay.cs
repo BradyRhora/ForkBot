@@ -11,7 +11,7 @@ namespace YorkU
         public string Term { get; }
         public string Section { get; }
         public string Professor { get; }
-        public Dictionary<string, string> DayTimes = new Dictionary<string, string>();
+        public Dictionary<string, DateTime> DayTimes = new Dictionary<string, DateTime>();
         public string CAT { get; }
         public bool HasLabs { get; } = false;
 
@@ -31,7 +31,14 @@ namespace YorkU
 
         public void AddDayTime(string day, string time)
         {
-            DayTimes.Add(day, time);
+            if (time == "")
+            {
+                DayTimes.Add(day, DateTime.MinValue);
+                return;
+            }
+
+            var splitTime = time.Split(':').Select(x=>Convert.ToInt32(x)).ToArray();
+            DayTimes.Add(day, new DateTime(1,1,1,splitTime[0],splitTime[1],0));
         }
     }
 }

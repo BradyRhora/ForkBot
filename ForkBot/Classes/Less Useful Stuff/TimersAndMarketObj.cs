@@ -36,7 +36,6 @@ namespace ForkBot
                     await user.SendMessageAsync(reminders[i].Text);
                     reminders[i].Delete();
                 }
-
             }
         }
 
@@ -599,7 +598,8 @@ namespace ForkBot
                         List<Reminder> reminders = new List<Reminder>();
                         while (reader.Read())
                         {
-                            var user = Bot.client.GetUser((ulong)reader.GetInt64(1));
+                            var id = (ulong)reader.GetInt64(1);
+                            var user = Bot.client.GetUser(id);
                             reminders.Add(new Reminder(reader.GetInt32(0),user, reader.GetString(2), reader.GetDateTime(3).AddHours(5)));
                         }
                         return reminders.ToArray();

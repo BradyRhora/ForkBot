@@ -26,7 +26,7 @@ namespace YorkU
         public string Language { get; }
         public string Type { get; }
 
-        static int year = 2019;
+        static int year = 2020;
         public bool CourseNotFound = false;
 
         private CourseSchedule Schedule;
@@ -70,7 +70,7 @@ namespace YorkU
 
         public CourseSchedule GetSchedule() { return Schedule; }
 
-        public Course(string code, bool getInfo = true)
+        public Course(string code, bool getInfo = true, string term = "")
         {
             using (var con = new SQLiteConnection(ForkBot.Constants.Values.YORK_DB_CONNECTION_STRING))
             {
@@ -93,29 +93,25 @@ namespace YorkU
                     }
                 }
             }
-            if (getInfo) GetCourseInfo();
+            if (getInfo) GetCourseInfo(term);
         }
 
-        void GetCourseInfo()
+        void GetCourseInfo(string term = "")
         {
-            if (Term == null) Term = GetCurrentTerm();
+            if (term != "") Term = term.ToUpper();
+            else if (Term == null) Term = GetCurrentTerm();
             CourseLink = $"https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm.woa/wa/crsq?fa={Faculty}&sj={Department}&cn={Level}&cr={Credit}&ay={year}&ss={Term.ToUpper()}";
 
             var pageDoc = web.Load(CourseLink).DocumentNode;
 
-            try
+            var sError = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]/p[1]"); //note to future self, don't include `tbody`
+            if (sError != null && sError.InnerText == "Current Courses Search Results")
             {
-                var sError = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]/table[1]/tr[1]/td[1]/p[1]"); //note to future self, don't include `tbody`
 
-                if (sError.InnerText == "Current Courses Search Results")
-                {
-
-                    var listTable = pageDoc.SelectSingleNode("/html/body/table/tr[2]/td[2]/table/tr[2]/td/table/tr/td/table[2]");
-                    var newLink = listTable.ChildNodes.Last().ChildNodes[3].InnerText;
-                    pageDoc = web.Load(newLink).DocumentNode;
-                }
+                var listTable = pageDoc.SelectSingleNode("/html/body/table/tr[2]/td[2]/table/tr[2]/td/table/tr/td/table[2]");
+                var newLink = listTable.ChildNodes.Last().ChildNodes[3].InnerText;
+                pageDoc = web.Load(newLink).DocumentNode;
             }
-            catch { }
 
             string desc;
             desc = pageDoc.SelectSingleNode("/html[1]/body[1]/table[1]/tr[2]/td[2]/table[1]/tr[2]/td[1]/table[1]/tr[1]/td[1]").ChildNodes[5].InnerText;
@@ -126,7 +122,7 @@ namespace YorkU
             Schedule = new CourseSchedule(this);
         }
 
-        static string GetCurrentTerm()
+        public static string GetCurrentTerm()
         {
             DateTime FallStart = new DateTime(DateTime.Now.Year, 9, 4);
             DateTime FallEnd = new DateTime(DateTime.Now.Year, 12, 3);

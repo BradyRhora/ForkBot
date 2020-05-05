@@ -13,6 +13,7 @@ namespace ForkBot
 
         public static bool UserHasItem(User user, int itemID, int itemCount = 1)
         {
+            if (itemID == -1) return false;
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
                 con.Open();
@@ -106,6 +107,7 @@ namespace ForkBot
                     com.Parameters.AddWithValue("@itemN", item.Replace("_"," "));
                     com.Parameters.AddWithValue("@item", item);
                     var value = com.ExecuteScalar();
+                    if (value == null) return -1;
                     return Convert.ToInt32(value);
                     
                 }
@@ -454,7 +456,10 @@ namespace ForkBot
                 using (var cmd = new SQLiteCommand(stm, con))
                 {
                     cmd.Parameters.AddWithValue("@id", user.Id);
-                    return Convert.ToInt32(cmd.ExecuteScalar());
+                    
+                    var val = cmd.ExecuteScalar();
+                    if (val.GetType() == typeof(DBNull)) return 0;
+                    return Convert.ToInt32(val);
                 }
             }
         }
@@ -476,7 +481,9 @@ namespace ForkBot
                 var stm = "select sum(count) from user_items" + specItem;
                 using (var cmd = new SQLiteCommand(stm, con))
                 {
-                    return Convert.ToInt32(cmd.ExecuteScalar());
+                    var amt = cmd.ExecuteScalar();
+                    if (amt.GetType() == typeof(DBNull)) return 0;
+                    else return Convert.ToInt32(amt);
                 }
             }
         }

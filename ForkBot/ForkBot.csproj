@@ -36,6 +36,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>forkbot_logo_new_old.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Discord.Net.Commands, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Discord.Net.Commands.2.0.1\lib\net46\Discord.Net.Commands.dll</HintPath>
@@ -459,6 +462,9 @@
     <Content Include="bin\Debug\System.Xml.XPath.XDocument.dll" />
     <Content Include="bin\Debug\TensorFlowSharp.dll" />
     <Content Include="bin\Debug\TensorFlowSharp.xml" />
+    <Content Include="forkbot_logo.ico" />
+    <Content Include="forkbot_logo_new.ico" />
+    <Content Include="forkbot_logo_new_old.ico" />
     <Content Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

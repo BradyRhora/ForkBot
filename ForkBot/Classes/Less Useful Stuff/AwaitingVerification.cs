@@ -11,11 +11,13 @@ namespace ForkBot
     {
         public IUser User { get; }
         public IRole[] Roles { get; }
+        public IMessage Message { get; }
 
-        public AwaitingVerification(IUser user, IRole[] roles)
+        public AwaitingVerification(IUser user, IMessage msg, IRole[] roles)
         {
             User = user;
             Roles = roles;
+            Message = msg;
         }
     }
 }

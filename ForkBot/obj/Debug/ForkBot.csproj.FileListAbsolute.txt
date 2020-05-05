@@ -349,3 +349,4 @@ C:\Users\brady\source\repos\BradyRhora\ForkBot\ForkBot\bin\Debug\EntityFramework
 C:\Users\brady\source\repos\BradyRhora\ForkBot\ForkBot\bin\Debug\System.Data.SQLite.xml
 C:\Users\brady\source\repos\BradyRhora\ForkBot\ForkBot\bin\Debug\System.Data.SQLite.dll.config
 C:\Users\brady\source\repos\BradyRhora\ForkBot\ForkBot\obj\Debug\ForkBot.csprojAssemblyReference.cache
+C:\Users\brady\source\repos\BradyRhora\ForkBot\ForkBot\obj\Debug\ForkBot.csproj.CoreCompileInputs.cache

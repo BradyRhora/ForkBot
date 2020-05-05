@@ -103,7 +103,7 @@ namespace ForkBot
         [Command("define"), Alias(new string[] { "def" }), Summary("Returns the definiton for the inputted word.")]
         public async Task Define([Remainder]string word)
         {
-            throw new NotSupportedException("The Oxford Dictionary API has been discontinued");
+            throw new NotSupportedException("The Oxford Dictionary API has been discontinued.");
             /*OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
             var result = await client.SearchEntries(word, CancellationToken.None);
             if (result != null)
@@ -216,6 +216,7 @@ namespace ForkBot
         public async Task Course([Remainder] string code = "")
         {
             Course course = null;
+            string term = "";
             try
             {
                 if (code == "")
@@ -230,11 +231,10 @@ namespace ForkBot
                 }
 
                 code = code.ToLower();
-                string term = "";
-                bool force = false;
+                //bool force = false;
                 if (code.Split(' ').Contains("fw")) term = "fw";
                 else if (code.Split(' ').Contains("su")) term = "su";
-                else if (code.Split(' ').Contains("force")) force = true;
+                //else if (code.Split(' ').Contains("force")) force = true;
 
                 code = code.Replace(" fw", "").Replace(" su", "").Replace(" force", "");
 
@@ -246,27 +246,31 @@ namespace ForkBot
                     code = splits[0].Trim() + " " + splits[1].Trim();
                 }
 
-
-                course = new Course(code);
+                if (term == "") term = YorkU.Course.GetCurrentTerm();
+                course = new Course(code,term:term);;
 
 
                 JEmbed emb = new JEmbed();
                 emb.Title = course.Title;
                 emb.TitleUrl = course.ScheduleLink;
-                emb.Description = course.Description + "\n\n";
+                emb.Description = course.Description;
                 emb.ColorStripe = Constants.Colours.YORK_RED;
 
                 foreach (CourseDay day in course.GetSchedule().Days)
                 {
-                    emb.Description += $"\n{day.Term} {day.Section} - {day.Professor}\n";
-                    if (day.HasLabs) emb.Description += "This section has labs, click the title to see times and catalog numbers.\n";
-                    else emb.Description += $"Catalog Number: {day.CAT}\n";
-                    foreach (var dayTime in day.DayTimes)
+                    emb.Fields.Add(new JEmbedField(x =>
                     {
-                        if (dayTime.Key == "") emb.Description += "\nOnline";
-                        else emb.Description += $"\n{dayTime.Key} - {dayTime.Value}";
-                    }
-                    emb.Description += "\n";
+                        x.Header = $"**__{day.Term} - {day.Section}__**";
+                        x.Text = $"{day.Professor.Replace("Section Director:","**Section Director:**")}\n";
+                        if (day.HasLabs) x.Text += "This section has labs, click the title to see times and catalog numbers.\n";
+                        else x.Text += $"**Catalog Number**: {day.CAT}\n";
+                        foreach (var dayTime in day.DayTimes)
+                        {
+                            if (dayTime.Value == DateTime.MinValue) x.Text += "\nOnline";
+                            else x.Text += $"\n{dayTime.Key} at {dayTime.Value.ToShortTimeString()}";
+                        }
+                    }));
+                    
                 }
 
                 emb.Footer.Text = "Term: " + course.Term;
@@ -274,10 +278,10 @@ namespace ForkBot
 
                 await Context.Channel.SendMessageAsync("", embed: emb.Build());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (course != null && course.CourseNotFound) await ReplyAsync($"The specified course was not found. If you know this course exists, try `;course {code} force`. This may be very slow, so only do it once. It will then be added to the courselist and should work normally.");
-                else await ReplyAsync($"There was an error loading the course page. (Probably not available this term: **{Var.term}**)\nTry appending a different term to the end of the command (e.g. `;course {code} fw`)");
+                else await ReplyAsync($"There was an error loading the course page. (Probably not available this term: **{term.ToUpper()}**)\nTry appending a different term to the end of the command (e.g. `;course {code} fw`)");
             }
 
         }
@@ -344,11 +348,12 @@ namespace ForkBot
         {
             var guilds = Bot.client.Guilds;
             int guildCount = guilds.Count();
-            int userCount = 0;
+            IGuildUser[] users = new IGuildUser[0];
             foreach (IGuild g in guilds)
             {
-                userCount += (await g.GetUsersAsync()).Count();
+                users = (await g.GetUsersAsync()).Union(users).ToArray();
             }
+            var userCount = users.Count();
             var uptime = Var.CurrentDate() - Var.startTime;
 
             JEmbed emb = new JEmbed();
@@ -358,13 +363,14 @@ namespace ForkBot
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Users";
-                x.Text = $"Serving {userCount} users in {guildCount} guilds.";
+                x.Text = $"Serving {userCount} unique users in {guildCount} guilds.";
             }));
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Uptime";
                 x.Text = $"{uptime.Days} days, {uptime.Hours} hours, {uptime.Minutes} minutes, {uptime.Seconds} seconds.";
             }));
+            emb.ThumbnailUrl = Constants.Images.ForkBot;
             await ReplyAsync("", embed: emb.Build());
         }
 
@@ -426,7 +432,7 @@ namespace ForkBot
                                 remindTime = remindTime.Add(new TimeSpan(Convert.ToInt32(amount), 0, 0));
                                 break;
                             case "minute":
-                            case "mins":
+                            case "min":
                                 remindTime = remindTime.Add(new TimeSpan(0, Convert.ToInt32(amount), 0));
                                 break;
                             default:
@@ -469,7 +475,6 @@ namespace ForkBot
         {
             var reminders = Reminder.GetUserReminders(Context.User);
             int idCount = 0;
-            bool deleted = false;
             for (int i = 0; i < reminders.Count(); i++)
             {
                 idCount++;
@@ -546,7 +551,7 @@ namespace ForkBot
                 string unknownRoles = "";
                 foreach(var role in reqRoles)
                 {
-                    var roleName = role;
+                    var roleName = role.ToLower();
                     if (roleName == "york") continue;
                     int year = -1;
                     if (int.TryParse(roleName, out year))
@@ -595,10 +600,11 @@ namespace ForkBot
                     text += $"\nThe following roles were requested but not found: {unknownRoles.Trim(' ').Trim(',')}";
                 }
 
-                text += $"\nUse `;verify [user]` to **AUTOMATICALLY GRANT** the found roles.";
-                await reportChan.SendMessageAsync(Context.Guild.GetRole(Constants.Roles.MOD).Mention, embed: new InfoEmbed("Verification Request", text, footer).Build());
+                text += $"\nUse `;verify [user]` or react with ✅ to **AUTOMATICALLY GRANT** the found roles.";
+                var varMsg = await reportChan.SendMessageAsync(Context.Guild.GetRole(Constants.Roles.MOD).Mention, embed: new InfoEmbed("Verification Request", text, footer).Build());
+                await varMsg.AddReactionAsync(new Emoji("✅"));
                 await ReplyAsync("Moderators have recieved your verification request and will grant you access shortly.");
-                Var.awaitingVerifications.Add(new AwaitingVerification(Context.User, requestedRoles.ToArray()));
+                Var.awaitingVerifications.Add(new AwaitingVerification(Context.User, varMsg, requestedRoles.ToArray()));
             }
         }
 
@@ -744,6 +750,11 @@ namespace ForkBot
         [Command("donate"), Summary("[FUN] Give the specified user some of your coins or items!")]
         public async Task Donate(IUser user, int donation)
         {
+            if (user.Id == Constants.Users.FORKBOT)
+            {
+                await ReplyAsync("You cannot donate to this user.");
+                return;
+            }
             int coins = donation;
             User u1 = Functions.GetUser(Context.User);
             if (donation <= 0) await ReplyAsync("Donation must be greater than 0 coins.");
@@ -1017,7 +1028,13 @@ namespace ForkBot
                     int price = Convert.ToInt32(posts[i].Price);
 
                     string plural = "";
-                    if (amount > 1) plural = "s";
+                    if (amount > 1)
+                    {
+                        if (itemName.EndsWith("es")) plural = "";
+                        else if (itemName.EndsWith("ss")) plural = "es";
+                        else if (itemName.EndsWith("s")) plural = "";
+                        else plural = "s";
+                    }
 
 
                     emb.Fields.Add(new JEmbedField(x =>
@@ -1238,7 +1255,7 @@ namespace ForkBot
                 if (u.HasItem(item))
                 {
                     u.RemoveItem(item);
-                    msg += ":recycle: You have succesfully thrown away your " + item + "!\n";
+                    msg += ":recycle: You have successfully thrown away your " + item + "!\n";
                 }
                 else msg += ":x: You do not have an item called " + item + "!\n";
             }
@@ -1865,9 +1882,9 @@ namespace ForkBot
                     {
                         Var.presentRigged = false;
 
-                        if (user.GetData<bool>("gnoming"))
+                        if (user.GetData<bool>("active_gnome"))
                         {
-                            user.SetData("active_gnome", "0");
+                            user.SetData("active_gnome", false);
                             await ReplyAsync(DBFunctions.GetItemEmote("gnome") + $" Whoa! The present was rigged by {Var.presentRigger.Mention} [{Var.presentRigger.Username}]! Your gnome sacrificed himself to save your items!\n{Constants.Values.GNOME_VID}");
                             await Context.Channel.SendMessageAsync($"A present appears! :gift: Press {Var.presentNum} to open it!");
                             Var.presentWaiting = true;
@@ -1876,7 +1893,7 @@ namespace ForkBot
                         }
                         else
                         {
-                            int lossCount = rdm.Next(5) + 1;
+                            int lossCount = rdm.Next(5) + 3;
                             if (lossCount > user.GetItemList().Count()) lossCount = user.GetItemList().Count();
                             if (lossCount == 0)
                             {
@@ -1887,9 +1904,9 @@ namespace ForkBot
                                 string msg = $":bomb: Oh no! The present was rigged by {Var.presentRigger.Mention} and you lost:\n```";
                                 for (int i = 0; i < lossCount; i++)
                                 {
-                                    int itemID = user.GetItemList()[rdm.Next(user.GetItemList().Count())];
+                                    int itemID = user.GetItemList().ElementAt(rdm.Next(user.GetItemList().Count())).Key;
                                     var item = DBFunctions.GetItemName(itemID);
-                                    user.RemoveItem(item);
+                                    user.RemoveItem(itemID);
                                     msg += item + "\n";
                                 }
                                 await ReplyAsync(msg + "```\n:boom::boom::boom::boom:");
@@ -1963,7 +1980,7 @@ namespace ForkBot
                 con.Open();
 
                 var stm = "";
-                string title = "";
+                //string title = "";
                 string emote = "";
 
                 JEmbed emb = new JEmbed();
@@ -1982,10 +1999,10 @@ namespace ForkBot
                     emb.Title = "Top 5 Richest Users";
                     emote = "💰";
                 }
-                else if (DBFunctions.GetItemID(stat) != 0)
+                else if (DBFunctions.GetItemID(stat) != -1)
                 {
                     var id = DBFunctions.GetItemID(stat);
-                    stm = $"SELECT USER_ID, COUNT FROM USER_ITEMS WHERE ITEM_ID = {id} ORDER BY COUNT {order} LIMIT 10";
+                    stm = $"SELECT USER_ID, COUNT FROM USER_ITEMS WHERE ITEM_ID = {id} ORDER BY COUNT {order}";
                     emb.Title = $"Top 5 Most {DBFunctions.GetItemName(id)}s";
                     emote = DBFunctions.GetItemEmote(id);
                 }
@@ -2502,93 +2519,21 @@ namespace ForkBot
         public async Task Verify(IGuildUser user)
         {
             if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) return;
+            
+            
 
             var awaitingUser = Var.awaitingVerifications.Where(x => x.User.Id == Context.User.Id).FirstOrDefault();
             if (awaitingUser != null)
+            {
+
                 await user.AddRolesAsync(awaitingUser.Roles);
-            await user.AddRoleAsync(user.Guild.GetRole(Constants.Roles.VERIFIED));
-
-            await ReplyAsync("Successfully verified.");
-
-        }
-        //trusted related commands
-        /*[Command("trust"), RequireUserPermission(GuildPermission.MoveMembers), Summary("[MOD] Makes a user trusted.")]
-        public async Task Trust(IGuildUser user)
-        {
-            if (Context.Guild.Id != Constants.Guilds.YORK_UNIVERSITY) { await ReplyAsync("This command is only for the York University server."); return; }
-            var u = Functions.GetUser(user);
-            u.SetData("isTrusted", "true");
-            u.SetData("lastInfraction", "0");
-            await user.AddRoleAsync(user.Guild.GetRole(Constants.Roles.TRUSTED));
-            await ReplyAsync($"Trusted {Functions.GetName(user)}.");
-        }
-
-        [Command("record")]
-        public async Task Record() => await Record(Context.User as IGuildUser);
-
-        [Command("record"), Summary("Shows a users progress to being auto trusted.")]
-        public async Task Record(IGuildUser user)
-        {
-            var u = Functions.GetUser(user);
-            var joinDate = user.JoinedAt;
-            
-            var lastInfraction = u.GetData("lastInfraction");
-            var messageCount = u.GetData("messages");
-            var isTrusted = u.GetData("isTrusted");
-            var tMsgs = u.GetData("trustedMsgs");
-
-            JEmbed emb = new JEmbed();
-            emb.Author.Name = user.Username;
-            emb.Author.IconUrl = user.GetAvatarUrl();
-
-            if (isTrusted == "true")
-            {
-                emb.ColorStripe = Discord.Color.Green;
-                emb.Title = $"{user.Username} is Trusted!";
+                await user.AddRoleAsync(user.Guild.GetRole(Constants.Roles.VERIFIED));
+                await ReplyAsync("Successfully verified.");
             }
-            else
-            {
-                emb.ColorStripe = Discord.Color.Red;
-                emb.Title = $"{user.Username}'s Progress to Being Trusted";
-            }
-
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Message Count";
-                if (isTrusted == "true" || tMsgs == "true") messageCount = "500";
-                x.Text = $"{messageCount}/500";
-                x.Inline = true;
-            }));
-
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Last Infraction";
-
-                if (lastInfraction != "0")
-                {
-                    var iDate = Functions.StringToDateTime(lastInfraction);
-                    var time = Var.CurrentDate() - iDate;
-                    x.Text = $"{time.Days} Days, {time.Hours} Hours, and {time.Minutes} minutes.";
-                }
-                else x.Text = "Clean slate!";
-                x.Inline = true;
-            }));
-
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Join Date";
-                if (joinDate.HasValue)
-                    x.Text = $"{joinDate.Value.Day}/{joinDate.Value.Month}/{joinDate.Value.Year} {joinDate.Value.Hour - 4}:{joinDate.Value.Minute}";
-                else
-                    x.Text = "?";
-                x.Inline = true;
-            }));
-
-            await ReplyAsync("", embed: emb.Build());
+            else await ReplyAsync("User not found.");
 
         }
-        */
-
+        
         [Command("lockdown"), Summary("[MOD] Locks the server")]
         public async Task Lockdown()
         {
@@ -2599,6 +2544,18 @@ namespace ForkBot
             if (Var.LockDown) await ReplyAsync("Server locked.");
             else await ReplyAsync("Server unlocked.");
         }
+
+        [Command("fban"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Pretend to ban someone hahahahaha..")]
+        public async Task FBan(string user)
+        {
+            await Context.Message.DeleteAsync();
+            await ReplyAsync($"{user} has left the server.");
+        }
+
+        [Command("fban"), RequireUserPermission(GuildPermission.KickMembers), Summary("[MOD] Pretend to ban someone hahahahaha..")]
+        public async Task FBan(IUser user) => await FBan(user.Username);
+        
+
         #endregion
 
         #region Brady Commands
@@ -2714,14 +2671,6 @@ namespace ForkBot
                 await ReplyAsync("Successfully added course.");
             }
             else await ReplyAsync("FORMAT EXAMPLE: `LE/EECS 4404 3.00\tIntroduction to Machine Learning and Pattern Recognition`");
-        }
-
-        [Command("fban"), Summary("[BRADY] Pretend to ban someone hahahahaha..")]
-        public async Task FBan(string user)
-        {
-            if (Context.User.Id != Constants.Users.BRADY) throw NotBradyException;
-            await Context.Message.DeleteAsync();
-            await ReplyAsync($"{user} has left the server.");
         }
 
         [Command("giveallitem"), Summary("[BRADY] Give all users an item and optionally display a message.")]

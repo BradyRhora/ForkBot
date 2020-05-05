@@ -96,9 +96,10 @@ namespace ForkBot
         }
 
         [Command("eyeglasses")]
-        public async Task Eyeglasses(string item)
+        public async Task Eyeglasses([Remainder] string item)
         {
-            if (Check(Context, "eyeglasses",false)) return;
+            if (Check(Context, "eyeglasses", false)) return;
+            item = item.Replace("_", " ");
             User u = Functions.GetUser(Context.User);
             if (u.HasItem(DBFunctions.GetItemID(item)))
             {
@@ -176,7 +177,8 @@ namespace ForkBot
 
             var presents = DBFunctions.GetItemIDList();
             int presRDM;
-            do {
+            do
+            {
                 presRDM = rdm.Next(presents.Count());
             }
             while (!DBFunctions.ItemIsPresentable(presents[presRDM]));
@@ -212,7 +214,7 @@ namespace ForkBot
 
         }
 
-        [Command("roll"), Alias(new string[] {"game_die"})]
+        [Command("roll"), Alias(new string[] { "game_die" })]
         public async Task Roll(int max = 6)
         {
             if (Check(Context, "game_die", false)) return;
@@ -254,9 +256,7 @@ namespace ForkBot
                     u1.GiveCoins(amount);
                     u2.GiveCoins(-amount);
                     await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
-                    if (rdm.Next(100) < 20) DBFunctions.AddNews("ROBBED AT GUNPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
-                            $"robbing local person {user.Username} using a gun! Fearing for their life, {user.Username} handed over {amount} coins to the culprit who then escaped. Police are " +
-                            $"currently investigating but currently have no leads!");
+                    
                 }
                 else
                 {
@@ -266,9 +266,7 @@ namespace ForkBot
                         await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
                                                                $" You drop your gun and run before the police arrive. {(user as IGuildUser).Mention} picks up the gun!");
                         u2.GiveItem("gun");
-                        if (rdm.Next(100) < 70) DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY!", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
-                            $"was caught in an attempt to rob {user.Username} using a pistol. {user.Username} was able to disarm the culprit and didn't lose anything. It is currently unclear if " +
-                            $"{Context.User.Username} was under the influence of any drugs or alcohol at this time, but it is believed to be so.");
+                        
                     }
                     else
                     {
@@ -277,9 +275,7 @@ namespace ForkBot
                         u1.GiveItem(item);
                         u2.RemoveItem(item);
                         await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
-                        if (rdm.Next(100) < 20) DBFunctions.AddNews("ROBBED AT GUNPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
-                            $"robbing local person {user.Username} using a gun! Fearing for their life, {user.Username} handed over their {item} to the culprit who then escaped. Police are " +
-                            $"currently investigating but currently have no leads!");
+                        
                     }
                 }
             }
@@ -327,12 +323,12 @@ namespace ForkBot
                 switch (choice)
                 {
                     case 1:
-                        int coinAmount = rdm.Next(1000,3000)+1;
+                        int coinAmount = rdm.Next(1000, 3000) + 1;
                         user.GiveCoins(coinAmount);
                         msg += $"**+{coinAmount} coins!**";
                         break;
                     case 2:
-                        int amount = rdm.Next(2000, 5000)+1;
+                        int amount = rdm.Next(2000, 5000) + 1;
                         msg += $"**Fashion+{amount}**";
                         user.AddStat("fashion", amount);
                         break;
@@ -355,7 +351,7 @@ namespace ForkBot
                         }
                         break;
                     case 4:
-                        int hAmount = rdm.Next(2000, 5000)+1;
+                        int hAmount = rdm.Next(2000, 5000) + 1;
                         msg += $"**Happiness+{hAmount}**";
                         user.AddStat("happiness", hAmount);
                         break;
@@ -548,9 +544,7 @@ namespace ForkBot
                         u1.GiveCoins(amount);
                         u2.GiveCoins(-amount);
                         await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
-                        if (rdm.Next(100) < 20)DBFunctions.AddNews("ROBBED AT KNIFEPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen " +
-                            $"robbing local person {user.Username} using a knife! Fearing for their life, {user.Username} handed over {amount} coins to the culprit, who then escaped. Police are " +
-                            $"currently investigating but currently have no leads!");
+                        
                     }
                     else
                     {
@@ -560,10 +554,6 @@ namespace ForkBot
                             await Context.Channel.SendMessageAsync($"You try to steal an item from {user.Username}... but they have nothing!" +
                                                                    $" You drop your knife and run before the police arrive. {(user as IGuildUser).Mention} picks up the knife!");
                             u2.GiveItem("knife");
-
-                            if (rdm.Next(100) < 70) DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY WITH A SHARP WEAPON", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
-                            $"was caught in an attempt to rob {user.Username} using a knife. {user.Username} was able to disarm the culprit and didn't lose anything. It is currently unclear if " +
-                            $"{Context.User.Username} was under the influence of any drugs or alcohol at this time, but it is believed to be so.");
                         }
                         else
                         {
@@ -572,19 +562,14 @@ namespace ForkBot
                             u1.GiveItem(item);
                             u2.RemoveItem(item);
                             await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen your {item} from you!");
-                            if (rdm.Next(100) < 20) DBFunctions.AddNews("ROBBED AT KNIFEPOINT!", $"On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}, a person was seen" +
-                            $"robbing local person {user.Username} using a knife! Fearing for their life, {user.Username} handed over their {item} to the culprit, who then escaped. Police are " +
-                            $"currently investigating but currently have no leads!");
+                            
                         }
                     }
                 }
                 else
                 {
                     await Context.Channel.SendMessageAsync($":knife: Your attempt to rob {user.Username} fails! You get nothing.");
-                    if (rdm.Next(100) < 70) DBFunctions.AddNews("ATTEMPTED ARMED ROBBERY WITH A SHARP WEAPON", $"At {Var.CurrentDate().ToString("h: mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}, {Context.User.Username} " +
-                            $"was caught in an attempt to rob {user.Username} using a knife. {user.Username} was able to disarm the culprit and didn't lose anything. It is currently unclear if " +
-                            $"{Context.User.Username} was under the influence of any drugs or alcohol at this time, but it is believed to be so.");
-
+                    
                 }
             }
         }
@@ -606,7 +591,8 @@ namespace ForkBot
                 if (Context.Message.Attachments.Count() <= 0) await Paintbrush(Context.User);
                 else if (Context.Message.Attachments.First().Size < 500000)
                     await Paintbrush(Context.Message.Attachments.First().Url);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("Paintbrush Error:\n" + e.StackTrace);
             }
@@ -623,8 +609,8 @@ namespace ForkBot
             {
                 Console.WriteLine("Paintbrush Error:\n" + e.StackTrace);
             }
-}
-        
+        }
+
         [Command("paintbrush")]
         public async Task Paintbrush(string url)
         {
@@ -707,7 +693,7 @@ namespace ForkBot
                 Console.WriteLine("Paintbrush Error:\n" + e.StackTrace);
             }
         }
-        
+
         [Command("santa")]
         public async Task Santa()
         {
@@ -740,7 +726,7 @@ namespace ForkBot
             await Context.Channel.SendMessageAsync(":watch: `" + (DateTime.UtcNow - new TimeSpan(4, 0, 0)).ToLocalTime() + "`");
         }
 
-        [Command("mag"), Alias("burn", "magnifyingglass","magnifying_glass")]
+        [Command("mag"), Alias("burn", "magnifyingglass", "magnifying_glass")]
         public async Task Mag() { if (Check(Context, "mag", false)) return; await Context.Channel.SendMessageAsync("Choose someone to burn with `;mag [user]`..."); }
 
         [Command("mag"), Alias("burn", "magnifyingglass", "magnifying_glass")]
@@ -820,7 +806,7 @@ namespace ForkBot
                     emb.Description = sm.Generate() + "\n" + result;
                     emb.Footer.Text = $"You have: {user.GetCoins()} coins.";
                     emb.ColorStripe = Functions.GetColor(Context.User);
-                    var msg = await Context.Channel.SendMessageAsync("",embed:emb.Build());
+                    var msg = await Context.Channel.SendMessageAsync("", embed: emb.Build());
 
                     if ((rdm.Next(100) + 1) <= 5)
                     {
@@ -860,7 +846,7 @@ namespace ForkBot
                 for (int i = 0; i < items.Count(); i++) items[i] = rdm.Next(lootboxItems.Count());
 
                 string msg = "Your lootbox bursts open!\n:sparkles: ";
-                foreach(int i in items)
+                foreach (int i in items)
                 {
                     msg += DBFunctions.GetItemEmote(lootboxItems[i]) + " " + lootboxItems[i] + ":sparkles: ";
                     u.GiveItem(lootboxItems[i]);
@@ -878,7 +864,7 @@ namespace ForkBot
             User u = Functions.GetUser(Context.User);
             if (u.HasItem("key2") && u.HasItem("postbox"))
             {
-                string[] lootboxItems = { "pouch", "lock", "key", "moneybag","briefcase", "gun", "knife", "mag", "ticket", "stopwatch", "gift","unicorn","watch", "stopwatch","santa","shopping_cart","poop" };
+                string[] lootboxItems = { "pouch", "lock", "key", "moneybag", "briefcase", "gun", "knife", "mag", "ticket", "stopwatch", "gift", "unicorn", "watch", "stopwatch", "santa", "shopping_cart", "poop" };
 
                 u.RemoveItem("key2");
                 u.RemoveItem("postbox");
@@ -924,7 +910,7 @@ namespace ForkBot
         {
             if (Check(Context, "stopwatch")) return;
             await Context.Channel.SendMessageAsync(":stopwatch: The present time has decreased by 75%!");
-            Var.presentWait -= new TimeSpan(0,0,Convert.ToInt32(Var.presentWait.TotalSeconds * .75));
+            Var.presentWait -= new TimeSpan(0, 0, Convert.ToInt32(Var.presentWait.TotalSeconds * .75));
         }
 
         [Command("baby_symbol")]
@@ -948,13 +934,13 @@ namespace ForkBot
             string[] twins = { "A BABY", "TWINS", "TRIPLETS", "QUADRUPLETS", "QUINTUPLETS", "SEXTUPLETS", "SEPTUPLETS", "OCTUPLETS" };
 
 
-            if (babyCount+1 > 4)
-            DBFunctions.AddNews($"{Context.User.Username.ToUpper()} GIVES BIRTH TO {twins[babyCount]}!", "We here at The Daily Fork would like to extend our deepest " +
-                $"congratulations over to {Context.User.Username} for their succesful delivery of {babyCount+1} beautiful babies! The delivery took place at {Var.CurrentDate().ToString("h:mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}. " +
-                $"Good work to everyone involved!");
+            if (babyCount + 1 > 4)
+                DBFunctions.AddNews($"{Context.User.Username.ToUpper()} GIVES BIRTH TO {twins[babyCount]}!", "We here at The Daily Fork would like to extend our deepest " +
+                    $"congratulations over to {Context.User.Username} for their succesful delivery of {babyCount + 1} beautiful babies! The delivery took place at {Var.CurrentDate().ToString("h:mm tt")} on {Var.CurrentDate().ToString("dddd, MMMM dd")}. " +
+                    $"Good work to everyone involved!");
         }
 
-        [Command("jack_o_lantern"), Alias(new string[] {"jackolantern","pumpkin","jack-o-lantern" })]
+        [Command("jack_o_lantern"), Alias(new string[] { "jackolantern", "pumpkin", "jack-o-lantern" })]
         public async Task JackOLantern()
         {
             if (Check(Context, "jack_o_lantern")) return;
@@ -965,7 +951,7 @@ namespace ForkBot
             {
                 msg += "Happy halloween!";
                 int candyCount = rdm.Next(11) + 5;
-                for(int i = 0; i < candyCount; i++)
+                for (int i = 0; i < candyCount; i++)
                 {
                     u.GiveItem("candy");
                 }
@@ -979,16 +965,16 @@ namespace ForkBot
                 await ReplyAsync("You got 2 pieces of candy! :candy: Maybe if you used this at a different time it would be better..");
             }
         }
-        
+
         [Command("candy")]
         public async Task Candy()
         {
-            if (Check(Context,"candy")) return;
+            if (Check(Context, "candy")) return;
             await Context.Channel.SendMessageAsync(":candy: Don't forget to check for razors!\n**Fullness+10 Happiness+15**");
             Functions.GetUser(Context.User).AddStat("fullness", 10);
             Functions.GetUser(Context.User).AddStat("happiness", 15);
         }
-        
+
         [Command("gnome")]
         public async Task Gnome()
         {
@@ -1002,15 +988,15 @@ namespace ForkBot
                 await ReplyAsync(DBFunctions.GetItemEmote(DBFunctions.GetItemID("gnome")) + " Hohohohohoho! You've gnought to worry! I'll protect you!");
             }
         }
-        
+
         [Command("makekey")]
         public async Task MakeKey()
         {
             int packageCount = 0;
             var user = Functions.GetUser(Context.User);
             var uitems = user.GetItemList();
-            
-            if (user.HasItem(DBFunctions.GetItemID("package"),5))
+
+            if (user.HasItem(DBFunctions.GetItemID("package"), 5))
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -1020,7 +1006,7 @@ namespace ForkBot
                 await ReplyAsync("You have succesfully converted 5 packages into 1 key! :key:");
             }
             else await ReplyAsync("You must have 5 packages to make a key!");
-            
+
         }
 
         [Command("dividers"), Alias(new string[] { "sort", "divider" })]
@@ -1028,7 +1014,7 @@ namespace ForkBot
         {
             await ReplyAsync("this command is being deleted soon. divider sell price has increased, sell it while you can!");
         }
-        
+
         [Command("meat_on_bone"), Alias("meat")]
         public async Task MeatOnBone()
         {
@@ -1042,20 +1028,20 @@ namespace ForkBot
         public async Task Hole()
         {
             if (Check(Context, "hole")) return;
-            try { await Context.Message.DeleteAsync(); } catch { } 
+            try { await Context.Message.DeleteAsync(); } catch { }
             Functions.GetUser(Context.User).SetData("has_bm", "true");
             await (Bot.client.GetChannel(Constants.Channels.ELITE) as IMessageChannel).SendMessageAsync($":spy: @everyone, {Context.User.Mention} has entered the Black Market.");
             await Context.User.SendMessageAsync(":spy: Psst... hey.... you've been granted access to the black market. **Don't** tell anyone about this... Or you'll regret it.\nUse `;bm` to access and buy from it just like the shop.\nKeep it in private messages..");
             DBFunctions.AddNews("🕵️", $"Welcome, {Context.User.Username}.");
         }
-        
+
         [Command("spy")]
         public async Task Spy()
         {
             if (Check(Context, "spy", false)) return;
             if (Var.presentRigged)
             {
-                if (rdm.Next(100)+1 < 10)
+                if (rdm.Next(100) + 1 < 10)
                 {
                     await ReplyAsync(":spy: Oh fu-! :boom::boom::boom:\nYour spy accidentally activated the bomb and died!");
                 }
@@ -1067,7 +1053,7 @@ namespace ForkBot
         [Command("unlock")]
         public async Task Unlock()
         {
-            if (Check(Context, "unlock",false)) return;
+            if (Check(Context, "unlock", false)) return;
             var u = Functions.GetUser(Context.User);
             if (u.HasItem("iphone"))
             {
@@ -1078,7 +1064,7 @@ namespace ForkBot
             }
             else await ReplyAsync("You need an IPhone to use this.");
         }
-        
+
         [Command("calling"), Alias("call")]
         public async Task Calling()
         {
@@ -1173,8 +1159,8 @@ namespace ForkBot
                 Functions.GetUser(Context.User).AddStat("happiness", 18);
             }
         }
-        
-        [Command("bow_and_arrow"),Alias("bowandarrow","bow")]
+
+        [Command("bow_and_arrow"), Alias("bowandarrow", "bow")]
         public async Task Bow_And_Arrow(string target)
         {
             if (Check(Context, "bow_and_arrow", false)) return;
@@ -1196,11 +1182,11 @@ namespace ForkBot
                     }
                     else
                     {
-                        coinGain = rdm.Next(100)+100;
+                        coinGain = rdm.Next(100) + 100;
                         await ReplyAsync($"The tiger falls to the ground, and you take some nice pictures! You're also able to sell its pelt for {coinGain} coins.");
                     }
 
-                    user.GiveCoins(coinGain-coinLoss);
+                    user.GiveCoins(coinGain - coinLoss);
                     break;
                 case "man":
                     int coins = rdm.Next(50, 200);
@@ -1223,13 +1209,13 @@ namespace ForkBot
                     await ReplyAsync("You feel like you shouldn't shoot at that. (Yet)");
                     break;
             }
-            
+
         }
 
         [Command("pouch")]
         public async Task Pouch()
         {
-            if (Check(Context, "pouch",false)) return;
+            if (Check(Context, "pouch", false)) return;
             var user = Functions.GetUser(Context.User);
             if (!user.GetData<bool>("active_pouch"))
             {
@@ -1311,7 +1297,7 @@ namespace ForkBot
                     u2.RemoveItem(itemID);
                 }
                 msg = msg.Trim(',');
-                int poopCount = rdm.Next(3, 10)+1;
+                int poopCount = rdm.Next(3, 10) + 1;
                 msg += $"\n:poop: {poopCount} poops fall into your inventory! :poop:";
                 for (int i = 0; i < poopCount; i++) u2.GiveItem("poop");
                 await ReplyAsync(msg);
@@ -1361,7 +1347,7 @@ namespace ForkBot
                 else
                     await ReplyAsync("You look through your telescope and see...\nA black squirrel...\nA grey cat...\nAnd a red herring!\n" +
                         $"No sign of any {param}.");
-                
+
 
             }
         }
@@ -1371,13 +1357,176 @@ namespace ForkBot
         {
             if (Check(Context, "super scope", false)) return;
 
-            var arrivalDate = new DateTime(2020, 1,30);
+            var arrivalDate = new DateTime(2020, 1, 30);
 
-            await ReplyAsync($"The voids expansion increases. It will arrive in {(int)((arrivalDate-DateTime.Now).TotalHours)} hours.");
+            if (DateTime.Now <= arrivalDate)
+            {
+                var hours = (int)((arrivalDate - DateTime.Now).TotalHours);
+                string msg = $"The voids expansion increases. It will arrive in {hours} hours";
+                var mins = (arrivalDate - DateTime.Now).Minutes;
+                if (hours == 0) msg += $" and {mins} minutes.";
+                else msg += ".";
+                await ReplyAsync(msg);
+            }
+            else
+            {
+                if (Var.VoidDate < DateTime.Now)
+                {
+                    Var.VoidDate = DateTime.Now + new TimeSpan(12, 0, 0);
+                    Var.IDEnd = rdm.Next(10);
+                }
 
+                var voidEmote = DBFunctions.GetItemEmote("void");
+                if (Context.User.Id.ToString().EndsWith(Var.IDEnd.ToString()))
+                {
+                    await ReplyAsync(voidEmote + " The void has chosen you.");
+                    var user = new User(Context.User.Id);
+                    user.GiveItem("void");
+                    user.RemoveItem("super_scope");
+                }
+                else
+                    await ReplyAsync(voidEmote + " The void does not choose you.");
+            }
         }
 
+        [Command("void")]
+        public async Task Void([Remainder] string param = "")
+        {
+            if (Check(Context, "void", false)) return;
+            var itemID = DBFunctions.GetItemID(param);
+            if (itemID == -1)
+                await ReplyAsync("The void hungers. It must be fed.");
+            else
+            {
+                var value = DBFunctions.GetItemPrice(itemID);
+                var user = new User(Context.User.Id);
+                user.RemoveItem(itemID);
+                user.AddData("void_amount", value);
+                var voidAmt = user.GetData<int>("void_amount");
+                if (voidAmt >= 25000)
+                {
+                    user.SetData("void_amount", 0);
+                    await ReplyAsync("The void is full. It awakens.");
+                    user.RemoveItem("void");
+                    user.GiveItem("fullvoid");
+                }
+                else await ReplyAsync($"The void devours your {DBFunctions.GetItemName(itemID)}\n" +
+                    $"It remains unquenched.");
+            }
+        }
+
+        [Command("enchantedring"), Alias("enchanted_ring")]
+        public async Task EnchantedRing([Remainder] string param = "")
+        {
+            if (Check(Context, "enchanted_ring", false)) return;
+
+            param = param.ToLower().Replace("_", " ");
+            var user = new User(Context.User.Id);
+            var ringEmote = DBFunctions.GetItemEmote("enchanted ring");
+            Dictionary<string, string> wells = new Dictionary<string, string>()
+            {
+                { "weed","weedswell" },
+                { "santa","santawell" },
+                { "moneybag","goldswell" },
+                { "controller","mariowell" },
+                { "super scope","superwell" },
+                { "box","hollowswell" },
+                { "bomb","ragewell" },
+                { "skull","venomswell" },
+                { "poop bucket", "monkaswell" },
+                { "spoon", "batswell" }
+            };
+
+            if (wells.ContainsKey(param))
+            {
+                if (!user.HasItem(param)) return;
+
+                if (Properties.Settings.Default.claimedMaxwells == null)
+                {
+                    Properties.Settings.Default.claimedMaxwells = new System.Collections.Specialized.StringCollection();
+                    Properties.Settings.Default.Save();
+                }
+
+
+                if (!Properties.Settings.Default.claimedMaxwells.Contains(wells[param]))
+                {
+                    Properties.Settings.Default.claimedMaxwells.Add(wells[param]);
+                    Properties.Settings.Default.Save();
+
+                    user.GiveItem(wells[param]);
+                    user.RemoveItem(param);
+                    user.RemoveItem("enchanted ring");
+                    var emote = DBFunctions.GetItemEmote(wells[param]);
+                    await ReplyAsync($"The ring shines brightly as it interacts with the {param}... And a form emerges from the light.\n\n{emote}");
+                }
+                else await ReplyAsync("The ring begins to shine... But then fades. It seems this one has already been awakened...");
+            }
+            else if (param == "") await ReplyAsync("The ring waits for a catalyst.");
+            else await ReplyAsync("This item seems to have no effect.");
+        }
+
+        [Command("maxwell"), Alias("weedswell","venomswell","superwell","santawell","ragewell","mariowell","goldswell","batswell","monkaswell","hollowswell")]
+        public async Task Maxwell([Remainder] string wish = "")
+        {
+            var maxwell = Context.Message.Content.Split(' ')[0].Trim(';');
+            var user = new User(Context.User.Id);
+            if (!user.HasItem(maxwell)) return;
+
+            if (wish == "")
+            {
+                await ReplyAsync("Ask me your questions child, tell me your requests, and I will deliver unto you the response.");
+            }
+            else
+            {
+                var brady = Bot.client.GetUser(Constants.Users.BRADY);
+                var isdm = await Functions.isDM(Context.Message);
+                string chan = "";
+                if (isdm) chan = "DM's";
+                else chan = Context.Channel.Name;
+                var msg = await ReplyAsync("One moment...");
+                var req = new MaxwellRequest(Context.User, msg, DBFunctions.GetItemID(maxwell), wish, isdm);
+                Var.maxwellRequests.Add(req);
+                await brady.SendMessageAsync($"{Context.User.Mention} asks their {maxwell} {DBFunctions.GetItemEmote(maxwell)} in {chan} with an ID of {req.ID}...\n```\n{wish}\n```");
+            }
+        }
+
+        [Command("well")]
+        public async Task Well(int mwID, [Remainder] string message)
+        {
+            if (Context.User.Id != Constants.Users.BRADY) return;
+
+            var req = Var.maxwellRequests.Where(x => x.ID == mwID).FirstOrDefault();
+            //if (message == "del")
+            //{
+                Var.maxwellRequests.Remove(req);
+                //return;
+            //}
+
+            var emote = DBFunctions.GetItemEmote(req.MaxwellID);
+
+            await req.Message.ModifyAsync(x => x.Content = $"{emote}💬\n{message}");
+            /*
+            if (req.isDM)
+            {
+                await req.User.SendMessageAsync(emote + "\n" + message);
+            }
+            else
+            {
+                var chan = Bot.client.GetChannel(req.Channel) as ITextChannel;
+                await chan.SendMessageAsync(emote + "\n" + message);
+            }*/
+
+            await ReplyAsync("Sent.");
+        }
+
+        [Command("controller"), Alias("videogame","game", "video_game")]
+        public async Task Controller()
+        {
+            var user = Functions.GetUser(Context.User);
+            var hasNotifs = user.GetData<bool>("Notify_Game");
+            if (!hasNotifs) if (Check(Context, "controller")) return;
+            user.SetData("Notify_Game", !hasNotifs);
+            await ReplyAsync($"Set free game notifications to {!hasNotifs}.");
+        }
     }
-
-
 }

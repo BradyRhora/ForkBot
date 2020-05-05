@@ -12,10 +12,10 @@ namespace ForkBot
                                                           new ItemCombo("woman","baby","baby bottle"),
                                                           new ItemCombo("skull","baby","weed"),
                                                           new ItemCombo("baby bottle","milk"),
-                                                          new ItemCombo("older woman","woman","wine"),
+                                                          new ItemCombo("old woman","woman","wine"),
                                                           new ItemCombo("pregnant woman","man","woman"),
                                                           new ItemCombo("baby symbol","pregnant woman","watch"),
-                                                          new ItemCombo("older man","man","beer"),
+                                                          new ItemCombo("old man","man","beer"),
                                                           new ItemCombo("gift","box","ribbon"),
                                                           new ItemCombo("stopwatch","iphone","watch"),
                                                           new ItemCombo("tiger","cat","milk","meat"),
@@ -24,7 +24,9 @@ namespace ForkBot
                                                           new ItemCombo("special:oldbm","unlock","spy"),
                                                           new ItemCombo("package","lock","box"),
                                                           new ItemCombo("poop bucket", "poop", "bucket"),
-                                                          new ItemCombo("super scope", "telescope", "skull","battery")};
+                                                          new ItemCombo("super scope", "telescope", "skull","battery"),
+                                                          new ItemCombo("enchanted ring", "full void","ring"),
+                                                          new ItemCombo("maxwell","weedswell","venomswell","superwell","santawell","ragewell","mariowell","goldswell","batswell","monkaswell","hollowswell")};
         public string[] Items;
         public string Result;
 
@@ -39,12 +41,13 @@ namespace ForkBot
             int iCount = 0;
             foreach(ItemCombo c in ItemCombos)
             {
-                var ingredients = c.Items.ToList();
+                var ingredients = c.Items.Select(x=>DBFunctions.GetItemID(x)).ToList();
                 foreach (string item in items)
                 {
-                    if (ingredients.Contains(item))
+                    var itemID = DBFunctions.GetItemID(item);
+                    if (ingredients.Contains(itemID))
                     {
-                        ingredients.Remove(item);
+                        ingredients.Remove(itemID);
                         iCount++;
                     }
                 }

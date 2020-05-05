@@ -62,13 +62,10 @@ namespace ForkBot
         public async Task gem()
         {
             if (Check(Context, "gem")) return;
-            await ReplyAsync("Sorry remind me to do this I forgot");
+            var gemTime = DateTime.Now + new TimeSpan(3, 0, 0);
             var user = Functions.GetUser(Context.User);
-            user.GiveItem("gem");
-            /*string gemTime = Functions.DateTimeToString(DateTime.Now + new TimeSpan(3, 0, 0));
-            var user = Functions.GetUser(Context.User);
-            user.SetData("gemtime", gemTime);
-            await ReplyAsync("Your stat increases will be multiplied for 3 hours!");*/
+            user.SetData("gem_time", gemTime);
+            await ReplyAsync("Your stat increases will be multiplied for 3 hours!");
         }
 
         [Command("fax")]

@@ -93,7 +93,7 @@ namespace ForkBot
 
         public class Dates
         {
-            public static DateTime STRIKE_END = new DateTime(2019, 11, 6);
+            public static DateTime STRIKE_END = new DateTime(2020, 3, 16);
         }
 
         public class Values
