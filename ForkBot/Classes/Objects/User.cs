@@ -46,6 +46,7 @@ namespace ForkBot
                 try
                 {
                     var user = Bot.client.GetUser(ID);
+                    if (user == null) return "[UserNotFound]";
                     return user.Username;
                 }
                 catch (Exception) { return null; }

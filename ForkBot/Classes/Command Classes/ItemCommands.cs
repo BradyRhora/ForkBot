@@ -9,7 +9,6 @@ using Discord;
 using Discord.Commands;
 using ImageProcessor;
 using System.Net;
-using PokeAPI;
 using System.Data.SQLite;
 
 namespace ForkBot

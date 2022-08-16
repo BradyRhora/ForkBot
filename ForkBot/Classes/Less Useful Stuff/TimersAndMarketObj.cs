@@ -146,7 +146,11 @@ namespace ForkBot
                 var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
                 foreach (IUser u in notifyUsers)
                 {
-                    await u.SendMessageAsync("", embed: new InfoEmbed("Bi-Weekly Bid Alert", $"The bi-weekly bid is on! This time: {amount} {item}(s)! Get it with the ID: {newBid.ID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
+                    try
+                    {
+                        await u.SendMessageAsync("", embed: new InfoEmbed("Bi-Weekly Bid Alert", $"The bi-weekly bid is on! This time: {amount} {item}(s)! Get it with the ID: {newBid.ID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
+                    }
+                    catch (Exception) { } //in case "cannot send message to this user"
                 }
             }
         }

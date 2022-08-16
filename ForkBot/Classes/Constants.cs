@@ -86,7 +86,7 @@ namespace ForkBot
             public static Emoji HAMMER = new Emoji("🔨");
             public static Emoji DIE = new Emoji("🎲");
             public static Emoji QUESTION = new Emoji("❓");
-            public static Emote BRADY = Emote.Parse("<:brady:465359176575614980>");
+            public static Emote BRADY = Emote.Parse("<:Smuggers:657954937820676116>");
             public static Emote BLANK = Emote.Parse("<:blank:528431788616318977>");
 
         }
@@ -94,6 +94,7 @@ namespace ForkBot
         public class Dates
         {
             public static DateTime STRIKE_END = new DateTime(2020, 3, 16);
+            public static DateTime REBIRTH = new DateTime(2022, 8, 9);
         }
 
         public class Values

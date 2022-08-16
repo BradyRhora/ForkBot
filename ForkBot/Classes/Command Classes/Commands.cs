@@ -100,113 +100,84 @@ namespace ForkBot
 
         }
 
-        [Command("define"), Alias(new string[] { "def" }), Summary("Returns the definiton for the inputted word.")]
-        public async Task Define([Remainder]string word)
-        {
-            throw new NotSupportedException("The Oxford Dictionary API has been discontinued.");
-            /*OxfordDictionaryClient client = new OxfordDictionaryClient("45278ea9", "c4dcdf7c03df65ac5791b67874d956ce");
-            var result = await client.SearchEntries(word, CancellationToken.None);
-            if (result != null)
-            {
-                var senses = result.Results[0].LexicalEntries[0].Entries[0].Senses[0];
-
-                JEmbed emb = new JEmbed();
-                emb.Title = Func.ToTitleCase(word);
-                emb.Description = Char.ToUpper(senses.Definitions[0][0]) + senses.Definitions[0].Substring(1) + ".";
-                emb.ColorStripe = Constants.Colours.YORK_RED;
-                if (senses.Examples != null)
-                {
-                    emb.Fields.Add(new JEmbedField(x =>
-                    {
-                        x.Header = "Examples:";
-                        string text = "";
-                        foreach (OxfordDictionariesAPI.Models.Example eg in senses.Examples)
-                        {
-                            text += $"\"{Char.ToUpper(eg.Text[0]) + eg.Text.Substring(1)}.\"\n";
-                        }
-                        x.Text = text;
-                    }));
-                }
-                await Context.Channel.SendMessageAsync("", embed: emb.Build());
-            }
-            else await Context.Channel.SendMessageAsync($"Could not find definition for: {word}.");*/
-        }
-
-
         HtmlWeb web = new HtmlWeb();
-        string GetProfCode(string name)
+        Dictionary<string,string> GetProfStats(string name, string[] inputStats)
         {
             string link = "https://www.ratemyprofessors.com/search.jsp?query=" + name.Replace(" ", "%20");
             var page = web.Load(link).DocumentNode;
-            var node = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div/div[2]/ul/li/a").Attributes[0].Value;
-            if (node != null)
-                return node.Replace("/ShowRatings.jsp?tid=", "");
-            else
-                return null;
+            var str = page.SelectSingleNode("/html[1]/body[1]/script[1]").InnerHtml;
+            List<string> statNames = inputStats.ToList();
+
+            bool adding = false;
+            string addingStr = "";
+            int first = -1, second = -1;
+            Dictionary<string,string> stats = new Dictionary<string, string>();
+            for(int i = 0; i < str.Length - 6 && statNames.Count() > 0; i++)
+            {
+                if (!adding)
+                {
+                    foreach (string s in statNames)
+                    {
+                        if (str[i] == s[0])
+                        {
+                            if (str.Substring(i-1, s.Length+2) == '"'+s+'"')
+                            {
+                                adding = true;
+                                addingStr = s;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (str[i] == ':') first = i;
+                    else if (str[i] == ',')
+                    {
+                        second = i-1;
+                        string stat = str.Substring(first + 1, second - first).Trim('"');
+                        stats.Add(addingStr, stat);
+                        statNames.Remove(addingStr);
+                        adding = false;
+                    }
+                }
+            }
+
+            return stats;
         }
 
         [Command("professor"), Alias(new string[] { "prof", "rmp" }), Summary("Check out a professors rating from RateMyProfessors.com!")]
         public async Task Professor([Remainder] string name)
         {
-            var id = GetProfCode(name);
-            if (id == null)
-            {
-                await ReplyAsync("Prof not found!");
-                return;
-            }
-            Thread.Sleep(1111);
-            var link = "https://www.ratemyprofessors.com/ShowRatings.jsp?tid=" + id;
-            var page = web.Load(link).DocumentNode;
+            var stats = GetProfStats(name, new string[] {"avgRating","wouldTakeAgainPercent","avgDifficulty","department","firstName","lastName","name","numRatings" });
 
-            var rating = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[1]/div/div[1]/div/div/div").InnerText;
-            var takeAgain = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[1]/div/div[2]/div[1]/div").InnerText;
-            var difficulty = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[1]/div/div[2]/div[2]/div").InnerText;
-            var titleText = page.SelectSingleNode("/html/head/title").InnerText;
-            string profName = titleText.Split(' ')[0] + " " + titleText.Split(' ')[1];
-            string university = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[1]/div[1]/div[1]/div[3]/h2/a").InnerText;
-            university = university.Replace(" (all campuses)", "");
-            var tagBox = page.SelectSingleNode("/html/body/div[2]/div[4]/div/div[1]/div[3]/div[2]/div[2]");
-            List<string> tags = new List<string>();
-            for (int i = 0; i < tagBox.ChildNodes.Count(); i++)
-            {
-                if (tagBox.ChildNodes[i].Name == "span") tags.Add(tagBox.ChildNodes[i].InnerText + " " + tagBox.ChildNodes[i].FirstChild.InnerText);
-            }
-
+            string profName = stats["firstName"] + " " + stats["lastName"];
+            string school = stats["name"];
             JEmbed emb = new JEmbed();
 
-            emb.Title = profName + " - " + university;
+            emb.Title = profName + " - " + school;
+            emb.Description = "Department of " + stats["department"];
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Rating:";
-                x.Text = rating;
+                x.Text = stats["avgRating"] + $"({stats["numRatings"]} ratings)";
                 x.Inline = true;
             }));
 
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Difficulty:";
-                x.Text = difficulty;
+                x.Text = stats["avgDifficulty"];
                 x.Inline = true;
             }));
 
             emb.Fields.Add(new JEmbedField(x =>
             {
                 x.Header = "Would take again?:";
-                x.Text = takeAgain;
+                x.Text = stats["wouldTakeAgainPercent"];
                 x.Inline = true;
             }));
 
-            emb.Fields.Add(new JEmbedField(x =>
-            {
-                x.Header = "Top Tags:";
-                string text = "";
-                foreach (string s in tags)
-                {
-                    text += s;
-                }
-                x.Text = text;
-                x.Inline = false;
-            }));
+            emb.Footer = new JEmbedFooter("Info scraped from www.ratemyprofessors.com");
 
             emb.ColorStripe = Constants.Colours.YORK_RED;
             await Context.Channel.SendMessageAsync("", embed: emb.Build());
@@ -247,7 +218,7 @@ namespace ForkBot
                 }
 
                 if (term == "") term = YorkU.Course.GetCurrentTerm();
-                course = new Course(code,term:term);;
+                course = new Course(code,term:term);
 
 
                 JEmbed emb = new JEmbed();
@@ -1190,18 +1161,19 @@ namespace ForkBot
         public async Task ItemInfo([Remainder] string item)
         {
             var itemID = DBFunctions.GetItemID(item);
-
-            JEmbed emb = new JEmbed();
-            emb.Title = DBFunctions.GetItemEmote(item) + " " + DBFunctions.GetItemName(itemID);
-            emb.Description = DBFunctions.GetItemDescription(itemID);
-            emb.ColorStripe = Constants.Colours.YORK_RED;
-            if (!DBFunctions.ItemIsShoppable(itemID)) emb.Description += $"\n\n:moneybag: Cannot be purchased. Find through presents or combining!\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
-            else emb.Description += $"\n\n:moneybag: Buy: {DBFunctions.GetItemPrice(itemID)} coins.\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
-            emb.Footer.Text = $"There are currently {DBFunctions.GetTotalItemCount(item)} in circulation.";
-            await ReplyAsync("", embed: emb.Build());
-            return;
-
-            //await ReplyAsync("Item not found.");
+            if (itemID == -1)
+                await ReplyAsync($"Item '{item}' does not exist.");
+            else
+            {
+                JEmbed emb = new JEmbed();
+                emb.Title = DBFunctions.GetItemEmote(item) + " " + DBFunctions.GetItemName(itemID);
+                emb.Description = DBFunctions.GetItemDescription(itemID);
+                emb.ColorStripe = Constants.Colours.YORK_RED;
+                if (!DBFunctions.ItemIsShoppable(itemID)) emb.Description += $"\n\n:moneybag: Cannot be purchased. Find through presents or combining!\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
+                else emb.Description += $"\n\n:moneybag: Buy: {DBFunctions.GetItemPrice(itemID)} coins.\nSell: {Convert.ToInt32(DBFunctions.GetItemPrice(itemID) * Constants.Values.SELL_VAL)} coins.";
+                emb.Footer.Text = $"There are currently {DBFunctions.GetTotalItemCount(item)} in circulation.";
+                await ReplyAsync("", embed: emb.Build());
+            }
         }
 
         [Command("combine"), Summary("[FUN] Combine lame items to make rad items!")]
@@ -2037,11 +2009,12 @@ namespace ForkBot
                     while (reader.Read() && rank < 5)
                     {
                         rank++;
-                        emb.Fields.Add(new JEmbedField(async x =>
+                        
+                        var userID = Convert.ToUInt64(reader.GetInt64(0));
+                        var user = Functions.GetUser(userID);
+                        var name = await user.GetName(Context.Guild);
+                        emb.Fields.Add(new JEmbedField(x =>
                         {
-                            var userID = Convert.ToUInt64(reader.GetInt64(0));
-                            var user = Functions.GetUser(userID);
-                            var name = await user.GetName(Context.Guild);
                             if (name == null)
                                 rank--;
                             else
@@ -2091,7 +2064,7 @@ namespace ForkBot
                 string uNum = u.GetData<string>("lotto_num");
                 string uNum2 = u.GetData<string>("bm_lotto_num");
 
-                if (uNum == "0") emb.Footer.Text = "Get your number today with ';lottery buy'!";
+                if (uNum == null || uNum == "0") emb.Footer.Text = "Get your number today with ';lottery buy'!";
                 else
                 {
                     var lottoDay = u.GetData<DateTime>("lotto_day").AddHours(5);
@@ -2107,7 +2080,7 @@ namespace ForkBot
                         }
 
                         int matchCount2 = 0;
-                        if (uNum2 != "0")
+                        if (uNum2 != null && uNum2 != "0")
                         {
                             for (int i = 0; i < 4; i++)
                             {

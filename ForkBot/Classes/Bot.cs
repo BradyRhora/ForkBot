@@ -55,8 +55,9 @@ namespace ForkBot
                 Var.IDEnd = rdm.Next(10);
                 Console.WriteLine($"ForkBot successfully intialized with debug code [{Var.DebugCode}]");
                 Var.startTime = Var.CurrentDate();
-                int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
-                await client.SetGameAsync(strikeCount + " days since last social interaction", type: ActivityType.Watching);
+
+                int strikeCount = (Var.CurrentDate() - Constants.Dates.REBIRTH).Days;
+                await client.SetGameAsync(strikeCount + " days since REBIRTH", type: ActivityType.Watching);
                 Timers.RemindTimer = new Timer(Timers.Remind, null, 1000 * 30, 1000 * 60);
                 Timers.BidTimer = new Timer(Timers.BidTimerCallBack, null, 1000 * 30, 1000 * 60);
                 await Task.Delay(-1);
@@ -75,12 +76,12 @@ namespace ForkBot
         public async Task InstallCommands()
         {
             client.MessageReceived += HandleMessage;
-            client.UserJoined += HandleJoin;
-            client.UserLeft += HandleLeave;
-            client.MessageDeleted += HandleDelete;
+            //client.UserJoined += HandleJoin;
+            //client.UserLeft += HandleLeave;
+            //client.MessageDeleted += HandleDelete;
             client.ReactionAdded += HandleReact;
-            client.MessageUpdated += HandleEdit;
-            client.UserVoiceStateUpdated += HandleVoiceUpdate;
+            //client.MessageUpdated += HandleEdit;
+            //client.UserVoiceStateUpdated += HandleVoiceUpdate;
             await commands.AddModulesAsync(Assembly.GetEntryAssembly(), services: null);
         }
 
@@ -111,78 +112,19 @@ namespace ForkBot
             if (lastDay.DayOfYear < Var.CurrentDate().DayOfYear)
             {
                 //status update
-                int strikeCount = (Var.CurrentDate() - Constants.Dates.STRIKE_END).Days;
-                await client.SetGameAsync(strikeCount + " days since last social interaction", type: ActivityType.Watching);
-
-                //game notify
-                Console.WriteLine("Fix Game notify");
-                /*
-                HtmlWeb web = new HtmlWeb();
-                var doc = web.Load("https://steamdb.info/upcoming/free/").DocumentNode;
-                var node = doc.SelectSingleNode("/html/body/div[1]/div[1]/div[3]/table[1]/tbody");
-                var notified = DBFunctions.GetUsersWhere("Notify_Game", "1");
-
-                Dictionary<string, string> gamesToNotify = new Dictionary<string, string>();
-                foreach(var row in node.ChildNodes)
-                {
-                    if (row.Name == "#text") continue;
-                    var keep = row.ChildNodes[7].InnerText == "Keep";
-                    if (keep)
-                    {
-                        var appid = row.Attributes[1].Value;
-                        var name = row.ChildNodes[3].InnerText.Replace("\n","");
-                        //await client.GetUser(Constants.Users.BRADY).SendMessageAsync($"{name} - {appid}");
-                        using (var sql = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
-                        {
-                            sql.Open();
-                            var cmd = "SELECT COUNT(*) FROM NOTIFIED_GAMES WHERE APP_ID = " + appid;
-                            int count = 0;
-                            using (var com = new SQLiteCommand(cmd, sql))
-                            {
-                                count = Convert.ToInt32(com.ExecuteScalar());
-                            }
-
-                            if (count == 0)
-                            {
-                                gamesToNotify.Add(appid, name);
-                                cmd = $"INSERT INTO NOTIFIED_GAMES VALUES({appid})";
-                                using (var com = new SQLiteCommand(cmd, sql))
-                                {
-                                    com.ExecuteNonQuery();
-                                }
-                            }
-                        }
-                    }
-
-                    if (gamesToNotify.Count() > 0)
-                    {
-                        var msg = ":video_game: The Following Game(s) Are Currently Free To Keep! :video_game:\n```";
-                        foreach (var game in gamesToNotify.Values)
-                            msg += gamesToNotify + "\n";
-                        msg += "```";
-
-                        foreach (var u in notified)
-                        {
-                            await u.SendMessageAsync(msg);
-                        }
-                    }
-                }*/
+                int strikeCount = (Var.CurrentDate() - Constants.Dates.REBIRTH).Days;
+                await client.SetGameAsync(strikeCount + " days since REBIRTH", type: ActivityType.Watching);
             }
 
-            //checks if message contains any blocked words
-            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
+            //checks if message contains any blocked words ## DISABLED ##
+            /*if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && Functions.Filter(message.Content))
             {
                 await message.DeleteAsync();
                 return;
-            }
+            }*/
 
             if (Var.blockedUsers.Where(x=>x.Id == message.Author.Id).Count() > 0) return; //prevents "blocked" users from using the bot
 
-       
-            
-            //Special check for Fork.py
-            if (message.Author.IsBot && message.Author.Id != Constants.Users.FORKPY) return;
-            
             //present stuff
             if (Var.presentWaiting && message.Content == Convert.ToString(Var.presentNum))
             {
@@ -287,8 +229,8 @@ namespace ForkBot
             }*/
 
             //Doesnt allow bot usage in "blocked" channels
-            ulong[] blockedChannels = { Constants.Channels.GENERAL_SLOW, Constants.Channels.GENERAL_TRUSTED, Constants.Channels.NEWS_DEBATE, Constants.Channels.LIFESTYLE };
-            if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.BOOSTER)) return;
+            //ulong[] blockedChannels = { Constants.Channels.GENERAL_SLOW, Constants.Channels.GENERAL_TRUSTED, Constants.Channels.NEWS_DEBATE, Constants.Channels.LIFESTYLE };
+            //if (!isDM && (message.Channel as IGuildChannel).Guild.Id == Constants.Guilds.YORK_UNIVERSITY && (blockedChannels.Contains(message.Channel.Id)) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.MOD) && !(message.Author as IGuildUser).RoleIds.Contains(Constants.Roles.BOOSTER)) return;
             #endregion
 
             int argPos = 0;
@@ -354,10 +296,6 @@ namespace ForkBot
                     Var.lastMessage[context.User.Id] = Var.CurrentDate();
                 }
             }
-            else if (message.MentionedUsers.First().Id == client.CurrentUser.Id && message.Author.Id != client.CurrentUser.Id && Var.responding && ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY || message.Channel.Id == Constants.Channels.COMMANDS || message.Channel.Id == 265998661606047744))
-                Functions.Respond(message);
-            else if ((message.Channel as IGuildChannel).Guild.Id != Constants.Guilds.YORK_UNIVERSITY && !Var.responding)
-                Functions.Respond(message);
             else return;
 
         }
@@ -375,12 +313,12 @@ namespace ForkBot
                 await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Mention}! Welcome to {user.Guild.Name}!");
             }
         }
-        public async Task HandleLeave(SocketGuildUser user)
+        public async Task HandleLeave(SocketGuild guild, SocketUser user)
         {
             if (Var.DebugMode) return;
-            if (!Var.LockDown && user.Guild.Id == Constants.Guilds.YORK_UNIVERSITY) await (user.Guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
+            if (!Var.LockDown && guild.Id == Constants.Guilds.YORK_UNIVERSITY) await (guild.GetChannel(Constants.Channels.GENERAL_SLOW) as IMessageChannel).SendMessageAsync($"{user.Username} has left the server.");
         }
-        public async Task HandleDelete(Cacheable<IMessage, ulong> cache, ISocketMessageChannel channel)
+        public async Task HandleDelete(Cacheable<IMessage, ulong> cache, Cacheable<IMessageChannel,ulong> channel)
         {
             var msg = cache.Value;
             if (msg == null) return;
@@ -470,7 +408,7 @@ namespace ForkBot
                 await chan.SendMessageAsync("", embed: emb.Build());
             }
         }
-        public async Task HandleReact(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction react)
+        public async Task HandleReact(Cacheable<IUserMessage, ulong> cache, Cacheable<IMessageChannel, ulong> channel, SocketReaction react)
         {
             if (cache.Value == null) return;
             if ((react.UserId != client.CurrentUser.Id))

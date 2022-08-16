@@ -79,45 +79,7 @@ namespace ForkBot
         
 
         static WebClient web = new WebClient();
-        public static async void Respond(IMessage message)
-        {
-            try
-            {
-                string msg = Regex.Replace(message.Content, "(<.*@.*377913570912108544.*>)", "").Trim();
-                if (msg.ToLower() == "disconnect") msg = "&disconnect=true";
-                else msg = "&message=" + msg;
-                var xml = web.DownloadString("https://www.botlibre.com/rest/api/form-chat?" +
-                                                              "&application=7362540682895337949" +
-                                                              "&instance=22180784" +
-                                                              $"&conversation={Var.Conversation}" + 
-                                                               msg);
-                if (msg == "&disconnect=true")
-                {
-                    Var.Conversation = "0";
-                    await message.Channel.SendMessageAsync(":robot::speech_balloon: Goodbye.");
-                }
-                else
-                {
-                    XmlDocument response = new XmlDocument();
-                    response.LoadXml(xml);
-                    var n = response.GetElementsByTagName("message");
-                    string responseMsg = n[0].InnerText;
-                    if (Var.Conversation == "0") Var.Conversation = response.ChildNodes[1].Attributes[0].Value;
-                    responseMsg = Regex.Replace(responseMsg, "(<.*@.*\\w+.*>)", "").Trim();
-
-                    if (message.Author.Id == Constants.Users.FORKPY) responseMsg = message.Author.Mention + " " + responseMsg;
-                    else responseMsg = ":robot::speech_balloon: " + responseMsg;
-
-                    if (Var.responding) await message.Channel.SendMessageAsync(responseMsg);
-                }
-            }
-            catch (Exception e)
-            {
-                if (Var.responding) await message.Channel.SendMessageAsync(":robot::speech_balloon: Watch your profanity!");
-                Console.WriteLine(e.Message);
-            }
-        }
-
+        
         string[] stats = { "hygiene", "fashion", "happiness", "fitness", "fullness", "healthiness", "sobriety" };
         /*public static KeyValuePair<ulong,int>[] GetTopList(string stat = "")
         {
@@ -245,7 +207,7 @@ namespace ForkBot
 
         public static async Task<bool> isDM(IMessage message)
         {
-            return message.Channel.Name == (await message.Author.GetOrCreateDMChannelAsync()).Name;
+            return message.Channel.Name == (await message.Author.CreateDMChannelAsync()).Name;
         }
     }
 

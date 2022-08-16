@@ -26,7 +26,7 @@ namespace YorkU
         public string Language { get; }
         public string Type { get; }
 
-        static int year = 2020;
+        static int year = DateTime.Now.Year;
         public bool CourseNotFound = false;
 
         private CourseSchedule Schedule;
