@@ -36,7 +36,7 @@ namespace ForkBot
         {
             try
             {
-                if (guild == null) return Bot.client.GetUser(ID).Username;
+                if (guild == null) return (await Bot.client.GetUserAsync(ID)).Username;
                 var gUser = await guild.GetUserAsync(ID);
                 if (gUser == null) throw new Exception("User not in guild");
                 return Functions.GetName(gUser);
@@ -45,7 +45,7 @@ namespace ForkBot
             {
                 try
                 {
-                    var user = Bot.client.GetUser(ID);
+                    var user = await Bot.client.GetUserAsync(ID);
                     if (user == null) return "[UserNotFound]";
                     return user.Username;
                 }
@@ -203,7 +203,7 @@ namespace ForkBot
             return HasItem(DBFunctions.GetItemID(item), amount);
         }
 
-        public void GiveCoins(int amount)
+        public async Task GiveCoinsAsync(int amount)
         {
 
             var topUserStm = $"SELECT USER_ID, COINS FROM USERS ORDER BY COINS DESC LIMIT 1";
@@ -236,8 +236,8 @@ namespace ForkBot
 
                 if (topUserID != newtopUserID)
                 {
-                    var name1 = Bot.client.GetUser(topUserID).Username;
-                    var name2 = Bot.client.GetUser(newtopUserID).Username;
+                    var name1 = (await Bot.client.GetUserAsync(topUserID)).Username;
+                    var name2 = (await Bot.client.GetUserAsync(newtopUserID)).Username;
                     var headline = $"{name2.ToUpper()} TAKES {name1.ToUpper()}'S PLACE AS THE RICHEST!";
                     var content = $"{name2}'s net worth has finally increased beyond {name1}! On {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}," +
                         $" {name2} gained {amount} coins, and it was just enough to put them over {name1}'s current {topUserAmount}. If you need a loan, then" +
@@ -255,7 +255,7 @@ namespace ForkBot
 
             var forkbot = new User(Constants.Users.FORKBOT);
             if (ID == forkbot.ID) return;
-            forkbot.GiveCoins(-amount);
+            await forkbot.GiveCoinsAsync(-amount);
         }
 
         public int GetCoins() { return GetData<int>("coins"); }
@@ -288,7 +288,7 @@ namespace ForkBot
             }
         }
 
-        public void AddStat(string stat, int addition)
+        public async Task AddStatAsync(string stat, int addition)
         {
             var userGemTime = GetData<DateTime>("gem_time");
             if (DateTime.Now < userGemTime) addition = (int)(addition * 2.5);
@@ -328,8 +328,8 @@ namespace ForkBot
 
                 if (topUserID != newtopUserID)
                 {
-                    var name1 = Bot.client.GetUser(topUserID).Username;
-                    var name2 = Bot.client.GetUser(newtopUserID).Username;
+                    var name1 = (await Bot.client.GetUserAsync(topUserID)).Username;
+                    var name2 = (await Bot.client.GetUserAsync(newtopUserID)).Username;
                     var headline = $"{name2} TAKES {name1}'S PLACE AS THE KING OF {stat.ToUpper()}!";
                     var content = $"Outstandingly, {name2} has taken over as the new leader of {stat}! They smashed the current record of {topUserAmount} with ease " +
                         $"on {Var.CurrentDate().ToString("dddd, MMMM dd")} at {Var.CurrentDate().ToString("h:mm tt")}. If you were looking to be the person with the most {stat}," +

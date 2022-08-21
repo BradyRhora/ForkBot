@@ -301,7 +301,7 @@ namespace ForkBot
         [Command("suggest"), Summary("Suggest something for ForkBot, whether it's an item, an item's function, a new command, or anything else! People who abuse this will be blocked from using it.")]
         public async Task Suggest([Remainder] string suggestion)
         {
-            var brady = Bot.client.GetUser(Constants.Users.BRADY);
+            var brady = await Bot.client.GetUserAsync(Constants.Users.BRADY);
             if (Properties.Settings.Default.sBlocked == null) { Properties.Settings.Default.sBlocked = new System.Collections.Specialized.StringCollection(); Properties.Settings.Default.Save(); }
             if (Properties.Settings.Default.sBlocked.Contains(Convert.ToString(Context.User.Id))) return;
             await brady.SendMessageAsync("", embed: new InfoEmbed("SUGGESTION FROM: " + Context.User.Username, suggestion).Build());
@@ -610,7 +610,7 @@ namespace ForkBot
                         }
                     }
                 }
-                u.GiveCoins(coinGain);
+                await u.GiveCoinsAsync(coinGain);
                 msg = $"You have sold ***ALL*** of your items for {coinGain} coins.";
             }
             else
@@ -622,7 +622,7 @@ namespace ForkBot
                         u.RemoveItem(item);
                         int price = (int)(DBFunctions.GetItemPrice(item) * Constants.Values.SELL_VAL);
 
-                        u.GiveCoins(price);
+                        await u.GiveCoinsAsync(price);
                         msg += $"You successfully sold your {item} for {price} coins!\n";
 
                     }
@@ -663,13 +663,13 @@ namespace ForkBot
                 switch (command)
                 {
                     case "accept":
-                        if (!trade.Accepted && Context.User.Id != trade.Starter().Id) trade.Accept();
+                        if (!trade.Accepted && Context.User.Id != trade.Starter()) trade.Accept();
                         showMenu = true;
                         break;
                     case "deny":
                         if (!trade.Accepted)
                         {
-                            await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE DENIED", $"{trade.Starter().Mention}, {Context.User.Username} has denied the trade request.").Build());
+                            await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE DENIED", $"<@{trade.Starter()}>, {Context.User.Username} has denied the trade request.").Build());
                             Var.trades.Remove(trade);
                         }
                         break;
@@ -684,7 +684,7 @@ namespace ForkBot
                                 amount = Convert.ToInt32(stuff[1]);
                                 item = stuff[0];
                             }
-                            var success = trade.AddItem(Context.User, item, amount);
+                            var success = await trade.AddItemAsync(Context.User, item, amount);
                             if (success == false)
                             {
                                 if (trade.Accepted)
@@ -697,19 +697,19 @@ namespace ForkBot
                         else await Context.Channel.SendMessageAsync("Please specify the item to add!");
                         break;
                     case "finish":
-                        trade.Confirm(Context.User);
+                        await trade.ConfirmAsync(Context.User);
                         if (trade.IsCompleted()) Var.trades.Remove(trade);
                         else await Context.Channel.SendMessageAsync("Awaiting confirmation from other user.");
                         break;
                     case "cancel":
-                        trade.Cancel();
+                        trade.CancelAsync();
                         await Context.Channel.SendMessageAsync("", embed: new InfoEmbed("TRADE CANCELLED", $"{Context.User.Username} has cancelled the trade. All items have been returned.").Build());
                         break;
                 }
             }
             else await Context.Channel.SendMessageAsync("You are not currently part of a trade.");
 
-            if (showMenu) await Context.Channel.SendMessageAsync("", embed: trade.CreateMenu());
+            if (showMenu) await Context.Channel.SendMessageAsync("", embed: await trade.CreateMenuAsync());
 
             if (trade.IsCompleted())
             {
@@ -733,8 +733,8 @@ namespace ForkBot
             {
                 if (u1.GetCoins() >= coins)
                 {
-                    u1.GiveCoins(-coins);
-                    Functions.GetUser(user).GiveCoins(coins);
+                    await u1.GiveCoinsAsync(-coins);
+                    await Functions.GetUser(user).GiveCoinsAsync(coins);
                     await ReplyAsync($":moneybag: {user.Mention} has been given {coins} of your coins!");
                 }
                 else await ReplyAsync("You don't have enough coins.");
@@ -814,7 +814,7 @@ namespace ForkBot
                     if (price < 0) price *= -1;
                     if (Convert.ToInt32(u.GetCoins()) >= price)
                     {
-                        u.GiveCoins(-price);
+                        await u.GiveCoinsAsync(-price);
                         u.GiveItem(name);
                         Properties.Settings.Default.jackpot += price;
                         Properties.Settings.Default.Save();
@@ -838,7 +838,7 @@ namespace ForkBot
                         {
                             stock--;
                             Var.currentShop.stock[Var.currentShop.items.IndexOf(item)] = stock;
-                            u.GiveCoins(-price);
+                            await u.GiveCoinsAsync(-price);
                             u.GiveItem(name);
                             await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {DBFunctions.GetItemEmote(name)} for {price} coins!");
                         }
@@ -894,7 +894,7 @@ namespace ForkBot
                             {
                                 stock--;
                                 Var.blackmarketShop.stock[Var.blackmarketShop.items.IndexOf(item)] = stock;
-                                u.GiveCoins(-price);
+                                await u.GiveCoinsAsync(-price);
                                 u.GiveItem(name);
                                 await Context.Channel.SendMessageAsync($":shopping_cart: You have successfully purchased a(n) {name} {DBFunctions.GetItemEmote(name)} for {price} coins!");
                             }
@@ -939,7 +939,7 @@ namespace ForkBot
                 if (page < 1) page = 1;
 
 
-                var postList = MarketPost.GetAllPosts();
+                var postList = await MarketPost.GetAllPostsAsync();
 
                 IOrderedEnumerable<MarketPost> sortedList;
                 MarketPost[] posts = postList.ToArray();
@@ -1065,7 +1065,7 @@ namespace ForkBot
                     return;
                 }
 
-                if (MarketPost.GetPostsByUser(Context.User.Id).Count() >= 10)
+                if ((await MarketPost.GetPostsByUser(Context.User.Id)).Count() >= 10)
                 {
                     await ReplyAsync(":x: You've reached the maximum of 10 Free Market postings.");
                     return;
@@ -1086,7 +1086,7 @@ namespace ForkBot
             else if (command[0] == "buy")
             {
                 string id = command[1].ToUpper();
-                var post = MarketPost.GetPost(id);
+                var post = await MarketPost.GetPostAsync(id);
 
 
                 if (post.User.Id == Context.User.Id)
@@ -1101,7 +1101,7 @@ namespace ForkBot
                 if (user.GetCoins() >= price)
                 {
                     for (int o = 0; o < amount; o++) user.GiveItem(itemName);
-                    user.GiveCoins(-price);
+                    await user.GiveCoinsAsync(-price);
 
                     MarketPost.DeletePost(id);
 
@@ -1112,7 +1112,7 @@ namespace ForkBot
                     if (price > 1) pluralC = "s";
 
                     await ReplyAsync($"You have successfully purchased {amount} {itemName}{plural} for {price} coin{pluralC}!");
-                    Functions.GetUser(post.User).GiveCoins(price);
+                    await Functions.GetUser(post.User).GiveCoinsAsync(price);
                     await post.User.SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}{plural} for {price} coin{pluralC}.");
 
                 }
@@ -1138,7 +1138,7 @@ namespace ForkBot
                             int fee = (int)(Convert.ToInt32(sData[4]) * .25);
                             if (user.GetCoins() >= fee)
                             {
-                                user.GiveCoins(-fee);
+                                await user.GiveCoinsAsync(-fee);
                                 items[i] = "";
                                 for (int o = 0; o < amount; o++) user.GiveItem(itemName);
                                 File.WriteAllLines("Files/FreeMarket.txt", items.Where(x => x != ""));
@@ -1244,10 +1244,10 @@ namespace ForkBot
                 return;
             }
 
-            var bids = ForkBot.Bid.GetAllBids();
+            var bids = await ForkBot.Bid.GetAllBidsAsync();
             if (commands.Count() == 0) commands = new string[] { "" };
 
-            var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
+            var notifyUserIDs = DBFunctions.GetUserIDsWhere("Notify_Bid", "1");
 
             switch (commands[0])
             {
@@ -1256,7 +1256,7 @@ namespace ForkBot
                     emb.Title = "Auctions";
                     emb.ColorStripe = Constants.Colours.YORK_RED;
                     emb.Footer.Text = "To bid, use `;bid [ID] [Amount]`";
-                    if (!notifyUsers.Select(x => x.Id).Contains(Context.User.Id)) emb.Footer.Text += " \n Want to be notified when there's a new auction? Use `;bid opt-in`!";
+                    if (!notifyUserIDs.Contains(Context.User.Id)) emb.Footer.Text += " \n Want to be notified when there's a new auction? Use `;bid opt-in`!";
 
                     if (bids.Count() == 0) emb.Description = "There are currently no auctions going on.";
                     foreach (var bid in bids)
@@ -1293,7 +1293,7 @@ namespace ForkBot
                     break;
                 case "opt-in":
                 case "opt-out":
-                    bool optedIn = notifyUsers.Select(x => x.Id).Contains(Context.User.Id);
+                    bool optedIn = notifyUserIDs.Contains(Context.User.Id);
                     var user = Functions.GetUser(Context.User);
                     if (optedIn)
                     {
@@ -1310,7 +1310,7 @@ namespace ForkBot
                 default:
                     string bidID = commands[0];
                     int bidAmount = Convert.ToInt32(commands[1]);
-                    var BID = ForkBot.Bid.GetBid(bidID);
+                    var BID = await ForkBot.Bid.GetBidAsync(bidID);
                     if (BID == null)
                     {
                         await ReplyAsync("Bid ID not found. Make sure you've typed it correctly.");
@@ -1331,11 +1331,11 @@ namespace ForkBot
                             {
                                 if (bidAmount >= Math.Ceiling(currentBid + (currentBid * 0.15)))
                                 {
-                                    u.GiveCoins(-bidAmount);
+                                    await u.GiveCoinsAsync(-bidAmount);
                                     if (BID.CurrentBidder != null)
                                     {
                                         var oldUser = Functions.GetUser(BID.CurrentBidder);
-                                        oldUser.GiveCoins(currentBid);
+                                        await oldUser.GiveCoinsAsync(currentBid);
                                     }
                                     BID.Update(Context.User, bidAmount);
                                     
@@ -1576,7 +1576,7 @@ namespace ForkBot
                 double allowance = rdm.Next(100, 500);
                 if (u.HasItem("credit_card")) allowance *= 2.5;
                 int iallowance = (int)allowance;
-                u.GiveCoins(iallowance);
+                await u.GiveCoinsAsync(iallowance);
                 u.SetData("allowance_datetime", DateTime.Now);
                 await Context.Channel.SendMessageAsync($":moneybag: | Here's your daily allowance! ***+{iallowance} coins.*** The next one will be available in 24 hours.");
             }
@@ -1685,7 +1685,7 @@ namespace ForkBot
                         }
                         var u = Functions.GetUser(Context.User);
                         int coinReward = rdm.Next(40) + 10;
-                        u.GiveCoins(coinReward);
+                        await u.GiveCoinsAsync(coinReward);
                         await Context.Channel.SendMessageAsync($"You did it! You got {coinReward} coins.");
                     }
 
@@ -2094,7 +2094,7 @@ namespace ForkBot
                             uNum = uNum2;
                         }
 
-                        emb.Fields.Add(new JEmbedField(x =>
+                        emb.Fields.Add(new JEmbedField (async x =>
                         {
                             x.Header = "Matches";
                             x.Text = $"You got {matchCount} match(es)!";
@@ -2106,13 +2106,13 @@ namespace ForkBot
                                 {
                                     case 1:
                                         x.Text += "You got 1000 coins!";
-                                        u.GiveCoins(1000);
+                                        await u.GiveCoinsAsync(1000);
                                         break;
                                     case 2:
                                         string[] level2Items = { "gift", "key", "moneybag", "ticket", "gift" };
                                         string item = level2Items[rdm.Next(level2Items.Count())];
                                         x.Text += $"You got 2500 coins and a(n) {item} {DBFunctions.GetItemEmote(item)}!";
-                                        u.GiveCoins(2500);
+                                        await u.GiveCoinsAsync(2500);
                                         u.GiveItem(item);
                                         break;
                                     case 3:
@@ -2120,7 +2120,7 @@ namespace ForkBot
                                         var item01 = level3Items[rdm.Next(level3Items.Count())];
                                         var item02 = level3Items[rdm.Next(level3Items.Count())];
                                         x.Text += $"You got 5000 coins and: {item01} {DBFunctions.GetItemEmote(item01)}, {item02} {DBFunctions.GetItemEmote(item02)}";
-                                        u.GiveCoins(5000);
+                                        await u.GiveCoinsAsync(5000);
                                         u.GiveItem(item01);
                                         u.GiveItem(item02);
                                         break;
@@ -2131,7 +2131,7 @@ namespace ForkBot
                                         var item3 = level4Items[rdm.Next(level4Items.Count())];
                                         var item4 = level4Items[rdm.Next(level4Items.Count())];
                                         x.Text += $"You got 10000 coins and: {item1} {DBFunctions.GetItemEmote(item1)}, {item2} {DBFunctions.GetItemEmote(item2)}, {item3} {DBFunctions.GetItemEmote(item3)}, {item4} {DBFunctions.GetItemEmote(item4)}";
-                                        u.GiveCoins(10000);
+                                        await u.GiveCoinsAsync(10000);
                                         u.GiveItem(item1);
                                         u.GiveItem(item2);
                                         u.GiveItem(item3);
@@ -2166,7 +2166,7 @@ namespace ForkBot
 
                 if (u.GetCoins() >= cost)
                 {
-                    u.GiveCoins(-cost);
+                    await u.GiveCoinsAsync(-cost);
                     u.SetData("lotto_num", $"{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}{rdm.Next(10)}");
                     await ReplyAsync($"You have successfully purchased a Happy Lucky Lottery Ticket for {cost} coins!");
                 }
@@ -2464,7 +2464,7 @@ namespace ForkBot
         public async Task Block(ulong id)
         {
             if (Context.User.Id != Constants.Users.BRADY) { await ReplyAsync("This can only be used by the bot owner."); return; }
-            var u = Bot.client.GetUser(id);
+            var u = await Bot.client.GetUserAsync(id);
             if (Var.blockedUsers.Contains(u))
             {
                 Var.blockedUsers.Remove(u);
@@ -2580,7 +2580,7 @@ namespace ForkBot
             if (Context.User.Id == Constants.Users.BRADY)
             {
                 User u = Functions.GetUser(user);
-                u.GiveCoins(amount);
+                await u.GiveCoinsAsync(amount);
                 await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given {amount} coins.");
             }
             else await Context.Channel.SendMessageAsync("Sorry, only Brady can use this right now.");
@@ -2655,7 +2655,7 @@ namespace ForkBot
                 var uID = u.Replace(".user", "").Split('\\')[1];
                 try
                 {
-                    var user = Bot.client.GetUser(Convert.ToUInt64(uID));
+                    var user = await Bot.client.GetUserAsync(Convert.ToUInt64(uID));
                     Functions.GetUser(user).GiveItem(item);
                 }
                 catch (Exception) { Console.WriteLine($"Unable to give user ({u}) item."); }
@@ -2795,9 +2795,10 @@ namespace ForkBot
 
             var newBid = new Bid(DBFunctions.GetItemID(item), amount);
 
-            var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
-            foreach (IUser u in notifyUsers)
+            var notifyUserIDs = DBFunctions.GetUserIDsWhere("Notify_Bid", "1");
+            foreach (ulong id in notifyUserIDs)
             {
+                var u = await Bot.client.GetUserAsync(id);
                 await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {amount} {item}(s)! Get it with the ID: {newBid.ID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
             }
         }

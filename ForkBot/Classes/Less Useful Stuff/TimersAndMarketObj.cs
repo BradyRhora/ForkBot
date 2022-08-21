@@ -25,7 +25,7 @@ namespace ForkBot
         public static Timer RemindTimer;
         public static async void Remind(object state)
         {
-            var reminders = Reminder.GetAllReminders();
+            var reminders = await Reminder.GetAllRemindersAsync();
 
             for (int i = reminders.Count() - 1; i >= 0; i--)
             {
@@ -42,7 +42,7 @@ namespace ForkBot
         public static Timer BidTimer;
         public static async void BidTimerCallBack(object state)
         {
-            var posts = MarketPost.GetAllPosts();
+            var posts = await MarketPost.GetAllPostsAsync();
             List<MarketPost> expired = new List<MarketPost>();
             List<MarketPost> expiringSoon = new List<MarketPost>();
             foreach (var post in posts)
@@ -89,10 +89,11 @@ namespace ForkBot
                                                                     $"be auctioned off and the coins will go towards slots.").Build());
 
 
-                var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
+                var notifyUserIDs = DBFunctions.GetUserIDsWhere("Notify_Bid", "1");
 
-                foreach (IUser u in notifyUsers)
+                foreach (ulong id in notifyUserIDs)
                 {
+                    var u = await Bot.client.GetUserAsync(id);
                     await u.SendMessageAsync("", embed: new InfoEmbed("New Bid Alert", $"There is a new bid for {count} {itemName}(s)! Get it with the ID: {postID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
                 }
                 newBids.Add(expiry);
@@ -106,7 +107,7 @@ namespace ForkBot
                     new Bid(bid.Item_ID, bid.Amount);
             }
 
-            var bids = Bid.GetAllBids();
+            var bids = await Bid.GetAllBidsAsync();
 
             for (int i = 0; i < bids.Count(); i++)
             {
@@ -143,11 +144,12 @@ namespace ForkBot
 
                 var newBid = new Bid(itemID, amount);
 
-                var notifyUsers = DBFunctions.GetUsersWhere("Notify_Bid", "1");
-                foreach (IUser u in notifyUsers)
+                var notifyUserIds = DBFunctions.GetUserIDsWhere("Notify_Bid", "1");
+                foreach (ulong id in notifyUserIds)
                 {
                     try
                     {
+                        var u = await Bot.client.GetUserAsync(id);
                         await u.SendMessageAsync("", embed: new InfoEmbed("Bi-Weekly Bid Alert", $"The bi-weekly bid is on! This time: {amount} {item}(s)! Get it with the ID: {newBid.ID}.\n*You are receiving this message because you have opted in to new bid notifications.*").Build());
                     }
                     catch (Exception) { } //in case "cannot send message to this user"
@@ -220,13 +222,13 @@ namespace ForkBot
                 {
                     id += key[rdm.Next(key.Count())];
                 }
-            } while (GetPost(id) != null);
+            } while (GetPostAsync(id) != null);
 
             return id;
         }
 
 
-        public static MarketPost GetPost(string ID)
+        public static async Task<MarketPost> GetPostAsync(string ID)
         {
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
@@ -239,7 +241,7 @@ namespace ForkBot
                     {
                         if (!reader.HasRows) return null;
                         reader.Read();
-                        var user = Bot.client.GetUser((ulong)reader.GetInt64(1));
+                        var user = await Bot.client.GetUserAsync((ulong)reader.GetInt64(1));
                         var item_ID = reader.GetInt32(2);
                         var amount = reader.GetInt32(3);
                         var price = reader.GetInt32(4);
@@ -251,7 +253,7 @@ namespace ForkBot
             }
         }
 
-        public static MarketPost[] GetAllPosts()
+        public static async Task<MarketPost[]> GetAllPostsAsync()
         {
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
@@ -265,7 +267,7 @@ namespace ForkBot
                         while (reader.Read())
                         {
                             var id = reader.GetString(0);
-                            var user = Bot.client.GetUser((ulong)reader.GetInt64(1));
+                            var user = await Bot.client.GetUserAsync((ulong)reader.GetInt64(1));
                             var item_ID = reader.GetInt32(2);
                             var amount = reader.GetInt32(3);
                             var price = reader.GetInt32(4);
@@ -279,7 +281,7 @@ namespace ForkBot
             }
         }
 
-        public static MarketPost[] GetPostsByUser(ulong userID)
+        public static async Task<MarketPost[]> GetPostsByUser(ulong userID)
         {
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
@@ -295,7 +297,7 @@ namespace ForkBot
                         {
 
                             var post_ID = reader.GetString(0);
-                            var user = Bot.client.GetUser((ulong)reader.GetInt64(1));
+                            var user = await Bot.client.GetUserAsync((ulong)reader.GetInt64(1));
                             var item_ID = reader.GetInt32(2);
                             var amount = reader.GetInt32(3);
                             var price = reader.GetInt32(4);
@@ -391,13 +393,13 @@ namespace ForkBot
                 {
                     id += key[rdm.Next(key.Count())];
                 }
-            } while (GetBid(id) != null);
+            } while (GetBidAsync(id) != null);
 
             return id;
         }
 
 
-        public static Bid GetBid(string ID)
+        public static async Task<Bid> GetBidAsync(string ID)
         {
             ID = ID.ToUpper();
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
@@ -419,7 +421,7 @@ namespace ForkBot
                         
                         IUser currentBidder = null;
                         if (bidderID.GetType() != typeof(DBNull)) 
-                            currentBidder = Bot.client.GetUser((ulong)(long)bidderID);
+                            currentBidder = await Bot.client.GetUserAsync((ulong)(long)bidderID);
 
                         return new Bid(ID, itemID, amount, currentBid, currentBidder, endDate);
                     }
@@ -427,7 +429,7 @@ namespace ForkBot
             }
         }
 
-        public static Bid[] GetAllBids()
+        public static async Task<Bid[]> GetAllBidsAsync()
         {
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
@@ -448,7 +450,7 @@ namespace ForkBot
                             var bidderID = reader.GetValue(5);
                             IUser bidder = null;
                             if (bidderID.GetType() != typeof(DBNull))
-                                bidder = Bot.client.GetUser((ulong)(long)bidderID);
+                                bidder = await Bot.client.GetUserAsync((ulong)(long)bidderID);
 
                             posts.Add(new Bid(bidID, itemID, amount, currentBid, bidder, endDate));
                         }
@@ -589,7 +591,7 @@ namespace ForkBot
             }
         }
 
-        public static Reminder[] GetAllReminders()
+        public static async Task<Reminder[]> GetAllRemindersAsync()
         {
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
@@ -603,7 +605,7 @@ namespace ForkBot
                         while (reader.Read())
                         {
                             var id = (ulong)reader.GetInt64(1);
-                            var user = Bot.client.GetUser(id);
+                            var user = await Bot.client.GetUserAsync(id);
                             reminders.Add(new Reminder(reader.GetInt32(0),user, reader.GetString(2), reader.GetDateTime(3).AddHours(5)));
                         }
                         return reminders.ToArray();

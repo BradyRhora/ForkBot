@@ -72,7 +72,7 @@ namespace ForkBot
             return itemCount;
         }
 
-        public static IUser[] GetUsersWhere(string data, string value)
+        public static ulong[] GetUserIDsWhere(string data, string value)
         {
             using (var con = new SQLiteConnection(Constants.Values.DB_CONNECTION_STRING))
             {
@@ -83,11 +83,10 @@ namespace ForkBot
                     cmd.Parameters.AddWithValue("@value", value);
                     using (var reader = cmd.ExecuteReader())
                     {
-                        List<IUser> users = new List<IUser>();
+                        List<ulong> users = new List<ulong>();
                         while (reader.Read())
                         {
-                            var user = Bot.client.GetUser((ulong)reader.GetInt64(0));
-                            if (user != null) users.Add(user);
+                            users.Add((ulong)reader.GetInt64(0));
                         }
                         return users.ToArray();
                     }

@@ -38,18 +38,18 @@ namespace ForkBot
             if (r < 50)
             {
                 msg = "You take a successful poop. It flushes nicely and you wash your hands.\n**Hygiene+20**";
-                user.AddStat("hygiene", 20);
+                await user.AddStatAsync("hygiene", 20);
             }
             else if (r < 75)
             {
                 msg = "You've been holding this in for a while.. Poop gets everywhere and is a pain to clean up.\n**Hygiene-50**";
-                user.AddStat("hygiene", -50);
+                await user.AddStatAsync("hygiene", -50);
             }
             else
             {
                 msg = "This... this is the best poop you've ever had in your life! You feel fantastic!\n**Hygiene+40 Happiness+20**";
-                user.AddStat("hygiene", 40);
-                user.AddStat("happiness", 20);
+                await user.AddStatAsync("hygiene", 40);
+                await user.AddStatAsync("happiness", 20);
             }
             await Context.Channel.SendMessageAsync(":poop: " + msg);
         }
@@ -59,7 +59,7 @@ namespace ForkBot
         {
             if (Check(Context, "shirt")) return;
             await Context.Channel.SendMessageAsync(":shirt: Lookin' good!\n**Fashion+10**");
-            Functions.GetUser(Context.User).AddStat("fashion", 10);
+            await Functions.GetUser(Context.User).AddStatAsync("fashion", 10);
         }
 
         [Command("dress")]
@@ -67,7 +67,7 @@ namespace ForkBot
         {
             if (Check(Context, "dress")) return;
             await Context.Channel.SendMessageAsync(":dress: So beautiful!\n**Fashion+25**");
-            Functions.GetUser(Context.User).AddStat("fashion", 25);
+            await Functions.GetUser(Context.User).AddStatAsync("fashion", 25);
         }
 
         [Command("high_heel")]
@@ -75,7 +75,7 @@ namespace ForkBot
         {
             if (Check(Context, "high_heel")) return;
             await Context.Channel.SendMessageAsync(":high_heel: You feel fabulous.\n**Fashion+10**");
-            Functions.GetUser(Context.User).AddStat("fashion", 10);
+            await Functions.GetUser(Context.User).AddStatAsync("fashion", 10);
         }
 
         [Command("athletic_shoe")]
@@ -83,7 +83,7 @@ namespace ForkBot
         {
             if (Check(Context, "athletic_shoe")) return;
             await Context.Channel.SendMessageAsync(":athletic_shoe: You go for a nice run!\n**Fitness+20**");
-            Functions.GetUser(Context.User).AddStat("fitness", 20);
+            await Functions.GetUser(Context.User).AddStatAsync("fitness", 20);
         }
 
         [Command("dark_sunglasses")]
@@ -91,10 +91,10 @@ namespace ForkBot
         {
             if (Check(Context, "dark_sunglasses")) return;
             await Context.Channel.SendMessageAsync(":dark_sunglasses: You equip your sunglasses... and get a whole lot cooler.\n**Fashion+20**");
-            Functions.GetUser(Context.User).AddStat("fashion", 20);
+            await Functions.GetUser(Context.User).AddStatAsync("fashion", 20);
         }
 
-        [Command("eyeglasses")]
+        [Command("eyeglasses"), Alias("glasses")]
         public async Task Eyeglasses([Remainder] string item)
         {
             if (Check(Context, "eyeglasses", false)) return;
@@ -149,7 +149,7 @@ namespace ForkBot
             else amount = rdm.Next(100, 1000) + 1;
 
             await Context.Channel.SendMessageAsync($":briefcase: There's money inside the briefcase!\n**+{amount} coins**");
-            Functions.GetUser(Context.User).GiveCoins(amount);
+            await Functions.GetUser(Context.User).GiveCoinsAsync(amount);
         }
 
         [Command("purse")]
@@ -164,8 +164,8 @@ namespace ForkBot
 
             await Context.Channel.SendMessageAsync($":purse: There's money inside! You also look great!\n**+{amount} coins Fashion+5**");
             var u = Functions.GetUser(Context.User);
-            u.GiveCoins(amount);
-            u.AddStat("fashion", 5);
+            await u.GiveCoinsAsync(amount);
+            await u.AddStatAsync("fashion", 5);
         }
 
         [Command("gift")]
@@ -252,8 +252,8 @@ namespace ForkBot
                     int amount;
                     do amount = rdm.Next(500);
                     while (amount > u2.GetCoins());
-                    u1.GiveCoins(amount);
-                    u2.GiveCoins(-amount);
+                    await u1.GiveCoinsAsync(amount);
+                    await u2.GiveCoinsAsync(-amount);
                     await Context.Channel.SendMessageAsync($":gun: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
                     
                 }
@@ -285,7 +285,7 @@ namespace ForkBot
         {
             if (Check(Context, "cat")) return;
             await Context.Channel.SendMessageAsync(":cat: You pet your kitty :blush:\n**Happiness+30**");
-            Functions.GetUser(Context.User).AddStat("happiness", 30);
+            await Functions.GetUser(Context.User).AddStatAsync("happiness", 30);
         }
 
         [Command("dog")]
@@ -293,7 +293,7 @@ namespace ForkBot
         {
             if (Check(Context, "dog")) return;
             await Context.Channel.SendMessageAsync(":dog: You pet your pupper :blush:\n**Happiness+30**");
-            Functions.GetUser(Context.User).AddStat("happiness", 30);
+            await Functions.GetUser(Context.User).AddStatAsync("happiness", 30);
         }
 
         [Command("unicorn")]
@@ -323,13 +323,13 @@ namespace ForkBot
                 {
                     case 1:
                         int coinAmount = rdm.Next(1000, 3000) + 1;
-                        user.GiveCoins(coinAmount);
+                        await user.GiveCoinsAsync(coinAmount);
                         msg += $"**+{coinAmount} coins!**";
                         break;
                     case 2:
                         int amount = rdm.Next(2000, 5000) + 1;
                         msg += $"**Fashion+{amount}**";
-                        user.AddStat("fashion", amount);
+                        await user.AddStatAsync("fashion", amount);
                         break;
                     case 3:
                         await Context.Channel.SendMessageAsync("You got...");
@@ -352,7 +352,7 @@ namespace ForkBot
                     case 4:
                         int hAmount = rdm.Next(2000, 5000) + 1;
                         msg += $"**Happiness+{hAmount}**";
-                        user.AddStat("happiness", hAmount);
+                        await user.AddStatAsync("happiness", hAmount);
                         break;
                     case 5:
                         choice = rdm.Next(4) + 1;
@@ -377,7 +377,7 @@ namespace ForkBot
         {
             if (Check(Context, "eggplant")) return;
             await Context.Channel.SendMessageAsync(":eggplant: You eat the eggplant. What were you expecting?\n**Fullness+10**");
-            Functions.GetUser(Context.User).AddStat("fullness", 10);
+            await Functions.GetUser(Context.User).AddStatAsync("fullness", 10);
         }
 
         [Command("apple")]
@@ -385,8 +385,8 @@ namespace ForkBot
         {
             if (Check(Context, "apple")) return;
             await Context.Channel.SendMessageAsync(":apple: Keeps the doctor away!\n**Healthiness+5 Fullness+10**");
-            Functions.GetUser(Context.User).AddStat("fullness", 10);
-            Functions.GetUser(Context.User).AddStat("healthiness", 5);
+            await Functions.GetUser(Context.User).AddStatAsync("fullness", 10);
+            await Functions.GetUser(Context.User).AddStatAsync("healthiness", 5);
         }
 
         [Command("egg")]
@@ -404,13 +404,13 @@ namespace ForkBot
             if (eggType == "Raw")
             {
                 msg = ":egg: Eugh! You eat the egg.. Raw!\n**Happiness-20 Fullness-10**";
-                Functions.GetUser(Context.User).AddStat("fullness", -10);
-                Functions.GetUser(Context.User).AddStat("happiness", -20);
+                await Functions.GetUser(Context.User).AddStatAsync("fullness", -10);
+                await Functions.GetUser(Context.User).AddStatAsync("happiness", -20);
             }
             else
             {
                 msg = ":cooking: Yum! " + eggType + " eggs!\n**Fullness+20**";
-                Functions.GetUser(Context.User).AddStat("fullness", 20);
+                await Functions.GetUser(Context.User).AddStatAsync("fullness", 20);
             }
             await ReplyAsync(msg);
         }
@@ -428,7 +428,7 @@ namespace ForkBot
             else
             {
                 await Context.Channel.SendMessageAsync($":egg: {Context.User.Username} throws their egg at {user.Username}!\n**Their Happiness-10**");
-                u.AddStat("happiness", -10);
+                await u.AddStatAsync("happiness", -10);
             }
         }
 
@@ -437,7 +437,7 @@ namespace ForkBot
         {
             if (Check(Context, "ramen")) return;
             await Context.Channel.SendMessageAsync(":ramen: Sweet sweet ramen...\n**Fullness+50**");
-            Functions.GetUser(Context.User).AddStat("fullness", 50);
+            await Functions.GetUser(Context.User).AddStatAsync("fullness", 50);
         }
 
         [Command("goose")]
@@ -445,7 +445,7 @@ namespace ForkBot
         {
             if (Check(Context, "goose")) return;
             await Context.Channel.SendMessageAsync("<:goose:369992347314028554> A herd of geese fly by... eugh!\n**Happiness-35**");
-            Functions.GetUser(Context.User).AddStat("happiness", -35);
+            await Functions.GetUser(Context.User).AddStatAsync("happiness", -35);
             string msg = "You got...\n:poop: A goose poop!";
             var user = Functions.GetUser(Context.User);
             user.GiveItem("poop");
@@ -469,28 +469,28 @@ namespace ForkBot
             if (rand < 10)
             {
                 msg = "Youness winks at you.\n**Happiness+25**";
-                user.AddStat("happiness", 25);
+                await user.AddStatAsync("happiness", 25);
             }
             else if (rand < 20)
             {
                 msg = "Youness returns your test... You passed!\n**Happiness+20**";
-                user.AddStat("happiness", 20);
+                await user.AddStatAsync("happiness", 20);
             }
             else if (rand < 30)
             {
                 msg = "Youness returns your test... You failed...\n**Happiness-30**";
-                user.AddStat("happiness", -30);
+                await user.AddStatAsync("happiness", -30);
             }
             else if (rand < 40)
             {
                 msg = "Youness yells at the next class for coming in early. You sense his manliness.\n**Happiness+30**";
-                user.AddStat("happiness", 30);
+                await user.AddStatAsync("happiness", 30);
             }
             else
             {
                 msg = "Youness tells you there *is* one thing you can do to get that A+ you need...\n**Fullness+10(inches) Happiness+5**";
-                user.AddStat("fullness", 10);
-                user.AddStat("happiness", 5);
+                await user.AddStatAsync("fullness", 10);
+                await user.AddStatAsync("happiness", 5);
             }
 
             await Context.Channel.SendMessageAsync($"<:youness:373579959899258880> {msg}");
@@ -505,7 +505,7 @@ namespace ForkBot
             int amount = rdm.Next(100, 1000) + 1;
 
             await Context.Channel.SendMessageAsync($":moneybag: Loads of coins come out of the bag!!\n**+{amount} coins**");
-            Functions.GetUser(Context.User).GiveCoins(amount);
+            await Functions.GetUser(Context.User).GiveCoinsAsync(amount);
         }
 
         [Command("shopping_cart"), Alias("shoppingcart", "cart")]
@@ -540,8 +540,8 @@ namespace ForkBot
                         int amount;
                         do amount = rdm.Next(500);
                         while (amount > u2.GetCoins());
-                        u1.GiveCoins(amount);
-                        u2.GiveCoins(-amount);
+                        await u1.GiveCoinsAsync(amount);
+                        await u2.GiveCoinsAsync(-amount);
                         await Context.Channel.SendMessageAsync($":knife: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has stolen {amount} coins from you!");
                         
                     }
@@ -578,8 +578,8 @@ namespace ForkBot
         {
             if (Check(Context, "beer")) return;
             await Context.Channel.SendMessageAsync(":beer: You drink the beer and feel a little tipsy.\n**Sobriety-5 Happiness+20**");
-            Functions.GetUser(Context.User).AddStat("sobriety", -5);
-            Functions.GetUser(Context.User).AddStat("happiness", 20);
+            await Functions.GetUser(Context.User).AddStatAsync("sobriety", -5);
+            await Functions.GetUser(Context.User).AddStatAsync("happiness", 20);
         }
 
         [Command("paintbrush")]
@@ -752,7 +752,7 @@ namespace ForkBot
                     int amount;
                     do amount = rdm.Next(500);
                     while (amount > u2.GetCoins());
-                    u2.GiveCoins(-amount);
+                    await u2.GiveCoinsAsync(-amount);
                     await Context.Channel.SendMessageAsync($":mag: {(user as IGuildUser).Mention}! {(Context.User as IGuildUser).Mention} has burned {amount} of your coins!");
                 }
                 else
@@ -798,7 +798,7 @@ namespace ForkBot
                 {
                     Properties.Settings.Default.jackpot += bet;
                     Properties.Settings.Default.Save();
-                    user.GiveCoins(-bet);
+                    await user.GiveCoinsAsync(-bet);
                     SlotMachine sm = new SlotMachine(Context.User, bet);
                     var result = sm.Spin();
                     JEmbed emb = new JEmbed();
@@ -970,8 +970,8 @@ namespace ForkBot
         {
             if (Check(Context, "candy")) return;
             await Context.Channel.SendMessageAsync(":candy: Don't forget to check for razors!\n**Fullness+10 Happiness+15**");
-            Functions.GetUser(Context.User).AddStat("fullness", 10);
-            Functions.GetUser(Context.User).AddStat("happiness", 15);
+            await Functions.GetUser(Context.User).AddStatAsync("fullness", 10);
+            await Functions.GetUser(Context.User).AddStatAsync("happiness", 15);
         }
 
         [Command("gnome")]
@@ -1020,7 +1020,7 @@ namespace ForkBot
             if (Check(Context, "meat_on_bone")) return;
             int stat = rdm.Next(35, 51);
             await Context.Channel.SendMessageAsync($":meat_on_bone: So well cooked!\n**Fullness+{stat}**");
-            Functions.GetUser(Context.User).AddStat("fullness", stat);
+            await Functions.GetUser(Context.User).AddStatAsync("fullness", stat);
         }
 
         [Command("hole")]
@@ -1097,14 +1097,14 @@ namespace ForkBot
                     msg = "<:rhonda:504902977069383681> Rhonda Lenton answered the phone! \"It's me, Rhonda. Here's a scholarship!\"";
                     int coins = rdm.Next(1500, 3000);
                     msg += $"\nYou got {coins} coins!";
-                    u.GiveCoins(coins);
+                    await u.GiveCoinsAsync(coins);
                     break;
                 case 3:
                     msg = ":smiling_imp: Oh no, Satan answered the phone! \"Ur going to hell bitch.\" You hear a dab over the phone.";
                     int coins2 = rdm.Next(500);
                     if (coins2 > u.GetCoins()) coins2 = u.GetCoins();
                     msg += $"\nOh no! You lost {coins2} coins!";
-                    u.GiveCoins(-coins2);
+                    await u.GiveCoinsAsync(-coins2);
                     break;
             }
             await ReplyAsync(msg);
@@ -1120,20 +1120,20 @@ namespace ForkBot
             if (r < 70)
             {
                 msg = "You had a good time. You spent the evening watching \"Family Guy Funny Moments 2019\" on youtube and then had some Popeyes.\n**Sobriety-20Happiness+80**";
-                user.AddStat("happiness", 80);
-                user.AddStat("sobriety", -20);
+                await user.AddStatAsync("happiness", 80);
+                await user.AddStatAsync("sobriety", -20);
             }
             else if (r < 90)
             {
                 msg = "This was a terrible high. You were so paranoid you called 911 while hiding in the fridge.\n**Sobriety-50Happiness-90**";
-                user.AddStat("sobriety", -50);
-                user.AddStat("happiness", -70);
+                await user.AddStatAsync("sobriety", -50);
+                await user.AddStatAsync("happiness", -70);
             }
             else
             {
                 msg = "This was the best high of your life! You finally figured out the meaning of life. Sadly you forgot it.\n**Sobriety-30Happiness+110**";
-                user.AddStat("sobriety", -30);
-                user.AddStat("happiness", 110);
+                await user.AddStatAsync("sobriety", -30);
+                await user.AddStatAsync("happiness", 110);
             }
             await Context.Channel.SendMessageAsync($"<:weed:506117312823427082> {msg}");
         }
@@ -1147,15 +1147,15 @@ namespace ForkBot
             if (r < 5)
             {
                 await Context.Channel.SendMessageAsync(":wine_glass: Cheers! You had some cheap wine.\n**Sobriety-3 Happiness+13**");
-                Functions.GetUser(Context.User).AddStat("sobriety", -3);
-                Functions.GetUser(Context.User).AddStat("happiness", 13);
+                await Functions.GetUser(Context.User).AddStatAsync("sobriety", -3);
+                await Functions.GetUser(Context.User).AddStatAsync("happiness", 13);
             }
 
             else
             {
                 await Context.Channel.SendMessageAsync(":wine_glass: A votre santé! You had some imported wine!\n**Sobriety-3 Happiness+18**");
-                Functions.GetUser(Context.User).AddStat("sobriety", -3);
-                Functions.GetUser(Context.User).AddStat("happiness", 18);
+                await Functions.GetUser(Context.User).AddStatAsync("sobriety", -3);
+                await Functions.GetUser(Context.User).AddStatAsync("happiness", 18);
             }
         }
 
@@ -1185,11 +1185,11 @@ namespace ForkBot
                         await ReplyAsync($"The tiger falls to the ground, and you take some nice pictures! You're also able to sell its pelt for {coinGain} coins.");
                     }
 
-                    user.GiveCoins(coinGain - coinLoss);
+                    await user.GiveCoinsAsync(coinGain - coinLoss);
                     break;
                 case "man":
                     int coins = rdm.Next(50, 200);
-                    user.GiveCoins(coins);
+                    await user.GiveCoinsAsync(coins);
                     user.RemoveItem("bow_and_arrow");
                     user.RemoveItem("man");
                     await ReplyAsync("The arrow pierces through his body and he collapses to the ground. His wallet slides out of his pocket as his face collides with the concrete.\n" +
@@ -1464,7 +1464,7 @@ namespace ForkBot
             else await ReplyAsync("This item seems to have no effect.");
         }
 
-        [Command("maxwell"), Alias("weedswell","venomswell","superwell","santawell","ragewell","mariowell","goldswell","batswell","monkaswell","hollowswell")]
+        [Command("maxwell"), Alias("weedswell","venomswell","superwell","santawell","ragewell","mariowell","goldswell","batswell","monkaswell","hollowswell", "neonwell", "cursedwell")]
         public async Task Maxwell([Remainder] string wish = "")
         {
             var maxwell = Context.Message.Content.Split(' ')[0].Trim(';');
@@ -1477,7 +1477,7 @@ namespace ForkBot
             }
             else
             {
-                var brady = Bot.client.GetUser(Constants.Users.BRADY);
+                var brady = await Bot.client.GetUserAsync(Constants.Users.BRADY);
                 var isdm = await Functions.isDM(Context.Message);
                 string chan = "";
                 if (isdm) chan = "DM's";

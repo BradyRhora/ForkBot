@@ -74,7 +74,7 @@ namespace ForkBot
         [Command("fax")]
         public async Task Fax(ulong user, [Remainder] string message)
         {
-            var reciever = Bot.client.GetUser(user);
+            var reciever = await Bot.client.GetUserAsync(user);
             if (reciever == null || Check(Context, "fax", true)) return;
 
 

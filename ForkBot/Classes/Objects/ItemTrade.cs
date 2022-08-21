@@ -35,7 +35,7 @@ namespace ForkBot
         /// <param name="u">The user adding the item</param>
         /// <param name="item">The item to be added</param>
         /// <returns></returns>
-        public bool AddItem(IUser u, string item, int amount)
+        public async Task<bool> AddItemAsync(IUser u, string item, int amount)
         {
             if (!Accepted) return false;
             
@@ -48,7 +48,7 @@ namespace ForkBot
                     if (coins > 0 && u1.GetCoins() >= coins)
                     {
                         coins1 += coins;
-                        u1.GiveCoins(-coins);
+                        await u1.GiveCoinsAsync(-coins);
                         return true;
                     }
                 }
@@ -76,7 +76,7 @@ namespace ForkBot
                     if (coins > 0 && u2.GetCoins() >= coins)
                     {
                         coins2 += coins;
-                        u2.GiveCoins(-coins);
+                        await u2.GiveCoinsAsync(-coins);
                         return true;
                     }
                 }
@@ -102,12 +102,11 @@ namespace ForkBot
         /// <summary>
         /// Generates the embed menu to display the trade info.
         /// </summary>
-        /// <returns></returns>
-        public Embed CreateMenu()
+        public async Task<Embed> CreateMenuAsync()
         {
             JEmbed emb = new JEmbed();
-            string u1Name = Bot.client.GetUser(u1.ID).Username;
-            string u2Name = Bot.client.GetUser(u2.ID).Username;
+            string u1Name = (await Bot.client.GetUserAsync(u1.ID)).Username;
+            string u2Name = (await Bot.client.GetUserAsync(u2.ID)).Username;
             emb.Title = $"Trade: {u1Name} - {u2Name}";
             emb.Description = "Use `;trade add [item]` to add an item, or `;trade add [number]` to add coins.\nWhen done, use `;trade finish` or use `;trade cancel` to cancel the trade.\nYou can now put `*[#]` at the end to add multiple items! (i.e. `;trade add key*10`)";
 
@@ -152,23 +151,23 @@ namespace ForkBot
             Accepted = true;
         }
 
-        public IUser Starter()
+        public ulong Starter()
         {
-            return Bot.client.GetUser(u1.ID);
+            return u1.ID;
         }
 
-        public void Confirm(IUser user)
+        public async Task ConfirmAsync(IUser user)
         {
-            if (Starter().Id == user.Id) confirmed1 = true;
+            if (Starter() == user.Id) confirmed1 = true;
             else confirmed2 = true;
 
             if (confirmed1 && confirmed2)
             {
-                CompleteTrade();
+                await CompleteTradeAsync();
             }
         }
 
-        void CompleteTrade()
+        async Task CompleteTradeAsync()
         {
             foreach(string item in items1)
             {
@@ -178,7 +177,7 @@ namespace ForkBot
 
             if (coins1 > 0)
             {
-                u2.GiveCoins(coins1);
+                await u2.GiveCoinsAsync(coins1);
             }
 
             foreach (string item in items2)
@@ -189,7 +188,7 @@ namespace ForkBot
 
             if (coins2 > 0)
             {
-                u1.GiveCoins(coins2);
+                await u1.GiveCoinsAsync(coins2);
             }
 
             completed = true;
@@ -200,21 +199,19 @@ namespace ForkBot
             return completed;
         }
 
-        public void Cancel()
+        public async Task CancelAsync()
         {
             Var.trades.Remove(this);
             foreach(string item in items1)
             {
                 u1.GiveItem(item);
-
             }
-            u1.GiveCoins(coins1);
+            await u1.GiveCoinsAsync(coins1);
             foreach (string item in items2)
             {
                 u2.GiveItem(item);
-
             }
-            u2.GiveCoins(coins2);
+            await u2.GiveCoinsAsync(coins2);
         }
     }
 }

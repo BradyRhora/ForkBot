@@ -63,7 +63,7 @@ namespace ForkBot
             new Slot("gem",0)
         };
 
-        public string Spin()
+        public async Task<string> Spin()
         {
             var slot = Slots[0];
             for (int i = 0; i < 3; i++) spins[i] = rdm.Next(Slots[i].Count());
@@ -72,7 +72,7 @@ namespace ForkBot
             Properties.Settings.Default.jackpot -= winnings;
             if (Properties.Settings.Default.jackpot < 0) Properties.Settings.Default.jackpot = 0;
             Properties.Settings.Default.Save();
-            Functions.GetUser(GetGambler()).GiveCoins(winnings);
+            await Functions.GetUser(GetGambler()).GiveCoinsAsync(winnings);
 
             string winMSG = ":poop: YOU LOSE";
             if (winnings != 0) winMSG = ":star: YOU WIN!";
