@@ -18,8 +18,8 @@ namespace ForkBot
         bool completed = false;
         public ItemTrade(IUser userOne, IUser userTwo)
         {
-            u1 = Functions.GetUser(userOne);
-            u2 = Functions.GetUser(userTwo);
+            u1 = User.Get(userOne);
+            u2 = User.Get(userTwo);
             items1 = new List<string>();
             items2 = new List<string>();
             coins1 = 0;

@@ -587,7 +587,7 @@ namespace ForkBot
         [Command("sell"), Summary("[FUN] Sell items from your inventory.")]
         public async Task Sell(params string[] items)
         {
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             string msg = "";
             var itemList = DBFunctions.GetItemNameList();
             if (items.Count() == 1 && items[0] == "all") await ReplyAsync("Are you sure you want to sell **all** of your items? Use `;sell allforreal` if so.");
@@ -727,14 +727,14 @@ namespace ForkBot
                 return;
             }
             int coins = donation;
-            User u1 = Functions.GetUser(Context.User);
+            User u1 = User.Get(Context.User);
             if (donation <= 0) await ReplyAsync("Donation must be greater than 0 coins.");
             else
             {
                 if (u1.GetCoins() >= coins)
                 {
                     await u1.GiveCoinsAsync(-coins);
-                    await Functions.GetUser(user).GiveCoinsAsync(coins);
+                    await User.Get(user).GiveCoinsAsync(coins);
                     await ReplyAsync($":moneybag: {user.Mention} has been given {coins} of your coins!");
                 }
                 else await ReplyAsync("You don't have enough coins.");
@@ -744,8 +744,8 @@ namespace ForkBot
         [Command("give"), Summary("[FUN] Give the specified user some of your items!")]
         public async Task Give(IUser user, params string[] donation)
         {
-            User u1 = Functions.GetUser(Context.User);
-            User u2 = Functions.GetUser(user);
+            User u1 = User.Get(Context.User);
+            User u2 = User.Get(user);
 
             string msg = $"{user.Mention}, {Context.User.Mention} has given you:\n";
             string donations = "";
@@ -775,7 +775,7 @@ namespace ForkBot
                 await ReplyAsync("Sorry, this command cannot be used in private messages.");
                 return;
             }
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             DateTime day = new DateTime();
             DateTime currentDay = new DateTime();
             if (Var.currentShop != null)
@@ -853,7 +853,7 @@ namespace ForkBot
         [Command("bm")]
         public async Task BlackMarket([Remainder] string command = null)
         {
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             if (u.GetData<bool>("has_bm") != true) return;
             else
             {
@@ -909,7 +909,7 @@ namespace ForkBot
         [Command("freemarket"), Alias("fm", "market"), Summary("[FUN] Sell items to other users! Choose your own price!")]
         public async Task FreeMarket(params string[] command)
         {
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             bool sort = false, lowest = false, itemParam = false;
             if (command.Count() == 0 || command[0] == "view")
             {
@@ -1112,7 +1112,7 @@ namespace ForkBot
                     if (price > 1) pluralC = "s";
 
                     await ReplyAsync($"You have successfully purchased {amount} {itemName}{plural} for {price} coin{pluralC}!");
-                    await Functions.GetUser(post.User).GiveCoinsAsync(price);
+                    await User.Get(post.User).GiveCoinsAsync(price);
                     await post.User.SendMessageAsync($"{Context.User.Username}#{Context.User.Discriminator} has purchased your {amount} {itemName}{plural} for {price} coin{pluralC}.");
 
                 }
@@ -1179,7 +1179,7 @@ namespace ForkBot
         [Command("combine"), Summary("[FUN] Combine lame items to make rad items!")]
         public async Task Combine(params string[] items)
         {
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
 
             foreach (string item in items)
             {
@@ -1220,7 +1220,7 @@ namespace ForkBot
         [Command("trash"), Summary("[FUN] Throw items away.")]
         public async Task Trash(params string[] items)
         {
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             string msg = "";
             foreach (string item in items)
             {
@@ -1273,7 +1273,7 @@ namespace ForkBot
 
                         if (bidder != null)
                         {
-                            var u = Functions.GetUser(bid.CurrentBidder);
+                            var u = User.Get(bid.CurrentBidder);
                             bidderMsg += $" by {await u.GetName(Context.Guild)}";
                         }
 
@@ -1294,7 +1294,7 @@ namespace ForkBot
                 case "opt-in":
                 case "opt-out":
                     bool optedIn = notifyUserIDs.Contains(Context.User.Id);
-                    var user = Functions.GetUser(Context.User);
+                    var user = User.Get(Context.User);
                     if (optedIn)
                     {
                         user.SetData("Notify_Bid", false);
@@ -1324,7 +1324,7 @@ namespace ForkBot
 
                     if (bidAmount > currentBid)
                     {
-                        var u = Functions.GetUser(Context.User);
+                        var u = User.Get(Context.User);
                         if (BID.CurrentBidder == null || u.ID != BID.CurrentBidder.Id)
                         {
                             if (u.GetCoins() >= bidAmount)
@@ -1334,7 +1334,7 @@ namespace ForkBot
                                     await u.GiveCoinsAsync(-bidAmount);
                                     if (BID.CurrentBidder != null)
                                     {
-                                        var oldUser = Functions.GetUser(BID.CurrentBidder);
+                                        var oldUser = User.Get(BID.CurrentBidder);
                                         await oldUser.GiveCoinsAsync(currentBid);
                                     }
                                     BID.Update(Context.User, bidAmount);
@@ -1567,7 +1567,7 @@ namespace ForkBot
                 await ReplyAsync("Sorry, this command cannot be used in private messages.");
                 return;
             }
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             var lastAllowance = u.GetData<DateTime>("allowance_datetime");
 
             var ONE_DAY = new TimeSpan(24, 0, 0);
@@ -1683,7 +1683,7 @@ namespace ForkBot
                         {
                             Var.guessedChars.Add(c);
                         }
-                        var u = Functions.GetUser(Context.User);
+                        var u = User.Get(Context.User);
                         int coinReward = rdm.Next(40) + 10;
                         await u.GiveCoinsAsync(coinReward);
                         await Context.Channel.SendMessageAsync($"You did it! You got {coinReward} coins.");
@@ -1725,7 +1725,7 @@ namespace ForkBot
         [Command("profile"), Summary("View your or another users profile.")]
         public async Task Profile([Remainder] IUser user)
         {
-            var u = Functions.GetUser(user);
+            var u = User.Get(user);
 
             var emb = new JEmbed();
             emb.Author.Name = user.Username;
@@ -1822,7 +1822,7 @@ namespace ForkBot
                     Var.presentClaims.Clear();
                 }
 
-                User user = Functions.GetUser(Context.User);
+                User user = User.Get(Context.User);
                 bool hasPouch = user.GetData<bool>("Active_Pouch");
                 if (Var.presentCount > 0 && (!Var.presentClaims.Any(x => x.Id == Context.User.Id) || hasPouch))
                 {
@@ -2011,7 +2011,7 @@ namespace ForkBot
                         rank++;
                         
                         var userID = Convert.ToUInt64(reader.GetInt64(0));
-                        var user = Functions.GetUser(userID);
+                        var user = User.Get(userID);
                         var name = await user.GetName(Context.Guild);
                         emb.Fields.Add(new JEmbedField(x =>
                         {
@@ -2044,7 +2044,7 @@ namespace ForkBot
                 await ReplyAsync("Sorry, this command cannot be used in private messages.");
                 return;
             }
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
 
             if (command == "")
             {
@@ -2202,7 +2202,7 @@ namespace ForkBot
             MineSweeper game = Var.MSGames.Where(x => x.player.ID == Context.User.Id).FirstOrDefault();
             if (command == "" && game == null)
             {
-                game = new MineSweeper(Functions.GetUser(Context.User));
+                game = new MineSweeper(User.Get(Context.User));
                 await ReplyAsync(game.Build());
                 Var.MSGames.Add(game);
                 await ReplyAsync("Use `;ms x,y` (replacing x and y with letter coordinates) to reveal a tile, or `;ms flag x,y` to flag a tile.");
@@ -2336,7 +2336,7 @@ namespace ForkBot
                 await ReplyAsync("Sorry, this command cannot be used in private messages.");
                 return;
             }
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             var chanGames = Var.FPGames.Where(x => x.Channel.Id == Context.Channel.Id);
             ForkParty game = null;
             if (chanGames.Count() != 0) game = chanGames.First();
@@ -2579,7 +2579,7 @@ namespace ForkBot
         {
             if (Context.User.Id == Constants.Users.BRADY)
             {
-                User u = Functions.GetUser(user);
+                User u = User.Get(user);
                 await u.GiveCoinsAsync(amount);
                 await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given {amount} coins.");
             }
@@ -2591,7 +2591,7 @@ namespace ForkBot
         {
             if (Context.User.Id == Constants.Users.BRADY)
             {
-                User u = Functions.GetUser(user);
+                User u = User.Get(user);
                 var success = u.GiveItem(item);
                 if (success) await Context.Channel.SendMessageAsync($"{user.Username} has successfully been given: {item}.");
                 else await ReplyAsync($"Failed to give item. Are you sure '{item}' exists?");
@@ -2656,7 +2656,7 @@ namespace ForkBot
                 try
                 {
                     var user = await Bot.client.GetUserAsync(Convert.ToUInt64(uID));
-                    Functions.GetUser(user).GiveItem(item);
+                    User.Get(user).GiveItem(item);
                 }
                 catch (Exception) { Console.WriteLine($"Unable to give user ({u}) item."); }
             }
@@ -2771,8 +2771,8 @@ namespace ForkBot
         public async Task Transfer(IUser oldUser, IUser newUser)
         {
             if (Context.User.Id != Constants.Users.BRADY) return;
-            var user1 = Functions.GetUser(oldUser);
-            var user2 = Functions.GetUser(newUser);
+            var user1 = User.Get(oldUser);
+            var user2 = User.Get(newUser);
             string oldData = user1.GetFileString();
             user2.Archive(true);
             user2.SetFileString(oldData);

@@ -122,7 +122,7 @@ namespace ForkBot
                     if (bidder != null)
                     {
                         await bidder.SendMessageAsync($"Congratulations! You've won the bid for {DBFunctions.GetItemEmote(itemID)} {amount} {DBFunctions.GetItemName(itemID)}(s).");
-                        var user = Functions.GetUser(bidder);
+                        var user = User.Get(bidder);
                         Properties.Settings.Default.jackpot += currentBid;
                         Properties.Settings.Default.Save();
                         for (int j = 0; j < amount; j++) user.GiveItem(itemID);

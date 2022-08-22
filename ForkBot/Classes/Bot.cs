@@ -104,7 +104,7 @@ namespace ForkBot
             if (Var.DebugMode && message.Author.Id != Constants.Users.BRADY && Var.DebugUsers.Where(x => x.Id == message.Author.Id).Count() <= 0) return;
             
             if (!Var.DebugMode && message.Channel.Id == Constants.Channels.DEBUG) return;
-            var user = Functions.GetUser(message.Author);
+            var user = User.Get(message.Author);
 
             #region Pre-Command Functions
 
@@ -289,7 +289,7 @@ namespace ForkBot
                         if (rdm.Next(100) + 1 < 10)
                         {
                             await context.Channel.SendMessageAsync(":package: `A lootbox appears in your inventory! (package)`");
-                            Functions.GetUser(context.User).GiveItem("package");
+                            User.Get(context.User).GiveItem("package");
                         }
                     }
                     //set last message time to now
