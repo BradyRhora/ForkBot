@@ -14,7 +14,7 @@ namespace ForkBot
 
         public bool Check(ICommandContext Context, string item, bool remove = true)
         {
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             if (user.HasItem(item))
             {
                 if (remove) user.RemoveItem(item);
@@ -27,7 +27,7 @@ namespace ForkBot
         public async Task tickets(string command = "")
         {
             if (Check(Context, "tickets")) return;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
 
             if (user.GetData<string>("bm_lotto_num") == "0")
             {
@@ -51,7 +51,7 @@ namespace ForkBot
         [Command("warning")]
         public async Task warning()
         {
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
             if (u.HasItem("warning"))
             {
                 await ReplyAsync("gimme a bit longer");
@@ -63,7 +63,7 @@ namespace ForkBot
         {
             if (Check(Context, "gem")) return;
             var gemTime = DateTime.Now + new TimeSpan(3, 0, 0);
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             user.SetData("gem_time", gemTime);
             await ReplyAsync("Your stat increases will be multiplied for 3 hours!");
         }

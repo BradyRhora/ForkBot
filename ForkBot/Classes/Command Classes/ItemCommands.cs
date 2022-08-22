@@ -19,7 +19,7 @@ namespace ForkBot
 
         public bool Check(ICommandContext Context, string item, bool remove = true)
         {
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             if (user.HasItem(DBFunctions.GetItemID(item)))
             {
                 if (remove) user.RemoveItem(item);
@@ -33,7 +33,7 @@ namespace ForkBot
         {
             if (Check(Context, "poop")) return;
             int r = rdm.Next(100) + 1;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             string msg;
             if (r < 50)
             {
@@ -59,7 +59,7 @@ namespace ForkBot
         {
             if (Check(Context, "shirt")) return;
             await Context.Channel.SendMessageAsync(":shirt: Lookin' good!\n**Fashion+10**");
-            await Functions.GetUser(Context.User).AddStatAsync("fashion", 10);
+            await User.Get(Context.User).AddStatAsync("fashion", 10);
         }
 
         [Command("dress")]
@@ -67,7 +67,7 @@ namespace ForkBot
         {
             if (Check(Context, "dress")) return;
             await Context.Channel.SendMessageAsync(":dress: So beautiful!\n**Fashion+25**");
-            await Functions.GetUser(Context.User).AddStatAsync("fashion", 25);
+            await User.Get(Context.User).AddStatAsync("fashion", 25);
         }
 
         [Command("high_heel")]
@@ -75,7 +75,7 @@ namespace ForkBot
         {
             if (Check(Context, "high_heel")) return;
             await Context.Channel.SendMessageAsync(":high_heel: You feel fabulous.\n**Fashion+10**");
-            await Functions.GetUser(Context.User).AddStatAsync("fashion", 10);
+            await User.Get(Context.User).AddStatAsync("fashion", 10);
         }
 
         [Command("athletic_shoe")]
@@ -83,7 +83,7 @@ namespace ForkBot
         {
             if (Check(Context, "athletic_shoe")) return;
             await Context.Channel.SendMessageAsync(":athletic_shoe: You go for a nice run!\n**Fitness+20**");
-            await Functions.GetUser(Context.User).AddStatAsync("fitness", 20);
+            await User.Get(Context.User).AddStatAsync("fitness", 20);
         }
 
         [Command("dark_sunglasses")]
@@ -91,7 +91,7 @@ namespace ForkBot
         {
             if (Check(Context, "dark_sunglasses")) return;
             await Context.Channel.SendMessageAsync(":dark_sunglasses: You equip your sunglasses... and get a whole lot cooler.\n**Fashion+20**");
-            await Functions.GetUser(Context.User).AddStatAsync("fashion", 20);
+            await User.Get(Context.User).AddStatAsync("fashion", 20);
         }
 
         [Command("eyeglasses"), Alias("glasses")]
@@ -99,7 +99,7 @@ namespace ForkBot
         {
             if (Check(Context, "eyeglasses", false)) return;
             item = item.Replace("_", " ");
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
             if (u.HasItem(DBFunctions.GetItemID(item)))
             {
                 List<ItemCombo> possible = new List<ItemCombo>();
@@ -149,7 +149,7 @@ namespace ForkBot
             else amount = rdm.Next(100, 1000) + 1;
 
             await Context.Channel.SendMessageAsync($":briefcase: There's money inside the briefcase!\n**+{amount} coins**");
-            await Functions.GetUser(Context.User).GiveCoinsAsync(amount);
+            await User.Get(Context.User).GiveCoinsAsync(amount);
         }
 
         [Command("purse")]
@@ -163,7 +163,7 @@ namespace ForkBot
             else amount = rdm.Next(50, 200) + 1;
 
             await Context.Channel.SendMessageAsync($":purse: There's money inside! You also look great!\n**+{amount} coins Fashion+5**");
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             await u.GiveCoinsAsync(amount);
             await u.AddStatAsync("fashion", 5);
         }
@@ -172,7 +172,7 @@ namespace ForkBot
         public async Task Gift()
         {
             if (Check(Context, "gift")) return;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
 
             var presents = DBFunctions.GetItemIDList();
             int presRDM;
@@ -236,8 +236,8 @@ namespace ForkBot
         public async Task Gun(IUser user)
         {
             if (Check(Context, "gun")) return;
-            var u1 = Functions.GetUser(Context.User);
-            var u2 = Functions.GetUser(user);
+            var u1 = User.Get(Context.User);
+            var u2 = User.Get(user);
 
             if (u2.GetData<bool>("active_gnome"))
             {
@@ -285,7 +285,7 @@ namespace ForkBot
         {
             if (Check(Context, "cat")) return;
             await Context.Channel.SendMessageAsync(":cat: You pet your kitty :blush:\n**Happiness+30**");
-            await Functions.GetUser(Context.User).AddStatAsync("happiness", 30);
+            await User.Get(Context.User).AddStatAsync("happiness", 30);
         }
 
         [Command("dog")]
@@ -293,7 +293,7 @@ namespace ForkBot
         {
             if (Check(Context, "dog")) return;
             await Context.Channel.SendMessageAsync(":dog: You pet your pupper :blush:\n**Happiness+30**");
-            await Functions.GetUser(Context.User).AddStatAsync("happiness", 30);
+            await User.Get(Context.User).AddStatAsync("happiness", 30);
         }
 
         [Command("unicorn")]
@@ -313,7 +313,7 @@ namespace ForkBot
         {
             if (choice <= 0 || choice > 5) return;
             if (Check(Context, "unicorn")) return;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             string msg = ":unicorn: Your wish is my command!\n";
             bool repeat;
             do
@@ -377,7 +377,7 @@ namespace ForkBot
         {
             if (Check(Context, "eggplant")) return;
             await Context.Channel.SendMessageAsync(":eggplant: You eat the eggplant. What were you expecting?\n**Fullness+10**");
-            await Functions.GetUser(Context.User).AddStatAsync("fullness", 10);
+            await User.Get(Context.User).AddStatAsync("fullness", 10);
         }
 
         [Command("apple")]
@@ -385,8 +385,8 @@ namespace ForkBot
         {
             if (Check(Context, "apple")) return;
             await Context.Channel.SendMessageAsync(":apple: Keeps the doctor away!\n**Healthiness+5 Fullness+10**");
-            await Functions.GetUser(Context.User).AddStatAsync("fullness", 10);
-            await Functions.GetUser(Context.User).AddStatAsync("healthiness", 5);
+            await User.Get(Context.User).AddStatAsync("fullness", 10);
+            await User.Get(Context.User).AddStatAsync("healthiness", 5);
         }
 
         [Command("egg")]
@@ -404,13 +404,13 @@ namespace ForkBot
             if (eggType == "Raw")
             {
                 msg = ":egg: Eugh! You eat the egg.. Raw!\n**Happiness-20 Fullness-10**";
-                await Functions.GetUser(Context.User).AddStatAsync("fullness", -10);
-                await Functions.GetUser(Context.User).AddStatAsync("happiness", -20);
+                await User.Get(Context.User).AddStatAsync("fullness", -10);
+                await User.Get(Context.User).AddStatAsync("happiness", -20);
             }
             else
             {
                 msg = ":cooking: Yum! " + eggType + " eggs!\n**Fullness+20**";
-                await Functions.GetUser(Context.User).AddStatAsync("fullness", 20);
+                await User.Get(Context.User).AddStatAsync("fullness", 20);
             }
             await ReplyAsync(msg);
         }
@@ -419,7 +419,7 @@ namespace ForkBot
         public async Task Egg(IUser user)
         {
             if (Check(Context, "egg")) return;
-            var u = Functions.GetUser(user);
+            var u = User.Get(user);
             if (u.GetData<bool>("active_gnome"))
             {
                 u.SetData("active_gnome", "0");
@@ -437,7 +437,7 @@ namespace ForkBot
         {
             if (Check(Context, "ramen")) return;
             await Context.Channel.SendMessageAsync(":ramen: Sweet sweet ramen...\n**Fullness+50**");
-            await Functions.GetUser(Context.User).AddStatAsync("fullness", 50);
+            await User.Get(Context.User).AddStatAsync("fullness", 50);
         }
 
         [Command("goose")]
@@ -445,9 +445,9 @@ namespace ForkBot
         {
             if (Check(Context, "goose")) return;
             await Context.Channel.SendMessageAsync("<:goose:369992347314028554> A herd of geese fly by... eugh!\n**Happiness-35**");
-            await Functions.GetUser(Context.User).AddStatAsync("happiness", -35);
+            await User.Get(Context.User).AddStatAsync("happiness", -35);
             string msg = "You got...\n:poop: A goose poop!";
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             user.GiveItem("poop");
             int poopCount = rdm.Next(5);
             for (int i = 0; i < poopCount; i++)
@@ -465,7 +465,7 @@ namespace ForkBot
 
             int rand = rdm.Next(50) + 1;
             string msg;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             if (rand < 10)
             {
                 msg = "Youness winks at you.\n**Happiness+25**";
@@ -505,7 +505,7 @@ namespace ForkBot
             int amount = rdm.Next(100, 1000) + 1;
 
             await Context.Channel.SendMessageAsync($":moneybag: Loads of coins come out of the bag!!\n**+{amount} coins**");
-            await Functions.GetUser(Context.User).GiveCoinsAsync(amount);
+            await User.Get(Context.User).GiveCoinsAsync(amount);
         }
 
         [Command("shopping_cart"), Alias("shoppingcart", "cart")]
@@ -523,8 +523,8 @@ namespace ForkBot
         public async Task Knife(IUser user)
         {
             if (Check(Context, "knife")) return;
-            var u1 = Functions.GetUser(Context.User);
-            var u2 = Functions.GetUser(user);
+            var u1 = User.Get(Context.User);
+            var u2 = User.Get(user);
 
             if (u2.GetData<bool>("active_gnome"))
             {
@@ -578,8 +578,8 @@ namespace ForkBot
         {
             if (Check(Context, "beer")) return;
             await Context.Channel.SendMessageAsync(":beer: You drink the beer and feel a little tipsy.\n**Sobriety-5 Happiness+20**");
-            await Functions.GetUser(Context.User).AddStatAsync("sobriety", -5);
-            await Functions.GetUser(Context.User).AddStatAsync("happiness", 20);
+            await User.Get(Context.User).AddStatAsync("sobriety", -5);
+            await User.Get(Context.User).AddStatAsync("happiness", 20);
         }
 
         [Command("paintbrush")]
@@ -699,7 +699,7 @@ namespace ForkBot
             if (Check(Context, "santa")) return;
 
             await Context.Channel.SendMessageAsync("You got...");
-            string sMessage = ""; var user = Functions.GetUser(Context.User);
+            string sMessage = ""; var user = User.Get(Context.User);
             var presents = DBFunctions.GetItemIDList();
             for (int i = 0; i < 5; i++)
             {
@@ -737,8 +737,8 @@ namespace ForkBot
                 return;
             }
             if (Check(Context, "mag")) return;
-            var u1 = Functions.GetUser(Context.User);
-            var u2 = Functions.GetUser(user);
+            var u1 = User.Get(Context.User);
+            var u2 = User.Get(user);
 
             if (u2.GetData<bool>("active_gnome"))
             {
@@ -790,7 +790,7 @@ namespace ForkBot
             try
             {
                 if (bet < 100) { await ReplyAsync("You need to bet at least 100 coins to use this! `;slots [bet]`"); return; }
-                var user = Functions.GetUser(Context.User);
+                var user = User.Get(Context.User);
 
                 if (user.GetCoins() < bet) await Context.Channel.SendMessageAsync(":slot_machine: | You do not have that many coins!");
                 else if (bet <= 0) await Context.Channel.SendMessageAsync(":slot_machine: | Your bet must be above 0.");
@@ -832,7 +832,7 @@ namespace ForkBot
         [Command("key"), Alias(new string[] { "package", "lootbox" })]
         public async Task Key()
         {
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
             if (u.HasItem("key") && u.HasItem("package"))
             {
                 string[] lootboxItems = { "knife", "poop", "bomb", "ticket", "slot_machine", "mag", "moneybag", "purse", "briefcase", "shopping_cart", "gift", "crystal_ball", "gnome" };
@@ -860,7 +860,7 @@ namespace ForkBot
         [Command("postbox")]
         public async Task Postbox()
         {
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
             if (u.HasItem("key2") && u.HasItem("postbox"))
             {
                 string[] lootboxItems = { "pouch", "lock", "key", "moneybag", "briefcase", "gun", "knife", "mag", "ticket", "stopwatch", "gift", "unicorn", "watch", "stopwatch", "santa", "shopping_cart", "poop" };
@@ -888,7 +888,7 @@ namespace ForkBot
         [Command("key2")]
         public async Task Key2()
         {
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
             if (u.HasItem("key2") && u.HasItem("postbox"))
             {
                 await Postbox();
@@ -918,7 +918,7 @@ namespace ForkBot
             if (Check(Context, "baby_symbol")) return;
             await Context.Channel.SendMessageAsync(":pregnant_woman: Her water broke!");
             string msg = "You got...\n:baby: A baby!";
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             user.GiveItem("baby");
             int babyCount = rdm.Next(8);
             for (int i = 0; i < babyCount; i++)
@@ -945,7 +945,7 @@ namespace ForkBot
             if (Check(Context, "jack_o_lantern")) return;
             var dt = Var.CurrentDate();
             string msg = "";
-            User u = Functions.GetUser(Context.User);
+            User u = User.Get(Context.User);
             if (dt.Month == 10 && dt.Day == 31)
             {
                 msg += "Happy halloween!";
@@ -970,15 +970,15 @@ namespace ForkBot
         {
             if (Check(Context, "candy")) return;
             await Context.Channel.SendMessageAsync(":candy: Don't forget to check for razors!\n**Fullness+10 Happiness+15**");
-            await Functions.GetUser(Context.User).AddStatAsync("fullness", 10);
-            await Functions.GetUser(Context.User).AddStatAsync("happiness", 15);
+            await User.Get(Context.User).AddStatAsync("fullness", 10);
+            await User.Get(Context.User).AddStatAsync("happiness", 15);
         }
 
         [Command("gnome")]
         public async Task Gnome()
         {
             if (Check(Context, "gnome", false)) return;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             if (user.GetData<bool>("active_gnome")) await ReplyAsync(DBFunctions.GetItemEmote(DBFunctions.GetItemID("gnome")) + " Hohohohoho! You already have gnome protection!");
             else
             {
@@ -992,7 +992,7 @@ namespace ForkBot
         public async Task MakeKey()
         {
             int packageCount = 0;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             var uitems = user.GetItemList();
 
             if (user.HasItem(DBFunctions.GetItemID("package"), 5))
@@ -1020,7 +1020,7 @@ namespace ForkBot
             if (Check(Context, "meat_on_bone")) return;
             int stat = rdm.Next(35, 51);
             await Context.Channel.SendMessageAsync($":meat_on_bone: So well cooked!\n**Fullness+{stat}**");
-            await Functions.GetUser(Context.User).AddStatAsync("fullness", stat);
+            await User.Get(Context.User).AddStatAsync("fullness", stat);
         }
 
         [Command("hole")]
@@ -1028,7 +1028,7 @@ namespace ForkBot
         {
             if (Check(Context, "hole")) return;
             try { await Context.Message.DeleteAsync(); } catch { }
-            Functions.GetUser(Context.User).SetData("has_bm", "true");
+            User.Get(Context.User).SetData("has_bm", "true");
             await (Bot.client.GetChannel(Constants.Channels.ELITE) as IMessageChannel).SendMessageAsync($":spy: @everyone, {Context.User.Mention} has entered the Black Market.");
             await Context.User.SendMessageAsync(":spy: Psst... hey.... you've been granted access to the black market. **Don't** tell anyone about this... Or you'll regret it.\nUse `;bm` to access and buy from it just like the shop.\nKeep it in private messages..");
             DBFunctions.AddNews("🕵️", $"Welcome, {Context.User.Username}.");
@@ -1053,7 +1053,7 @@ namespace ForkBot
         public async Task Unlock()
         {
             if (Check(Context, "unlock", false)) return;
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             if (u.HasItem("iphone"))
             {
                 u.RemoveItem("iphone");
@@ -1070,7 +1070,7 @@ namespace ForkBot
             if (Check(Context, "calling")) return;
             int index = rdm.Next(4);
             string msg = "";
-            var u = Functions.GetUser(Context.User);
+            var u = User.Get(Context.User);
             switch (index)
             {
                 case 0:
@@ -1115,7 +1115,7 @@ namespace ForkBot
         {
             if (Check(Context, "weed")) return;
             int r = rdm.Next(100) + 1;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             string msg;
             if (r < 70)
             {
@@ -1147,15 +1147,15 @@ namespace ForkBot
             if (r < 5)
             {
                 await Context.Channel.SendMessageAsync(":wine_glass: Cheers! You had some cheap wine.\n**Sobriety-3 Happiness+13**");
-                await Functions.GetUser(Context.User).AddStatAsync("sobriety", -3);
-                await Functions.GetUser(Context.User).AddStatAsync("happiness", 13);
+                await User.Get(Context.User).AddStatAsync("sobriety", -3);
+                await User.Get(Context.User).AddStatAsync("happiness", 13);
             }
 
             else
             {
                 await Context.Channel.SendMessageAsync(":wine_glass: A votre santé! You had some imported wine!\n**Sobriety-3 Happiness+18**");
-                await Functions.GetUser(Context.User).AddStatAsync("sobriety", -3);
-                await Functions.GetUser(Context.User).AddStatAsync("happiness", 18);
+                await User.Get(Context.User).AddStatAsync("sobriety", -3);
+                await User.Get(Context.User).AddStatAsync("happiness", 18);
             }
         }
 
@@ -1163,7 +1163,7 @@ namespace ForkBot
         public async Task Bow_And_Arrow(string target)
         {
             if (Check(Context, "bow_and_arrow", false)) return;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             if (!user.HasItem(DBFunctions.GetItemID(target))) target = "null";
             switch (target)
             {
@@ -1215,7 +1215,7 @@ namespace ForkBot
         public async Task Pouch()
         {
             if (Check(Context, "pouch", false)) return;
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             if (!user.GetData<bool>("active_pouch"))
             {
                 user.SetData("active_pouch", "1");
@@ -1262,7 +1262,7 @@ namespace ForkBot
         public async Task PoopBucket(IUser target)
         {
             if (Check(Context, "Poop Bucket")) return;
-            var u2 = Functions.GetUser(target);
+            var u2 = User.Get(target);
 
             if (u2.GetData<bool>("active_gnome"))
             {
@@ -1521,7 +1521,7 @@ namespace ForkBot
         [Command("controller"), Alias("videogame","game", "video_game")]
         public async Task Controller()
         {
-            var user = Functions.GetUser(Context.User);
+            var user = User.Get(Context.User);
             var hasNotifs = user.GetData<bool>("Notify_Game");
             if (!hasNotifs) if (Check(Context, "controller")) return;
             user.SetData("Notify_Game", !hasNotifs);

@@ -72,7 +72,7 @@ namespace ForkBot
             Properties.Settings.Default.jackpot -= winnings;
             if (Properties.Settings.Default.jackpot < 0) Properties.Settings.Default.jackpot = 0;
             Properties.Settings.Default.Save();
-            await Functions.GetUser(GetGambler()).GiveCoinsAsync(winnings);
+            await User.Get(GetGambler()).GiveCoinsAsync(winnings);
 
             string winMSG = ":poop: YOU LOSE";
             if (winnings != 0) winMSG = ":star: YOU WIN!";
